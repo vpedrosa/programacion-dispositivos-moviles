@@ -57,6 +57,8 @@ Actuación sobre los dispositivos mediante comandos de voz (encender/apagar luce
 
 Versión para smartwatches con Wear OS que permite controlar los dispositivos de la casa **exclusivamente mediante comandos de voz**. El reloj captura el audio y lo envía a la aplicación principal, que se encarga del reconocimiento de voz (speech-to-text) y de ejecutar las acciones correspondientes. La interfaz se centra en la escucha y confirmación de órdenes por voz, sin controles táctiles para actuar sobre dispositivos.
 
+**[Ver prototipo visual Wear OS](smart-home-wear-os/PROTOTIPO.md)**
+
 #### Modo Antiokupas
 
 Funcionalidad de simulación de presencia: enciende luces y reproduce un vídeo de YouTube en la Smart TV siguiendo un patrón horario programado, simulando que la casa está habitada.
