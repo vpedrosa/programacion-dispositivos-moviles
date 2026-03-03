@@ -16,11 +16,11 @@
         {
           "type": "text",
           "id": "xrfM0",
-          "x": 170,
-          "y": 16,
+          "x": 175,
+          "y": 11,
           "name": "timeText",
           "fill": "$text-muted",
-          "content": "9:41",
+          "content": "09:41",
           "textAlign": "center",
           "fontFamily": "Inter",
           "fontSize": 12,
@@ -28,22 +28,9 @@
         },
         {
           "type": "text",
-          "id": "TP3GB",
-          "x": 148,
-          "y": 42,
-          "name": "titleText",
-          "fill": "$text-primary",
-          "content": "Smart Home",
-          "textAlign": "center",
-          "fontFamily": "Inter",
-          "fontSize": 13,
-          "fontWeight": "600"
-        },
-        {
-          "type": "text",
           "id": "VRV5F",
-          "x": 143,
-          "y": 240,
+          "x": 145,
+          "y": 235,
           "name": "statusText",
           "fill": "$success",
           "content": "Escuchando...",
@@ -55,8 +42,8 @@
         {
           "type": "text",
           "id": "mPqJo",
-          "x": 132,
-          "y": 260,
+          "x": 137,
+          "y": 258,
           "name": "commandText",
           "fill": "$text-secondary",
           "content": "«Enciende las luces»",
@@ -67,11 +54,11 @@
         {
           "type": "frame",
           "id": "xzjW6",
-          "x": 72,
-          "y": 290,
+          "x": 103,
+          "y": 291,
           "name": "resultBg",
-          "width": 240,
-          "height": 44,
+          "width": 178,
+          "height": 32,
           "fill": "$bg-card",
           "cornerRadius": 12,
           "gap": 8,
@@ -123,7 +110,7 @@
             {
               "type": "icon_font",
               "id": "gB469",
-              "x": 17,
+              "x": 16.5,
               "y": 0,
               "name": "connIcon",
               "opacity": 0.6,
@@ -139,7 +126,7 @@
           "type": "frame",
           "id": "DbiGH",
           "x": 112,
-          "y": 80,
+          "y": 70,
           "name": "voice-area",
           "width": 160,
           "height": 160,
@@ -196,6 +183,20 @@
               "fill": "$white"
             }
           ]
+        },
+        {
+          "type": "rectangle",
+          "id": "1pvW1",
+          "x": 177,
+          "y": 31,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "isotipo.png",
+            "mode": "fill"
+          },
+          "width": 29,
+          "height": 29
         }
       ]
     }
