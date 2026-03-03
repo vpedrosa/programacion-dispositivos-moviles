@@ -16,6 +16,8 @@ Aplicación multiplataforma desarrollada con **Kotlin Multiplatform** para la ge
 
 Contará con internacionalización y estará localizada en inglés y español.
 
+**[Ver prototipo visual](smart-home/PROTOTIPO.md)**
+
 > **Nota sobre Wear OS:** El módulo Wear OS únicamente captura el audio del usuario y lo envía a la aplicación principal. Es la app principal la que realiza el procesamiento speech-to-text y ejecuta el control mediante comandos de voz.
 
 ### Dispositivos Simulados (27 en total)
@@ -39,9 +41,9 @@ Contará con internacionalización y estará localizada en inglés y español.
 
 Permite crear agrupaciones lógicas de dispositivos asociadas a estancias de la casa (salón, dormitorio, cocina, garaje, etc.) y ejecutar acciones conjuntas sobre todos los dispositivos de un grupo. Cada grupo puede personalizarse con una **fotografía** representativa de la estancia, tomada desde la cámara del dispositivo o seleccionada de la galería.
 
-#### Gestión por Categorías de Dispositivos
+#### Gestión de Dispositivos
 
-Permite actuar sobre todos los dispositivos de una misma categoría simultáneamente (por ejemplo: apagar todas las bombillas, cerrar todas las persianas).
+Vista unificada de todos los dispositivos de la casa, agrupados por tipo (bombillas, cerraduras, persianas, interruptores, sensores, termostato, Smart TV). Permite el control individual de cada dispositivo y acciones conjuntas por categoría (por ejemplo: apagar todas las bombillas, cerrar todas las persianas).
 
 #### Recepción de Eventos y Notificaciones
 
@@ -63,10 +65,10 @@ Funcionalidad de simulación de presencia: enciende luces y reproduce un vídeo 
 
 #### App Principal (Android)
 
-- **Pantalla de Inicio / Dashboard:** Vista general del estado de la casa: resumen de dispositivos activos, alertas recientes, accesos directos a grupos y categorías.
+- **Pantalla de Inicio / Dashboard:** Vista general del estado de la casa: resumen de dispositivos activos, alertas recientes, accesos directos a grupos y dispositivos.
 - **Pantalla de Grupos Lógicos (Habitaciones):** Lista de grupos con su fotografía asociada y nombre. Opción de crear nuevo grupo, asignar dispositivos y añadir/cambiar la foto (cámara o galería). Al seleccionar un grupo: vista de sus dispositivos con controles individuales y acción conjunta.
 - **Pantalla de Edición de Grupo:** Nombre del grupo, selección de dispositivos asignados. Captura o selección de fotografía para el grupo (integración con cámara y galería del dispositivo).
-- **Pantalla de Categorías de Dispositivos:** Lista de categorías (bombillas, persianas, cerraduras, interruptores, sensores, TV). Al seleccionar una categoría: lista de dispositivos de ese tipo con control individual y acción conjunta.
+- **Pantalla de Dispositivos:** Lista unificada de todos los dispositivos agrupados por tipo (bombillas, cerraduras, persianas, interruptores, sensores, termostato, Smart TV). Cada sección permite control individual y acción conjunta. Al seleccionar un dispositivo se accede a su detalle.
 - **Pantalla de Detalle de Dispositivo:** Control específico según tipo: bombilla (color picker + slider de intensidad), cerradura (abrir/cerrar), persiana (nivel de apertura), termostato (ajuste de temperatura objetivo), TV (casting/reproducción), interruptor (on/off).
 - **Pantalla de Notificaciones / Eventos:** Historial de eventos recibidos: alertas de humo, fugas de agua, puerta abierta, lecturas de temperatura, cambios del termostato.
 - **Pantalla de Configuración del Modo Antiokupas:** Activación/desactivación del modo. Configuración del patrón horario (franjas de encendido de luces y reproducción de vídeo). Selección del vídeo de YouTube a reproducir.
