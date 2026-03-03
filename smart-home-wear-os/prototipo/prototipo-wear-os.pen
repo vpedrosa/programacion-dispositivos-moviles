@@ -3,15 +3,251 @@
   "children": [
     {
       "type": "frame",
-      "id": "bi8Au",
+      "id": "SFUkV",
       "x": 0,
       "y": 0,
-      "name": "Frame",
-      "clip": true,
-      "width": 800,
-      "height": 600,
-      "fill": "#FFFFFF",
-      "layout": "none"
+      "name": "Wear OS - Principal",
+      "width": 384,
+      "height": 384,
+      "fill": "$bg-primary",
+      "cornerRadius": 192,
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "xrfM0",
+          "x": 170,
+          "y": 16,
+          "name": "timeText",
+          "fill": "$text-muted",
+          "content": "9:41",
+          "textAlign": "center",
+          "fontFamily": "Inter",
+          "fontSize": 12,
+          "fontWeight": "600"
+        },
+        {
+          "type": "text",
+          "id": "TP3GB",
+          "x": 148,
+          "y": 42,
+          "name": "titleText",
+          "fill": "$text-primary",
+          "content": "Smart Home",
+          "textAlign": "center",
+          "fontFamily": "Inter",
+          "fontSize": 13,
+          "fontWeight": "600"
+        },
+        {
+          "type": "text",
+          "id": "VRV5F",
+          "x": 143,
+          "y": 240,
+          "name": "statusText",
+          "fill": "$success",
+          "content": "Escuchando...",
+          "textAlign": "center",
+          "fontFamily": "Inter",
+          "fontSize": 14,
+          "fontWeight": "600"
+        },
+        {
+          "type": "text",
+          "id": "mPqJo",
+          "x": 132,
+          "y": 260,
+          "name": "commandText",
+          "fill": "$text-secondary",
+          "content": "«Enciende las luces»",
+          "textAlign": "center",
+          "fontFamily": "Inter",
+          "fontSize": 11
+        },
+        {
+          "type": "frame",
+          "id": "xzjW6",
+          "x": 72,
+          "y": 290,
+          "name": "resultBg",
+          "width": 240,
+          "height": 44,
+          "fill": "$bg-card",
+          "cornerRadius": 12,
+          "gap": 8,
+          "padding": [
+            8,
+            12
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon_font",
+              "id": "WxI6T",
+              "name": "checkIcon",
+              "width": 18,
+              "height": 18,
+              "iconFontName": "circle-check",
+              "iconFontFamily": "lucide",
+              "fill": "$success"
+            },
+            {
+              "type": "text",
+              "id": "IXX6A",
+              "name": "resultText",
+              "fill": "$text-primary",
+              "content": "3 bombillas encendidas",
+              "fontFamily": "Inter",
+              "fontSize": 11,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "id": "iUZlB",
+          "x": 168,
+          "y": 344,
+          "children": [
+            {
+              "type": "text",
+              "id": "3AnMc",
+              "x": 0,
+              "y": 14,
+              "name": "connText",
+              "fill": "$text-muted",
+              "content": "Conectado",
+              "fontFamily": "Inter",
+              "fontSize": 9
+            },
+            {
+              "type": "icon_font",
+              "id": "gB469",
+              "x": 17,
+              "y": 0,
+              "name": "connIcon",
+              "opacity": 0.6,
+              "width": 14,
+              "height": 14,
+              "iconFontName": "bluetooth",
+              "iconFontFamily": "lucide",
+              "fill": "$accent"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "DbiGH",
+          "x": 112,
+          "y": 80,
+          "name": "voice-area",
+          "width": 160,
+          "height": 160,
+          "layout": "none",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "okPil",
+              "x": 0,
+              "y": 0,
+              "name": "outerRing",
+              "opacity": 0.15,
+              "width": 160,
+              "height": 160,
+              "stroke": {
+                "thickness": 2,
+                "fill": "$accent"
+              }
+            },
+            {
+              "type": "ellipse",
+              "id": "7BNrW",
+              "x": 12,
+              "y": 12,
+              "name": "innerRing",
+              "opacity": 0.3,
+              "width": 136,
+              "height": 136,
+              "stroke": {
+                "thickness": 3,
+                "fill": "$accent"
+              }
+            },
+            {
+              "type": "ellipse",
+              "id": "C7qEV",
+              "x": 25,
+              "y": 25,
+              "name": "micBg",
+              "fill": "$accent",
+              "width": 110,
+              "height": 110
+            },
+            {
+              "type": "icon_font",
+              "id": "qFBCb",
+              "x": 58,
+              "y": 58,
+              "name": "micIc",
+              "width": 44,
+              "height": 44,
+              "iconFontName": "mic",
+              "iconFontFamily": "lucide",
+              "fill": "$white"
+            }
+          ]
+        }
+      ]
     }
-  ]
+  ],
+  "variables": {
+    "accent": {
+      "type": "color",
+      "value": "#123458"
+    },
+    "bg-card": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "bg-primary": {
+      "type": "color",
+      "value": "#F1EFEC"
+    },
+    "bg-secondary": {
+      "type": "color",
+      "value": "#D4C9BE"
+    },
+    "border": {
+      "type": "color",
+      "value": "#D4C9BE"
+    },
+    "danger": {
+      "type": "color",
+      "value": "#C0392B"
+    },
+    "success": {
+      "type": "color",
+      "value": "#27AE60"
+    },
+    "text-muted": {
+      "type": "color",
+      "value": "#999999"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#030303"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#666666"
+    },
+    "warning": {
+      "type": "color",
+      "value": "#F39C12"
+    },
+    "white": {
+      "type": "color",
+      "value": "#FFFFFF"
+    }
+  }
 }

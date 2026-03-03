@@ -468,7 +468,8 @@
               "fill": "$text-muted",
               "content": "Encendida",
               "fontFamily": "Inter",
-              "fontSize": 11
+              "fontSize": 11,
+              "fontWeight": "normal"
             }
           ]
         },
@@ -545,7 +546,8 @@
               "fill": "$text-muted",
               "content": "10 dispositivos",
               "fontFamily": "Inter",
-              "fontSize": 12
+              "fontSize": 12,
+              "fontWeight": "normal"
             }
           ]
         },
@@ -626,7 +628,8 @@
               "fill": "$text-muted",
               "content": "Hace 12 min · Sensor de contacto",
               "fontFamily": "Inter",
-              "fontSize": 11
+              "fontSize": 11,
+              "fontWeight": "normal"
             }
           ]
         }
@@ -702,7 +705,8 @@
                   "fill": "$text-muted",
                   "content": "Buenos días",
                   "fontFamily": "Inter",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "text",
@@ -1017,7 +1021,8 @@
                       "fill": "$text-muted",
                       "content": "3 activos",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -1113,7 +1118,8 @@
                       "fill": "$text-muted",
                       "content": "1 activo",
                       "fontFamily": "Inter",
-                      "fontSize": 11
+                      "fontSize": 11,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
