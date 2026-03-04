@@ -57,6 +57,7 @@ import smarthome.composeapp.generated.resources.edit_group_photo_section
 import smarthome.composeapp.generated.resources.edit_group_photo_tap
 import smarthome.composeapp.generated.resources.edit_group_save
 import smarthome.composeapp.generated.resources.a11y_navigate_back
+import smarthome.composeapp.generated.resources.a11y_photo_placeholder
 import smarthome.composeapp.generated.resources.title_edit_group
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -285,7 +286,7 @@ private fun PhotoPlaceholder(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Icon(
                     imageVector = Icons.Default.CameraAlt,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.a11y_photo_placeholder),
                     modifier = Modifier.size(40.dp),
                     tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
                 )

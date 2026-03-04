@@ -189,4 +189,16 @@
     <string name="a11y_delete_group">Delete group</string>
     <string name="a11y_add_time_slot">Add time slot</string>
     <string name="a11y_remove_time_slot">Remove time slot</string>
+    <string name="a11y_icon_lights">Lights</string>
+    <string name="a11y_icon_locks">Locks</string>
+    <string name="a11y_icon_temperature">Temperature</string>
+    <string name="a11y_icon_smart_tv">Smart TV</string>
+    <string name="a11y_icon_home">Home</string>
+    <string name="a11y_alert_smoke">Smoke alert</string>
+    <string name="a11y_alert_water">Water leak alert</string>
+    <string name="a11y_alert_temperature">Temperature reading</string>
+    <string name="a11y_alert_door">Door event</string>
+    <string name="a11y_alert_thermostat">Thermostat event</string>
+    <string name="a11y_photo_placeholder">Take or select photo</string>
+    <string name="a11y_room_placeholder">Room</string>
 </resources>

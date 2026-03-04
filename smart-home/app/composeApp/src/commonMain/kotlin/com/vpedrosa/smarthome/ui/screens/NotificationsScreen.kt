@@ -41,9 +41,15 @@ import androidx.compose.ui.unit.dp
 import com.vpedrosa.smarthome.device.domain.DeviceEventType
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.jetbrains.compose.resources.StringResource
 import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.notifications_title
 import smarthome.composeapp.generated.resources.notifications_empty
+import smarthome.composeapp.generated.resources.a11y_alert_smoke
+import smarthome.composeapp.generated.resources.a11y_alert_water
+import smarthome.composeapp.generated.resources.a11y_alert_temperature
+import smarthome.composeapp.generated.resources.a11y_alert_door
+import smarthome.composeapp.generated.resources.a11y_alert_thermostat
 
 private val AlertRed = Color(0xFFF44336)
 private val AlertOrange = Color(0xFFFF9800)
@@ -130,7 +136,7 @@ private fun EventCard(event: EventItem) {
             ) {
                 Icon(
                     imageVector = icon,
-                    contentDescription = null,
+                    contentDescription = event.type.a11yRes()?.let { stringResource(it) },
                     tint = iconColor,
                     modifier = Modifier.size(20.dp),
                 )
@@ -164,4 +170,13 @@ private fun eventIconData(type: DeviceEventType): Pair<Color, ImageVector> = whe
     DeviceEventType.THERMOSTAT_ADJUSTED -> AlertBlue to Icons.Default.Thermostat
     DeviceEventType.DEVICE_TURNED_ON -> AlertGreen to Icons.Default.PowerSettingsNew
     DeviceEventType.DEVICE_TURNED_OFF -> AlertOrange to Icons.Default.PowerSettingsNew
+}
+
+private fun DeviceEventType.a11yRes(): StringResource? = when (this) {
+    DeviceEventType.SMOKE_ALERT -> Res.string.a11y_alert_smoke
+    DeviceEventType.WATER_LEAK_ALERT -> Res.string.a11y_alert_water
+    DeviceEventType.TEMPERATURE_READING -> Res.string.a11y_alert_temperature
+    DeviceEventType.DOOR_OPENED, DeviceEventType.DOOR_CLOSED -> Res.string.a11y_alert_door
+    DeviceEventType.THERMOSTAT_ADJUSTED -> Res.string.a11y_alert_thermostat
+    DeviceEventType.DEVICE_TURNED_ON, DeviceEventType.DEVICE_TURNED_OFF -> null
 }

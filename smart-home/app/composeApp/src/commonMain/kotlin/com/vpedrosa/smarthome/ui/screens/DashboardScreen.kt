@@ -58,6 +58,12 @@ import smarthome.composeapp.generated.resources.dashboard_no_alerts
 import smarthome.composeapp.generated.resources.dashboard_active_devices
 import smarthome.composeapp.generated.resources.action_on
 import smarthome.composeapp.generated.resources.action_off
+import smarthome.composeapp.generated.resources.a11y_icon_lights
+import smarthome.composeapp.generated.resources.a11y_icon_locks
+import smarthome.composeapp.generated.resources.a11y_icon_temperature
+import smarthome.composeapp.generated.resources.a11y_icon_smart_tv
+import smarthome.composeapp.generated.resources.a11y_icon_home
+import smarthome.composeapp.generated.resources.a11y_room_placeholder
 
 private val Navy = Color(0xFF123458)
 private val CardBackground = Color(0xFFFFFFFF)
@@ -119,7 +125,7 @@ private fun GreetingHeader() {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Home,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.a11y_icon_home),
                     tint = Navy,
                     modifier = Modifier.size(20.dp),
                 )
@@ -145,6 +151,7 @@ private fun SummaryGrid(state: DashboardUiState) {
             SummaryCard(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Default.LightbulbCircle,
+                iconDescription = stringResource(Res.string.a11y_icon_lights),
                 value = "${state.lightsOnCount}",
                 label = stringResource(Res.string.dashboard_lights_on),
                 iconTint = Color(0xFFFFC107),
@@ -152,6 +159,7 @@ private fun SummaryGrid(state: DashboardUiState) {
             SummaryCard(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Default.Lock,
+                iconDescription = stringResource(Res.string.a11y_icon_locks),
                 value = "${state.locksCount}",
                 label = stringResource(Res.string.dashboard_locks_active),
                 iconTint = Navy,
@@ -164,6 +172,7 @@ private fun SummaryGrid(state: DashboardUiState) {
             SummaryCard(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Default.Thermostat,
+                iconDescription = stringResource(Res.string.a11y_icon_temperature),
                 value = state.temperature,
                 label = stringResource(Res.string.dashboard_temperature),
                 iconTint = AlertOrange,
@@ -171,6 +180,7 @@ private fun SummaryGrid(state: DashboardUiState) {
             SummaryCard(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Default.Tv,
+                iconDescription = stringResource(Res.string.a11y_icon_smart_tv),
                 value = if (state.isSmartTvOn) stringResource(Res.string.action_on) else stringResource(Res.string.action_off),
                 label = stringResource(Res.string.dashboard_smart_tv),
                 iconTint = AlertBlue,
@@ -183,6 +193,7 @@ private fun SummaryGrid(state: DashboardUiState) {
 private fun SummaryCard(
     modifier: Modifier = Modifier,
     icon: ImageVector,
+    iconDescription: String,
     value: String,
     label: String,
     iconTint: Color,
@@ -198,7 +209,7 @@ private fun SummaryCard(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = iconDescription,
                 tint = iconTint,
                 modifier = Modifier.size(28.dp),
             )
@@ -298,7 +309,7 @@ private fun RoomCard(room: RoomSummary) {
             ) {
                 Icon(
                     imageVector = Icons.Default.Home,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.a11y_room_placeholder),
                     tint = Navy.copy(alpha = 0.4f),
                     modifier = Modifier.size(32.dp),
                 )

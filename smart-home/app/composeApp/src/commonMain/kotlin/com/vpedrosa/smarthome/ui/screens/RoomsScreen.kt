@@ -51,6 +51,7 @@ import smarthome.composeapp.generated.resources.rooms_add_group
 import smarthome.composeapp.generated.resources.rooms_device_count
 import smarthome.composeapp.generated.resources.rooms_empty
 import smarthome.composeapp.generated.resources.title_rooms
+import smarthome.composeapp.generated.resources.a11y_room_placeholder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -180,7 +181,7 @@ private fun RoomCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.MeetingRoom,
-                        contentDescription = null,
+                        contentDescription = stringResource(Res.string.a11y_room_placeholder),
                         modifier = Modifier.size(48.dp),
                         tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f),
                     )
