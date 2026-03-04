@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Smart Home</string>
+
+    <!-- Navigation / Bottom Bar -->
+    <string name="nav_dashboard">Inicio</string>
+    <string name="nav_rooms">Habitaciones</string>
+    <string name="nav_devices">Dispositivos</string>
+    <string name="nav_notifications">Notificaciones</string>
+    <string name="nav_settings">Ajustes</string>
+
+    <!-- Screen titles -->
+    <string name="title_dashboard">Inicio</string>
+    <string name="title_rooms">Habitaciones</string>
+    <string name="title_edit_group">Editar Grupo</string>
+    <string name="title_devices">Dispositivos</string>
+    <string name="title_device_detail">Detalle de Dispositivo</string>
+    <string name="title_notifications">Notificaciones</string>
+    <string name="title_anti_squatter">Modo Antiokupas</string>
+    <string name="title_voice_control">Control por Voz</string>
+    <string name="title_settings">Ajustes</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_greeting">¡Hola!</string>
+    <string name="dashboard_lights_on">Luces encendidas</string>
+    <string name="dashboard_locks_active">Cerraduras activas</string>
+    <string name="dashboard_temperature">Temperatura</string>
+    <string name="dashboard_smart_tv">Smart TV</string>
+    <string name="dashboard_recent_alerts">Alertas Recientes</string>
+    <string name="dashboard_rooms">Habitaciones</string>
+
+    <!-- Device types -->
+    <string name="device_type_light">Bombilla</string>
+    <string name="device_type_lock">Cerradura</string>
+    <string name="device_type_blind">Persiana</string>
+    <string name="device_type_switch">Interruptor</string>
+    <string name="device_type_sensor">Sensor</string>
+    <string name="device_type_thermostat">Termostato</string>
+    <string name="device_type_smart_tv">Smart TV</string>
+
+    <!-- Common actions -->
+    <string name="action_on">Encendido</string>
+    <string name="action_off">Apagado</string>
+    <string name="action_open">Abrir</string>
+    <string name="action_close">Cerrar</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_delete">Eliminar</string>
+    <string name="action_turn_on_all">Encender todas</string>
+    <string name="action_turn_off_all">Apagar todas</string>
+
+    <!-- Device controls -->
+    <string name="control_brightness">Intensidad</string>
+    <string name="control_color">Color</string>
+    <string name="control_opening_level">Nivel de apertura</string>
+    <string name="control_target_temperature">Temperatura objetivo</string>
+    <string name="control_current_temperature">Temperatura actual</string>
+    <string name="control_heating">Calefacción</string>
+
+    <!-- Settings -->
+    <string name="settings_devices">Dispositivos</string>
+    <string name="settings_notifications_section">Notificaciones</string>
+    <string name="settings_smoke_alerts">Alertas de humo</string>
+    <string name="settings_water_leak_alerts">Alertas de fugas de agua</string>
+    <string name="settings_temperature_alerts">Alertas de temperatura</string>
+    <string name="settings_door_alerts">Avisos de puerta abierta</string>
+    <string name="settings_thermostat_events">Eventos del termostato</string>
+    <string name="settings_modes">Modos</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_general">General</string>
+</resources>

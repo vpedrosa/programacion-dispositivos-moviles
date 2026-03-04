@@ -8,6 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import org.jetbrains.compose.resources.stringResource
+import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.title_settings
 
 @Composable
 fun SettingsScreen() {
@@ -18,7 +21,7 @@ fun SettingsScreen() {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Ajustes",
+            text = stringResource(Res.string.title_settings),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
         )

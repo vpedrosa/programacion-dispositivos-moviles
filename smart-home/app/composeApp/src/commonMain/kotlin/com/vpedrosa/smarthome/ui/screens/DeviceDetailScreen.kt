@@ -8,6 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import org.jetbrains.compose.resources.stringResource
+import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.title_device_detail
 
 @Composable
 fun DeviceDetailScreen(deviceId: String) {
@@ -18,7 +21,7 @@ fun DeviceDetailScreen(deviceId: String) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Detalle Dispositivo: $deviceId",
+            text = "${stringResource(Res.string.title_device_detail)}: $deviceId",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
         )

@@ -10,6 +10,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
+import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.app_name
 
 @Composable
 fun SplashScreen(onNavigateToDashboard: () -> Unit) {
@@ -25,7 +28,7 @@ fun SplashScreen(onNavigateToDashboard: () -> Unit) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Smart Home",
+            text = stringResource(Res.string.app_name),
             style = MaterialTheme.typography.headlineLarge,
             color = MaterialTheme.colorScheme.primary,
         )

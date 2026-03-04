@@ -8,6 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import org.jetbrains.compose.resources.stringResource
+import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.title_dashboard
 
 @Composable
 fun DashboardScreen() {
@@ -18,7 +21,7 @@ fun DashboardScreen() {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "Dashboard",
+            text = stringResource(Res.string.title_dashboard),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground,
         )
