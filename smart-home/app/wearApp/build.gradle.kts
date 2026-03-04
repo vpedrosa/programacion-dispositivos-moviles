@@ -45,10 +45,30 @@ android {
 }
 
 dependencies {
-    implementation(project(":composeApp"))
+    // NOTE: composeApp dependency removed for now; wearApp is self-contained.
+    // When real Data Layer communication is implemented, this module will
+    // share domain types via a separate shared module or the Data Layer API.
     implementation(libs.androidx.activity.compose)
     implementation(libs.wear.compose.material3)
     implementation(libs.wear.compose.foundation)
     implementation(libs.wear.compose.navigation)
+
+    // Koin for DI
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Lifecycle ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.0")
+    implementation("io.insert-koin:koin-androidx-compose:4.1.1")
+
     debugImplementation(libs.compose.uiTooling)
+
+    // Testing
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlin.testJunit)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
