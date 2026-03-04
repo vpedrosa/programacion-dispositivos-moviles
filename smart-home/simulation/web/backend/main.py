@@ -10,9 +10,12 @@ from typing import Any
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 app = FastAPI(title="Smart Home Matter Simulation API", version="1.0.0")
+
+# Frontend estático (se monta al final del archivo para no interferir con /api)
 
 app.add_middleware(
     CORSMiddleware,
@@ -192,3 +195,9 @@ async def _read_device_state(node_id: int, device_type: str) -> dict[str, Any]:
         case "sensor" | "smoke" | "temperature":
             state["type"] = device_type
     return state
+
+
+# Montar frontend estático al final para no interferir con /api
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
+if FRONTEND_DIR.exists():
+    app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")

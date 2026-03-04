@@ -1,0 +1,209 @@
+:root {
+    --navy: #123458;
+    --linen: #F1EFEC;
+    --warm-gray: #D4C9BE;
+    --black: #030303;
+    --white: #FFFFFF;
+    --green: #2E7D32;
+    --red: #C62828;
+    --orange: #EF6C00;
+    --blue: #1565C0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--linen);
+    color: var(--black);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+header {
+    text-align: center;
+    padding: 24px 0;
+    border-bottom: 2px solid var(--warm-gray);
+    margin-bottom: 24px;
+}
+
+header h1 {
+    color: var(--navy);
+    font-size: 1.8rem;
+}
+
+.subtitle {
+    color: #666;
+    margin-top: 4px;
+}
+
+h2 {
+    color: var(--navy);
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Register form */
+.register-card .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.register-card label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.register-card input, .register-card select {
+    padding: 8px 12px;
+    border: 1px solid var(--warm-gray);
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.register-card button {
+    padding: 8px 20px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.register-card button:hover { opacity: 0.9; }
+
+/* Device grid */
+.devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.device-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-left: 4px solid var(--navy);
+}
+
+.device-card.lighting { border-left-color: #FFC107; }
+.device-card.lock { border-left-color: var(--red); }
+.device-card.thermostat { border-left-color: var(--blue); }
+.device-card.window { border-left-color: var(--green); }
+.device-card.smoke { border-left-color: var(--orange); }
+.device-card.temperature { border-left-color: #9C27B0; }
+
+.device-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.device-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.device-type {
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.device-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.device-controls button {
+    padding: 6px 14px;
+    border: 1px solid var(--warm-gray);
+    border-radius: 8px;
+    background: var(--linen);
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.device-controls button:hover { background: var(--warm-gray); }
+
+.device-controls button.primary {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+}
+
+.device-controls button.danger {
+    background: var(--red);
+    color: var(--white);
+    border-color: var(--red);
+}
+
+.device-controls input[type="range"] {
+    width: 100%;
+    accent-color: var(--navy);
+}
+
+.device-state {
+    margin-top: 8px;
+    padding: 8px;
+    background: var(--linen);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* Events log */
+.event-log {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.event-item {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--linen);
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-item .event-time {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+.event-item.alert { color: var(--red); }
+.event-item.info { color: var(--blue); }
+
+.empty-state {
+    color: #999;
+    text-align: center;
+    padding: 24px;
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .register-card .form-row { flex-direction: column; }
+    .devices-grid { grid-template-columns: 1fr; }
+}

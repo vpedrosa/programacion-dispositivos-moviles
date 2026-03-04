@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home — Panel de Simulación Matter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🏠 Smart Home — Simulación Matter</h1>
+        <p class="subtitle">Panel de control de dispositivos connectedhomeip</p>
+    </header>
+
+    <main>
+        <!-- Registro de dispositivo -->
+        <section class="card register-card">
+            <h2>Registrar dispositivo</h2>
+            <form id="register-form">
+                <div class="form-row">
+                    <label>Node ID <input type="number" id="reg-node" min="1" required></label>
+                    <label>Tipo
+                        <select id="reg-type">
+                            <option value="lighting">Bombilla</option>
+                            <option value="lock">Cerradura</option>
+                            <option value="thermostat">Termostato</option>
+                            <option value="window">Persiana</option>
+                            <option value="smoke">Sensor humo</option>
+                            <option value="temperature">Sensor temperatura</option>
+                        </select>
+                    </label>
+                    <label>Nombre <input type="text" id="reg-name" placeholder="Ej: Bombilla Salón"></label>
+                    <label>Puerto <input type="number" id="reg-port" value="5540"></label>
+                    <button type="submit">Registrar</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Lista de dispositivos -->
+        <section id="devices-section">
+            <h2>Dispositivos</h2>
+            <div id="devices-grid" class="devices-grid">
+                <p class="empty-state">No hay dispositivos registrados. Usa el formulario de arriba para registrar uno.</p>
+            </div>
+        </section>
+
+        <!-- Log de eventos -->
+        <section class="card">
+            <h2>Log de eventos</h2>
+            <div id="event-log" class="event-log">
+                <p class="empty-state">Sin eventos</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
