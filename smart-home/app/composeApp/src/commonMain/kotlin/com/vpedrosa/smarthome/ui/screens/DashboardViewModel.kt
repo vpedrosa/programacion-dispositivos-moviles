@@ -1,0 +1,99 @@
+package com.vpedrosa.smarthome.ui.screens
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.vpedrosa.smarthome.device.domain.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.Light
+import com.vpedrosa.smarthome.device.domain.Lock
+import com.vpedrosa.smarthome.device.domain.Room
+import com.vpedrosa.smarthome.device.domain.SmartTv
+import com.vpedrosa.smarthome.device.domain.TemperatureSensor
+import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllRoomsUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceEventsUseCase
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+
+data class DashboardUiState(
+    val lightsOnCount: Int = 0,
+    val locksCount: Int = 0,
+    val temperature: String = "--",
+    val smartTvStatus: String = "Off",
+    val recentAlerts: List<AlertItem> = emptyList(),
+    val rooms: List<RoomSummary> = emptyList(),
+)
+
+data class AlertItem(
+    val id: String,
+    val message: String,
+    val type: DeviceEventType,
+)
+
+data class RoomSummary(
+    val id: String,
+    val name: String,
+    val activeDeviceCount: Int,
+    val photoUri: String?,
+)
+
+class DashboardViewModel(
+    observeAllDevices: ObserveAllDevicesUseCase,
+    observeAllRooms: ObserveAllRoomsUseCase,
+    observeDeviceEvents: ObserveDeviceEventsUseCase,
+) : ViewModel() {
+
+    val uiState: StateFlow<DashboardUiState> = combine(
+        observeAllDevices(),
+        observeAllRooms(),
+        observeDeviceEvents(),
+    ) { devices, rooms, events ->
+
+        val lightsOn = devices.count { it is Light && it.isOn }
+        val locksCount = devices.count { it is Lock }
+        val tempSensor = devices.filterIsInstance<TemperatureSensor>().firstOrNull()
+        val temperatureText = tempSensor?.let { "${it.currentTemperature}\u00B0" } ?: "--"
+        val smartTv = devices.filterIsInstance<SmartTv>().firstOrNull()
+        val tvStatus = if (smartTv?.isOn == true) "On" else "Off"
+
+        val recentAlerts = events
+            .sortedByDescending { it.timestamp }
+            .take(5)
+            .map { it.toAlertItem() }
+
+        val roomSummaries = rooms.map { room ->
+            val activeCount = room.deviceIds.count { deviceId ->
+                devices.find { it.id == deviceId }?.let { device ->
+                    device.isActive()
+                } ?: false
+            }
+            RoomSummary(
+                id = room.id.value,
+                name = room.name,
+                activeDeviceCount = activeCount,
+                photoUri = room.photoUri,
+            )
+        }
+
+        DashboardUiState(
+            lightsOnCount = lightsOn,
+            locksCount = locksCount,
+            temperature = temperatureText,
+            smartTvStatus = tvStatus,
+            recentAlerts = recentAlerts,
+            rooms = roomSummaries,
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = DashboardUiState(),
+    )
+}
+
+private fun DeviceEvent.toAlertItem() = AlertItem(
+    id = id,
+    message = message,
+    type = type,
+)

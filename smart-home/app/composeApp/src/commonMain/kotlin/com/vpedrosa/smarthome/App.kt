@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,8 +20,10 @@ import com.vpedrosa.smarthome.navigation.Settings
 import com.vpedrosa.smarthome.navigation.SmartHomeNavHost
 import com.vpedrosa.smarthome.ui.components.BottomBarTab
 import com.vpedrosa.smarthome.device.deviceModule
+import com.vpedrosa.smarthome.device.domain.SensorEventSimulator
 import com.vpedrosa.smarthome.ui.components.SmartHomeBottomBar
 import org.koin.compose.KoinApplication
+import org.koin.compose.koinInject
 
 private val Linen = Color(0xFFF1EFEC)
 private val WarmGray = Color(0xFFD4C9BE)
@@ -49,6 +52,9 @@ private val screensWithBottomBar = setOf(
 @Composable
 fun App() {
     KoinApplication(application = { modules(deviceModule) }) {
+        val simulator = koinInject<SensorEventSimulator>()
+        LaunchedEffect(Unit) { simulator.start() }
+
         MaterialTheme(colorScheme = SmartHomeColorScheme) {
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
