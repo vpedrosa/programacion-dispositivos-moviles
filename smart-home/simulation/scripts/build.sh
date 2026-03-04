@@ -24,6 +24,8 @@ declare -A DEVICES=(
     ["lighting-app"]="examples/lighting-app/linux"
     ["lock-app"]="examples/lock-app/linux"
     ["all-clusters-app"]="examples/all-clusters-app/linux"
+    ["smoke-co-alarm-app"]="examples/smoke-co-alarm-app/linux"
+    ["temperature-measurement-app"]="examples/temperature-measurement-app/linux"
     ["thermostat"]="examples/thermostat/linux"
     ["window-app"]="examples/window-app/linux"
 )
