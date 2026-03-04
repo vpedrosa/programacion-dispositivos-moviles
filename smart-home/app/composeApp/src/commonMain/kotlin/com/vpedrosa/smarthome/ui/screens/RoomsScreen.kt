@@ -46,6 +46,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.rooms_active_count
+import smarthome.composeapp.generated.resources.a11y_delete_group
 import smarthome.composeapp.generated.resources.rooms_add_group
 import smarthome.composeapp.generated.resources.rooms_device_count
 import smarthome.composeapp.generated.resources.rooms_empty
@@ -228,7 +229,7 @@ private fun RoomCard(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.a11y_delete_group),
                     tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
                 )
             }

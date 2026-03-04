@@ -86,7 +86,13 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.a11y_cast_content
+import smarthome.composeapp.generated.resources.a11y_decrease_temperature
+import smarthome.composeapp.generated.resources.a11y_increase_temperature
+import smarthome.composeapp.generated.resources.a11y_lock_door
 import smarthome.composeapp.generated.resources.a11y_navigate_back
+import smarthome.composeapp.generated.resources.a11y_play_video
+import smarthome.composeapp.generated.resources.a11y_unlock_door
 import smarthome.composeapp.generated.resources.blind_closed
 import smarthome.composeapp.generated.resources.blind_open
 import smarthome.composeapp.generated.resources.blind_open_percent
@@ -474,7 +480,10 @@ private fun LockContent(
                 Icon(
                     imageVector = if (device.isLocked) Icons.Default.Lock
                     else Icons.Default.LockOpen,
-                    contentDescription = null,
+                    contentDescription = stringResource(
+                        if (device.isLocked) Res.string.a11y_lock_door
+                        else Res.string.a11y_unlock_door,
+                    ),
                     modifier = Modifier.size(48.dp),
                     tint = if (device.isLocked) navy else Color(0xFFD32F2F),
                 )
@@ -849,7 +858,7 @@ private fun ThermostatContent(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Remove,
-                        contentDescription = null,
+                        contentDescription = stringResource(Res.string.a11y_decrease_temperature),
                         tint = MaterialTheme.colorScheme.onBackground,
                     )
                 }
@@ -873,7 +882,7 @@ private fun ThermostatContent(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = null,
+                        contentDescription = stringResource(Res.string.a11y_increase_temperature),
                         tint = MaterialTheme.colorScheme.onBackground,
                     )
                 }
@@ -997,14 +1006,14 @@ private fun SmartTvContent(
             if (device.isCasting) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.a11y_play_video),
                     modifier = Modifier.size(48.dp),
                     tint = Color.White.copy(alpha = 0.8f),
                 )
             } else {
                 Icon(
                     imageVector = Icons.Default.CastConnected,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.a11y_cast_content),
                     modifier = Modifier.size(48.dp),
                     tint = Color.White.copy(alpha = 0.3f),
                 )
@@ -1034,7 +1043,7 @@ private fun SmartTvContent(
         ) {
             Icon(
                 imageVector = Icons.Default.CastConnected,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.a11y_cast_content),
                 modifier = Modifier.size(18.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))

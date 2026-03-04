@@ -58,7 +58,9 @@ import smarthome.composeapp.generated.resources.anti_squatter_presence_simulatio
 import smarthome.composeapp.generated.resources.anti_squatter_time_range
 import smarthome.composeapp.generated.resources.anti_squatter_tv_section
 import smarthome.composeapp.generated.resources.anti_squatter_video_url
+import smarthome.composeapp.generated.resources.a11y_add_time_slot
 import smarthome.composeapp.generated.resources.a11y_navigate_back
+import smarthome.composeapp.generated.resources.a11y_remove_time_slot
 import smarthome.composeapp.generated.resources.title_anti_squatter
 
 private val ActiveGreen = Color(0xFF4CAF50)
@@ -181,7 +183,7 @@ fun AntiSquatterScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.a11y_add_time_slot),
                     tint = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.width(4.dp))
@@ -317,7 +319,7 @@ private fun TimeSlotCard(
                 IconButton(onClick = onRemove) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = null,
+                        contentDescription = stringResource(Res.string.a11y_remove_time_slot),
                         tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                     )
                 }

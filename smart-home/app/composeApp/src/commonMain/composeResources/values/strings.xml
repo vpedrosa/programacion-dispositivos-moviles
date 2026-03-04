@@ -180,4 +180,13 @@
     <string name="action_back">Back</string>
     <string name="a11y_navigate_back">Go back</string>
     <string name="a11y_navigate_forward">Navigate forward</string>
+    <string name="a11y_increase_temperature">Increase temperature</string>
+    <string name="a11y_decrease_temperature">Decrease temperature</string>
+    <string name="a11y_cast_content">Cast content</string>
+    <string name="a11y_play_video">Play video</string>
+    <string name="a11y_lock_door">Lock door</string>
+    <string name="a11y_unlock_door">Unlock door</string>
+    <string name="a11y_delete_group">Delete group</string>
+    <string name="a11y_add_time_slot">Add time slot</string>
+    <string name="a11y_remove_time_slot">Remove time slot</string>
 </resources>
