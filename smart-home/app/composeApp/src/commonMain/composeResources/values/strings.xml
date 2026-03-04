@@ -135,15 +135,42 @@
     <string name="edit_group_save">Save group</string>
 
     <!-- Settings -->
-    <string name="settings_devices">Devices</string>
-    <string name="settings_notifications_section">Notifications</string>
+    <string name="settings_devices">DEVICES</string>
+    <string name="settings_notifications_section">NOTIFICATIONS</string>
     <string name="settings_smoke_alerts">Smoke alerts</string>
     <string name="settings_water_leak_alerts">Water leak alerts</string>
     <string name="settings_temperature_alerts">Temperature alerts</string>
     <string name="settings_door_alerts">Door open alerts</string>
+    <string name="settings_door_alerts_subtitle">Notify if it remains open</string>
     <string name="settings_thermostat_events">Thermostat events</string>
-    <string name="settings_modes">Modes</string>
+    <string name="settings_thermostat_events_subtitle">Temperature changes</string>
+    <string name="settings_modes">MODES</string>
     <string name="settings_language">Language</string>
+    <string name="settings_language_value">English</string>
     <string name="settings_about">About</string>
-    <string name="settings_general">General</string>
+    <string name="settings_about_value">Smart Home v1.0</string>
+    <string name="settings_general">GENERAL</string>
+    <string name="settings_matter_commissioning">Matter Commissioning</string>
+    <string name="settings_manage_simulated">Manage simulated devices</string>
+    <string name="settings_sensor_alerts">Sensor alerts</string>
+
+    <!-- Anti-Squatter -->
+    <string name="anti_squatter_presence_simulation">Presence simulation</string>
+    <string name="anti_squatter_active_subtitle">Active - Simulating presence</string>
+    <string name="anti_squatter_inactive_subtitle">Inactive</string>
+    <string name="anti_squatter_lights_section">LIGHT TIME SCHEDULE</string>
+    <string name="anti_squatter_add_slot">Add time slot</string>
+    <string name="anti_squatter_tv_section">SMART TV PLAYBACK</string>
+    <string name="anti_squatter_play_video">Play video</string>
+    <string name="anti_squatter_time_range">Time range</string>
+    <string name="anti_squatter_video_url">Video URL</string>
+    <string name="anti_squatter_change_video">Change video</string>
+
+    <!-- Voice Control -->
+    <string name="voice_listening">Listening...</string>
+    <string name="voice_tap_to_speak">Tap the microphone to speak</string>
+    <string name="voice_hint">Try: "Turn on the living room lights"</string>
+    <string name="voice_recent_commands">RECENT COMMANDS</string>
+    <string name="voice_no_recent">No recent commands</string>
+    <string name="voice_devices_affected">%1$d devices affected</string>
 </resources>

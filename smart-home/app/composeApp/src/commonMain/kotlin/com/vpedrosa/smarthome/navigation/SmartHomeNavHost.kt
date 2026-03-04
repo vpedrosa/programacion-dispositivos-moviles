@@ -81,15 +81,23 @@ fun SmartHomeNavHost(
         }
 
         composable<AntiSquatter> {
-            AntiSquatterScreen()
+            AntiSquatterScreen(
+                onNavigateBack = { navController.popBackStack() },
+            )
         }
 
         composable<VoiceControl> {
-            VoiceControlScreen()
+            VoiceControlScreen(
+                onNavigateBack = { navController.popBackStack() },
+            )
         }
 
         composable<Settings> {
-            SettingsScreen()
+            SettingsScreen(
+                onNavigateToAntiSquatter = {
+                    navController.navigate(AntiSquatter)
+                },
+            )
         }
     }
 }

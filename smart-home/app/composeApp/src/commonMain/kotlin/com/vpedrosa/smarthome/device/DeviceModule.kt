@@ -1,34 +1,50 @@
 package com.vpedrosa.smarthome.device
 
+import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryAntiSquatterRepository
+import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryAppSettingsRepository
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryDeviceEventRepository
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryDeviceRepository
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryRoomRepository
+import com.vpedrosa.smarthome.device.adapters.speech.FakeSpeechRecognizer
+import com.vpedrosa.smarthome.device.domain.ports.AntiSquatterRepository
+import com.vpedrosa.smarthome.device.domain.ports.AppSettingsRepository
 import com.vpedrosa.smarthome.device.domain.ports.DeviceEventRepository
 import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
+import com.vpedrosa.smarthome.device.domain.ports.SpeechRecognizerPort
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.ExecuteVoiceCommandUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllRoomsUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.ObserveAntiSquatterConfigUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.ObserveAppSettingsUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceEventsUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveDevicesByRoomUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.ParseVoiceCommandUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveRoomUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.SaveAntiSquatterConfigUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.SaveAppSettingsUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.SaveRoomUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.SimulatePresenceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ToggleCastingUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateLightUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.DeleteRoomUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.SaveRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateThermostatUseCase
 import com.vpedrosa.smarthome.device.domain.SensorEventSimulator
 import com.vpedrosa.smarthome.device.domain.usecases.AddDeviceEventUseCase
+import com.vpedrosa.smarthome.ui.screens.AntiSquatterViewModel
 import com.vpedrosa.smarthome.ui.screens.DashboardViewModel
 import com.vpedrosa.smarthome.ui.screens.DeviceDetailViewModel
 import com.vpedrosa.smarthome.ui.screens.DevicesViewModel
 import com.vpedrosa.smarthome.ui.screens.EditGroupViewModel
 import com.vpedrosa.smarthome.ui.screens.NotificationsViewModel
 import com.vpedrosa.smarthome.ui.screens.RoomsViewModel
+import com.vpedrosa.smarthome.ui.screens.SettingsViewModel
+import com.vpedrosa.smarthome.ui.screens.VoiceControlViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -41,6 +57,11 @@ val deviceModule = module {
     single<DeviceRepository> { InMemoryDeviceRepository() }
     single<RoomRepository> { InMemoryRoomRepository() }
     single<DeviceEventRepository> { InMemoryDeviceEventRepository() }
+    single<AntiSquatterRepository> { InMemoryAntiSquatterRepository() }
+    single<AppSettingsRepository> { InMemoryAppSettingsRepository() }
+    single<SpeechRecognizerPort> {
+        FakeSpeechRecognizer(CoroutineScope(SupervisorJob() + Dispatchers.Default))
+    }
 
     // Use cases
     factory { ObserveAllDevicesUseCase(get()) }
@@ -59,6 +80,13 @@ val deviceModule = module {
     factory { SaveRoomUseCase(get()) }
     factory { DeleteRoomUseCase(get()) }
     factory { AddDeviceEventUseCase(get()) }
+    factory { ObserveAntiSquatterConfigUseCase(get()) }
+    factory { SaveAntiSquatterConfigUseCase(get()) }
+    factory { SimulatePresenceUseCase(get(), get()) }
+    factory { ObserveAppSettingsUseCase(get()) }
+    factory { SaveAppSettingsUseCase(get()) }
+    factory { ParseVoiceCommandUseCase() }
+    factory { ExecuteVoiceCommandUseCase(get(), get()) }
 
     // Sensor event simulator (singleton, lazy start)
     single {
@@ -74,6 +102,9 @@ val deviceModule = module {
     viewModelOf(::RoomsViewModel)
     viewModelOf(::DashboardViewModel)
     viewModelOf(::NotificationsViewModel)
+    viewModelOf(::AntiSquatterViewModel)
+    viewModelOf(::SettingsViewModel)
+    viewModelOf(::VoiceControlViewModel)
     viewModel { params -> DeviceDetailViewModel(params.get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { params -> EditGroupViewModel(params.getOrNull(), get(), get(), get()) }
 }

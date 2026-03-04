@@ -135,15 +135,42 @@
     <string name="edit_group_save">Guardar grupo</string>
 
     <!-- Settings -->
-    <string name="settings_devices">Dispositivos</string>
-    <string name="settings_notifications_section">Notificaciones</string>
+    <string name="settings_devices">DISPOSITIVOS</string>
+    <string name="settings_notifications_section">NOTIFICACIONES</string>
     <string name="settings_smoke_alerts">Alertas de humo</string>
     <string name="settings_water_leak_alerts">Alertas de fugas de agua</string>
     <string name="settings_temperature_alerts">Alertas de temperatura</string>
-    <string name="settings_door_alerts">Avisos de puerta abierta</string>
+    <string name="settings_door_alerts">Puerta abierta</string>
+    <string name="settings_door_alerts_subtitle">Notificar si permanece abierta</string>
     <string name="settings_thermostat_events">Eventos del termostato</string>
-    <string name="settings_modes">Modos</string>
+    <string name="settings_thermostat_events_subtitle">Cambios de temperatura</string>
+    <string name="settings_modes">MODOS</string>
     <string name="settings_language">Idioma</string>
+    <string name="settings_language_value">Espanol</string>
     <string name="settings_about">Acerca de</string>
-    <string name="settings_general">General</string>
+    <string name="settings_about_value">Smart Home v1.0</string>
+    <string name="settings_general">GENERAL</string>
+    <string name="settings_matter_commissioning">Comisionamiento Matter</string>
+    <string name="settings_manage_simulated">Gestionar dispositivos simulados</string>
+    <string name="settings_sensor_alerts">Alertas de sensores</string>
+
+    <!-- Anti-Squatter -->
+    <string name="anti_squatter_presence_simulation">Simulacion de presencia</string>
+    <string name="anti_squatter_active_subtitle">Activo - Simulando presencia</string>
+    <string name="anti_squatter_inactive_subtitle">Inactivo</string>
+    <string name="anti_squatter_lights_section">PATRON HORARIO - LUCES</string>
+    <string name="anti_squatter_add_slot">Anadir franja</string>
+    <string name="anti_squatter_tv_section">REPRODUCCION SMART TV</string>
+    <string name="anti_squatter_play_video">Reproducir video</string>
+    <string name="anti_squatter_time_range">Horario</string>
+    <string name="anti_squatter_video_url">URL del video</string>
+    <string name="anti_squatter_change_video">Cambiar video</string>
+
+    <!-- Voice Control -->
+    <string name="voice_listening">Escuchando...</string>
+    <string name="voice_tap_to_speak">Toca el microfono para hablar</string>
+    <string name="voice_hint">Prueba: "Enciende las luces del salon"</string>
+    <string name="voice_recent_commands">COMANDOS RECIENTES</string>
+    <string name="voice_no_recent">Sin comandos recientes</string>
+    <string name="voice_devices_affected">%1$d dispositivos afectados</string>
 </resources>
