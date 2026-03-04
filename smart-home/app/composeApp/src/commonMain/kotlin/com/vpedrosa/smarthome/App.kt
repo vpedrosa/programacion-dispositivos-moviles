@@ -18,7 +18,9 @@ import com.vpedrosa.smarthome.navigation.Rooms
 import com.vpedrosa.smarthome.navigation.Settings
 import com.vpedrosa.smarthome.navigation.SmartHomeNavHost
 import com.vpedrosa.smarthome.ui.components.BottomBarTab
+import com.vpedrosa.smarthome.device.deviceModule
 import com.vpedrosa.smarthome.ui.components.SmartHomeBottomBar
+import org.koin.compose.KoinApplication
 
 private val Linen = Color(0xFFF1EFEC)
 private val WarmGray = Color(0xFFD4C9BE)
@@ -46,35 +48,37 @@ private val screensWithBottomBar = setOf(
 
 @Composable
 fun App() {
-    MaterialTheme(colorScheme = SmartHomeColorScheme) {
-        val navController = rememberNavController()
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
+    KoinApplication(application = { modules(deviceModule) }) {
+        MaterialTheme(colorScheme = SmartHomeColorScheme) {
+            val navController = rememberNavController()
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
 
-        val showBottomBar = currentRoute in screensWithBottomBar
+            val showBottomBar = currentRoute in screensWithBottomBar
 
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            containerColor = MaterialTheme.colorScheme.background,
-            bottomBar = {
-                if (showBottomBar) {
-                    SmartHomeBottomBar(
-                        currentRoute = currentRoute,
-                        onTabSelected = { tab ->
-                            navController.navigate(tab.route) {
-                                popUpTo<Dashboard> { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                    )
-                }
-            },
-        ) { innerPadding ->
-            SmartHomeNavHost(
-                navController = navController,
-                modifier = Modifier.padding(innerPadding),
-            )
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                containerColor = MaterialTheme.colorScheme.background,
+                bottomBar = {
+                    if (showBottomBar) {
+                        SmartHomeBottomBar(
+                            currentRoute = currentRoute,
+                            onTabSelected = { tab ->
+                                navController.navigate(tab.route) {
+                                    popUpTo<Dashboard> { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                        )
+                    }
+                },
+            ) { innerPadding ->
+                SmartHomeNavHost(
+                    navController = navController,
+                    modifier = Modifier.padding(innerPadding),
+                )
+            }
         }
     }
 }

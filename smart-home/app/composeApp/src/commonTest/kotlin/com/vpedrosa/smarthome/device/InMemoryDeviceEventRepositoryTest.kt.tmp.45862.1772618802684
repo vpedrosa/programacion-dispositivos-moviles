@@ -1,0 +1,66 @@
+package com.vpedrosa.smarthome.device
+
+import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryDeviceEventRepository
+import com.vpedrosa.smarthome.device.domain.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.DeviceId
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Clock
+import kotlin.test.Test
+import kotlin.test.assertEquals
+
+class InMemoryDeviceEventRepositoryTest {
+
+    private fun createEvent(
+        id: String,
+        deviceId: String,
+        type: DeviceEventType = DeviceEventType.DEVICE_TURNED_ON,
+    ) = DeviceEvent(
+        id = id,
+        deviceId = DeviceId(deviceId),
+        type = type,
+        message = "Test event $id",
+        timestamp = Clock.System.now(),
+    )
+
+    @Test
+    fun startsEmpty() = runTest {
+        val repo = InMemoryDeviceEventRepository()
+        val result = repo.observeAllEvents().first()
+        assertEquals(0, result.size)
+    }
+
+    @Test
+    fun add_appendsEvent() = runTest {
+        val repo = InMemoryDeviceEventRepository()
+        repo.add(createEvent("e1", "d1"))
+        repo.add(createEvent("e2", "d2"))
+        val result = repo.observeAllEvents().first()
+        assertEquals(2, result.size)
+    }
+
+    @Test
+    fun observeEventsByDevice_filtersCorrectly() = runTest {
+        val repo = InMemoryDeviceEventRepository()
+        repo.add(createEvent("e1", "d1"))
+        repo.add(createEvent("e2", "d2"))
+        repo.add(createEvent("e3", "d1", DeviceEventType.DEVICE_TURNED_OFF))
+
+        val d1Events = repo.observeEventsByDevice(DeviceId("d1")).first()
+        assertEquals(2, d1Events.size)
+
+        val d2Events = repo.observeEventsByDevice(DeviceId("d2")).first()
+        assertEquals(1, d2Events.size)
+    }
+
+    @Test
+    fun clear_removesAllEvents() = runTest {
+        val repo = InMemoryDeviceEventRepository()
+        repo.add(createEvent("e1", "d1"))
+        repo.add(createEvent("e2", "d2"))
+        repo.clear()
+        val result = repo.observeAllEvents().first()
+        assertEquals(0, result.size)
+    }
+}
