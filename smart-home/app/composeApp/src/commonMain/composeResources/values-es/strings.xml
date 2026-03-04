@@ -36,8 +36,24 @@
     <string name="device_type_blind">Persiana</string>
     <string name="device_type_switch">Interruptor</string>
     <string name="device_type_sensor">Sensor</string>
+    <string name="device_type_smoke_sensor">Sensor de Humo</string>
+    <string name="device_type_water_leak_sensor">Sensor de Fugas</string>
+    <string name="device_type_temperature_sensor">Sensor de Temperatura</string>
+    <string name="device_type_contact_sensor">Sensor de Contacto</string>
     <string name="device_type_thermostat">Termostato</string>
     <string name="device_type_smart_tv">Smart TV</string>
+
+    <!-- Device type plurals -->
+    <string name="device_type_lights">Bombillas</string>
+    <string name="device_type_locks">Cerraduras</string>
+    <string name="device_type_blinds">Persianas</string>
+    <string name="device_type_switches">Interruptores</string>
+    <string name="device_type_smoke_sensors">Sensores de Humo</string>
+    <string name="device_type_water_leak_sensors">Sensores de Fugas</string>
+    <string name="device_type_temperature_sensors">Sensores de Temperatura</string>
+    <string name="device_type_contact_sensors">Sensores de Contacto</string>
+    <string name="device_type_thermostats">Termostatos</string>
+    <string name="device_type_smart_tvs">Smart TVs</string>
 
     <!-- Common actions -->
     <string name="action_on">Encendido</string>
@@ -57,6 +73,42 @@
     <string name="control_target_temperature">Temperatura objetivo</string>
     <string name="control_current_temperature">Temperatura actual</string>
     <string name="control_heating">Calefacción</string>
+
+    <!-- Device detail -->
+    <string name="device_detail_state">Estado</string>
+    <string name="device_detail_recent_history">Historial reciente</string>
+    <string name="device_detail_no_events">Sin eventos registrados</string>
+
+    <!-- Lock -->
+    <string name="lock_closed">Cerrada</string>
+    <string name="lock_open">Abierta</string>
+    <string name="lock_toggle_unlock">Abrir cerradura</string>
+    <string name="lock_toggle_lock">Cerrar cerradura</string>
+
+    <!-- Blind -->
+    <string name="blind_open_percent">%1$d%% abierta</string>
+    <string name="blind_closed">Cerrada 0%%</string>
+    <string name="blind_open">100%% Abierta</string>
+
+    <!-- Thermostat -->
+    <string name="heating_active">Activa</string>
+    <string name="heating_inactive">Inactiva</string>
+    <string name="heating_warming">Calentando</string>
+    <string name="heating_cooling">Enfriando</string>
+
+    <!-- Smart TV -->
+    <string name="casting_section">Casting / Reproducción</string>
+    <string name="casting_active">Casting activo</string>
+    <string name="casting_inactive">Sin casting activo</string>
+    <string name="send_cast">Enviar contenido (Cast)</string>
+
+    <!-- Sensors -->
+    <string name="sensor_smoke_detected">¡Humo detectado!</string>
+    <string name="sensor_no_smoke">Sin humo detectado</string>
+    <string name="sensor_water_leak">¡Fuga de agua detectada!</string>
+    <string name="sensor_no_leak">Sin fugas detectadas</string>
+    <string name="contact_open">Abierto</string>
+    <string name="contact_closed">Cerrado</string>
 
     <!-- Settings -->
     <string name="settings_devices">Dispositivos</string>

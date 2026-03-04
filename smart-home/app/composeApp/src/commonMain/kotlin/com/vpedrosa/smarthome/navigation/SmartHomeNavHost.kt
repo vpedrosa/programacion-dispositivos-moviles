@@ -50,12 +50,19 @@ fun SmartHomeNavHost(
         }
 
         composable<Devices> {
-            DevicesScreen()
+            DevicesScreen(
+                onNavigateToDeviceDetail = { deviceId ->
+                    navController.navigate(DeviceDetail(deviceId))
+                },
+            )
         }
 
         composable<DeviceDetail> { backStackEntry ->
             val detail = backStackEntry.toRoute<DeviceDetail>()
-            DeviceDetailScreen(deviceId = detail.deviceId)
+            DeviceDetailScreen(
+                deviceId = detail.deviceId,
+                onNavigateBack = { navController.popBackStack() },
+            )
         }
 
         composable<Notifications> {

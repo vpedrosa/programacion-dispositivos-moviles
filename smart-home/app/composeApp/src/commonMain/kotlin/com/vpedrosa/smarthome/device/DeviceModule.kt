@@ -19,6 +19,10 @@ import com.vpedrosa.smarthome.device.domain.usecases.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateLightUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateThermostatUseCase
+import com.vpedrosa.smarthome.ui.screens.DeviceDetailViewModel
+import com.vpedrosa.smarthome.ui.screens.DevicesViewModel
+import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val deviceModule = module {
@@ -41,4 +45,8 @@ val deviceModule = module {
     factory { ObserveRoomUseCase(get()) }
     factory { ObserveDeviceEventsUseCase(get()) }
     factory { BulkToggleDevicesByTypeUseCase(get()) }
+
+    // ViewModels
+    viewModelOf(::DevicesViewModel)
+    viewModel { params -> DeviceDetailViewModel(params.get(), get(), get(), get(), get(), get(), get(), get(), get()) }
 }
