@@ -21,7 +21,7 @@ data class DashboardUiState(
     val lightsOnCount: Int = 0,
     val locksCount: Int = 0,
     val temperature: String = "--",
-    val smartTvStatus: String = "Off",
+    val isSmartTvOn: Boolean = false,
     val recentAlerts: List<AlertItem> = emptyList(),
     val rooms: List<RoomSummary> = emptyList(),
 )
@@ -56,7 +56,7 @@ class DashboardViewModel(
         val tempSensor = devices.filterIsInstance<TemperatureSensor>().firstOrNull()
         val temperatureText = tempSensor?.let { "${it.currentTemperature}\u00B0" } ?: "--"
         val smartTv = devices.filterIsInstance<SmartTv>().firstOrNull()
-        val tvStatus = if (smartTv?.isOn == true) "On" else "Off"
+        val tvOn = smartTv?.isOn == true
 
         val recentAlerts = events
             .sortedByDescending { it.timestamp }
@@ -81,7 +81,7 @@ class DashboardViewModel(
             lightsOnCount = lightsOn,
             locksCount = locksCount,
             temperature = temperatureText,
-            smartTvStatus = tvStatus,
+            isSmartTvOn = tvOn,
             recentAlerts = recentAlerts,
             rooms = roomSummaries,
         )

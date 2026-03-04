@@ -56,6 +56,8 @@ import smarthome.composeapp.generated.resources.dashboard_smart_tv
 import smarthome.composeapp.generated.resources.dashboard_temperature
 import smarthome.composeapp.generated.resources.dashboard_no_alerts
 import smarthome.composeapp.generated.resources.dashboard_active_devices
+import smarthome.composeapp.generated.resources.action_on
+import smarthome.composeapp.generated.resources.action_off
 
 private val Navy = Color(0xFF123458)
 private val CardBackground = Color(0xFFFFFFFF)
@@ -169,7 +171,7 @@ private fun SummaryGrid(state: DashboardUiState) {
             SummaryCard(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Default.Tv,
-                value = state.smartTvStatus,
+                value = if (state.isSmartTvOn) stringResource(Res.string.action_on) else stringResource(Res.string.action_off),
                 label = stringResource(Res.string.dashboard_smart_tv),
                 iconTint = AlertBlue,
             )

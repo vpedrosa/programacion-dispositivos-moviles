@@ -173,4 +173,9 @@
     <string name="voice_recent_commands">COMANDOS RECIENTES</string>
     <string name="voice_no_recent">Sin comandos recientes</string>
     <string name="voice_devices_affected">%1$d dispositivos afectados</string>
+    <string name="voice_stop_listening">Dejar de escuchar</string>
+    <string name="voice_start_listening">Empezar a escuchar</string>
+
+    <!-- Accessibility -->
+    <string name="action_back">Volver</string>
 </resources>

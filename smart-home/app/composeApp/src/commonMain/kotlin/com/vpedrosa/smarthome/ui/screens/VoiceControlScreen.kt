@@ -64,6 +64,9 @@ import smarthome.composeapp.generated.resources.voice_recent_commands
 import smarthome.composeapp.generated.resources.voice_tap_to_speak
 import smarthome.composeapp.generated.resources.voice_no_recent
 import smarthome.composeapp.generated.resources.voice_devices_affected
+import smarthome.composeapp.generated.resources.voice_stop_listening
+import smarthome.composeapp.generated.resources.voice_start_listening
+import smarthome.composeapp.generated.resources.action_back
 
 // Color constants matching the project scheme
 private val Navy = Color(0xFF123458)
@@ -94,7 +97,7 @@ fun VoiceControlScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(Res.string.action_back),
                         )
                     }
                 },
@@ -208,7 +211,7 @@ private fun MicrophoneButton(
     ) {
         Icon(
             imageVector = if (isListening) Icons.Filled.MicOff else Icons.Filled.Mic,
-            contentDescription = if (isListening) "Stop listening" else "Start listening",
+            contentDescription = if (isListening) stringResource(Res.string.voice_stop_listening) else stringResource(Res.string.voice_start_listening),
             tint = Color.White,
             modifier = Modifier.size(48.dp),
         )

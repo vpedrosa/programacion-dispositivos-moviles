@@ -117,6 +117,8 @@ import smarthome.composeapp.generated.resources.sensor_no_smoke
 import smarthome.composeapp.generated.resources.sensor_smoke_detected
 import smarthome.composeapp.generated.resources.sensor_water_leak
 import smarthome.composeapp.generated.resources.action_close
+import smarthome.composeapp.generated.resources.action_on
+import smarthome.composeapp.generated.resources.action_off
 import smarthome.composeapp.generated.resources.action_open
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -300,8 +302,9 @@ private fun LightContent(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+                val onOffText = if (device.isOn) stringResource(Res.string.action_on) else stringResource(Res.string.action_off)
                 val subtitle = buildString {
-                    append(if (device.isOn) "On" else "Off")
+                    append(onOffText)
                     if (roomName != null) append(" · $roomName")
                 }
                 Text(
@@ -947,8 +950,9 @@ private fun SmartTvContent(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+                val onOffText = if (device.isOn) stringResource(Res.string.action_on) else stringResource(Res.string.action_off)
                 val subtitle = buildString {
-                    append(if (device.isOn) "On" else "Off")
+                    append(onOffText)
                     if (roomName != null) append(" · $roomName")
                 }
                 Text(
@@ -1064,8 +1068,9 @@ private fun SwitchContent(
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+                val onOffText = if (device.isOn) stringResource(Res.string.action_on) else stringResource(Res.string.action_off)
                 val subtitle = buildString {
-                    append(if (device.isOn) "On" else "Off")
+                    append(onOffText)
                     if (roomName != null) append(" · $roomName")
                 }
                 Text(
