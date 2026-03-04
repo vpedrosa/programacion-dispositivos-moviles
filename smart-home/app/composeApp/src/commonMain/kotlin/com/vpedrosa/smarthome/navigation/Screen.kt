@@ -12,7 +12,7 @@ object Dashboard
 object Rooms
 
 @Serializable
-object EditGroup
+data class EditGroup(val roomId: String? = null)
 
 @Serializable
 object Devices

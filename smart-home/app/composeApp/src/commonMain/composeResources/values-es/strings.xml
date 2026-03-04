@@ -22,13 +22,20 @@
     <string name="title_settings">Ajustes</string>
 
     <!-- Dashboard -->
-    <string name="dashboard_greeting">¡Hola!</string>
+    <string name="dashboard_greeting">Buenos dias!</string>
+    <string name="dashboard_home_name">Mi Casa</string>
     <string name="dashboard_lights_on">Luces encendidas</string>
-    <string name="dashboard_locks_active">Cerraduras activas</string>
+    <string name="dashboard_locks_active">Cerraduras</string>
     <string name="dashboard_temperature">Temperatura</string>
     <string name="dashboard_smart_tv">Smart TV</string>
-    <string name="dashboard_recent_alerts">Alertas Recientes</string>
-    <string name="dashboard_rooms">Habitaciones</string>
+    <string name="dashboard_recent_alerts">ALERTAS RECIENTES</string>
+    <string name="dashboard_rooms">HABITACIONES</string>
+    <string name="dashboard_no_alerts">Sin alertas recientes</string>
+    <string name="dashboard_active_devices">%1$d activos</string>
+
+    <!-- Notifications -->
+    <string name="notifications_title">Eventos</string>
+    <string name="notifications_empty">Sin eventos registrados</string>
 
     <!-- Device types -->
     <string name="device_type_light">Bombilla</string>
@@ -109,6 +116,23 @@
     <string name="sensor_no_leak">Sin fugas detectadas</string>
     <string name="contact_open">Abierto</string>
     <string name="contact_closed">Cerrado</string>
+
+    <!-- Rooms screen -->
+    <string name="rooms_device_count">%1$d dispositivos</string>
+    <string name="rooms_active_count">%1$d activos</string>
+    <string name="rooms_empty">Sin habitaciones</string>
+    <string name="rooms_add_group">Nuevo grupo</string>
+    <string name="rooms_delete_confirm">Eliminar esta habitacion?</string>
+
+    <!-- Edit Group screen -->
+    <string name="edit_group_new_title">Nuevo Grupo</string>
+    <string name="edit_group_name_label">Nombre del grupo</string>
+    <string name="edit_group_name_placeholder">Ej. Salon</string>
+    <string name="edit_group_photo_section">Fotografia</string>
+    <string name="edit_group_photo_tap">Toca para capturar o seleccionar foto</string>
+    <string name="edit_group_devices_section">Asignar dispositivos</string>
+    <string name="edit_group_no_devices">No hay dispositivos disponibles</string>
+    <string name="edit_group_save">Guardar grupo</string>
 
     <!-- Settings -->
     <string name="settings_devices">Dispositivos</string>

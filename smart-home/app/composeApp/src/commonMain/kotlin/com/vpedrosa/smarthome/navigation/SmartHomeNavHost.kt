@@ -42,11 +42,22 @@ fun SmartHomeNavHost(
         }
 
         composable<Rooms> {
-            RoomsScreen()
+            RoomsScreen(
+                onNavigateToEditGroup = { roomId ->
+                    navController.navigate(EditGroup(roomId = roomId))
+                },
+                onNavigateToNewGroup = {
+                    navController.navigate(EditGroup())
+                },
+            )
         }
 
-        composable<EditGroup> {
-            EditGroupScreen()
+        composable<EditGroup> { backStackEntry ->
+            val route = backStackEntry.toRoute<EditGroup>()
+            EditGroupScreen(
+                roomId = route.roomId,
+                onNavigateBack = { navController.popBackStack() },
+            )
         }
 
         composable<Devices> {
