@@ -1,0 +1,30 @@
+name: Tarea de mantenimiento
+description: Tareas de configuración, CI/CD, dependencias u otras tareas de mantenimiento.
+labels: ["chore"]
+body:
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Descripción
+      description: Explicación de lo que se necesita implementar, corregir o modificar.
+      placeholder: Describe la tarea de mantenimiento...
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      description: Lista de criterios que deben cumplirse para dar por completada la tarea.
+      value: |
+        - [ ] Criterio 1
+        - [ ] Criterio 2
+        - [ ] Criterio 3
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto adicional
+      description: "Cualquier información relevante: capturas de pantalla, logs, enlaces a documentación, etc."
+    validations:
+      required: false

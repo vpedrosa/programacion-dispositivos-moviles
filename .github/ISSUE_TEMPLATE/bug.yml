@@ -1,0 +1,30 @@
+name: Reporte de bug
+description: Reportar un error o comportamiento inesperado.
+labels: ["bug"]
+body:
+  - type: textarea
+    id: descripcion
+    attributes:
+      label: Descripción
+      description: Explicación de lo que se necesita corregir.
+      placeholder: Describe el error encontrado...
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Criterios de aceptación
+      description: Lista de criterios que deben cumplirse para dar por corregido el bug.
+      value: |
+        - [ ] Criterio 1
+        - [ ] Criterio 2
+        - [ ] Criterio 3
+    validations:
+      required: true
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto adicional
+      description: "Cualquier información relevante: capturas de pantalla, logs, enlaces a documentación, etc."
+    validations:
+      required: false
