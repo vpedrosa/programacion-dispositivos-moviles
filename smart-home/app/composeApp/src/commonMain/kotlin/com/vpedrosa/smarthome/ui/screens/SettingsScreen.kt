@@ -51,6 +51,7 @@ import smarthome.composeapp.generated.resources.settings_notifications_section
 import smarthome.composeapp.generated.resources.settings_sensor_alerts
 import smarthome.composeapp.generated.resources.settings_thermostat_events
 import smarthome.composeapp.generated.resources.settings_thermostat_events_subtitle
+import smarthome.composeapp.generated.resources.a11y_navigate_forward
 import smarthome.composeapp.generated.resources.title_anti_squatter
 import smarthome.composeapp.generated.resources.title_settings
 
@@ -219,7 +220,7 @@ private fun SettingsNavigationItem(
             }
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.a11y_navigate_forward),
                 tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
             )
         }

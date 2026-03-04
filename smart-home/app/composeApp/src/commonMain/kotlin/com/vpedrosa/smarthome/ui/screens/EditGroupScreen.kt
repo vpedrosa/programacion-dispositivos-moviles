@@ -56,6 +56,7 @@ import smarthome.composeapp.generated.resources.edit_group_no_devices
 import smarthome.composeapp.generated.resources.edit_group_photo_section
 import smarthome.composeapp.generated.resources.edit_group_photo_tap
 import smarthome.composeapp.generated.resources.edit_group_save
+import smarthome.composeapp.generated.resources.a11y_navigate_back
 import smarthome.composeapp.generated.resources.title_edit_group
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
@@ -95,7 +96,7 @@ fun EditGroupScreen(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
+                        contentDescription = stringResource(Res.string.a11y_navigate_back),
                     )
                 }
             },

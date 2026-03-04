@@ -58,6 +58,7 @@ import smarthome.composeapp.generated.resources.anti_squatter_presence_simulatio
 import smarthome.composeapp.generated.resources.anti_squatter_time_range
 import smarthome.composeapp.generated.resources.anti_squatter_tv_section
 import smarthome.composeapp.generated.resources.anti_squatter_video_url
+import smarthome.composeapp.generated.resources.a11y_navigate_back
 import smarthome.composeapp.generated.resources.title_anti_squatter
 
 private val ActiveGreen = Color(0xFF4CAF50)
@@ -87,7 +88,7 @@ fun AntiSquatterScreen(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
+                        contentDescription = stringResource(Res.string.a11y_navigate_back),
                     )
                 }
             },

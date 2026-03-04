@@ -178,4 +178,6 @@
 
     <!-- Accessibility -->
     <string name="action_back">Volver</string>
+    <string name="a11y_navigate_back">Volver atrás</string>
+    <string name="a11y_navigate_forward">Navegar adelante</string>
 </resources>

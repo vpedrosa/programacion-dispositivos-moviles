@@ -86,6 +86,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.a11y_navigate_back
 import smarthome.composeapp.generated.resources.blind_closed
 import smarthome.composeapp.generated.resources.blind_open
 import smarthome.composeapp.generated.resources.blind_open_percent
@@ -182,7 +183,7 @@ fun DeviceDetailScreen(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null,
+                        contentDescription = stringResource(Res.string.a11y_navigate_back),
                     )
                 }
             },

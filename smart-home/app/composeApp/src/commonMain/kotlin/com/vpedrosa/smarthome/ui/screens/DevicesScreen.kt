@@ -66,6 +66,7 @@ import smarthome.composeapp.generated.resources.device_type_switches
 import smarthome.composeapp.generated.resources.device_type_temperature_sensors
 import smarthome.composeapp.generated.resources.device_type_thermostats
 import smarthome.composeapp.generated.resources.device_type_water_leak_sensors
+import smarthome.composeapp.generated.resources.a11y_navigate_back
 import smarthome.composeapp.generated.resources.title_devices
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,7 +96,7 @@ fun DevicesScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
+                            contentDescription = stringResource(Res.string.a11y_navigate_back),
                         )
                     }
                 }
