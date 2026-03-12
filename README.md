@@ -6,7 +6,7 @@
 
 - [Smart Home](#smart-home)
 - [The Tokenizer](#the-tokenizer)
-- [Guitar Pal (Pendiente de reevaluación)](#guitar-pal-pendiente-de-reevaluación)
+- [City Defender](#city-defender)
 
 ---
 
@@ -165,44 +165,53 @@ Multiplicador muy elevado activable/desactivable desde la configuración que per
 
 ---
 
-## Guitar Pal (Pendiente de reevaluación)
+## City Defender
 
-> **Estado: Pendiente de reevaluar.** Esta tercera aplicación está actualmente en evaluación para determinar si se incluirá en el alcance de la práctica. La información a continuación describe el diseño propuesto.
+Implementación moderna del clásico arcade *Missile Command* desarrollada en **Godot**. El jugador defiende 4 ciudades de oleadas de misiles enemigos que caen desde la parte superior de la pantalla, tocando para lanzar misiles interceptores que explotan en el punto de contacto y destruyen los misiles enemigos dentro de su radio de explosión. Si las 4 ciudades son destruidas, la partida termina.
 
-Aplicación nativa Android desarrollada en Kotlin para músicos de instrumentos de cuerda. Integra un afinador basado en el algoritmo YIN (mediante la librería TarsosDSP), un metrónomo configurable, un generador de tonos de referencia, grabación y análisis de sesiones de práctica, y soporte para múltiples instrumentos con afinaciones alternativas y perfiles personalizados. Incluye un módulo Wear OS con metrónomo háptico.
+### Mecánicas de Juego
 
-Contará con internacionalización y estará localizada en inglés y español.
+#### Defensa y Ciudades
 
-### Instrumentos Soportados
+- **Misiles interceptores:** El jugador toca la pantalla para lanzar un misil desde la base de defensa central. Al llegar al punto indicado, explota con un radio de área que destruye los misiles enemigos cercanos. Existe un cooldown corto entre disparos.
+- **Ciudades:** 4 ciudades con barra de salud individual. Cuando un misil enemigo impacta una ciudad, pierde vida. A 0 HP la ciudad queda destruida.
 
-| Instrumento | Afinación estándar | Ejemplos de afinaciones alternativas |
-| :--- | --- | :--- |
-| Guitarra (6 cuerdas) | E A D G B E | Drop D, DADGAD, Open G, Open D, Half Step Down |
-| Bajo eléctrico (4/5 cuerdas) | E A D G (B E A D G) | Drop D, Half Step Down, D Standard |
-| Ukelele | G C E A | D Tuning, Baritone (D G B E) |
+#### Misiles Enemigos
 
-### Funcionalidades Principales
+- **Misiles normales:** Caen desde posiciones aleatorias hacia una ciudad aleatoria en línea recta.
+- **Misiles rápidos:** Aparecen conforme avanza la partida, con el doble de velocidad y apariencia diferenciada.
+- **Misiles pesados:** Aparecen en fases avanzadas y requieren dos impactos para ser destruidos.
 
-- **Afinador con Autodetección:** Detección de pitch en tiempo real mediante el algoritmo YIN (TarsosDSP). Autodetecta la cuerda que se está tocando, muestra la nota detectada y la desviación respecto a la frecuencia objetivo.
-- **Perfiles de Afinación:** Sistema de perfiles persistentes donde el usuario puede seleccionar instrumento, elegir una afinación predefinida o crear afinaciones personalizadas.
-- **Generador de Tonos de Referencia:** Síntesis de audio que reproduce la frecuencia exacta de cada cuerda según el instrumento y afinación seleccionados.
-- **Metrónomo Configurable:** Metrónomo con ajuste de BPM, selección de compás y configuración de acentos.
-- **Grabación y Análisis de Sesiones de Práctica:** Grabación de audio con análisis posterior de precisión de afinación, notas más tocadas, estabilidad tonal y evolución entre sesiones.
-- **Módulo Wear OS - Metrónomo Háptico:** Metrónomo basado en vibración háptica para práctica silenciosa. Control de BPM desde el reloj.
+#### Dificultad Progresiva
+
+La dificultad aumenta de forma continua conforme avanza la partida: la velocidad y frecuencia de los misiles enemigos se incrementan gradualmente, se introducen tipos de misiles más peligrosos y periódicamente aparecen oleadas especiales con ráfagas de múltiples misiles simultáneos.
+
+#### Sistema de Puntuación (Score)
+
+El jugador acumula un **score** que aumenta con el tiempo de supervivencia y con cada misil enemigo destruido. Los misiles más difíciles otorgan más puntos, y destruir varios misiles con una sola explosión concede un bonus. Este score es el que se registra en el ranking global al finalizar la partida.
+
+#### Sistema de Dinero y Power-ups
+
+Cada misil destruido otorga dinero (más dinero cuanto más difícil sea el misil, con bonus por destrucciones múltiples en una sola explosión). El dinero se gasta en una tienda accesible durante la partida que pausa el juego:
+
+| Power-up | Efecto |
+| --- | --- |
+| **Reparar ciudad** | Restaura vida a una ciudad dañada |
+| **Reconstruir ciudad** | Revive una ciudad destruida con vida mínima |
+| **Escudo temporal** | Escudo sobre las ciudades que absorbe un impacto cada una durante un tiempo limitado |
+| **Radio de explosión+** | Aumenta permanentemente el radio de explosión de los misiles interceptores (acumulable) |
+| **Disparo doble** | Lanza 2 misiles interceptores por toque durante un tiempo limitado |
+| **Bomba EMP** | Destruye todos los misiles enemigos en pantalla (uso único) |
+| **Cadencia+** | Reduce permanentemente el cooldown entre disparos (acumulable) |
+
+#### Highscores con Firebase Firestore
+
+Al terminar la partida, si la puntuación del jugador entra en el **top 10 global**, se le pide un nombre y se registra en Firebase Firestore. El ranking de los 10 mejores scores es accesible desde el menú principal.
 
 ### Pantallas de la Aplicación
 
-#### Módulo principal para Android
-
-- **Pantalla Principal / Hub:** Acceso directo a afinador, metrónomo, grabadora y generador de tonos. Indicador del perfil de instrumento/afinación activo.
-- **Pantalla de Afinador:** Selector de instrumento y afinación, nota detectada en tiempo real, indicador de desviación tonal, autodetección de cuerda.
-- **Pantalla de Generador de Tonos de Referencia:** Representación de las cuerdas del instrumento, botón por cuerda para reproducir su tono, frecuencia objetivo visible.
-- **Pantalla de Metrónomo:** Control de BPM (slider + entrada numérica + tap tempo), selector de compás y acentos, visualización rítmica.
-- **Pantalla de Grabación de Sesión:** Controles de grabación, visualización en tiempo real del audio capturado.
-- **Pantalla de Análisis de Sesión:** Historial de sesiones, gráficas de precisión, notas frecuentes, estabilidad tonal, comparativa entre sesiones.
-- **Pantalla de Gestión de Perfiles de Afinación:** Lista de perfiles guardados, creación/edición/eliminación de perfiles personalizados, afinaciones predefinidas por instrumento.
-- **Pantalla de Configuración / Ajustes:** Sensibilidad del micrófono, frecuencia de referencia A4, gestión de datos de sesiones.
-
-#### App Wear OS
-
-- **Pantalla de Metrónomo Háptico:** Control de BPM, inicio/parada, vibración háptica marcando el tempo.
+- **Menú Principal:** Botones de jugar, ver highscores y salir.
+- **Pantalla de Juego:** Gameplay con HUD mostrando score, dinero, vida de las ciudades y botón de acceso a la tienda.
+- **Tienda:** Overlay con los power-ups disponibles y sus costes. Pausa el juego mientras está abierta.
+- **Game Over:** Puntuación final, input de nombre si el score entra en el top 10, botón de reintentar.
+- **Highscores:** Tabla con el top 10 global obtenido de Firestore.
