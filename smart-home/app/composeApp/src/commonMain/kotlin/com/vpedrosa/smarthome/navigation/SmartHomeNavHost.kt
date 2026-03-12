@@ -39,7 +39,11 @@ fun SmartHomeNavHost(
         }
 
         composable<Dashboard> {
-            DashboardScreen()
+            DashboardScreen(
+                onNavigateToCommissioning = {
+                    navController.navigate(Commissioning)
+                },
+            )
         }
 
         composable<Rooms> {

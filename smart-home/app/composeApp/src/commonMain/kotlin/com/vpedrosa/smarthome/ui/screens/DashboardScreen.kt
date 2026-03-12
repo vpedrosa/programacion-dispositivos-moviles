@@ -20,11 +20,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LightbulbCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -74,6 +77,7 @@ private val AlertBlue = Color(0xFF2196F3)
 
 @Composable
 fun DashboardScreen(
+    onNavigateToCommissioning: () -> Unit = {},
     viewModel: DashboardViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -87,6 +91,25 @@ fun DashboardScreen(
     ) {
         // -- Greeting header --
         GreetingHeader()
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // -- Quick commissioning button --
+        Button(
+            onClick = onNavigateToCommissioning,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Navy,
+            ),
+        ) {
+            Icon(
+                imageVector = Icons.Default.AddCircleOutline,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Comisionar dispositivos")
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
