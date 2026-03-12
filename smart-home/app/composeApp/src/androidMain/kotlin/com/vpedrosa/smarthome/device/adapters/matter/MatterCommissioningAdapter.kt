@@ -44,6 +44,8 @@ class MatterCommissioningAdapter(
     private val chipController: ChipDeviceController
 
     init {
+        System.loadLibrary("CHIPController")
+
         AndroidChipPlatform(
             AndroidBleManager(),
             PreferencesKeyValueStoreManager(context),
