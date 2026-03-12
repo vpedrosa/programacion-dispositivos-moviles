@@ -21,6 +21,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.koin.android)
+            implementation(libs.matter.android.demo.sdk)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
