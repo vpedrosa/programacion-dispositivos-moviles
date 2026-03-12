@@ -17,19 +17,25 @@ fi
 
 echo "--- Arrancando simulación Matter ---"
 cd "$SCRIPT_DIR"
-node src/main.mjs > "$LOG_DIR/matter.log" 2>&1 &
-MATTER_PID=$!
-echo "$MATTER_PID" > "$LOG_DIR/matter.pid"
 
-# Esperar a que arranque
-sleep 3
+if [ "${1:-}" = "--background" ] || [ "${1:-}" = "-b" ]; then
+    node src/main.mjs > "$LOG_DIR/matter.log" 2>&1 &
+    MATTER_PID=$!
+    echo "$MATTER_PID" > "$LOG_DIR/matter.pid"
 
-if kill -0 "$MATTER_PID" 2>/dev/null; then
-    echo "Simulación arrancada (PID: $MATTER_PID)"
-    echo "Log: $LOG_DIR/matter.log"
-    echo "Para parar: ./stop.sh"
+    sleep 3
+
+    if kill -0 "$MATTER_PID" 2>/dev/null; then
+        echo "Simulación arrancada (PID: $MATTER_PID)"
+        echo "Log: $LOG_DIR/matter.log"
+        echo "Para parar: ./stop.sh"
+    else
+        echo "ERROR: La simulación no arrancó. Ver log:"
+        tail -20 "$LOG_DIR/matter.log"
+        exit 1
+    fi
 else
-    echo "ERROR: La simulación no arrancó. Ver log:"
-    tail -20 "$LOG_DIR/matter.log"
-    exit 1
+    echo "Ejecutando en primer plano (Ctrl+C para parar)"
+    echo ""
+    exec node src/main.mjs
 fi
