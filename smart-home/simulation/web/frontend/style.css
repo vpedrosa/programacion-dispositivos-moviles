@@ -106,11 +106,30 @@ h2 {
 }
 
 .device-card.lighting { border-left-color: #FFC107; }
+.device-card.switch { border-left-color: #78909C; }
 .device-card.lock { border-left-color: var(--red); }
+.device-card.contact_sensor { border-left-color: #5D4037; }
 .device-card.thermostat { border-left-color: var(--blue); }
 .device-card.window { border-left-color: var(--green); }
+.device-card.media_player { border-left-color: #AB47BC; }
 .device-card.smoke { border-left-color: var(--orange); }
+.device-card.water_leak { border-left-color: #0097A7; }
 .device-card.temperature { border-left-color: #9C27B0; }
+
+.device-card.available {
+    opacity: 0.75;
+    border-left-style: dashed;
+}
+
+.qr-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.qr-canvas {
+    border-radius: 4px;
+}
 
 .device-header {
     display: flex;
@@ -201,6 +220,40 @@ h2 {
     text-align: center;
     padding: 24px;
     font-style: italic;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.section-header h2 { margin-bottom: 0; }
+
+.btn-sm {
+    padding: 4px 12px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.btn-sm:hover { opacity: 0.9; }
+
+button.decommission {
+    background: none;
+    color: #999;
+    border: 1px dashed #ccc;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+}
+
+button.decommission:hover {
+    color: var(--red);
+    border-color: var(--red);
 }
 
 @media (max-width: 600px) {

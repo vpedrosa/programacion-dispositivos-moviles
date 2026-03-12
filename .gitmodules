@@ -1,3 +1,0 @@
-[submodule "smart-home/simulation/third_party/connectedhomeip"]
-	path = smart-home/simulation/third_party/connectedhomeip
-	url = https://github.com/project-chip/connectedhomeip.git

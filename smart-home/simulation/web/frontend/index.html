@@ -3,44 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Home — Panel de Simulación Matter</title>
+    <title>Smart Home — Panel de Simulación</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>🏠 Smart Home — Simulación Matter</h1>
-        <p class="subtitle">Panel de control de dispositivos connectedhomeip</p>
+        <h1>Smart Home — Simulación Mock</h1>
+        <p class="subtitle">Panel de control y comisionamiento de dispositivos</p>
     </header>
 
     <main>
-        <!-- Registro de dispositivo -->
-        <section class="card register-card">
-            <h2>Registrar dispositivo</h2>
-            <form id="register-form">
-                <div class="form-row">
-                    <label>Node ID <input type="number" id="reg-node" min="1" required></label>
-                    <label>Tipo
-                        <select id="reg-type">
-                            <option value="lighting">Bombilla</option>
-                            <option value="lock">Cerradura</option>
-                            <option value="thermostat">Termostato</option>
-                            <option value="window">Persiana</option>
-                            <option value="smoke">Sensor humo</option>
-                            <option value="temperature">Sensor temperatura</option>
-                        </select>
-                    </label>
-                    <label>Nombre <input type="text" id="reg-name" placeholder="Ej: Bombilla Salón"></label>
-                    <label>Puerto <input type="number" id="reg-port" value="5540"></label>
-                    <button type="submit">Registrar</button>
-                </div>
-            </form>
+        <!-- Dispositivos disponibles (no comisionados) -->
+        <section class="card">
+            <div class="section-header">
+                <h2>Dispositivos disponibles</h2>
+                <button class="btn-sm" onclick="refreshDiscover()">Actualizar</button>
+            </div>
+            <div id="discover-grid" class="devices-grid">
+                <p class="empty-state">Cargando...</p>
+            </div>
         </section>
 
-        <!-- Lista de dispositivos -->
-        <section id="devices-section">
-            <h2>Dispositivos</h2>
+        <!-- Dispositivos comisionados -->
+        <section>
+            <h2>Dispositivos comisionados</h2>
             <div id="devices-grid" class="devices-grid">
-                <p class="empty-state">No hay dispositivos registrados. Usa el formulario de arriba para registrar uno.</p>
+                <p class="empty-state">Ninguno comisionado aun. Comisiona dispositivos desde la seccion de arriba.</p>
             </div>
         </section>
 
@@ -53,6 +41,7 @@
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

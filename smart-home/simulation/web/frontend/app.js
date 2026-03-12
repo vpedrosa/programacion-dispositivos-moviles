@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = `${window.location.origin}/api`;
 
 // --- API calls ---
 
@@ -16,21 +16,105 @@ async function apiPost(path, body = {}) {
     return res.json();
 }
 
-// --- Device registration ---
+async function apiDelete(path) {
+    const res = await fetch(`${API_BASE}${path}`, { method: 'DELETE' });
+    return res.json();
+}
 
-document.getElementById('register-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const nodeId = document.getElementById('reg-node').value;
-    const type = document.getElementById('reg-type').value;
-    const name = document.getElementById('reg-name').value;
-    const port = document.getElementById('reg-port').value;
+// --- Discover (dispositivos disponibles) ---
 
-    await apiPost(`/devices/register?node_id=${nodeId}&device_type=${type}&name=${encodeURIComponent(name)}&port=${port}`);
-    document.getElementById('register-form').reset();
-    refreshDevices();
-});
+async function refreshDiscover() {
+    try {
+        const data = await apiGet('/discover');
+        const grid = document.getElementById('discover-grid');
 
-// --- Device rendering ---
+        if (data.devices.length === 0) {
+            grid.innerHTML = '<p class="empty-state">Todos los dispositivos han sido comisionados.</p>';
+            return;
+        }
+
+        grid.innerHTML = '';
+        data.devices.forEach(device => {
+            grid.appendChild(createDiscoverCard(device));
+        });
+        renderQRCodes();
+    } catch (err) {
+        console.error('Error refreshing discover:', err);
+    }
+}
+
+function createDiscoverCard(device) {
+    const card = document.createElement('div');
+    card.className = `device-card card available ${device.type}`;
+    card.id = `discover-${device.node_id}`;
+
+    card.innerHTML = `
+        <div class="device-header">
+            <span class="device-name">${device.name}</span>
+            <span class="device-type">${getTypeLabel(device.type)} (nodo ${device.node_id})</span>
+        </div>
+        <div class="device-state qr-section">
+            <div id="qr-${device.node_id}" class="qr-container"></div>
+            <code>${device.setup_code}</code>
+        </div>
+        <div class="device-controls">
+            <button class="primary" onclick="commissionDevice(${device.node_id}, '${device.setup_code}')">Comisionar</button>
+        </div>
+    `;
+
+    return card;
+}
+
+function renderQRCodes() {
+    document.querySelectorAll('.qr-container').forEach(container => {
+        if (container.childElementCount > 0) return; // ya renderizado
+        const code = container.closest('.qr-section')?.querySelector('code')?.textContent;
+        if (code && typeof QRCode !== 'undefined') {
+            new QRCode(container, { text: code, width: 80, height: 80, correctLevel: QRCode.CorrectLevel.L });
+        }
+    });
+}
+
+async function commissionDevice(nodeId, setupCode) {
+    const result = await apiPost(`/devices/${nodeId}/commission`, { setup_code: setupCode });
+    if (result.status === 'commissioned') {
+        addEventLog(`Comisionado: ${result.name} (nodo ${nodeId})`, result.type);
+        refreshDiscover();
+        refreshDevices();
+    } else {
+        addEventLog(`Error comisionando nodo ${nodeId}`, JSON.stringify(result), true);
+    }
+}
+
+async function decommissionDevice(nodeId) {
+    const result = await apiDelete(`/devices/${nodeId}/commission`);
+    if (result.status === 'decommissioned') {
+        addEventLog(`Descomisionado: nodo ${nodeId}`, '');
+        refreshDiscover();
+        refreshDevices();
+    }
+}
+
+// --- Dispositivos comisionados ---
+
+async function refreshDevices() {
+    try {
+        const data = await apiGet('/devices');
+        const grid = document.getElementById('devices-grid');
+
+        if (data.devices.length === 0) {
+            grid.innerHTML = '<p class="empty-state">Ninguno comisionado aun. Comisiona dispositivos desde la seccion de arriba.</p>';
+            return;
+        }
+
+        grid.innerHTML = '';
+        data.devices.forEach(device => {
+            grid.appendChild(createDeviceCard(device));
+        });
+    } catch (err) {
+        console.error('Error refreshing devices:', err);
+    }
+}
 
 function createDeviceCard(device) {
     const card = document.createElement('div');
@@ -48,6 +132,7 @@ function createDeviceCard(device) {
         </div>
         <div class="device-controls">
             ${controls}
+            <button class="decommission" onclick="decommissionDevice(${device.node_id})" title="Descomisionar">Descomisionar</button>
         </div>
     `;
 
@@ -57,11 +142,15 @@ function createDeviceCard(device) {
 function getTypeLabel(type) {
     const labels = {
         lighting: 'Bombilla',
+        switch: 'Interruptor',
         lock: 'Cerradura',
-        thermostat: 'Termostato',
+        contact_sensor: 'Sensor contacto',
         window: 'Persiana',
+        media_player: 'Smart TV',
         smoke: 'Sensor humo',
+        water_leak: 'Sensor agua',
         temperature: 'Sensor temp.',
+        thermostat: 'Termostato',
     };
     return labels[type] || type;
 }
@@ -79,33 +168,71 @@ function getControlsForType(device) {
                 <button class="primary" onclick="sendCmd(${nid}, 'on')">Encender</button>
                 <button onclick="sendCmd(${nid}, 'off')">Apagar</button>
                 <label style="width:100%">Brillo
-                    <input type="range" min="0" max="254" value="127"
+                    <input type="range" min="0" max="254" value="${device.state.brightness || 0}"
                            onchange="sendCmd(${nid}, 'brightness', [this.value])">
                 </label>
+                <label style="width:48%">Hue
+                    <input type="range" min="0" max="254" value="${device.state.hue || 0}"
+                           onchange="sendCmd(${nid}, 'color', [this.value, document.getElementById('sat-${nid}').value])">
+                </label>
+                <label style="width:48%">Saturacion
+                    <input type="range" min="0" max="254" value="${device.state.saturation || 0}" id="sat-${nid}"
+                           onchange="sendCmd(${nid}, 'color', [document.querySelector('[onchange*=\\'sat-${nid}\\']')?.value || '0', this.value])">
+                </label>
+            `;
+        case 'switch':
+            return `
+                <button class="primary" onclick="sendCmd(${nid}, 'on')">Encender</button>
+                <button onclick="sendCmd(${nid}, 'off')">Apagar</button>
+                <button onclick="sendCmd(${nid}, 'toggle')">Toggle</button>
             `;
         case 'lock':
             return `
                 <button class="danger" onclick="sendCmd(${nid}, 'unlock')">Abrir</button>
                 <button class="primary" onclick="sendCmd(${nid}, 'lock')">Cerrar</button>
             `;
+        case 'contact_sensor':
+            return `
+                <button class="danger" onclick="triggerEvent(${nid}, 'contact-open')">Abrir contacto</button>
+                <button class="primary" onclick="triggerEvent(${nid}, 'contact-close')">Cerrar contacto</button>
+            `;
         case 'thermostat':
             return `
                 <button onclick="sendCmd(${nid}, 'read')">Leer</button>
                 <label>Setpoint (x100)
-                    <input type="number" id="therm-${nid}" value="2200" style="width:80px">
+                    <input type="number" id="therm-${nid}" value="${device.state.occupied_heating_setpoint || 2200}" style="width:80px">
                 </label>
                 <button class="primary" onclick="sendCmd(${nid}, 'set', [document.getElementById('therm-${nid}').value])">Ajustar</button>
             `;
         case 'window':
             return `
                 <label style="width:100%">Apertura (%)
-                    <input type="range" min="0" max="100" value="50"
+                    <input type="range" min="0" max="100" value="${device.state.current_position_lift_percentage || 0}"
                            onchange="sendCmd(${nid}, 'set', [this.value])">
                 </label>
+                <button class="primary" onclick="sendCmd(${nid}, 'open')">Abrir</button>
+                <button onclick="sendCmd(${nid}, 'close')">Cerrar</button>
+            `;
+        case 'media_player':
+            return `
+                <button class="primary" onclick="sendCmd(${nid}, 'on')">Encender</button>
+                <button onclick="sendCmd(${nid}, 'off')">Apagar</button>
+                <label style="width:100%">URL
+                    <input type="text" id="media-url-${nid}" placeholder="https://youtube.com/..." style="width:100%">
+                </label>
+                <button class="primary" onclick="sendCmd(${nid}, 'play', [document.getElementById('media-url-${nid}').value])">Play</button>
+                <button onclick="sendCmd(${nid}, 'pause')">Pausa</button>
+                <button onclick="sendCmd(${nid}, 'stop')">Stop</button>
             `;
         case 'smoke':
             return `
                 <button class="danger" onclick="triggerEvent(${nid}, 'smoke-alarm')">Disparar alarma</button>
+                <button onclick="triggerEvent(${nid}, 'smoke-clear')">Limpiar alarma</button>
+            `;
+        case 'water_leak':
+            return `
+                <button class="danger" onclick="triggerEvent(${nid}, 'water-leak')">Detectar fuga</button>
+                <button onclick="triggerEvent(${nid}, 'water-clear')">Limpiar fuga</button>
             `;
         case 'temperature':
             return `
@@ -124,7 +251,7 @@ async function sendCmd(nodeId, command, args = []) {
         command: command,
         args: args.map(String),
     });
-    addEventLog(`Comando: ${command} → nodo ${nodeId}`, JSON.stringify(result.result));
+    addEventLog(`Comando: ${command} -> nodo ${nodeId}`, JSON.stringify(result.result));
     refreshDevices();
 }
 
@@ -132,7 +259,7 @@ async function triggerEvent(nodeId, eventType) {
     const result = await apiPost(`/devices/${nodeId}/trigger`, {
         event_type: eventType,
     });
-    addEventLog(`Evento: ${eventType} → nodo ${nodeId}`, JSON.stringify(result.result), true);
+    addEventLog(`Evento: ${eventType} -> nodo ${nodeId}`, JSON.stringify(result.result), true);
     refreshDevices();
 }
 
@@ -153,25 +280,10 @@ function addEventLog(message, detail, isAlert = false) {
 
 // --- Refresh ---
 
-async function refreshDevices() {
-    try {
-        const data = await apiGet('/devices');
-        const grid = document.getElementById('devices-grid');
+setInterval(() => {
+    refreshDevices();
+    refreshDiscover();
+}, 5000);
 
-        if (data.devices.length === 0) {
-            grid.innerHTML = '<p class="empty-state">No hay dispositivos registrados.</p>';
-            return;
-        }
-
-        grid.innerHTML = '';
-        data.devices.forEach(device => {
-            grid.appendChild(createDeviceCard(device));
-        });
-    } catch (err) {
-        console.error('Error refreshing devices:', err);
-    }
-}
-
-// Poll every 5 seconds
-setInterval(refreshDevices, 5000);
+refreshDiscover();
 refreshDevices();
