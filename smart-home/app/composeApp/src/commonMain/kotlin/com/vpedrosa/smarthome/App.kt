@@ -21,6 +21,7 @@ import com.vpedrosa.smarthome.navigation.SmartHomeNavHost
 import com.vpedrosa.smarthome.ui.components.BottomBarTab
 import com.vpedrosa.smarthome.device.deviceModule
 import com.vpedrosa.smarthome.device.domain.SensorEventSimulator
+import com.vpedrosa.smarthome.di.platformModule
 import com.vpedrosa.smarthome.ui.components.SmartHomeBottomBar
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
@@ -51,7 +52,7 @@ private val screensWithBottomBar = setOf(
 
 @Composable
 fun App() {
-    KoinApplication(application = { modules(deviceModule) }) {
+    KoinApplication(application = { modules(deviceModule, platformModule) }) {
         val simulator = koinInject<SensorEventSimulator>()
         LaunchedEffect(Unit) { simulator.start() }
 
