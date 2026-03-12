@@ -1,5 +1,6 @@
 package com.vpedrosa.smarthome.device
 
+import com.vpedrosa.smarthome.device.adapters.discovery.StaticDeviceDiscoveryAdapter
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryAntiSquatterRepository
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryAppSettingsRepository
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryDeviceEventRepository
@@ -8,6 +9,7 @@ import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryRoomRepository
 import com.vpedrosa.smarthome.device.adapters.speech.FakeSpeechRecognizer
 import com.vpedrosa.smarthome.device.domain.ports.AntiSquatterRepository
 import com.vpedrosa.smarthome.device.domain.ports.AppSettingsRepository
+import com.vpedrosa.smarthome.device.domain.ports.DeviceDiscoveryPort
 import com.vpedrosa.smarthome.device.domain.ports.DeviceEventRepository
 import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
@@ -54,6 +56,7 @@ import org.koin.dsl.module
 
 val deviceModule = module {
     // Driven ports (adapters)
+    single<DeviceDiscoveryPort> { StaticDeviceDiscoveryAdapter() }
     single<DeviceRepository> { InMemoryDeviceRepository() }
     single<RoomRepository> { InMemoryRoomRepository() }
     single<DeviceEventRepository> { InMemoryDeviceEventRepository() }
