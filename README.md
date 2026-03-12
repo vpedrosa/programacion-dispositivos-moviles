@@ -16,7 +16,7 @@ Aplicación multiplataforma desarrollada con **Kotlin Multiplatform** para la ge
 
 Contará con internacionalización y estará localizada en inglés y español.
 
-**[Ver prototipo visual](smart-home/PROTOTIPO.md)**
+**[Ver prototipo visual](smart-home/PROTOTIPO.md)** | **[Integración Matter SDK](smart-home/MATTER.md)** | **[Simulación matter.js](smart-home/simulation/README.md)**
 
 > **Nota sobre Wear OS:** El módulo Wear OS únicamente captura el audio del usuario y lo envía a la aplicación principal. Es la app principal la que realiza el procesamiento speech-to-text y ejecuta el control mediante comandos de voz.
 
