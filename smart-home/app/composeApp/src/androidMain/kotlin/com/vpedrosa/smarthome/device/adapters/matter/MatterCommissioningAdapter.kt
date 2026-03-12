@@ -78,18 +78,22 @@ class MatterCommissioningAdapter(
         device: DiscoveredDevice,
     ) = suspendCancellableCoroutine { cont ->
         chipController.setCompletionListener(object : ChipDeviceController.CompletionListener {
-            override fun onConnectDeviceComplete() {
-                Log.d(TAG, "PASE connection established: ${device.name}")
-                cont.resume(Unit)
+            override fun onPairingComplete(code: Int) {
+                if (code == 0) {
+                    Log.d(TAG, "PASE connection established: ${device.name}")
+                } else {
+                    Log.e(TAG, "PASE failed with code $code: ${device.name}")
+                }
+                cont.resume(code)
             }
 
             override fun onError(error: Throwable?) {
                 Log.e(TAG, "PASE connection failed: ${device.name}", error)
-                cont.resume(Unit) // Will fail on commission step
+                cont.resume(-1)
             }
 
+            override fun onConnectDeviceComplete() {}
             override fun onStatusUpdate(status: Int) {}
-            override fun onPairingComplete(code: Int) {}
             override fun onPairingDeleted(code: Int) {}
             override fun onCommissioningComplete(nodeId: Long, errorCode: Int) {}
             override fun onCommissioningStatusUpdate(nodeId: Long, stage: String?, errorCode: Int) {}
@@ -123,6 +127,10 @@ class MatterCommissioningAdapter(
                 cont.resume(errorCode)
             }
 
+            override fun onCommissioningStatusUpdate(nId: Long, stage: String?, errorCode: Int) {
+                Log.d(TAG, "Commissioning stage: $stage (error=$errorCode) for node $nId")
+            }
+
             override fun onError(error: Throwable?) {
                 Log.e(TAG, "Commissioning error", error)
                 cont.resume(-1)
@@ -132,7 +140,6 @@ class MatterCommissioningAdapter(
             override fun onStatusUpdate(status: Int) {}
             override fun onPairingComplete(code: Int) {}
             override fun onPairingDeleted(code: Int) {}
-            override fun onCommissioningStatusUpdate(nodeId: Long, stage: String?, errorCode: Int) {}
             override fun onNotifyChipConnectionClosed() {}
             override fun onCloseBleComplete() {}
             override fun onReadCommissioningInfo(
@@ -144,6 +151,7 @@ class MatterCommissioningAdapter(
             override fun onOpCSRGenerationComplete(csr: ByteArray?) {}
         })
 
+        Log.d(TAG, "Starting commissioning for node $nodeId")
         chipController.commissionDevice(nodeId, null)
     }
 
