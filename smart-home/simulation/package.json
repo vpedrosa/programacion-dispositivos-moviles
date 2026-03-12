@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@matter/main": "^0.16.10",
-    "@matter/nodejs": "^0.16.10"
+    "@matter/nodejs": "^0.16.10",
+    "ws": "^8.19.0"
   }
 }

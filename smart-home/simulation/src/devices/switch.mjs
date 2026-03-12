@@ -1,6 +1,7 @@
 import { ServerNode, Endpoint } from "@matter/main";
 import { OnOffPlugInUnitDevice } from "@matter/main/devices/on-off-plug-in-unit";
 import { VENDOR_ID, VENDOR_NAME } from "../config.mjs";
+import { bus } from "../event-bus.mjs";
 
 export async function createSwitch(dev) {
     const node = await ServerNode.create({
@@ -19,8 +20,11 @@ export async function createSwitch(dev) {
     const plug = new Endpoint(OnOffPlugInUnitDevice, { id: "switch" });
     await node.add(plug);
 
+    bus.emit("register", { id: dev.serialNumber, name: dev.name, type: dev.type, port: dev.port, state: { onOff: false } });
+
     plug.events.onOff.onOff$Changed.on(value => {
         console.log(`[${dev.name}] ${value ? "ON" : "OFF"}`);
+        bus.emit("stateChange", { id: dev.serialNumber, state: { onOff: value } });
     });
 
     return node;

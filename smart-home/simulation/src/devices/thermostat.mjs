@@ -2,6 +2,7 @@ import { ServerNode, Endpoint } from "@matter/main";
 import { ThermostatDevice } from "@matter/main/devices/thermostat";
 import { ThermostatServer } from "@matter/main/behaviors/thermostat";
 import { VENDOR_ID, VENDOR_NAME } from "../config.mjs";
+import { bus } from "../event-bus.mjs";
 
 const HeatingThermostatServer = ThermostatServer.with("Heating");
 
@@ -33,8 +34,12 @@ export async function createThermostat(dev) {
     );
     await node.add(thermostat);
 
+    bus.emit("register", { id: dev.serialNumber, name: dev.name, type: dev.type, port: dev.port, state: { temperature: 21.0, setpoint: 22.0, heating: false } });
+
     thermostat.events.thermostat.occupiedHeatingSetpoint$Changed.on(value => {
-        console.log(`[${dev.name}] Setpoint: ${(value / 100).toFixed(1)}°C`);
+        const setpoint = value / 100;
+        console.log(`[${dev.name}] Setpoint: ${setpoint.toFixed(1)}°C`);
+        bus.emit("stateChange", { id: dev.serialNumber, state: { setpoint } });
     });
 
     return node;

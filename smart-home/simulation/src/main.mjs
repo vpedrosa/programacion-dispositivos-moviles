@@ -8,6 +8,7 @@
 
 import "@matter/nodejs";
 import { devices } from "./config.mjs";
+import { startDashboardServer } from "./ws-server.mjs";
 import { createLighting } from "./devices/lighting.mjs";
 import { createSwitch } from "./devices/switch.mjs";
 import { createLock } from "./devices/lock.mjs";
@@ -57,7 +58,9 @@ for (const dev of devices) {
 
 console.log(`\n${nodes.length}/${devices.length} dispositivos arrancados.`);
 console.log("Comisiona desde la app escaneando el QR o introduciendo el código manual.");
-console.log("Para parar: Ctrl+C o ./stop.sh\n");
+console.log("Para parar: Ctrl+C o ./stop.sh");
+
+startDashboardServer();
 
 // Shutdown limpio
 process.on("SIGINT", async () => {

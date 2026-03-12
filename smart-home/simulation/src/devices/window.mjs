@@ -2,6 +2,7 @@ import { ServerNode, Endpoint } from "@matter/main";
 import { WindowCoveringDevice } from "@matter/main/devices/window-covering";
 import { WindowCoveringServer } from "@matter/main/behaviors/window-covering";
 import { VENDOR_ID, VENDOR_NAME } from "../config.mjs";
+import { bus } from "../event-bus.mjs";
 
 const LiftServer = WindowCoveringServer.with("Lift", "PositionAwareLift");
 
@@ -21,6 +22,8 @@ export async function createWindow(dev) {
 
     const shade = new Endpoint(WindowCoveringDevice.with(LiftServer), { id: "shade" });
     await node.add(shade);
+
+    bus.emit("register", { id: dev.serialNumber, name: dev.name, type: dev.type, port: dev.port, state: { liftPercent: 0 } });
 
     return node;
 }

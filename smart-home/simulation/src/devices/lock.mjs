@@ -1,6 +1,7 @@
 import { ServerNode, Endpoint } from "@matter/main";
 import { DoorLockDevice } from "@matter/main/devices/door-lock";
 import { VENDOR_ID, VENDOR_NAME } from "../config.mjs";
+import { bus } from "../event-bus.mjs";
 
 export async function createLock(dev) {
     const node = await ServerNode.create({
@@ -27,9 +28,12 @@ export async function createLock(dev) {
     });
     await node.add(lock);
 
+    bus.emit("register", { id: dev.serialNumber, name: dev.name, type: dev.type, port: dev.port, state: { lockState: 1 } });
+
     lock.events.doorLock.lockState$Changed.on(value => {
         const states = { 0: "Not Fully Locked", 1: "Locked", 2: "Unlocked" };
         console.log(`[${dev.name}] ${states[value] || value}`);
+        bus.emit("stateChange", { id: dev.serialNumber, state: { lockState: value } });
     });
 
     return node;

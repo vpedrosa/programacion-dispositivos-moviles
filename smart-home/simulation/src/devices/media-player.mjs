@@ -1,6 +1,7 @@
 import { ServerNode, Endpoint } from "@matter/main";
 import { BasicVideoPlayerDevice } from "@matter/main/devices/basic-video-player";
 import { VENDOR_ID, VENDOR_NAME } from "../config.mjs";
+import { bus } from "../event-bus.mjs";
 
 export async function createMediaPlayer(dev) {
     const node = await ServerNode.create({
@@ -21,6 +22,8 @@ export async function createMediaPlayer(dev) {
         mediaPlayback: { currentState: 2 },
     });
     await node.add(player);
+
+    bus.emit("register", { id: dev.serialNumber, name: dev.name, type: dev.type, port: dev.port, state: { playbackState: 2 } });
 
     return node;
 }
