@@ -1,3 +1,5 @@
 logs/
+node_modules/
+.matter-*/
 web/backend/.venv/
 web/backend/__pycache__/

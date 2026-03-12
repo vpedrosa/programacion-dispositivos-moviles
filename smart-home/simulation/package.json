@@ -1,0 +1,14 @@
+{
+  "name": "smart-home-simulation",
+  "version": "1.0.0",
+  "description": "Simulación de dispositivos Matter virtuales con matter.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.mjs",
+    "stop": "kill $(cat logs/matter.pid 2>/dev/null) 2>/dev/null; echo 'Stopped'"
+  },
+  "dependencies": {
+    "@matter/main": "^0.16.10",
+    "@matter/nodejs": "^0.16.10"
+  }
+}

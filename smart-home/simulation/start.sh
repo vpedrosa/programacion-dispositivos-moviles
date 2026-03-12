@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# start.sh — Arranca la simulación mock de dispositivos Smart Home
+# start.sh — Arranca los 27 dispositivos Matter virtuales (matter.js)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -7,33 +7,29 @@ LOG_DIR="$SCRIPT_DIR/logs"
 
 mkdir -p "$LOG_DIR"
 
-echo "========================================"
-echo " Smart Home — Simulación Mock"
-echo "========================================"
-echo ""
-echo "Los dispositivos se registran automáticamente al arrancar el backend."
-echo ""
+# Instalar dependencias si no existen
+if [ ! -d "$SCRIPT_DIR/node_modules" ]; then
+    echo "--- Instalando dependencias (npm install) ---"
+    cd "$SCRIPT_DIR"
+    npm install
+    echo ""
+fi
 
-# Arrancar backend (incluye los 6 dispositivos pre-registrados)
-echo "--- Arrancando backend web ---"
-"$SCRIPT_DIR/scripts/run-web.sh" 0.0.0.0 8080 > "$LOG_DIR/backend.log" 2>&1 &
-BACKEND_PID=$!
-echo "$BACKEND_PID" > "$LOG_DIR/backend.pid"
+echo "--- Arrancando simulación Matter ---"
+cd "$SCRIPT_DIR"
+node src/main.mjs > "$LOG_DIR/matter.log" 2>&1 &
+MATTER_PID=$!
+echo "$MATTER_PID" > "$LOG_DIR/matter.pid"
 
-# Esperar a que el backend esté listo
-echo "  Esperando a que el backend esté listo..."
-for i in $(seq 1 10); do
-    if curl -s http://localhost:8080/api/devices > /dev/null 2>&1; then
-        break
-    fi
-    sleep 1
-done
+# Esperar a que arranque
+sleep 3
 
-echo ""
-echo "========================================"
-echo " Simulación arrancada"
-echo " UI web: http://localhost:8080"
-echo " API:    http://localhost:8080/docs"
-echo " Logs:   $LOG_DIR/"
-echo " Para parar: ./stop.sh"
-echo "========================================"
+if kill -0 "$MATTER_PID" 2>/dev/null; then
+    echo "Simulación arrancada (PID: $MATTER_PID)"
+    echo "Log: $LOG_DIR/matter.log"
+    echo "Para parar: ./stop.sh"
+else
+    echo "ERROR: La simulación no arrancó. Ver log:"
+    tail -20 "$LOG_DIR/matter.log"
+    exit 1
+fi
