@@ -1,105 +1,112 @@
-# Simulación Mock de dispositivos Smart Home
+# Simulacion Matter (matter.js)
 
-Simulación en memoria de dispositivos Matter para desarrollo y pruebas. No requiere el SDK connectedhomeip ni compilación de binarios C++. Todos los dispositivos se simulan mediante un backend Python (FastAPI) que gestiona el estado en memoria.
+Simulacion de 27 dispositivos Matter virtuales usando [matter.js](https://github.com/project-chip/matter.js). Cada dispositivo es un `ServerNode` independiente que usa el protocolo Matter real sobre UDP (mDNS, PASE, MRP). Son indistinguibles de hardware fisico para cualquier controlador Matter.
 
 ## Estructura
 
 ```
 simulation/
-├── scripts/
-│   └── run-web.sh     # Arranca el backend (venv + uvicorn)
-├── web/
-│   ├── backend/
-│   │   ├── main.py          # API REST + lógica mock de dispositivos
-│   │   └── requirements.txt # FastAPI + uvicorn
-│   └── frontend/
-│       ├── index.html        # UI web
-│       ├── app.js            # Lógica frontend
-│       └── style.css         # Estilos
-├── start.sh           # Arranca la simulación
-└── stop.sh            # Para la simulación
+├── src/
+│   ├── main.mjs              # Entrada: arranca los 27 dispositivos
+│   ├── config.mjs             # Definicion de dispositivos (puertos, discriminators, passcodes)
+│   └── devices/
+│       ├── lighting.mjs       # DimmableLightDevice (on/off + brillo)
+│       ├── switch.mjs         # OnOffPlugInUnitDevice
+│       ├── lock.mjs           # DoorLockDevice
+│       ├── contact-sensor.mjs # ContactSensorDevice
+│       ├── window.mjs         # WindowCoveringDevice (posicion %)
+│       ├── media-player.mjs   # BasicVideoPlayerDevice
+│       ├── smoke.mjs          # SmokeCoAlarmDevice
+│       ├── water-leak.mjs     # WaterLeakDetectorDevice
+│       ├── temperature.mjs    # TemperatureSensorDevice (variacion simulada)
+│       └── thermostat.mjs     # ThermostatDevice (calefaccion)
+├── package.json
+├── start.sh                   # Arranca la simulacion en background
+└── stop.sh                    # Para la simulacion
 ```
 
 ## Dispositivos simulados (27)
 
-Al arrancar, los 27 dispositivos aparecen como **disponibles en la red pero no comisionados**. La app debe descubrirlos y comisionarlos usando su `setup_code`.
+Al arrancar, los 27 dispositivos se anuncian por **mDNS** como no comisionados. La app los descubre y comisiona usando el protocolo Matter estandar (PASE sobre UDP).
 
-### Bombillas inteligentes (10)
+Cada dispositivo muestra su **manual pairing code** y **QR code** en el log al arrancar.
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 1 | Bombilla Salón 1 | `0001-120-1001` | on, off, brightness (0-254), color (hue, saturation), status |
-| 2 | Bombilla Salón 2 | `0002-120-1002` | " |
-| 3 | Bombilla Salón 3 | `0003-120-1003` | " |
-| 4 | Bombilla Cocina 1 | `0004-120-1004` | " |
-| 5 | Bombilla Cocina 2 | `0005-120-1005` | " |
-| 6 | Bombilla Dormitorio 1 | `0006-120-1006` | " |
-| 7 | Bombilla Dormitorio 2 | `0007-120-1007` | " |
-| 8 | Bombilla Baño | `0008-120-1008` | " |
-| 9 | Bombilla Garaje | `0009-120-1009` | " |
-| 10 | Bombilla Pasillo | `0010-120-1010` | " |
+### Bombillas inteligentes (10) — DimmableLight
 
-### Interruptores on/off (5)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 1 | Bombilla Salon 1 | 5540 | 3840 | 20202021 |
+| 2 | Bombilla Salon 2 | 5541 | 3841 | 20202022 |
+| 3 | Bombilla Salon 3 | 5542 | 3842 | 20202023 |
+| 4 | Bombilla Cocina 1 | 5543 | 3843 | 20202024 |
+| 5 | Bombilla Cocina 2 | 5544 | 3844 | 20202025 |
+| 6 | Bombilla Dormitorio 1 | 5545 | 3845 | 20202026 |
+| 7 | Bombilla Dormitorio 2 | 5546 | 3846 | 20202027 |
+| 8 | Bombilla Bano | 5547 | 3847 | 20202028 |
+| 9 | Bombilla Garaje | 5548 | 3848 | 20202029 |
+| 10 | Bombilla Pasillo | 5549 | 3849 | 20202030 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 11 | Interruptor Salón | `0011-120-1011` | on, off, toggle, status |
-| 12 | Interruptor Cocina | `0012-120-1012` | " |
-| 13 | Interruptor Dormitorio | `0013-120-1013` | " |
-| 14 | Interruptor Baño | `0014-120-1014` | " |
-| 15 | Interruptor Garaje | `0015-120-1015` | " |
+### Interruptores on/off (5) — OnOffPlugInUnit
 
-### Cerraduras (2)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 11 | Interruptor Salon | 5550 | 3850 | 20202031 |
+| 12 | Interruptor Cocina | 5551 | 3851 | 20202032 |
+| 13 | Interruptor Dormitorio | 5552 | 3852 | 20202033 |
+| 14 | Interruptor Bano | 5553 | 3853 | 20202034 |
+| 15 | Interruptor Garaje | 5554 | 3854 | 20202035 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 16 | Cerradura Entrada | `0016-120-1016` | lock, unlock, status |
-| 17 | Cerradura Garaje | `0017-120-1017` | " |
+### Cerraduras (2) — DoorLock
 
-### Sensor de contacto (1)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 16 | Cerradura Entrada | 5555 | 3855 | 20202036 |
+| 17 | Cerradura Garaje | 5556 | 3856 | 20202037 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 18 | Sensor Contacto Entrada | `0018-120-1018` | status, trigger: contact-open / contact-close |
+### Sensor de contacto (1) — ContactSensor
 
-### Persianas (4)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 18 | Sensor Contacto Entrada | 5557 | 3857 | 20202038 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 19 | Persiana Salón | `0019-120-1019` | set (0-100%), open, close, status |
-| 20 | Persiana Cocina | `0020-120-1020` | " |
-| 21 | Persiana Dormitorio | `0021-120-1021` | " |
-| 22 | Persiana Baño | `0022-120-1022` | " |
+### Persianas (4) — WindowCovering
 
-### Smart TV + Chromecast (1)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 19 | Persiana Salon | 5558 | 3858 | 20202039 |
+| 20 | Persiana Cocina | 5559 | 3859 | 20202040 |
+| 21 | Persiana Dormitorio | 5560 | 3860 | 20202041 |
+| 22 | Persiana Bano | 5561 | 3861 | 20202042 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 23 | Smart TV Salón | `0023-120-1023` | on, off, play (url), pause, stop, status |
+### Smart TV (1) — BasicVideoPlayer
 
-### Sensor de humos (1)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 23 | Smart TV Salon | 5562 | 3862 | 20202043 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 24 | Sensor de Humo | `0024-120-1024` | status, trigger: smoke-alarm / smoke-clear |
+### Sensor de humo (1) — SmokeCoAlarm
 
-### Sensor de fugas de agua (1)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 24 | Sensor de Humo | 5563 | 3863 | 20202044 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 25 | Sensor Fugas Agua | `0025-120-1025` | status, trigger: water-leak / water-clear |
+### Sensor de fugas de agua (1) — WaterLeakDetector
 
-### Sensor de temperatura (1)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 25 | Sensor Fugas Agua | 5564 | 3864 | 20202045 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 26 | Sensor Temperatura | `0026-120-1026` | lectura (con variación simulada ±0.5°C) |
+### Sensor de temperatura (1) — TemperatureSensor
 
-### Termostato (1)
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 26 | Sensor Temperatura | 5565 | 3865 | 20202046 |
 
-| Nodo | Nombre | Setup code | Operaciones |
-|:---:|---|---|---|
-| 27 | Termostato | `0027-120-1027` | read, set temperatura (x100, ej: 2200 = 22.00°C) |
+### Termostato (1) — Thermostat (Heating)
+
+| # | Nombre | Puerto | Discriminator | Passcode |
+|:-:|--------|:------:|:-------------:|:--------:|
+| 27 | Termostato | 5566 | 3866 | 20202047 |
 
 ## Uso
 
@@ -110,8 +117,15 @@ cd smart-home/simulation
 ./start.sh
 ```
 
-- **UI web:** http://localhost:8080
-- **API docs:** http://localhost:8080/docs
+La primera vez instala dependencias (`npm install`). Los dispositivos se anuncian por mDNS en la red local.
+
+### Ver logs
+
+```bash
+tail -f logs/matter.log
+```
+
+El log muestra el QR code y manual pairing code de cada dispositivo.
 
 ### Parar
 
@@ -119,118 +133,18 @@ cd smart-home/simulation
 ./stop.sh
 ```
 
-## API REST
+### Resetear estado
 
-### Descubrimiento y comisionamiento
-
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `GET` | `/api/discover` | Lista dispositivos disponibles (no comisionados) con su `setup_code` |
-| `POST` | `/api/devices/{node_id}/commission` | Comisiona un dispositivo enviando `{"setup_code": "..."}` |
-| `DELETE` | `/api/devices/{node_id}/commission` | Descomisiona un dispositivo |
-
-### Dispositivos comisionados
-
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `GET` | `/api/devices` | Lista dispositivos comisionados con estado |
-| `GET` | `/api/devices/{node_id}` | Estado de un dispositivo |
-| `POST` | `/api/devices/{node_id}/command` | Enviar comando `{"command": "...", "args": [...]}` |
-| `POST` | `/api/devices/{node_id}/trigger` | Disparar evento `{"event_type": "..."}` |
-| `GET` | `/api/devices/{node_id}/events` | Historial de eventos |
-
-## Flujo de comisionamiento desde la App
-
-### 1. Descubrir dispositivos disponibles
+Los dispositivos guardan estado de comisionamiento en `~/.matter/SIM-*`. Para resetear:
 
 ```bash
-curl -s http://localhost:8080/api/discover | python3 -m json.tool
+rm -rf ~/.matter/SIM-*
 ```
 
-Respuesta (extracto):
+## Comisionamiento desde la app
 
-```json
-{
-    "devices": [
-        {"node_id": 1, "type": "lighting", "name": "Bombilla Salón 1", "setup_code": "0001-120-1001"},
-        {"node_id": 16, "type": "lock", "name": "Cerradura Entrada", "setup_code": "0016-120-1016"},
-        ...
-    ]
-}
-```
-
-### 2. Comisionar un dispositivo con su setup_code
-
-```bash
-# Comisionar la Bombilla Salón 1
-curl -X POST http://localhost:8080/api/devices/1/commission \
-  -H 'Content-Type: application/json' \
-  -d '{"setup_code": "0001-120-1001"}'
-
-# Comisionar la Cerradura Entrada
-curl -X POST http://localhost:8080/api/devices/16/commission \
-  -H 'Content-Type: application/json' \
-  -d '{"setup_code": "0016-120-1016"}'
-```
-
-Si el código es incorrecto, devuelve `403 Forbidden`.
-
-### 3. Controlar el dispositivo (ya comisionado)
-
-```bash
-# Encender bombilla
-curl -X POST http://localhost:8080/api/devices/1/command \
-  -H 'Content-Type: application/json' \
-  -d '{"command": "on", "args": []}'
-
-# Ajustar brillo
-curl -X POST http://localhost:8080/api/devices/1/command \
-  -H 'Content-Type: application/json' \
-  -d '{"command": "brightness", "args": ["200"]}'
-
-# Cambiar color
-curl -X POST http://localhost:8080/api/devices/1/command \
-  -H 'Content-Type: application/json' \
-  -d '{"command": "color", "args": ["120", "200"]}'
-
-# Cerrar cerradura
-curl -X POST http://localhost:8080/api/devices/16/command \
-  -H 'Content-Type: application/json' \
-  -d '{"command": "lock", "args": []}'
-
-# Abrir persiana al 75%
-curl -X POST http://localhost:8080/api/devices/19/command \
-  -H 'Content-Type: application/json' \
-  -d '{"command": "set", "args": ["75"]}'
-
-# Reproducir vídeo en la Smart TV
-curl -X POST http://localhost:8080/api/devices/23/command \
-  -H 'Content-Type: application/json' \
-  -d '{"command": "play", "args": ["https://www.youtube.com/watch?v=dQw4w9WgXcQ"]}'
-
-# Ajustar termostato a 22.5°C
-curl -X POST http://localhost:8080/api/devices/27/command \
-  -H 'Content-Type: application/json' \
-  -d '{"command": "set", "args": ["2250"]}'
-
-# Disparar alarma de humo
-curl -X POST http://localhost:8080/api/devices/24/trigger \
-  -H 'Content-Type: application/json' \
-  -d '{"event_type": "smoke-alarm"}'
-
-# Detectar fuga de agua
-curl -X POST http://localhost:8080/api/devices/25/trigger \
-  -H 'Content-Type: application/json' \
-  -d '{"event_type": "water-leak"}'
-
-# Abrir sensor de contacto (puerta abierta)
-curl -X POST http://localhost:8080/api/devices/18/trigger \
-  -H 'Content-Type: application/json' \
-  -d '{"event_type": "contact-open"}'
-```
-
-### 4. Descomisionar un dispositivo
-
-```bash
-curl -X DELETE http://localhost:8080/api/devices/1/commission
-```
+1. Arranca la simulacion (`./start.sh`)
+2. Abre la app en un dispositivo/emulador **en la misma red**
+3. La app descubre los dispositivos por mDNS
+4. Usa el **manual pairing code** o **QR code** del log para comisionar cada dispositivo
+5. Una vez comisionado, el dispositivo se controla con el protocolo Matter estandar
