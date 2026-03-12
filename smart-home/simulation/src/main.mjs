@@ -7,6 +7,12 @@
  */
 
 import "@matter/nodejs";
+import { Logger } from "@matter/main";
+
+const LOG_LEVELS = { debug: 0, info: 1, notice: 2, warn: 3, error: 4, fatal: 5 };
+const level = (process.env.MATTER_LOG_LEVEL || "notice").toLowerCase();
+Logger.defaultLogLevel = LOG_LEVELS[level] ?? 3;
+
 import { devices } from "./config.mjs";
 import { startDashboardServer } from "./ws-server.mjs";
 import { createLighting } from "./devices/lighting.mjs";
@@ -35,6 +41,8 @@ const factories = {
 
 const nodes = [];
 
+startDashboardServer();
+
 console.log("========================================");
 console.log(" Smart Home — Simulación Matter (matter.js)");
 console.log("========================================\n");
@@ -59,8 +67,6 @@ for (const dev of devices) {
 console.log(`\n${nodes.length}/${devices.length} dispositivos arrancados.`);
 console.log("Comisiona desde la app escaneando el QR o introduciendo el código manual.");
 console.log("Para parar: Ctrl+C o ./stop.sh");
-
-startDashboardServer();
 
 // Shutdown limpio
 process.on("SIGINT", async () => {

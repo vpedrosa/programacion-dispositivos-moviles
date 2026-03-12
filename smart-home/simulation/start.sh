@@ -15,7 +15,9 @@ if [ ! -d "$SCRIPT_DIR/node_modules" ]; then
     echo ""
 fi
 
-echo "--- Arrancando simulación Matter ---"
+export MATTER_LOG_LEVEL="${MATTER_LOG_LEVEL:-notice}"
+
+echo "--- Arrancando simulación Matter (log: $MATTER_LOG_LEVEL) ---"
 cd "$SCRIPT_DIR"
 
 if [ "${1:-}" = "--background" ] || [ "${1:-}" = "-b" ]; then
