@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.vpedrosa.smarthome.ui.screens.CommissioningScreen
 import com.vpedrosa.smarthome.ui.screens.AntiSquatterScreen
 import com.vpedrosa.smarthome.ui.screens.DashboardScreen
 import com.vpedrosa.smarthome.ui.screens.DeviceDetailScreen
@@ -92,10 +93,19 @@ fun SmartHomeNavHost(
             )
         }
 
+        composable<Commissioning> {
+            CommissioningScreen(
+                onNavigateBack = { navController.popBackStack() },
+            )
+        }
+
         composable<Settings> {
             SettingsScreen(
                 onNavigateToAntiSquatter = {
                     navController.navigate(AntiSquatter)
+                },
+                onNavigateToCommissioning = {
+                    navController.navigate(Commissioning)
                 },
             )
         }

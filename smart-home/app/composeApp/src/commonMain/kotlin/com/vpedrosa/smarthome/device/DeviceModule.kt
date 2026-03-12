@@ -15,6 +15,7 @@ import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import com.vpedrosa.smarthome.device.domain.ports.SpeechRecognizerPort
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.CommissionDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ExecuteVoiceCommandUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllRoomsUseCase
@@ -23,6 +24,7 @@ import com.vpedrosa.smarthome.device.domain.usecases.ObserveAppSettingsUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceEventsUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveDevicesByRoomUseCase
+import com.vpedrosa.smarthome.device.domain.usecases.ObserveDiscoveredDevicesUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ParseVoiceCommandUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveRoomUseCase
@@ -38,6 +40,7 @@ import com.vpedrosa.smarthome.device.domain.usecases.DeleteRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateThermostatUseCase
 import com.vpedrosa.smarthome.device.domain.SensorEventSimulator
 import com.vpedrosa.smarthome.device.domain.usecases.AddDeviceEventUseCase
+import com.vpedrosa.smarthome.ui.screens.CommissioningViewModel
 import com.vpedrosa.smarthome.ui.screens.AntiSquatterViewModel
 import com.vpedrosa.smarthome.ui.screens.DashboardViewModel
 import com.vpedrosa.smarthome.ui.screens.DeviceDetailViewModel
@@ -89,6 +92,8 @@ val deviceModule = module {
     factory { ObserveAppSettingsUseCase(get()) }
     factory { SaveAppSettingsUseCase(get()) }
     factory { ParseVoiceCommandUseCase() }
+    factory { ObserveDiscoveredDevicesUseCase(get()) }
+    factory { CommissionDeviceUseCase(get(), get()) }
     factory { ExecuteVoiceCommandUseCase(get(), get()) }
 
     // Sensor event simulator (singleton, lazy start)
@@ -101,6 +106,7 @@ val deviceModule = module {
     }
 
     // ViewModels
+    viewModelOf(::CommissioningViewModel)
     viewModelOf(::DevicesViewModel)
     viewModelOf(::RoomsViewModel)
     viewModelOf(::DashboardViewModel)

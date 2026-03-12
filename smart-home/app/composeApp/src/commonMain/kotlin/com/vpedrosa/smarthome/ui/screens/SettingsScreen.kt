@@ -61,6 +61,7 @@ private val ActiveGreen = Color(0xFF4CAF50)
 @Composable
 fun SettingsScreen(
     onNavigateToAntiSquatter: () -> Unit = {},
+    onNavigateToCommissioning: () -> Unit = {},
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -96,7 +97,7 @@ fun SettingsScreen(
             SettingsNavigationItem(
                 title = stringResource(Res.string.settings_matter_commissioning),
                 subtitle = stringResource(Res.string.settings_manage_simulated),
-                onClick = { /* Matter commissioning - not implemented */ },
+                onClick = onNavigateToCommissioning,
             )
 
             Spacer(modifier = Modifier.height(24.dp))

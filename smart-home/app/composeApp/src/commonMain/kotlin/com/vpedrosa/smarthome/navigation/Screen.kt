@@ -30,4 +30,7 @@ object AntiSquatter
 object VoiceControl
 
 @Serializable
+object Commissioning
+
+@Serializable
 object Settings
