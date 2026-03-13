@@ -1,17 +1,7 @@
 package com.vpedrosa.smarthome.device.adapters.matter
 
-import android.content.Context
 import android.util.Log
 import chip.devicecontroller.ChipDeviceController
-import chip.devicecontroller.ControllerParams
-import chip.platform.AndroidBleManager
-import chip.platform.AndroidChipPlatform
-import chip.platform.ChipMdnsCallbackImpl
-import chip.platform.DiagnosticDataProviderImpl
-import chip.platform.NsdManagerServiceBrowser
-import chip.platform.NsdManagerServiceResolver
-import chip.platform.PreferencesConfigurationManager
-import chip.platform.PreferencesKeyValueStoreManager
 import com.vpedrosa.smarthome.device.domain.Blind
 import com.vpedrosa.smarthome.device.domain.ContactSensor
 import com.vpedrosa.smarthome.device.domain.Device
@@ -31,38 +21,9 @@ import com.vpedrosa.smarthome.device.domain.ports.CommissioningPort
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-/**
- * Adaptador de commissioning que usa CHIPDeviceController del Matter SDK.
- *
- * Realiza PASE over IP (sin BLE) contra dispositivos Matter en la red local.
- * Tras el commissioning, crea el modelo de dominio Device correspondiente.
- */
 class MatterCommissioningAdapter(
-    context: Context,
+    private val chipController: ChipDeviceController,
 ) : CommissioningPort {
-
-    private val chipController: ChipDeviceController
-
-    init {
-        System.loadLibrary("CHIPController")
-
-        AndroidChipPlatform(
-            AndroidBleManager(),
-            PreferencesKeyValueStoreManager(context),
-            PreferencesConfigurationManager(context),
-            NsdManagerServiceResolver(context),
-            NsdManagerServiceBrowser(context),
-            ChipMdnsCallbackImpl(),
-            DiagnosticDataProviderImpl(context),
-        )
-
-        chipController = ChipDeviceController(
-            ControllerParams.newBuilder()
-                .setUdpListenPort(0)
-                .setControllerVendorId(VENDOR_ID)
-                .build(),
-        )
-    }
 
     override suspend fun commission(device: DiscoveredDevice): Result<Device> = runCatching {
         val nodeId = generateNodeId(device)
@@ -176,6 +137,5 @@ class MatterCommissioningAdapter(
 
     private companion object {
         const val TAG = "MatterCommissioning"
-        const val VENDOR_ID = 0xFFF1
     }
 }

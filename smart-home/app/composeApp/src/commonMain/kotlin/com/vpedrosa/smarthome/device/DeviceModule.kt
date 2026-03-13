@@ -74,15 +74,15 @@ val deviceModule = module {
     factory { ObserveDeviceUseCase(get()) }
     factory { ObserveDevicesByRoomUseCase(get()) }
     factory { ObserveDevicesByTypeUseCase(get()) }
-    factory { ToggleDeviceUseCase(get()) }
-    factory { UpdateLightUseCase(get()) }
-    factory { UpdateBlindUseCase(get()) }
-    factory { UpdateThermostatUseCase(get()) }
+    factory { ToggleDeviceUseCase(get(), get()) }
+    factory { UpdateLightUseCase(get(), get()) }
+    factory { UpdateBlindUseCase(get(), get()) }
+    factory { UpdateThermostatUseCase(get(), get()) }
     factory { ToggleCastingUseCase(get()) }
     factory { ObserveAllRoomsUseCase(get()) }
     factory { ObserveRoomUseCase(get()) }
     factory { ObserveDeviceEventsUseCase(get()) }
-    factory { BulkToggleDevicesByTypeUseCase(get()) }
+    factory { BulkToggleDevicesByTypeUseCase(get(), get()) }
     factory { SaveRoomUseCase(get()) }
     factory { DeleteRoomUseCase(get()) }
     factory { AddDeviceEventUseCase(get()) }

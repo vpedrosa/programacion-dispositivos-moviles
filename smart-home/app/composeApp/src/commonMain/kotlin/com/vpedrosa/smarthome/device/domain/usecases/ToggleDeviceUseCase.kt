@@ -11,20 +11,37 @@ import com.vpedrosa.smarthome.device.domain.Switch
 import com.vpedrosa.smarthome.device.domain.TemperatureSensor
 import com.vpedrosa.smarthome.device.domain.Thermostat
 import com.vpedrosa.smarthome.device.domain.WaterLeakSensor
+import com.vpedrosa.smarthome.device.domain.ports.DeviceControlPort
 import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import kotlinx.coroutines.flow.first
 
 class ToggleDeviceUseCase(
     private val deviceRepository: DeviceRepository,
+    private val deviceControlPort: DeviceControlPort,
 ) {
     suspend operator fun invoke(id: DeviceId) {
         val device = deviceRepository.observeDevice(id).first() ?: return
         val toggled = when (device) {
-            is Light -> device.toggle()
-            is Lock -> device.toggle()
-            is Switch -> device.toggle()
-            is SmartTv -> device.toggle()
-            is Thermostat -> device.toggleHeating()
+            is Light -> {
+                deviceControlPort.toggleOnOff(id, !device.isOn)
+                device.toggle()
+            }
+            is Lock -> {
+                deviceControlPort.lockDoor(id, !device.isLocked)
+                device.toggle()
+            }
+            is Switch -> {
+                deviceControlPort.toggleOnOff(id, !device.isOn)
+                device.toggle()
+            }
+            is SmartTv -> {
+                deviceControlPort.toggleOnOff(id, !device.isOn)
+                device.toggle()
+            }
+            is Thermostat -> {
+                deviceControlPort.toggleOnOff(id, !device.isHeatingOn)
+                device.toggleHeating()
+            }
             is Blind,
             is SmokeSensor,
             is WaterLeakSensor,
