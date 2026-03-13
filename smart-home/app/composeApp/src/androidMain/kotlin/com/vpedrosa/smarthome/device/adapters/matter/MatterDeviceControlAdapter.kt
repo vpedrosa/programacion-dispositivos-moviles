@@ -3,17 +3,25 @@ package com.vpedrosa.smarthome.device.adapters.matter
 import android.util.Log
 import chip.devicecontroller.ChipClusters
 import chip.devicecontroller.ChipDeviceController
-import chip.devicecontroller.GetConnectedDeviceCallbackJni
-import java.util.Optional
 import com.vpedrosa.smarthome.device.domain.DeviceId
+import com.vpedrosa.smarthome.device.domain.DiscoveredDevice
 import com.vpedrosa.smarthome.device.domain.ports.DeviceControlPort
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.Optional
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 class MatterDeviceControlAdapter(
     private val chipController: ChipDeviceController,
 ) : DeviceControlPort {
+
+    private val deviceConnections = ConcurrentHashMap<Long, ConnectionInfo>()
+
+    override fun registerDevice(deviceId: DeviceId, discoveredDevice: DiscoveredDevice) {
+        val nodeId = deviceId.value.toLong()
+        deviceConnections[nodeId] = ConnectionInfo(discoveredDevice.host, discoveredDevice.port, discoveredDevice.passcode)
+    }
 
     override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {
         val pointer = getDevicePointer(deviceId)
@@ -55,23 +63,53 @@ class MatterDeviceControlAdapter(
         Log.d(TAG, "${deviceId.value}: Setpoint -> ${temperatureCelsius}°C")
     }
 
+    /**
+     * Obtiene un device pointer estableciendo una conexión PASE directa.
+     *
+     * No usa getConnectedDevicePointer (que necesita mDNS/CASE) porque mDNS
+     * no funciona en el emulador Android. En su lugar, re-establece PASE
+     * con la dirección conocida y usa getDeviceBeingCommissioned.
+     */
     private suspend fun getDevicePointer(deviceId: DeviceId): Long {
         val nodeId = deviceId.value.toLong()
-        return suspendCancellableCoroutine { cont ->
-            chipController.getConnectedDevicePointer(
-                nodeId,
-                object : GetConnectedDeviceCallbackJni.GetConnectedDeviceCallback {
-                    override fun onDeviceConnected(devicePointer: Long) {
-                        cont.resume(devicePointer)
-                    }
+        val conn = deviceConnections[nodeId]
+            ?: throw IllegalStateException("Device $nodeId not registered for control")
 
-                    override fun onConnectionFailure(nodeId: Long, error: Exception) {
-                        Log.e(TAG, "Connection failed for node $nodeId", error)
-                        cont.resumeWithException(error)
-                    }
-                },
-            )
-        }
+        establishPaseForControl(nodeId, conn)
+        return chipController.getDeviceBeingCommissionedPointer(nodeId)
+    }
+
+    private suspend fun establishPaseForControl(
+        nodeId: Long,
+        conn: ConnectionInfo,
+    ) = suspendCancellableCoroutine { cont ->
+        chipController.setCompletionListener(object : ChipDeviceController.CompletionListener {
+            override fun onPairingComplete(code: Int) {
+                Log.d(TAG, "PASE for control: node $nodeId, code=$code")
+                cont.resume(Unit)
+            }
+
+            override fun onError(error: Throwable?) {
+                Log.e(TAG, "PASE for control failed: node $nodeId", error)
+                cont.resumeWithException(
+                    error ?: RuntimeException("PASE failed for node $nodeId"),
+                )
+            }
+
+            override fun onConnectDeviceComplete() {}
+            override fun onStatusUpdate(status: Int) {}
+            override fun onPairingDeleted(code: Int) {}
+            override fun onCommissioningComplete(nodeId: Long, errorCode: Int) {}
+            override fun onCommissioningStatusUpdate(nodeId: Long, stage: String?, errorCode: Int) {}
+            override fun onNotifyChipConnectionClosed() {}
+            override fun onCloseBleComplete() {}
+            override fun onReadCommissioningInfo(
+                vendorId: Int, productId: Int, wifiEndpointId: Int, threadEndpointId: Int,
+            ) {}
+            override fun onOpCSRGenerationComplete(csr: ByteArray?) {}
+        })
+
+        chipController.establishPaseConnection(nodeId, conn.host, conn.port, conn.passcode)
     }
 
     private suspend fun suspendClusterCommand(
@@ -88,6 +126,8 @@ class MatterDeviceControlAdapter(
             }
         })
     }
+
+    private data class ConnectionInfo(val host: String, val port: Int, val passcode: Long)
 
     private companion object {
         const val TAG = "MatterDeviceControl"
