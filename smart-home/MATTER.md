@@ -25,27 +25,59 @@ La app KMP necesita descubrir, comisionar y controlar estos dispositivos usando 
 - Etiquetado como "demo/development only", lo cual es adecuado para un proyecto academico.
 - No requiere compilar codigo nativo ni descargar el repositorio connectedhomeip.
 
-### 2. Commissioning: PASE over IP (sin BLE)
+### 2. Sesiones PASE over IP (sin BLE ni CASE)
 
-El flujo estandar de commissioning Matter usa **BLE** para el primer contacto con el dispositivo. Esto requiere un dispositivo fisico Android con Bluetooth.
+#### Flujo Matter estandar vs. implementacion en emulador
 
-Sin embargo, el protocolo Matter tambien soporta **PASE over IP**: el commissioning se realiza directamente sobre UDP si se conoce la direccion IP y puerto del dispositivo. `CHIPDeviceController` expone este mecanismo:
+El flujo completo de commissioning Matter consta de varias fases:
 
-```kotlin
-chipDeviceController.establishPaseConnection(
-    deviceId,    // ID local asignado al dispositivo
-    ipAddress,   // Direccion IP del dispositivo
-    port,        // Puerto UDP
-    setupPincode // Passcode del dispositivo
-)
+```
+PASE (autenticacion por passcode)
+  → NOC (instalar certificados operacionales)
+    → FindOperational (descubrir dispositivo via mDNS con su identidad operacional)
+      → CASE (establecer sesion operacional con certificados)
+        → Cluster Commands (control del dispositivo)
 ```
 
-**Decision:** Se utiliza PASE over IP para el commissioning.
+En el emulador Android, **FindOperational falla** porque utiliza mDNS (`_matter._tcp`) y el emulador usa NAT, que impide el trafico multicast. El SDK intenta resolver la direccion operacional durante ~45 segundos antes de dar timeout (error 0x32). Esto provoca que `commissionDevice()` falle en el paso `FindOperational → Cleanup` y el dispositivo revierta la fabric instalada.
+
+#### PASE vs CASE
+
+| | PASE | CASE |
+|---|---|---|
+| Autenticacion | Passcode (SPAKE2+) | Certificados (NOC) |
+| Cifrado | AES-CCM (sesion derivada) | AES-CCM (sesion derivada) |
+| Canal seguro | Si | Si |
+| Cluster commands | Si | Si |
+| Requiere mDNS | No | Si |
+| Diseñado para | Commissioning | Operacion permanente |
+| Limitacion | Requiere conocer passcode | Requiere commissioning completo |
+
+Ambos tipos de sesion son **canales autenticados y cifrados del protocolo Matter**. La diferencia es el mecanismo de autenticacion (passcode vs certificados), no la seguridad del canal ni los comandos que se pueden enviar.
+
+#### Decision
+
+Se utiliza **PASE over IP** tanto para verificar conectividad como para el control de dispositivos, sin llamar a `commissionDevice()`:
+
+```kotlin
+// Commissioning: solo PASE para verificar conectividad
+chipDeviceController.establishPaseConnection(nodeId, ip, port, passcode)
+
+// Control: re-establecer PASE y enviar cluster commands
+chipDeviceController.establishPaseConnection(nodeId, ip, port, passcode)
+val pointer = chipDeviceController.getDeviceBeingCommissionedPointer(nodeId)
+ChipClusters.OnOffCluster(pointer, endpoint).on(callback)
+```
 
 - Los dispositivos matter.js escuchan en puertos UDP conocidos (5540-5566).
 - Desde el emulador Android, el host es accesible en `10.0.2.2`.
-- Elimina la dependencia de hardware BLE, permitiendo desarrollo en emulador.
-- Es un mecanismo estandar del protocolo Matter (no es un hack ni un workaround).
+- Elimina la dependencia de hardware BLE y de mDNS, permitiendo desarrollo completo en emulador.
+- PASE es un mecanismo estandar del protocolo Matter (RFC, no workaround).
+- Los comandos de cluster viajan cifrados sobre la sesion PASE igual que lo harian sobre CASE.
+
+#### Preparacion para CASE en produccion
+
+En un entorno con red local real (mDNS funciona), el adapter de control se reemplazaria por uno que use `commissionDevice()` + `getConnectedDevicePointer()` (CASE). Ningun cambio en puertos, use cases ni UI gracias a la arquitectura hexagonal.
 
 ### 3. Descubrimiento: adaptador estatico (emulador)
 
@@ -98,7 +130,7 @@ commonMain (puertos)                     androidMain (adaptadores)
 
 ### 5. Control de dispositivos: clusters Matter
 
-Tras el commissioning, `CHIPDeviceController` permite enviar comandos a los clusters Matter estandar del dispositivo:
+Tras establecer la sesion PASE, `MatterDeviceControlAdapter` re-establece PASE con la direccion conocida del dispositivo y envia comandos a los clusters Matter estandar:
 
 | Cluster Matter | Dispositivos | Operaciones |
 |---|---|---|
@@ -127,20 +159,21 @@ Tras el commissioning, `CHIPDeviceController` permite enviar comandos a los clus
 ```
 
 1. **Descubrimiento**: El adaptador estatico proporciona la lista de dispositivos con IP `10.0.2.2` y puertos 5540-5566.
-2. **Commissioning**: `CHIPDeviceController.establishPaseConnection()` realiza PASE sobre UDP con el passcode del dispositivo.
-3. **Control**: `CHIPClusters.*` envia comandos Matter reales al dispositivo a traves del mismo canal UDP.
-4. **Suscripciones**: La app se suscribe a cambios de atributos (sensores) para recibir actualizaciones en tiempo real.
+2. **Commissioning (PASE)**: `CHIPDeviceController.establishPaseConnection()` realiza PASE (SPAKE2+) sobre UDP con el passcode del dispositivo. Verifica conectividad y establece sesion cifrada. No se llama a `commissionDevice()` (ver seccion 2).
+3. **Registro**: `DeviceControlPort.registerDevice()` almacena la informacion de conexion (host, puerto, passcode) para poder re-establecer PASE en operaciones de control posteriores.
+4. **Control**: Para cada comando, `MatterDeviceControlAdapter` re-establece PASE con la direccion conocida, obtiene el device pointer via `getDeviceBeingCommissionedPointer()`, y envia el cluster command (`ChipClusters.*`) sobre la sesion PASE cifrada.
+5. **Suscripciones**: (Pendiente) La app se suscribiria a cambios de atributos (sensores) para recibir actualizaciones en tiempo real.
 
 ## Preparacion para produccion
 
 Para pasar a produccion con dispositivos reales, los cambios son exclusivamente en la capa de adaptadores:
 
-| Componente | Desarrollo | Produccion |
+| Componente | Desarrollo (emulador) | Produccion (dispositivo fisico) |
 |---|---|---|
 | Discovery | `StaticDeviceDiscoveryAdapter` | `MdnsDeviceDiscoveryAdapter` (NsdManager) |
-| Commissioning | PASE over IP (10.0.2.2) | PASE over BLE + IP |
-| Control | Sin cambios | Sin cambios |
-| Permisos | `INTERNET` | `INTERNET` + `BLUETOOTH_SCAN` + `BLUETOOTH_CONNECT` + `ACCESS_FINE_LOCATION` |
+| Commissioning | PASE over IP (solo verificacion) | PASE + `commissionDevice()` (NOC + CASE) |
+| Control | PASE directo (`getDeviceBeingCommissionedPointer`) | CASE operacional (`getConnectedDevicePointer`) |
+| Permisos | `INTERNET`, `ACCESS_WIFI_STATE`, `CHANGE_WIFI_MULTICAST_STATE` | + `BLUETOOTH_SCAN` + `BLUETOOTH_CONNECT` + `ACCESS_FINE_LOCATION` |
 
 Ningun use case, view model ni pantalla necesita modificacion. La inyeccion de dependencias (Koin) gestiona el intercambio de adaptadores.
 

@@ -20,16 +20,23 @@ import com.vpedrosa.smarthome.device.domain.Color as DeviceColor
 import com.vpedrosa.smarthome.device.domain.ports.CommissioningPort
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class MatterCommissioningAdapter(
     private val chipController: ChipDeviceController,
 ) : CommissioningPort {
 
+    /**
+     * "Comisiona" un dispositivo estableciendo PASE para verificar conectividad.
+     *
+     * No llama a commissionDevice() porque FindOperational (mDNS/CASE) no
+     * funciona en el emulador Android. El control se hace vía PASE directo
+     * en MatterDeviceControlAdapter.
+     */
     override suspend fun commission(device: DiscoveredDevice): Result<Device> = runCatching {
         val nodeId = generateNodeId(device)
 
         establishPaseConnection(nodeId, device)
-        commissionDevice(nodeId)
 
         createDomainDevice(device, nodeId)
     }
@@ -42,15 +49,20 @@ class MatterCommissioningAdapter(
             override fun onPairingComplete(code: Int) {
                 if (code == 0) {
                     Log.d(TAG, "PASE connection established: ${device.name}")
+                    cont.resume(Unit)
                 } else {
                     Log.e(TAG, "PASE failed with code $code: ${device.name}")
+                    cont.resumeWithException(
+                        RuntimeException("PASE failed with code $code for ${device.name}"),
+                    )
                 }
-                cont.resume(code)
             }
 
             override fun onError(error: Throwable?) {
                 Log.e(TAG, "PASE connection failed: ${device.name}", error)
-                cont.resume(-1)
+                cont.resumeWithException(
+                    error ?: RuntimeException("PASE failed for ${device.name}"),
+                )
             }
 
             override fun onConnectDeviceComplete() {}
@@ -75,45 +87,6 @@ class MatterCommissioningAdapter(
             device.port,
             device.passcode,
         )
-    }
-
-    private suspend fun commissionDevice(nodeId: Long) = suspendCancellableCoroutine { cont ->
-        chipController.setCompletionListener(object : ChipDeviceController.CompletionListener {
-            override fun onCommissioningComplete(completedNodeId: Long, errorCode: Int) {
-                if (errorCode == 0) {
-                    Log.d(TAG, "Commissioning complete: node $completedNodeId")
-                } else {
-                    Log.e(TAG, "Commissioning error: $errorCode for node $completedNodeId")
-                }
-                cont.resume(errorCode)
-            }
-
-            override fun onCommissioningStatusUpdate(nId: Long, stage: String?, errorCode: Int) {
-                Log.d(TAG, "Commissioning stage: $stage (error=$errorCode) for node $nId")
-            }
-
-            override fun onError(error: Throwable?) {
-                Log.e(TAG, "Commissioning error", error)
-                cont.resume(-1)
-            }
-
-            override fun onConnectDeviceComplete() {}
-            override fun onStatusUpdate(status: Int) {}
-            override fun onPairingComplete(code: Int) {}
-            override fun onPairingDeleted(code: Int) {}
-            override fun onNotifyChipConnectionClosed() {}
-            override fun onCloseBleComplete() {}
-            override fun onReadCommissioningInfo(
-                vendorId: Int,
-                productId: Int,
-                wifiEndpointId: Int,
-                threadEndpointId: Int,
-            ) {}
-            override fun onOpCSRGenerationComplete(csr: ByteArray?) {}
-        })
-
-        Log.d(TAG, "Starting commissioning for node $nodeId")
-        chipController.commissionDevice(nodeId, null)
     }
 
     private fun createDomainDevice(device: DiscoveredDevice, nodeId: Long): Device {
