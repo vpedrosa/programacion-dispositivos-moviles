@@ -359,6 +359,7 @@ private fun alertColor(type: DeviceEventType): Color = when (type) {
     DeviceEventType.WATER_LEAK_ALERT -> AlertBlue
     DeviceEventType.DOOR_OPENED -> AlertOrange
     DeviceEventType.DOOR_CLOSED -> AlertGreen
+    DeviceEventType.DOOR_OPEN_TOO_LONG -> AlertRed
     DeviceEventType.TEMPERATURE_READING -> Color(0xFFFFC107)
     DeviceEventType.THERMOSTAT_ADJUSTED -> AlertBlue
     DeviceEventType.DEVICE_TURNED_ON -> AlertGreen

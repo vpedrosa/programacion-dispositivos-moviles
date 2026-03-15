@@ -7,8 +7,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import kotlin.random.Random
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
 
 class SensorEventSimulator(
     private val addDeviceEvent: AddDeviceEventUseCase,
@@ -19,6 +21,9 @@ class SensorEventSimulator(
 
     private var started = false
 
+    /** Tracks when each ContactSensor was first detected as open. */
+    private val doorOpenSince = mutableMapOf<DeviceId, Instant>()
+
     fun start() {
         if (started) return
         started = true
@@ -28,6 +33,7 @@ class SensorEventSimulator(
         scope.launch { emitSmokeAlerts() }
         scope.launch { emitWaterLeakAlerts() }
         scope.launch { emitThermostatAdjustments() }
+        scope.launch { monitorDoorOpenDuration() }
     }
 
     private suspend fun emitTemperatureReadings() {
@@ -126,6 +132,46 @@ class SensorEventSimulator(
                             timestamp = Clock.System.now(),
                         ),
                     )
+                }
+            }
+        }
+    }
+
+    /**
+     * Monitors all ContactSensor devices every 30 seconds. If a door has been
+     * continuously open for more than 2 minutes, emits a DOOR_OPEN_TOO_LONG
+     * event. The alert repeats every 2 minutes while the door remains open.
+     */
+    private suspend fun monitorDoorOpenDuration() {
+        val alertThreshold = 2.minutes
+
+        while (true) {
+            delay(30_000L)
+
+            val now = Clock.System.now()
+            val sensors = findDevicesOfType<ContactSensor>()
+
+            for (sensor in sensors) {
+                if (sensor.isOpen) {
+                    val openedAt = doorOpenSince.getOrPut(sensor.id) { now }
+                    val elapsed = now - openedAt
+
+                    if (elapsed >= alertThreshold) {
+                        val minutes = elapsed.inWholeMinutes
+                        addDeviceEvent(
+                            DeviceEvent(
+                                id = randomId(),
+                                deviceId = sensor.id,
+                                type = DeviceEventType.DOOR_OPEN_TOO_LONG,
+                                message = "${sensor.name} lleva abierta ${minutes} min",
+                                timestamp = now,
+                            ),
+                        )
+                        // Reset the timer so the next alert fires 2 minutes later
+                        doorOpenSince[sensor.id] = now
+                    }
+                } else {
+                    doorOpenSince.remove(sensor.id)
                 }
             }
         }

@@ -206,6 +206,7 @@
     <string name="a11y_alert_water">Water leak alert</string>
     <string name="a11y_alert_temperature">Temperature reading</string>
     <string name="a11y_alert_door">Door event</string>
+    <string name="a11y_alert_door_open_too_long">Door open too long alert</string>
     <string name="a11y_alert_thermostat">Thermostat event</string>
     <string name="a11y_photo_placeholder">Take or select photo</string>
     <string name="a11y_room_placeholder">Room</string>

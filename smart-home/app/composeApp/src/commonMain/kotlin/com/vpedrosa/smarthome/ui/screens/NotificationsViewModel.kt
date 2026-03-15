@@ -82,6 +82,7 @@ private fun DeviceEvent.toEventItem(now: kotlin.time.Instant): EventItem {
         DeviceEventType.WATER_LEAK_ALERT -> "Sensor de fugas"
         DeviceEventType.TEMPERATURE_READING -> "Sensor de temperatura"
         DeviceEventType.DOOR_OPENED, DeviceEventType.DOOR_CLOSED -> "Sensor de contacto"
+        DeviceEventType.DOOR_OPEN_TOO_LONG -> "Sensor de contacto"
         DeviceEventType.THERMOSTAT_ADJUSTED -> "Termostato"
         DeviceEventType.DEVICE_TURNED_ON, DeviceEventType.DEVICE_TURNED_OFF -> "Dispositivo"
     }

@@ -49,6 +49,7 @@ import smarthome.composeapp.generated.resources.a11y_alert_smoke
 import smarthome.composeapp.generated.resources.a11y_alert_water
 import smarthome.composeapp.generated.resources.a11y_alert_temperature
 import smarthome.composeapp.generated.resources.a11y_alert_door
+import smarthome.composeapp.generated.resources.a11y_alert_door_open_too_long
 import smarthome.composeapp.generated.resources.a11y_alert_thermostat
 
 private val AlertRed = Color(0xFFF44336)
@@ -167,6 +168,7 @@ private fun eventIconData(type: DeviceEventType): Pair<Color, ImageVector> = whe
     DeviceEventType.TEMPERATURE_READING -> AlertYellow to Icons.Default.Thermostat
     DeviceEventType.DOOR_OPENED -> AlertOrange to Icons.Default.SensorDoor
     DeviceEventType.DOOR_CLOSED -> AlertGreen to Icons.Default.SensorDoor
+    DeviceEventType.DOOR_OPEN_TOO_LONG -> AlertRed to Icons.Default.Warning
     DeviceEventType.THERMOSTAT_ADJUSTED -> AlertBlue to Icons.Default.Thermostat
     DeviceEventType.DEVICE_TURNED_ON -> AlertGreen to Icons.Default.PowerSettingsNew
     DeviceEventType.DEVICE_TURNED_OFF -> AlertOrange to Icons.Default.PowerSettingsNew
@@ -177,6 +179,7 @@ private fun DeviceEventType.a11yRes(): StringResource? = when (this) {
     DeviceEventType.WATER_LEAK_ALERT -> Res.string.a11y_alert_water
     DeviceEventType.TEMPERATURE_READING -> Res.string.a11y_alert_temperature
     DeviceEventType.DOOR_OPENED, DeviceEventType.DOOR_CLOSED -> Res.string.a11y_alert_door
+    DeviceEventType.DOOR_OPEN_TOO_LONG -> Res.string.a11y_alert_door_open_too_long
     DeviceEventType.THERMOSTAT_ADJUSTED -> Res.string.a11y_alert_thermostat
     DeviceEventType.DEVICE_TURNED_ON, DeviceEventType.DEVICE_TURNED_OFF -> null
 }

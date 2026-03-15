@@ -206,6 +206,7 @@
     <string name="a11y_alert_water">Alerta de fuga de agua</string>
     <string name="a11y_alert_temperature">Lectura de temperatura</string>
     <string name="a11y_alert_door">Evento de puerta</string>
+    <string name="a11y_alert_door_open_too_long">Alerta de puerta abierta demasiado tiempo</string>
     <string name="a11y_alert_thermostat">Evento de termostato</string>
     <string name="a11y_photo_placeholder">Tomar o seleccionar foto</string>
     <string name="a11y_room_placeholder">Habitación</string>
