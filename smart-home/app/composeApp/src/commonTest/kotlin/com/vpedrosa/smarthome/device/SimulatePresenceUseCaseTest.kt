@@ -8,6 +8,7 @@ import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.Light
 import com.vpedrosa.smarthome.device.domain.LightTimeSlot
 import com.vpedrosa.smarthome.device.domain.RoomId
+import com.vpedrosa.smarthome.device.domain.SmartTv
 import com.vpedrosa.smarthome.device.domain.VideoConfig
 import com.vpedrosa.smarthome.device.domain.usecases.SimulatePresenceUseCase
 import kotlinx.coroutines.flow.first
@@ -39,6 +40,14 @@ class SimulatePresenceUseCaseTest {
         brightness = 60,
     )
 
+    private val smartTv = SmartTv(
+        id = DeviceId("tv-salon"),
+        name = "Salon TV",
+        roomId = salonId.value,
+        isOn = false,
+        isCasting = false,
+    )
+
     private val defaultVideoConfig = VideoConfig(
         isEnabled = false,
         startHour = 20,
@@ -46,6 +55,15 @@ class SimulatePresenceUseCaseTest {
         endHour = 22,
         endMinute = 0,
         videoUrl = "",
+    )
+
+    private val enabledVideoConfig = VideoConfig(
+        isEnabled = true,
+        startHour = 20,
+        startMinute = 0,
+        endHour = 22,
+        endMinute = 0,
+        videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
     )
 
     @Test
@@ -174,5 +192,127 @@ class SimulatePresenceUseCaseTest {
 
         assertTrue(salon.isOn, "Salon light should be ON (in both slots)")
         assertTrue(dorm.isOn, "Dormitorio light should be ON (in slot-2)")
+    }
+
+    // --- Smart TV video config tests ---
+
+    @Test
+    fun turnsOnTvAndStartsCastingDuringVideoTimeRange() = runTest {
+        val deviceRepo = InMemoryDeviceRepository(listOf(smartTv))
+        val config = AntiSquatterConfig(
+            isEnabled = true,
+            timeSlots = emptyList(),
+            videoConfig = enabledVideoConfig,
+        )
+        val antiSquatterRepo = InMemoryAntiSquatterRepository()
+        antiSquatterRepo.saveConfig(config)
+
+        val useCase = SimulatePresenceUseCase(antiSquatterRepo, deviceRepo)
+        useCase(hour = 21, minute = 0)
+
+        val devices = deviceRepo.observeAllDevices().first()
+        val tv = devices.first { it.id == smartTv.id } as SmartTv
+
+        assertTrue(tv.isOn, "TV should be ON during video time range")
+        assertTrue(tv.isCasting, "TV should be casting during video time range")
+    }
+
+    @Test
+    fun turnsOffTvAndStopsCastingOutsideVideoTimeRange() = runTest {
+        val tvOn = smartTv.copy(isOn = true, isCasting = true)
+        val deviceRepo = InMemoryDeviceRepository(listOf(tvOn))
+        val config = AntiSquatterConfig(
+            isEnabled = true,
+            timeSlots = emptyList(),
+            videoConfig = enabledVideoConfig,
+        )
+        val antiSquatterRepo = InMemoryAntiSquatterRepository()
+        antiSquatterRepo.saveConfig(config)
+
+        val useCase = SimulatePresenceUseCase(antiSquatterRepo, deviceRepo)
+        // 23:00 is outside the 20:00-22:00 video range
+        useCase(hour = 23, minute = 0)
+
+        val devices = deviceRepo.observeAllDevices().first()
+        val tv = devices.first { it.id == smartTv.id } as SmartTv
+
+        assertFalse(tv.isOn, "TV should be OFF outside video time range")
+        assertFalse(tv.isCasting, "TV should not be casting outside video time range")
+    }
+
+    @Test
+    fun doesNotTouchTvWhenVideoConfigIsDisabled() = runTest {
+        val deviceRepo = InMemoryDeviceRepository(listOf(smartTv))
+        val config = AntiSquatterConfig(
+            isEnabled = true,
+            timeSlots = emptyList(),
+            videoConfig = defaultVideoConfig, // isEnabled = false
+        )
+        val antiSquatterRepo = InMemoryAntiSquatterRepository()
+        antiSquatterRepo.saveConfig(config)
+
+        val useCase = SimulatePresenceUseCase(antiSquatterRepo, deviceRepo)
+        useCase(hour = 21, minute = 0)
+
+        val devices = deviceRepo.observeAllDevices().first()
+        val tv = devices.first { it.id == smartTv.id } as SmartTv
+
+        assertFalse(tv.isOn, "TV should stay OFF when video config is disabled")
+        assertFalse(tv.isCasting, "TV should not be casting when video config is disabled")
+    }
+
+    @Test
+    fun doesNotSaveTvWhenStateAlreadyMatches() = runTest {
+        // TV is already on and casting during the active range — no save should happen
+        val tvOn = smartTv.copy(isOn = true, isCasting = true)
+        val deviceRepo = InMemoryDeviceRepository(listOf(tvOn))
+        val config = AntiSquatterConfig(
+            isEnabled = true,
+            timeSlots = emptyList(),
+            videoConfig = enabledVideoConfig,
+        )
+        val antiSquatterRepo = InMemoryAntiSquatterRepository()
+        antiSquatterRepo.saveConfig(config)
+
+        val useCase = SimulatePresenceUseCase(antiSquatterRepo, deviceRepo)
+        useCase(hour = 21, minute = 0)
+
+        val devices = deviceRepo.observeAllDevices().first()
+        val tv = devices.first { it.id == smartTv.id } as SmartTv
+
+        assertTrue(tv.isOn, "TV should remain ON")
+        assertTrue(tv.isCasting, "TV should remain casting")
+    }
+
+    @Test
+    fun handlesLightsAndTvSimultaneously() = runTest {
+        val deviceRepo = InMemoryDeviceRepository(listOf(lightSalon, smartTv))
+        val config = AntiSquatterConfig(
+            isEnabled = true,
+            timeSlots = listOf(
+                LightTimeSlot(
+                    id = "slot-1",
+                    startHour = 20,
+                    startMinute = 0,
+                    endHour = 23,
+                    endMinute = 0,
+                    roomIds = listOf(salonId),
+                ),
+            ),
+            videoConfig = enabledVideoConfig, // 20:00-22:00
+        )
+        val antiSquatterRepo = InMemoryAntiSquatterRepository()
+        antiSquatterRepo.saveConfig(config)
+
+        val useCase = SimulatePresenceUseCase(antiSquatterRepo, deviceRepo)
+        useCase(hour = 21, minute = 0)
+
+        val devices = deviceRepo.observeAllDevices().first()
+        val salon = devices.first { it.id == lightSalon.id } as Light
+        val tv = devices.first { it.id == smartTv.id } as SmartTv
+
+        assertTrue(salon.isOn, "Salon light should be ON during active slot")
+        assertTrue(tv.isOn, "TV should be ON during video time range")
+        assertTrue(tv.isCasting, "TV should be casting during video time range")
     }
 }

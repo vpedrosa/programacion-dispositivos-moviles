@@ -46,6 +46,13 @@ data class VideoConfig(
         require(endMinute in 0..59) { "endMinute must be in 0..59" }
     }
 
+    fun containsTime(hour: Int, minute: Int): Boolean {
+        val time = hour * 60 + minute
+        val start = startHour * 60 + startMinute
+        val end = endHour * 60 + endMinute
+        return time in start until end
+    }
+
     fun formatTimeRange(): String {
         val start = "${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}"
         val end = "${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}"
