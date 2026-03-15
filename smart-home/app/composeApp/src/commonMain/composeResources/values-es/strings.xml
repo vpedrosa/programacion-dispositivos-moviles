@@ -93,9 +93,9 @@
     <string name="lock_toggle_lock">Cerrar cerradura</string>
 
     <!-- Blind -->
-    <string name="blind_open_percent">%1$d%% abierta</string>
-    <string name="blind_closed">Cerrada 0%%</string>
-    <string name="blind_open">100%% Abierta</string>
+    <string name="blind_open_percent">%1$d% abierta</string>
+    <string name="blind_closed">Cerrada 0%</string>
+    <string name="blind_open">100% Abierta</string>
 
     <!-- Thermostat -->
     <string name="heating_active">Activa</string>
