@@ -50,5 +50,12 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.android)
+
+    // Wearable Data Layer API (receive voice commands from Wear OS)
+    implementation(libs.play.services.wearable)
+
+    // Coroutines (for WearableMessageListenerService)
+    implementation(libs.kotlinx.coroutines.android)
+
     debugImplementation(libs.compose.uiTooling)
 }
