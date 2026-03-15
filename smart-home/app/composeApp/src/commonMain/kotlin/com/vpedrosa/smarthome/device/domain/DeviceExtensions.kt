@@ -2,39 +2,15 @@ package com.vpedrosa.smarthome.device.domain
 
 /**
  * Whether this device type supports toggling (on/off or lock/unlock).
- * Sensors and blinds do not have a toggle state.
+ * Delegates to [DeviceTypeRegistry].
  */
-fun DeviceType.isToggleable(): Boolean = when (this) {
-    DeviceType.LIGHT,
-    DeviceType.LOCK,
-    DeviceType.SWITCH,
-    DeviceType.SMART_TV,
-    DeviceType.THERMOSTAT -> true
-
-    DeviceType.BLIND,
-    DeviceType.SMOKE_SENSOR,
-    DeviceType.WATER_LEAK_SENSOR,
-    DeviceType.TEMPERATURE_SENSOR,
-    DeviceType.CONTACT_SENSOR -> false
-}
+fun DeviceType.isToggleable(): Boolean = DeviceTypeRegistry.isToggleable(this)
 
 /**
  * Whether this device type supports bulk toggle actions.
- * Contact sensors are individually toggleable but not bulk-toggled.
+ * Delegates to [DeviceTypeRegistry].
  */
-fun DeviceType.supportsBulkToggle(): Boolean = when (this) {
-    DeviceType.LIGHT,
-    DeviceType.LOCK,
-    DeviceType.SWITCH,
-    DeviceType.SMART_TV,
-    DeviceType.THERMOSTAT,
-    DeviceType.BLIND -> true
-
-    DeviceType.SMOKE_SENSOR,
-    DeviceType.WATER_LEAK_SENSOR,
-    DeviceType.TEMPERATURE_SENSOR,
-    DeviceType.CONTACT_SENSOR -> false
-}
+fun DeviceType.supportsBulkToggle(): Boolean = DeviceTypeRegistry.supportsBulkToggle(this)
 
 /**
  * Whether this individual device is currently in its "on" / "active" state.

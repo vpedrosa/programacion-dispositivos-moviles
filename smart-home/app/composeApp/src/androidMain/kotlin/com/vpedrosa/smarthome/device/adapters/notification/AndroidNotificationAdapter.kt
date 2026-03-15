@@ -14,9 +14,9 @@ class AndroidNotificationAdapter(
 ) : NotificationPort {
 
     companion object {
-        private const val CHANNEL_ID = "sensor_alerts"
-        private const val CHANNEL_NAME = "Sensor Alerts"
-        private const val CHANNEL_DESCRIPTION = "Critical alerts from smart home sensors"
+        private const val CHANNEL_ID = NotificationChannels.SENSOR_ALERTS_ID
+        private const val CHANNEL_NAME = NotificationChannels.SENSOR_ALERTS_NAME
+        private const val CHANNEL_DESCRIPTION = NotificationChannels.SENSOR_ALERTS_DESCRIPTION
     }
 
     init {
