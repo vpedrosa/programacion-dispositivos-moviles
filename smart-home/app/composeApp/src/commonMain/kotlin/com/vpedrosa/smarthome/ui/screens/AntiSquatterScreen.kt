@@ -50,6 +50,11 @@ import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.anti_squatter_active_subtitle
 import smarthome.composeapp.generated.resources.anti_squatter_add_slot
+import smarthome.composeapp.generated.resources.anti_squatter_summary_empty
+import smarthome.composeapp.generated.resources.anti_squatter_summary_lights
+import smarthome.composeapp.generated.resources.anti_squatter_summary_lights_no_rooms
+import smarthome.composeapp.generated.resources.anti_squatter_summary_title
+import smarthome.composeapp.generated.resources.anti_squatter_summary_tv
 import smarthome.composeapp.generated.resources.anti_squatter_change_video
 import smarthome.composeapp.generated.resources.anti_squatter_inactive_subtitle
 import smarthome.composeapp.generated.resources.anti_squatter_lights_section
@@ -154,6 +159,12 @@ fun AntiSquatterScreen(
                         ),
                     )
                 }
+            }
+
+            // --- ACTIVE PATTERN SUMMARY ---
+            if (state.isEnabled) {
+                Spacer(modifier = Modifier.height(12.dp))
+                PatternSummaryCard(state = state)
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -367,6 +378,60 @@ private fun TimeSlotCard(
                             labelColor = MaterialTheme.colorScheme.onBackground,
                         ),
                         shape = RoundedCornerShape(20.dp),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PatternSummaryCard(state: AntiSquatterUiState) {
+    val roomNames = state.rooms.associate { it.id to it.name }
+
+    val lines = buildList {
+        for (slot in state.timeSlots) {
+            val names = slot.roomIds.mapNotNull { roomNames[it] }
+            if (names.isNotEmpty()) {
+                add(stringResource(Res.string.anti_squatter_summary_lights, names.joinToString(", "), slot.formatTimeRange()))
+            } else {
+                add(stringResource(Res.string.anti_squatter_summary_lights_no_rooms, slot.formatTimeRange()))
+            }
+        }
+        if (state.videoConfig.isEnabled) {
+            val url = state.videoConfig.videoUrl.ifBlank { "—" }
+            add(stringResource(Res.string.anti_squatter_summary_tv, state.videoConfig.formatTimeRange(), url))
+        }
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+        ),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = stringResource(Res.string.anti_squatter_summary_title),
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            if (lines.isEmpty()) {
+                Text(
+                    text = stringResource(Res.string.anti_squatter_summary_empty),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                )
+            } else {
+                lines.forEach { line ->
+                    Text(
+                        text = "• $line",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                        modifier = Modifier.padding(vertical = 2.dp),
                     )
                 }
             }

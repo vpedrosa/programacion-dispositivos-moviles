@@ -159,6 +159,11 @@
     <!-- Anti-Squatter -->
     <string name="anti_squatter_presence_simulation">Presence simulation</string>
     <string name="anti_squatter_active_subtitle">Active - Simulating presence</string>
+    <string name="anti_squatter_summary_title">Active pattern</string>
+    <string name="anti_squatter_summary_lights">Lights in %1$s from %2$s</string>
+    <string name="anti_squatter_summary_lights_no_rooms">Lights (no rooms assigned) from %1$s</string>
+    <string name="anti_squatter_summary_tv">Smart TV from %1$s: %2$s</string>
+    <string name="anti_squatter_summary_empty">No actions configured. Add light time slots or enable Smart TV playback.</string>
     <string name="anti_squatter_inactive_subtitle">Inactive</string>
     <string name="anti_squatter_lights_section">LIGHT TIME SCHEDULE</string>
     <string name="anti_squatter_add_slot">Add time slot</string>
