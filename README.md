@@ -1,5 +1,7 @@
 # Programación de Dispositivos Móviles
 
+[![Smart Home CI](https://github.com/vpedrosa/programacion-dispositivos-moviles/actions/workflows/smart-home-ci.yml/badge.svg)](https://github.com/vpedrosa/programacion-dispositivos-moviles/actions/workflows/smart-home-ci.yml)
+
 *Valentín Pedrosa Campoy*
 
 ## Índice
