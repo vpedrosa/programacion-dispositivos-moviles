@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vpedrosa.smarthome.device.domain.VoiceCommand
 import com.vpedrosa.smarthome.device.domain.VoiceCommandResult
+import com.vpedrosa.smarthome.ui.components.AudioPermissionHandler
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
@@ -119,11 +120,25 @@ fun VoiceControlScreen(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Microphone button
-            MicrophoneButton(
-                isListening = state.isListening,
-                onClick = { viewModel.toggleListening() },
-            )
+            // Microphone button with audio permission handling
+            AudioPermissionHandler(
+                onPermissionResult = { granted ->
+                    if (granted && !state.isListening) {
+                        viewModel.toggleListening()
+                    }
+                },
+            ) { hasPermission, requestPermission ->
+                MicrophoneButton(
+                    isListening = state.isListening,
+                    onClick = {
+                        if (hasPermission) {
+                            viewModel.toggleListening()
+                        } else {
+                            requestPermission()
+                        }
+                    },
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 

@@ -6,14 +6,12 @@ import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryAppSettingsRep
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryDeviceEventRepository
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryDeviceRepository
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryRoomRepository
-import com.vpedrosa.smarthome.device.adapters.speech.FakeSpeechRecognizer
 import com.vpedrosa.smarthome.device.domain.ports.AntiSquatterRepository
 import com.vpedrosa.smarthome.device.domain.ports.AppSettingsRepository
 import com.vpedrosa.smarthome.device.domain.ports.DeviceDiscoveryPort
 import com.vpedrosa.smarthome.device.domain.ports.DeviceEventRepository
 import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
-import com.vpedrosa.smarthome.device.domain.ports.SpeechRecognizerPort
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeInRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.CommissionDeviceUseCase
@@ -39,9 +37,6 @@ val deviceModule = module {
     single<DeviceEventRepository> { InMemoryDeviceEventRepository() }
     single<AntiSquatterRepository> { InMemoryAntiSquatterRepository() }
     single<AppSettingsRepository> { InMemoryAppSettingsRepository() }
-    single<SpeechRecognizerPort> {
-        FakeSpeechRecognizer(CoroutineScope(SupervisorJob() + Dispatchers.Default))
-    }
 
     // Use cases
     factory { ToggleDeviceUseCase(get(), get()) }
