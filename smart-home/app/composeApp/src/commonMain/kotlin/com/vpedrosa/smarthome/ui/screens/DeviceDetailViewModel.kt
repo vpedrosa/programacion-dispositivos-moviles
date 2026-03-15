@@ -25,6 +25,8 @@ import com.vpedrosa.smarthome.device.domain.usecases.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateLightUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateThermostatUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -53,6 +55,7 @@ class DeviceDetailViewModel(
 ) : ViewModel() {
 
     private val deviceId = DeviceId(deviceIdValue)
+    private var controlJob: Job? = null
 
     private val _uiState = MutableStateFlow(DeviceDetailUiState())
     val uiState: StateFlow<DeviceDetailUiState> = _uiState.asStateFlow()
@@ -99,35 +102,47 @@ class DeviceDetailViewModel(
     }
 
     fun onToggle() {
-        viewModelScope.launch { toggleDevice(deviceId) }
+        viewModelScope.launch { runCatching { toggleDevice(deviceId) } }
     }
 
     fun onUpdateColor(color: DomainColor) {
-        viewModelScope.launch { updateLight(deviceId, color = color) }
+        viewModelScope.launch { runCatching { updateLight(deviceId, color = color) } }
     }
 
     fun onUpdateBrightness(brightness: Int) {
-        viewModelScope.launch { updateLight(deviceId, brightness = brightness) }
+        viewModelScope.launch { runCatching { updateLight(deviceId, brightness = brightness) } }
     }
 
     fun onUpdateOpeningLevel(level: Int) {
-        viewModelScope.launch { updateBlind(deviceId, level) }
+        viewModelScope.launch { runCatching { updateBlind(deviceId, level) } }
     }
 
     fun onUpdateTargetTemperature(temperature: Double) {
-        viewModelScope.launch { updateThermostat(deviceId, targetTemperature = temperature) }
+        debouncedControl { updateThermostat(deviceId, targetTemperature = temperature) }
     }
 
     fun onToggleHeating() {
         viewModelScope.launch {
             val device = _uiState.value.device
             if (device is Thermostat) {
-                updateThermostat(deviceId, isHeatingOn = !device.isHeatingOn)
+                runCatching { updateThermostat(deviceId, isHeatingOn = !device.isHeatingOn) }
             }
         }
     }
 
     fun onToggleCasting() {
         viewModelScope.launch { toggleCasting(deviceId) }
+    }
+
+    private fun debouncedControl(block: suspend () -> Unit) {
+        controlJob?.cancel()
+        controlJob = viewModelScope.launch {
+            delay(CONTROL_DEBOUNCE_MS)
+            runCatching { block() }
+        }
+    }
+
+    private companion object {
+        const val CONTROL_DEBOUNCE_MS = 300L
     }
 }

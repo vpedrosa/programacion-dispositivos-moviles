@@ -48,6 +48,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -357,13 +358,25 @@ private fun LightContent(
             color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.height(8.dp))
+
+        var localBrightness by remember(device.id) { mutableFloatStateOf(device.brightness.toFloat()) }
+        var isDragging by remember { mutableStateOf(false) }
+        if (!isDragging) localBrightness = device.brightness.toFloat()
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Slider(
-                value = device.brightness.toFloat(),
-                onValueChange = { onUpdateBrightness(it.roundToInt()) },
+                value = localBrightness,
+                onValueChange = {
+                    isDragging = true
+                    localBrightness = it
+                },
+                onValueChangeFinished = {
+                    isDragging = false
+                    onUpdateBrightness(localBrightness.roundToInt())
+                },
                 valueRange = 0f..100f,
                 modifier = Modifier.weight(1f),
                 colors = SliderDefaults.colors(
@@ -374,7 +387,7 @@ private fun LightContent(
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "${device.brightness}%",
+                text = "${localBrightness.roundToInt()}%",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -629,9 +642,21 @@ private fun BlindContent(
             color = MaterialTheme.colorScheme.onBackground,
         )
         Spacer(modifier = Modifier.height(8.dp))
+
+        var localLevel by remember(device.id) { mutableFloatStateOf(device.openingLevel.toFloat()) }
+        var isDragging by remember { mutableStateOf(false) }
+        if (!isDragging) localLevel = device.openingLevel.toFloat()
+
         Slider(
-            value = device.openingLevel.toFloat(),
-            onValueChange = { onUpdateOpeningLevel(it.roundToInt()) },
+            value = localLevel,
+            onValueChange = {
+                isDragging = true
+                localLevel = it
+            },
+            onValueChangeFinished = {
+                isDragging = false
+                onUpdateOpeningLevel(localLevel.roundToInt())
+            },
             valueRange = 0f..100f,
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
@@ -831,7 +856,7 @@ private fun ThermostatContent(
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "${device.targetTemperature.roundToInt()}\u00B0",
+                        text = "${"%.1f".format(device.targetTemperature)}\u00B0",
                         style = MaterialTheme.typography.displayMedium,
                         fontWeight = FontWeight.Bold,
                         color = navy,
@@ -848,8 +873,8 @@ private fun ThermostatContent(
             ) {
                 IconButton(
                     onClick = {
-                        val newTemp = (device.targetTemperature - 0.5).coerceAtLeast(15.0)
-                        onUpdateTargetTemp(newTemp)
+                        val newTemp = (device.targetTemperature - 0.1).coerceAtLeast(15.0)
+                        onUpdateTargetTemp((newTemp * 10).roundToInt() / 10.0)
                     },
                     modifier = Modifier
                         .size(48.dp)
@@ -864,7 +889,7 @@ private fun ThermostatContent(
                 }
 
                 Text(
-                    text = "${device.targetTemperature}\u00B0C",
+                    text = "${"%.1f".format(device.targetTemperature)}\u00B0C",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -872,8 +897,8 @@ private fun ThermostatContent(
 
                 IconButton(
                     onClick = {
-                        val newTemp = (device.targetTemperature + 0.5).coerceAtMost(30.0)
-                        onUpdateTargetTemp(newTemp)
+                        val newTemp = (device.targetTemperature + 0.1).coerceAtMost(30.0)
+                        onUpdateTargetTemp((newTemp * 10).roundToInt() / 10.0)
                     },
                     modifier = Modifier
                         .size(48.dp)
