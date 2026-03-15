@@ -1,5 +1,6 @@
 package com.vpedrosa.smarthome.device.domain.usecases
 
+import com.vpedrosa.smarthome.device.domain.Blind
 import com.vpedrosa.smarthome.device.domain.DeviceType
 import com.vpedrosa.smarthome.device.domain.Light
 import com.vpedrosa.smarthome.device.domain.Lock
@@ -48,6 +49,13 @@ class BulkToggleDevicesByTypeInRoomUseCase(
                     deviceControlPort.toggleOnOff(device.id, turnOn)
                     device.copy(isHeatingOn = turnOn)
                 } else null
+                is Blind -> {
+                    val targetLevel = if (turnOn) 100 else 0
+                    if (device.openingLevel != targetLevel) {
+                        deviceControlPort.setWindowCoveringPosition(device.id, targetLevel)
+                        device.copy(openingLevel = targetLevel)
+                    } else null
+                }
                 else -> null
             }
         }

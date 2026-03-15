@@ -99,9 +99,9 @@ fun DeviceType.supportsBulkToggle(): Boolean = when (this) {
     DeviceType.LOCK,
     DeviceType.SWITCH,
     DeviceType.SMART_TV,
-    DeviceType.THERMOSTAT -> true
+    DeviceType.THERMOSTAT,
+    DeviceType.BLIND -> true
 
-    DeviceType.BLIND,
     DeviceType.SMOKE_SENSOR,
     DeviceType.WATER_LEAK_SENSOR,
     DeviceType.TEMPERATURE_SENSOR,

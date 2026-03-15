@@ -72,6 +72,8 @@
     <string name="action_delete">Delete</string>
     <string name="action_turn_on_all">Turn on all</string>
     <string name="action_turn_off_all">Turn off all</string>
+    <string name="action_open_all">Open all</string>
+    <string name="action_close_all">Close all</string>
 
     <!-- Device controls -->
     <string name="control_brightness">Brightness</string>

@@ -54,6 +54,8 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.action_close_all
+import smarthome.composeapp.generated.resources.action_open_all
 import smarthome.composeapp.generated.resources.action_turn_off_all
 import smarthome.composeapp.generated.resources.action_turn_on_all
 import smarthome.composeapp.generated.resources.device_type_blinds
@@ -135,12 +137,19 @@ fun DevicesScreen(
 
                 if (type.supportsBulkToggle()) {
                     item(key = "bulk_$type") {
-                        BulkToggleButton(
-                            allActive = devices.allActive(),
-                            onBulkToggle = { turnOn ->
-                                viewModel.onBulkToggle(type, turnOn)
-                            },
-                        )
+                        if (type == DeviceType.BLIND) {
+                            BulkToggleButton(
+                                allActive = devices.allActive(),
+                                onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
+                                activeLabel = stringResource(Res.string.action_close_all),
+                                inactiveLabel = stringResource(Res.string.action_open_all),
+                            )
+                        } else {
+                            BulkToggleButton(
+                                allActive = devices.allActive(),
+                                onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
+                            )
+                        }
                     }
                 }
 
@@ -236,12 +245,10 @@ internal fun DeviceRow(
 internal fun BulkToggleButton(
     allActive: Boolean,
     onBulkToggle: (turnOn: Boolean) -> Unit,
+    activeLabel: String = stringResource(Res.string.action_turn_off_all),
+    inactiveLabel: String = stringResource(Res.string.action_turn_on_all),
 ) {
-    val label = if (allActive) {
-        stringResource(Res.string.action_turn_off_all)
-    } else {
-        stringResource(Res.string.action_turn_on_all)
-    }
+    val label = if (allActive) activeLabel else inactiveLabel
 
     OutlinedButton(
         onClick = { onBulkToggle(!allActive) },
