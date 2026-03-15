@@ -37,7 +37,7 @@ class BulkToggleDevicesByTypeUseCase(
                     device.copy(isLocked = turnOn)
                 } else null
                 is Thermostat -> if (device.isHeatingOn != turnOn) {
-                    deviceControlPort.toggleOnOff(device.id, turnOn)
+                    deviceControlPort.setThermostatMode(device.id, turnOn)
                     device.copy(isHeatingOn = turnOn)
                 } else null
                 is Blind -> {
