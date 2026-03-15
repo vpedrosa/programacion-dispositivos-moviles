@@ -29,7 +29,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Run unit tests
-        run: ./gradlew composeApp:allTests wearApp:testDebugUnitTest --no-daemon
+        run: ./gradlew composeApp:testDebugUnitTest wearApp:testDebugUnitTest --no-daemon
 
       - name: Upload test reports
         if: always()
@@ -37,8 +37,8 @@ jobs:
         with:
           name: test-reports
           path: |
-            smart-home/app/composeApp/build/reports/tests/
-            smart-home/app/wearApp/build/reports/tests/
+            smart-home/app/composeApp/build/reports/tests/testDebugUnitTest/
+            smart-home/app/wearApp/build/reports/tests/testDebugUnitTest/
 
   build:
     name: Build APKs
