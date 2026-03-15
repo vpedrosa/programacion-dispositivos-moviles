@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -51,16 +52,15 @@ class EditGroupViewModel(
 
     private fun loadRoom(roomId: RoomId) {
         viewModelScope.launch {
-            observeRoom(roomId).collect { room ->
-                if (room != null) {
-                    _uiState.update {
-                        it.copy(
-                            name = room.name,
-                            photoUri = room.photoUri,
-                            selectedDeviceIds = room.deviceIds.toSet(),
-                            isEditing = true,
-                        )
-                    }
+            val room = observeRoom(roomId).first()
+            if (room != null) {
+                _uiState.update {
+                    it.copy(
+                        name = room.name,
+                        photoUri = room.photoUri,
+                        selectedDeviceIds = room.deviceIds.toSet(),
+                        isEditing = true,
+                    )
                 }
             }
         }
