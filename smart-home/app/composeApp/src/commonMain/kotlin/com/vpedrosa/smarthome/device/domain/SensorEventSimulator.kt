@@ -1,5 +1,6 @@
 package com.vpedrosa.smarthome.device.domain
 
+import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.usecases.AddDeviceEventUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -12,6 +13,7 @@ import kotlin.time.Clock
 class SensorEventSimulator(
     private val addDeviceEvent: AddDeviceEventUseCase,
     private val observeAllDevices: ObserveAllDevicesUseCase,
+    private val deviceRepository: DeviceRepository,
     private val scope: CoroutineScope,
 ) {
 
@@ -53,18 +55,17 @@ class SensorEventSimulator(
             delay(90_000L)
             val sensors = findDevicesOfType<ContactSensor>()
             for (sensor in sensors) {
-                if (Random.nextFloat() < 0.4f) {
-                    val opened = Random.nextBoolean()
-                    addDeviceEvent(
-                        DeviceEvent(
-                            id = randomId(),
-                            deviceId = sensor.id,
-                            type = if (opened) DeviceEventType.DOOR_OPENED else DeviceEventType.DOOR_CLOSED,
-                            message = if (opened) "${sensor.name} abierta" else "${sensor.name} cerrada",
-                            timestamp = Clock.System.now(),
-                        ),
-                    )
-                }
+                val toggled = sensor.toggle()
+                deviceRepository.save(toggled)
+                addDeviceEvent(
+                    DeviceEvent(
+                        id = randomId(),
+                        deviceId = sensor.id,
+                        type = if (toggled.isOpen) DeviceEventType.DOOR_OPENED else DeviceEventType.DOOR_CLOSED,
+                        message = if (toggled.isOpen) "${sensor.name} abierta" else "${sensor.name} cerrada",
+                        timestamp = Clock.System.now(),
+                    ),
+                )
             }
         }
     }
