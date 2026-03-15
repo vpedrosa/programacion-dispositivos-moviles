@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MeetingRoom
@@ -43,6 +42,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.vpedrosa.smarthome.ui.components.UriImage
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
@@ -156,19 +156,10 @@ private fun RoomCard(
         Box(modifier = Modifier.fillMaxSize()) {
             // Photo background or gradient placeholder
             if (summary.room.photoUri != null) {
-                // When a real photo URI is set, AsyncImage will be used here.
-                // For now, show a styled placeholder with a camera icon overlay.
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            Brush.linearGradient(
-                                colors = listOf(
-                                    MaterialTheme.colorScheme.primary,
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
-                                ),
-                            ),
-                        ),
+                UriImage(
+                    uri = summary.room.photoUri,
+                    contentDescription = summary.room.name,
+                    modifier = Modifier.fillMaxSize(),
                 )
             } else {
                 Box(

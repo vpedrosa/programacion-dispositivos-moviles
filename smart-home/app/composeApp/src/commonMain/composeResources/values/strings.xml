@@ -135,6 +135,10 @@
     <string name="edit_group_devices_section">Assign devices</string>
     <string name="edit_group_no_devices">No devices available</string>
     <string name="edit_group_save">Save group</string>
+    <string name="edit_group_photo_choose_source">Choose photo source</string>
+    <string name="edit_group_photo_camera">Camera</string>
+    <string name="edit_group_photo_gallery">Gallery</string>
+    <string name="edit_group_photo_remove">Remove photo</string>
 
     <!-- Settings -->
     <string name="settings_devices">DEVICES</string>

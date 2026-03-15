@@ -38,11 +38,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.vpedrosa.smarthome.ui.components.PhotoPicker
+import com.vpedrosa.smarthome.ui.components.UriImage
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -69,6 +74,19 @@ fun EditGroupScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val allDevices by viewModel.allDevices.collectAsState()
+    var showPhotoPicker by remember { mutableStateOf(false) }
+
+    PhotoPicker(
+        showPicker = showPhotoPicker,
+        hasExistingPhoto = state.photoUri != null,
+        onPhotoSelected = { uri ->
+            viewModel.setPhotoUri(uri)
+        },
+        onPhotoRemoved = {
+            viewModel.setPhotoUri(null)
+        },
+        onDismiss = { showPhotoPicker = false },
+    )
 
     LaunchedEffect(state.isSaved) {
         if (state.isSaved) {
@@ -151,8 +169,7 @@ fun EditGroupScreen(
             PhotoPlaceholder(
                 photoUri = state.photoUri,
                 onPhotoCaptureRequest = {
-                    // Platform photo capture will be integrated later.
-                    // For now this is a visual placeholder.
+                    showPhotoPicker = true
                 },
             )
 
@@ -274,13 +291,10 @@ private fun PhotoPlaceholder(
         contentAlignment = Alignment.Center,
     ) {
         if (photoUri != null) {
-            // When real photo loading is integrated (e.g. Coil/AsyncImage),
-            // the image will be shown here. For now, display the URI text.
-            Text(
-                text = photoUri,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                modifier = Modifier.padding(16.dp),
+            UriImage(
+                uri = photoUri,
+                contentDescription = stringResource(Res.string.a11y_photo_placeholder),
+                modifier = Modifier.fillMaxSize(),
             )
         } else {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
