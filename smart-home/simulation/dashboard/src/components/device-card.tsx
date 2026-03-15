@@ -81,9 +81,14 @@ function StateDisplay({ type, state }: { type: string; state: DeviceState }) {
         2: "Detenido",
       };
       return (
-        <Badge variant={state.playbackState === 0 ? "default" : "secondary"}>
-          {labels[state.playbackState as number] ?? "Desconocido"}
-        </Badge>
+        <>
+          <Badge variant={state.onOff ? "default" : "secondary"}>
+            {state.onOff ? "Encendido" : "Apagado"}
+          </Badge>
+          <Badge variant={state.playbackState === 0 ? "default" : "secondary"}>
+            {labels[state.playbackState as number] ?? "Desconocido"}
+          </Badge>
+        </>
       );
     }
 

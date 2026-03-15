@@ -23,7 +23,12 @@ export async function createMediaPlayer(dev) {
     });
     await node.add(player);
 
-    bus.emit("register", { id: dev.serialNumber, name: dev.name, type: dev.type, port: dev.port, state: { playbackState: 2 } });
+    bus.emit("register", { id: dev.serialNumber, name: dev.name, type: dev.type, port: dev.port, state: { onOff: false, playbackState: 2 } });
+
+    player.events.onOff.onOff$Changed.on(value => {
+        console.log(`[${dev.name}] ${value ? "ON" : "OFF"}`);
+        bus.emit("stateChange", { id: dev.serialNumber, state: { onOff: value } });
+    });
 
     return node;
 }
