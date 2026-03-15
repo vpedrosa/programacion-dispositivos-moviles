@@ -88,7 +88,7 @@ val deviceModule = module {
     factory { BulkToggleDevicesByTypeInRoomUseCase(get(), get(), get()) }
     factory { SaveRoomUseCase(get()) }
     factory { DeleteRoomUseCase(get()) }
-    factory { AddDeviceEventUseCase(get()) }
+    factory { AddDeviceEventUseCase(get(), get()) }
     factory { ObserveAntiSquatterConfigUseCase(get()) }
     factory { SaveAntiSquatterConfigUseCase(get()) }
     factory { SimulatePresenceUseCase(get(), get()) }
