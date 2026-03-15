@@ -14,7 +14,7 @@ class UpdateBlindUseCase(
         val device = deviceRepository.observeDevice(id).first() ?: return
         if (device !is Blind) return
 
-        deviceControlPort.setLevel(id, openingLevel)
+        deviceControlPort.setWindowCoveringPosition(id, openingLevel)
         deviceRepository.save(device.changeOpeningLevel(openingLevel))
     }
 }

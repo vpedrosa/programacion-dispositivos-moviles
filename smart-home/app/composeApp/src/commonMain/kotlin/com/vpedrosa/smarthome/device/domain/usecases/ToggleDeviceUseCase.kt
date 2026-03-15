@@ -39,7 +39,7 @@ class ToggleDeviceUseCase(
                 device.toggle()
             }
             is Thermostat -> {
-                deviceControlPort.toggleOnOff(id, !device.isHeatingOn)
+                deviceControlPort.setThermostatMode(id, !device.isHeatingOn)
                 device.toggleHeating()
             }
             is Blind,

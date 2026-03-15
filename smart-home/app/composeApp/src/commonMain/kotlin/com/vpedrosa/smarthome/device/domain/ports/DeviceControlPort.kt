@@ -9,4 +9,6 @@ interface DeviceControlPort {
     suspend fun setLevel(deviceId: DeviceId, level: Int)
     suspend fun lockDoor(deviceId: DeviceId, lock: Boolean)
     suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double)
+    suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean)
+    suspend fun setWindowCoveringPosition(deviceId: DeviceId, openPercent: Int)
 }

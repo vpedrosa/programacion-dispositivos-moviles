@@ -22,9 +22,13 @@ class UpdateThermostatUseCase(
         if (targetTemperature != null) {
             deviceControlPort.setThermostatSetpoint(id, targetTemperature)
             updated = updated.adjustTarget(targetTemperature)
+            if (!device.isHeatingOn && isHeatingOn != false) {
+                deviceControlPort.setThermostatMode(id, true)
+                updated = updated.copy(isHeatingOn = true)
+            }
         }
         if (isHeatingOn != null) {
-            deviceControlPort.toggleOnOff(id, isHeatingOn)
+            deviceControlPort.setThermostatMode(id, isHeatingOn)
             updated = updated.copy(isHeatingOn = isHeatingOn)
         }
 
