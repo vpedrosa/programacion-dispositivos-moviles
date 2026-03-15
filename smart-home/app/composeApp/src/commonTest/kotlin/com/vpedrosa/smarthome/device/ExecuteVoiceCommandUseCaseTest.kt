@@ -14,6 +14,8 @@ import com.vpedrosa.smarthome.device.domain.RoomId
 import com.vpedrosa.smarthome.device.domain.SmartTv
 import com.vpedrosa.smarthome.device.domain.Switch
 import com.vpedrosa.smarthome.device.domain.Thermostat
+import com.vpedrosa.smarthome.device.domain.DiscoveredDevice
+import com.vpedrosa.smarthome.device.domain.ports.DeviceControlPort
 import com.vpedrosa.smarthome.device.domain.usecases.ExecuteVoiceCommandUseCase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -21,18 +23,28 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+internal class FakeVoiceDeviceControlPort : DeviceControlPort {
+    override fun registerDevice(deviceId: DeviceId, discoveredDevice: DiscoveredDevice) {}
+    override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {}
+    override suspend fun setLevel(deviceId: DeviceId, level: Int) {}
+    override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {}
+    override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {}
+    override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {}
+    override suspend fun setWindowCoveringPosition(deviceId: DeviceId, openPercent: Int) {}
+}
+
 class ExecuteVoiceCommandUseCaseTest {
 
     private val deviceRepo = InMemoryDeviceRepository(initialDevices = emptyList())
     private val roomRepo = InMemoryRoomRepository(initialRooms = emptyList())
-    private val execute = ExecuteVoiceCommandUseCase(deviceRepo, roomRepo)
+    private val execute = ExecuteVoiceCommandUseCase(deviceRepo, roomRepo, FakeVoiceDeviceControlPort())
 
     // -- Toggle lights --
 
     @Test
     fun turnOnAllLights() = runTest {
-        val light1 = Light(DeviceId("l1"), "Lamp 1", "room-1", isOn = false, Color.WHITE, 80)
-        val light2 = Light(DeviceId("l2"), "Lamp 2", "room-1", isOn = false, Color.WHITE, 60)
+        val light1 = Light(DeviceId("l1"), "Lamp 1", RoomId("room-1"), isOn = false, Color.WHITE, 80)
+        val light2 = Light(DeviceId("l2"), "Lamp 2", RoomId("room-1"), isOn = false, Color.WHITE, 60)
         deviceRepo.save(light1)
         deviceRepo.save(light2)
 
@@ -47,8 +59,8 @@ class ExecuteVoiceCommandUseCaseTest {
 
     @Test
     fun turnOnLightsInSpecificRoom() = runTest {
-        val light1 = Light(DeviceId("l1"), "Lamp 1", "room-1", isOn = false, Color.WHITE, 80)
-        val light2 = Light(DeviceId("l2"), "Lamp 2", "room-2", isOn = false, Color.WHITE, 60)
+        val light1 = Light(DeviceId("l1"), "Lamp 1", RoomId("room-1"), isOn = false, Color.WHITE, 80)
+        val light2 = Light(DeviceId("l2"), "Lamp 2", RoomId("room-2"), isOn = false, Color.WHITE, 60)
         deviceRepo.save(light1)
         deviceRepo.save(light2)
 
@@ -70,7 +82,7 @@ class ExecuteVoiceCommandUseCaseTest {
 
     @Test
     fun turnOffTv() = runTest {
-        val tv = SmartTv(DeviceId("tv1"), "Smart TV", "room-1", isOn = true, isCasting = false)
+        val tv = SmartTv(DeviceId("tv1"), "Smart TV", RoomId("room-1"), isOn = true, isCasting = false)
         deviceRepo.save(tv)
 
         val result = execute(ParsedVoiceCommand.ToggleDevices(DeviceType.SMART_TV, turnOn = false))
@@ -86,7 +98,7 @@ class ExecuteVoiceCommandUseCaseTest {
 
     @Test
     fun openBlinds() = runTest {
-        val blind = Blind(DeviceId("b1"), "Blind 1", "room-1", openingLevel = 0)
+        val blind = Blind(DeviceId("b1"), "Blind 1", RoomId("room-1"), openingLevel = 0)
         deviceRepo.save(blind)
 
         val result = execute(ParsedVoiceCommand.SetBlinds(open = true))
@@ -100,7 +112,7 @@ class ExecuteVoiceCommandUseCaseTest {
 
     @Test
     fun closeBlinds() = runTest {
-        val blind = Blind(DeviceId("b1"), "Blind 1", "room-1", openingLevel = 80)
+        val blind = Blind(DeviceId("b1"), "Blind 1", RoomId("room-1"), openingLevel = 80)
         deviceRepo.save(blind)
 
         val result = execute(ParsedVoiceCommand.SetBlinds(open = false))
@@ -115,7 +127,7 @@ class ExecuteVoiceCommandUseCaseTest {
     @Test
     fun setThermostatTemperature() = runTest {
         val thermostat = Thermostat(
-            DeviceId("t1"), "Thermostat", "room-1",
+            DeviceId("t1"), "Thermostat", RoomId("room-1"),
             currentTemperature = 20.0, targetTemperature = 18.0, isHeatingOn = true,
         )
         deviceRepo.save(thermostat)
@@ -133,7 +145,7 @@ class ExecuteVoiceCommandUseCaseTest {
 
     @Test
     fun lockDoor() = runTest {
-        val lock = Lock(DeviceId("lk1"), "Front Door", "room-1", isLocked = false)
+        val lock = Lock(DeviceId("lk1"), "Front Door", RoomId("room-1"), isLocked = false)
         deviceRepo.save(lock)
 
         val result = execute(ParsedVoiceCommand.ToggleLock(lock = true))
@@ -147,8 +159,8 @@ class ExecuteVoiceCommandUseCaseTest {
 
     @Test
     fun unlockDoorByName() = runTest {
-        val lock1 = Lock(DeviceId("lk1"), "Front Door", "room-1", isLocked = true)
-        val lock2 = Lock(DeviceId("lk2"), "Garage Door", "room-2", isLocked = true)
+        val lock1 = Lock(DeviceId("lk1"), "Front Door", RoomId("room-1"), isLocked = true)
+        val lock2 = Lock(DeviceId("lk2"), "Garage Door", RoomId("room-2"), isLocked = true)
         deviceRepo.save(lock1)
         deviceRepo.save(lock2)
 

@@ -3,14 +3,11 @@ package com.vpedrosa.smarthome.device.domain.usecases
 import com.vpedrosa.smarthome.device.domain.Blind
 import com.vpedrosa.smarthome.device.domain.Device
 import com.vpedrosa.smarthome.device.domain.DeviceType
-import com.vpedrosa.smarthome.device.domain.Light
 import com.vpedrosa.smarthome.device.domain.Lock
 import com.vpedrosa.smarthome.device.domain.ParsedVoiceCommand
-import com.vpedrosa.smarthome.device.domain.Room
-import com.vpedrosa.smarthome.device.domain.SmartTv
-import com.vpedrosa.smarthome.device.domain.Switch
 import com.vpedrosa.smarthome.device.domain.Thermostat
 import com.vpedrosa.smarthome.device.domain.VoiceCommandResult
+import com.vpedrosa.smarthome.device.domain.ports.DeviceControlPort
 import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import kotlinx.coroutines.flow.first
@@ -22,6 +19,7 @@ import kotlinx.coroutines.flow.first
 class ExecuteVoiceCommandUseCase(
     private val deviceRepository: DeviceRepository,
     private val roomRepository: RoomRepository,
+    private val deviceControlPort: DeviceControlPort,
 ) {
     suspend operator fun invoke(command: ParsedVoiceCommand): VoiceCommandResult {
         return when (command) {
@@ -48,13 +46,7 @@ class ExecuteVoiceCommandUseCase(
         }
 
         val toggled = devices.mapNotNull { device ->
-            when (device) {
-                is Light -> if (device.isOn != cmd.turnOn) device.copy(isOn = cmd.turnOn) else null
-                is Switch -> if (device.isOn != cmd.turnOn) device.copy(isOn = cmd.turnOn) else null
-                is SmartTv -> if (device.isOn != cmd.turnOn) device.copy(isOn = cmd.turnOn) else null
-                is Thermostat -> if (device.isHeatingOn != cmd.turnOn) device.copy(isHeatingOn = cmd.turnOn) else null
-                else -> null
-            }
+            toggleDevice(device, cmd.turnOn, deviceControlPort)
         }
 
         if (toggled.isNotEmpty()) {

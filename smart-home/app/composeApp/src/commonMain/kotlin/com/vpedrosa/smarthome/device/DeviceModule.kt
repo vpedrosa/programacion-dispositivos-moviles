@@ -97,7 +97,7 @@ val deviceModule = module {
     factory { ParseVoiceCommandUseCase() }
     factory { ObserveDiscoveredDevicesUseCase(get()) }
     factory { CommissionDeviceUseCase(get(), get(), get()) }
-    factory { ExecuteVoiceCommandUseCase(get(), get()) }
+    factory { ExecuteVoiceCommandUseCase(get(), get(), get()) }
 
     // Sensor event simulator (singleton, lazy start)
     single {
