@@ -3,8 +3,7 @@ package com.vpedrosa.smarthome.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vpedrosa.smarthome.device.domain.AppSettings
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAppSettingsUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.SaveAppSettingsUseCase
+import com.vpedrosa.smarthome.device.domain.ports.AppSettingsRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -18,11 +17,10 @@ data class SettingsUiState(
 )
 
 class SettingsViewModel(
-    observeSettings: ObserveAppSettingsUseCase,
-    private val saveSettings: SaveAppSettingsUseCase,
+    private val appSettingsRepository: AppSettingsRepository,
 ) : ViewModel() {
 
-    val uiState: StateFlow<SettingsUiState> = observeSettings()
+    val uiState: StateFlow<SettingsUiState> = appSettingsRepository.observeSettings()
         .map { settings ->
             SettingsUiState(
                 sensorAlertsEnabled = settings.sensorAlertsEnabled,
@@ -71,7 +69,7 @@ class SettingsViewModel(
 
     private fun saveCurrentSettings(settings: AppSettings) {
         viewModelScope.launch {
-            saveSettings(settings)
+            appSettingsRepository.saveSettings(settings)
         }
     }
 }

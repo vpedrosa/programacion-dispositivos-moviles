@@ -6,9 +6,8 @@ import com.vpedrosa.smarthome.device.domain.Device
 import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.Room
 import com.vpedrosa.smarthome.device.domain.RoomId
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveRoomUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.SaveRoomUseCase
+import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,15 +28,14 @@ data class EditGroupUiState(
 
 class EditGroupViewModel(
     private val roomIdValue: String?,
-    observeAllDevices: ObserveAllDevicesUseCase,
-    private val observeRoom: ObserveRoomUseCase,
-    private val saveRoom: SaveRoomUseCase,
+    deviceRepository: DeviceRepository,
+    private val roomRepository: RoomRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditGroupUiState())
     val uiState: StateFlow<EditGroupUiState> = _uiState.asStateFlow()
 
-    val allDevices: StateFlow<List<Device>> = observeAllDevices()
+    val allDevices: StateFlow<List<Device>> = deviceRepository.observeAllDevices()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -52,7 +50,7 @@ class EditGroupViewModel(
 
     private fun loadRoom(roomId: RoomId) {
         viewModelScope.launch {
-            val room = observeRoom(roomId).first()
+            val room = roomRepository.observeRoom(roomId).first()
             if (room != null) {
                 _uiState.update {
                     it.copy(
@@ -103,7 +101,7 @@ class EditGroupViewModel(
         )
 
         viewModelScope.launch {
-            saveRoom(room)
+            roomRepository.save(room)
             _uiState.update { it.copy(isSaved = true) }
         }
     }

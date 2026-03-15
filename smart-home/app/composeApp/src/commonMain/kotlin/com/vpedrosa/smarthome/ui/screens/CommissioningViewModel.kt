@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.DiscoveredDevice
+import com.vpedrosa.smarthome.device.domain.ports.DeviceDiscoveryPort
+import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.usecases.CommissionDeviceUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDiscoveredDevicesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,8 +23,8 @@ data class CommissioningUiState(
 )
 
 class CommissioningViewModel(
-    observeDiscoveredDevices: ObserveDiscoveredDevicesUseCase,
-    observeAllDevices: ObserveAllDevicesUseCase,
+    discoveryPort: DeviceDiscoveryPort,
+    deviceRepository: DeviceRepository,
     private val commissionDevice: CommissionDeviceUseCase,
 ) : ViewModel() {
 
@@ -32,8 +32,8 @@ class CommissioningViewModel(
     private val error = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<CommissioningUiState> = combine(
-        observeDiscoveredDevices(),
-        observeAllDevices(),
+        discoveryPort.discoverDevices(),
+        deviceRepository.observeAllDevices(),
         inProgress,
         error,
     ) { discovered, commissioned, progressing, lastError ->

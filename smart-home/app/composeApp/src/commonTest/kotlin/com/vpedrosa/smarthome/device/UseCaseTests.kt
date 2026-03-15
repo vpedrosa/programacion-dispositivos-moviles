@@ -17,8 +17,6 @@ import com.vpedrosa.smarthome.device.domain.Thermostat
 import com.vpedrosa.smarthome.device.domain.DiscoveredDevice
 import com.vpedrosa.smarthome.device.domain.ports.DeviceControlPort
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.DeleteRoomUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.SaveRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateLightUseCase
@@ -545,17 +543,16 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
 // endregion
 
-// region SaveRoomUseCase / DeleteRoomUseCase
+// region RoomRepository (save / delete)
 
-class SaveRoomUseCaseTest {
+class RoomRepositoryTest {
 
     @Test
     fun saveRoom_addsNewRoom() = runTest {
         val repo = InMemoryRoomRepository(emptyList())
-        val useCase = SaveRoomUseCase(repo)
 
         val room = Room(RoomId("room-1"), "Living Room", null, listOf(DeviceId("d-1")))
-        useCase(room)
+        repo.save(room)
 
         val result = repo.observeRoom(RoomId("room-1")).first()
         assertNotNull(result)
@@ -567,27 +564,22 @@ class SaveRoomUseCaseTest {
     fun saveRoom_updatesExistingRoom() = runTest {
         val room = Room(RoomId("room-1"), "Living Room", null, listOf(DeviceId("d-1")))
         val repo = InMemoryRoomRepository(listOf(room))
-        val useCase = SaveRoomUseCase(repo)
 
         val updated = room.copy(name = "Salon", deviceIds = listOf(DeviceId("d-1"), DeviceId("d-2")))
-        useCase(updated)
+        repo.save(updated)
 
         val result = repo.observeRoom(RoomId("room-1")).first()
         assertNotNull(result)
         assertEquals("Salon", result.name)
         assertEquals(2, result.deviceIds.size)
     }
-}
-
-class DeleteRoomUseCaseTest {
 
     @Test
     fun deleteRoom_removesRoom() = runTest {
         val room = Room(RoomId("room-1"), "Living Room", null, emptyList())
         val repo = InMemoryRoomRepository(listOf(room))
-        val useCase = DeleteRoomUseCase(repo)
 
-        useCase(RoomId("room-1"))
+        repo.delete(RoomId("room-1"))
 
         val result = repo.observeRoom(RoomId("room-1")).first()
         assertNull(result)
@@ -597,9 +589,8 @@ class DeleteRoomUseCaseTest {
     @Test
     fun deleteNonexistentRoom_doesNotCrash() = runTest {
         val repo = InMemoryRoomRepository(emptyList())
-        val useCase = DeleteRoomUseCase(repo)
 
-        useCase(RoomId("nonexistent"))
+        repo.delete(RoomId("nonexistent"))
 
         assertTrue(repo.observeAllRooms().first().isEmpty())
     }

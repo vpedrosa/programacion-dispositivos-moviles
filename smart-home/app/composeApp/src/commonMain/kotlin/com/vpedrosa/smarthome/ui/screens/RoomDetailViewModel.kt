@@ -6,9 +6,9 @@ import com.vpedrosa.smarthome.device.domain.Device
 import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.DeviceType
 import com.vpedrosa.smarthome.device.domain.RoomId
+import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeInRoomUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ToggleDeviceUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,8 +23,8 @@ data class RoomDetailUiState(
 
 class RoomDetailViewModel(
     private val roomIdValue: String,
-    observeAllDevices: ObserveAllDevicesUseCase,
-    observeRoom: ObserveRoomUseCase,
+    deviceRepository: DeviceRepository,
+    roomRepository: RoomRepository,
     private val toggleDevice: ToggleDeviceUseCase,
     private val bulkToggleByTypeInRoom: BulkToggleDevicesByTypeInRoomUseCase,
 ) : ViewModel() {
@@ -32,8 +32,8 @@ class RoomDetailViewModel(
     private val roomId = RoomId(roomIdValue)
 
     val uiState: StateFlow<RoomDetailUiState> = combine(
-        observeAllDevices(),
-        observeRoom(roomId),
+        deviceRepository.observeAllDevices(),
+        roomRepository.observeRoom(roomId),
     ) { allDevices, room ->
         val deviceMap = allDevices.associateBy { it.id }
         val roomDevices = room?.deviceIds?.mapNotNull { deviceMap[it] } ?: emptyList()

@@ -6,9 +6,9 @@ import com.vpedrosa.smarthome.device.domain.Device
 import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.DeviceType
 import com.vpedrosa.smarthome.device.domain.RoomId
+import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllRoomsUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ToggleDeviceUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,15 +22,15 @@ data class DevicesUiState(
 )
 
 class DevicesViewModel(
-    observeAllDevices: ObserveAllDevicesUseCase,
-    observeAllRooms: ObserveAllRoomsUseCase,
+    deviceRepository: DeviceRepository,
+    roomRepository: RoomRepository,
     private val toggleDevice: ToggleDeviceUseCase,
     private val bulkToggleDevicesByType: BulkToggleDevicesByTypeUseCase,
 ) : ViewModel() {
 
     val uiState: StateFlow<DevicesUiState> = combine(
-        observeAllDevices(),
-        observeAllRooms(),
+        deviceRepository.observeAllDevices(),
+        roomRepository.observeAllRooms(),
     ) { devices, rooms ->
         val grouped = devices
             .groupBy { it.type }

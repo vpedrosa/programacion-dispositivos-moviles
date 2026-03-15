@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vpedrosa.smarthome.device.domain.DeviceEvent
 import com.vpedrosa.smarthome.device.domain.DeviceEventType
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceEventsUseCase
+import com.vpedrosa.smarthome.device.domain.ports.DeviceEventRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -31,10 +31,10 @@ data class EventItem(
 )
 
 class NotificationsViewModel(
-    observeDeviceEvents: ObserveDeviceEventsUseCase,
+    deviceEventRepository: DeviceEventRepository,
 ) : ViewModel() {
 
-    val uiState: StateFlow<NotificationsUiState> = observeDeviceEvents()
+    val uiState: StateFlow<NotificationsUiState> = deviceEventRepository.observeAllEvents()
         .map { events ->
             val now = Clock.System.now()
             val tz = TimeZone.currentSystemDefault()

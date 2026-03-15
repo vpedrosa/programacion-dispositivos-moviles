@@ -7,9 +7,8 @@ import com.vpedrosa.smarthome.device.domain.LightTimeSlot
 import com.vpedrosa.smarthome.device.domain.Room
 import com.vpedrosa.smarthome.device.domain.RoomId
 import com.vpedrosa.smarthome.device.domain.VideoConfig
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllRoomsUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAntiSquatterConfigUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.SaveAntiSquatterConfigUseCase
+import com.vpedrosa.smarthome.device.domain.ports.AntiSquatterRepository
+import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -32,14 +31,13 @@ data class AntiSquatterUiState(
 )
 
 class AntiSquatterViewModel(
-    observeConfig: ObserveAntiSquatterConfigUseCase,
-    observeAllRooms: ObserveAllRoomsUseCase,
-    private val saveConfig: SaveAntiSquatterConfigUseCase,
+    private val antiSquatterRepository: AntiSquatterRepository,
+    roomRepository: RoomRepository,
 ) : ViewModel() {
 
     val uiState: StateFlow<AntiSquatterUiState> = combine(
-        observeConfig(),
-        observeAllRooms(),
+        antiSquatterRepository.observeConfig(),
+        roomRepository.observeAllRooms(),
     ) { config, rooms ->
         AntiSquatterUiState(
             isEnabled = config.isEnabled,
@@ -145,7 +143,7 @@ class AntiSquatterViewModel(
 
     private fun saveCurrentConfig(config: AntiSquatterConfig) {
         viewModelScope.launch {
-            saveConfig(config)
+            antiSquatterRepository.saveConfig(config)
         }
     }
 }

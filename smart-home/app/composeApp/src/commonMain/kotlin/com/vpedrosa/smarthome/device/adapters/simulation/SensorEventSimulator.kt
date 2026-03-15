@@ -11,7 +11,6 @@ import com.vpedrosa.smarthome.device.domain.Thermostat
 import com.vpedrosa.smarthome.device.domain.WaterLeakSensor
 import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.usecases.AddDeviceEventUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -23,7 +22,6 @@ import kotlin.time.Duration.Companion.minutes
 
 class SensorEventSimulator(
     private val addDeviceEvent: AddDeviceEventUseCase,
-    private val observeAllDevices: ObserveAllDevicesUseCase,
     private val deviceRepository: DeviceRepository,
     private val scope: CoroutineScope,
 ) {
@@ -187,7 +185,7 @@ class SensorEventSimulator(
     }
 
     private suspend inline fun <reified T : Device> findDevicesOfType(): List<T> =
-        observeAllDevices().first().filterIsInstance<T>()
+        deviceRepository.observeAllDevices().first().filterIsInstance<T>()
 
     private fun randomId(): String =
         "evt-${Clock.System.now().toEpochMilliseconds()}-${Random.nextInt(100_000)}"

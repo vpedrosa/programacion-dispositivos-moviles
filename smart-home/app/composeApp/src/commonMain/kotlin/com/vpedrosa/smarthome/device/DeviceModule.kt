@@ -18,26 +18,11 @@ import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeInRo
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.CommissionDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ExecuteVoiceCommandUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllRoomsUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAntiSquatterConfigUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAppSettingsUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceEventsUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDevicesByRoomUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDiscoveredDevicesUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ParseVoiceCommandUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDevicesByTypeUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveRoomUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.SaveAntiSquatterConfigUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.SaveAppSettingsUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.SaveRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.SimulatePresenceUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ToggleCastingUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateLightUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.DeleteRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateThermostatUseCase
 import com.vpedrosa.smarthome.device.adapters.simulation.SensorEventSimulator
 import com.vpedrosa.smarthome.device.domain.usecases.AddDeviceEventUseCase
@@ -59,30 +44,15 @@ val deviceModule = module {
     }
 
     // Use cases
-    factory { ObserveAllDevicesUseCase(get()) }
-    factory { ObserveDeviceUseCase(get()) }
-    factory { ObserveDevicesByRoomUseCase(get()) }
-    factory { ObserveDevicesByTypeUseCase(get()) }
     factory { ToggleDeviceUseCase(get(), get()) }
     factory { UpdateLightUseCase(get(), get()) }
     factory { UpdateBlindUseCase(get(), get()) }
     factory { UpdateThermostatUseCase(get(), get()) }
-    factory { ToggleCastingUseCase(get()) }
-    factory { ObserveAllRoomsUseCase(get()) }
-    factory { ObserveRoomUseCase(get()) }
-    factory { ObserveDeviceEventsUseCase(get()) }
     factory { BulkToggleDevicesByTypeUseCase(get(), get()) }
     factory { BulkToggleDevicesByTypeInRoomUseCase(get(), get(), get()) }
-    factory { SaveRoomUseCase(get()) }
-    factory { DeleteRoomUseCase(get()) }
     factory { AddDeviceEventUseCase(get(), get()) }
-    factory { ObserveAntiSquatterConfigUseCase(get()) }
-    factory { SaveAntiSquatterConfigUseCase(get()) }
     factory { SimulatePresenceUseCase(get(), get()) }
-    factory { ObserveAppSettingsUseCase(get()) }
-    factory { SaveAppSettingsUseCase(get()) }
     factory { ParseVoiceCommandUseCase() }
-    factory { ObserveDiscoveredDevicesUseCase(get()) }
     factory { CommissionDeviceUseCase(get(), get(), get()) }
     factory { ExecuteVoiceCommandUseCase(get(), get(), get()) }
 
@@ -90,7 +60,6 @@ val deviceModule = module {
     single {
         SensorEventSimulator(
             addDeviceEvent = get(),
-            observeAllDevices = get(),
             deviceRepository = get(),
             scope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
         )

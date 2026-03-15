@@ -16,10 +16,9 @@ import com.vpedrosa.smarthome.device.domain.Switch
 import com.vpedrosa.smarthome.device.domain.TemperatureSensor
 import com.vpedrosa.smarthome.device.domain.Thermostat
 import com.vpedrosa.smarthome.device.domain.WaterLeakSensor
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceEventsUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveRoomUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ToggleCastingUseCase
+import com.vpedrosa.smarthome.device.domain.ports.DeviceEventRepository
+import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import com.vpedrosa.smarthome.device.domain.usecases.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateLightUseCase
@@ -30,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -45,14 +45,13 @@ data class DeviceDetailUiState(
 
 class DeviceDetailViewModel(
     private val deviceIdValue: String,
-    private val observeDevice: ObserveDeviceUseCase,
-    private val observeRoom: ObserveRoomUseCase,
-    private val observeDeviceEvents: ObserveDeviceEventsUseCase,
+    private val deviceRepository: DeviceRepository,
+    private val roomRepository: RoomRepository,
+    private val deviceEventRepository: DeviceEventRepository,
     private val toggleDevice: ToggleDeviceUseCase,
     private val updateLight: UpdateLightUseCase,
     private val updateBlind: UpdateBlindUseCase,
     private val updateThermostat: UpdateThermostatUseCase,
-    private val toggleCasting: ToggleCastingUseCase,
 ) : ViewModel() {
 
     private val deviceId = DeviceId(deviceIdValue)
@@ -69,10 +68,10 @@ class DeviceDetailViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeDeviceAndRoom() {
         viewModelScope.launch {
-            observeDevice(deviceId)
+            deviceRepository.observeDevice(deviceId)
                 .flatMapLatest { device ->
                     if (device?.roomId != null) {
-                        observeRoom(device.roomId!!).map { room ->
+                        roomRepository.observeRoom(device.roomId!!).map { room ->
                             device to room
                         }
                     } else {
@@ -93,7 +92,7 @@ class DeviceDetailViewModel(
 
     private fun observeEvents() {
         viewModelScope.launch {
-            observeDeviceEvents()
+            deviceEventRepository.observeAllEvents()
                 .map { events -> events.filter { it.deviceId == deviceId } }
                 .collect { filteredEvents ->
                     _uiState.update { it.copy(deviceEvents = filteredEvents) }
@@ -131,7 +130,11 @@ class DeviceDetailViewModel(
     }
 
     fun onToggleCasting() {
-        viewModelScope.launch { toggleCasting(deviceId) }
+        viewModelScope.launch {
+            val device = deviceRepository.observeDevice(deviceId).first() ?: return@launch
+            if (device !is SmartTv) return@launch
+            deviceRepository.save(device.toggleCasting())
+        }
     }
 
     private fun debouncedControl(block: suspend () -> Unit) {

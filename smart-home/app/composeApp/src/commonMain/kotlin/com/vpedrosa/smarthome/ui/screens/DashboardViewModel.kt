@@ -10,9 +10,9 @@ import com.vpedrosa.smarthome.device.domain.Lock
 import com.vpedrosa.smarthome.device.domain.Room
 import com.vpedrosa.smarthome.device.domain.SmartTv
 import com.vpedrosa.smarthome.device.domain.TemperatureSensor
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllRoomsUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ObserveDeviceEventsUseCase
+import com.vpedrosa.smarthome.device.domain.ports.DeviceEventRepository
+import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -41,15 +41,15 @@ data class RoomSummary(
 )
 
 class DashboardViewModel(
-    observeAllDevices: ObserveAllDevicesUseCase,
-    observeAllRooms: ObserveAllRoomsUseCase,
-    observeDeviceEvents: ObserveDeviceEventsUseCase,
+    deviceRepository: DeviceRepository,
+    roomRepository: RoomRepository,
+    deviceEventRepository: DeviceEventRepository,
 ) : ViewModel() {
 
     val uiState: StateFlow<DashboardUiState> = combine(
-        observeAllDevices(),
-        observeAllRooms(),
-        observeDeviceEvents(),
+        deviceRepository.observeAllDevices(),
+        roomRepository.observeAllRooms(),
+        deviceEventRepository.observeAllEvents(),
     ) { devices, rooms, events ->
 
         val lightsOn = devices.count { it is Light && it.isOn }
