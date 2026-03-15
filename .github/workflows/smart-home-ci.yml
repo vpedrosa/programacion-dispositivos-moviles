@@ -1,0 +1,73 @@
+name: Smart Home CI
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'smart-home/app/**'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'smart-home/app/**'
+
+defaults:
+  run:
+    working-directory: smart-home/app
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Run unit tests
+        run: ./gradlew composeApp:allTests wearApp:testDebugUnitTest --no-daemon
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            smart-home/app/composeApp/build/reports/tests/
+            smart-home/app/wearApp/build/reports/tests/
+
+  build:
+    name: Build APKs
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build phone APK
+        run: ./gradlew androidApp:assembleDebug --no-daemon
+
+      - name: Build Wear OS APK
+        run: ./gradlew wearApp:assembleDebug --no-daemon
+
+      - name: Upload phone APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-home-phone-apk
+          path: smart-home/app/androidApp/build/outputs/apk/debug/*.apk
+
+      - name: Upload Wear OS APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-home-wear-apk
+          path: smart-home/app/wearApp/build/outputs/apk/debug/*.apk
