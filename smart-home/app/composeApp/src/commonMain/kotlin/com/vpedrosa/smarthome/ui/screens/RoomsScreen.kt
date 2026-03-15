@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MeetingRoom
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -47,6 +48,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.rooms_active_count
 import smarthome.composeapp.generated.resources.a11y_delete_group
+import smarthome.composeapp.generated.resources.a11y_edit_group
 import smarthome.composeapp.generated.resources.rooms_add_group
 import smarthome.composeapp.generated.resources.rooms_device_count
 import smarthome.composeapp.generated.resources.rooms_empty
@@ -56,6 +58,7 @@ import smarthome.composeapp.generated.resources.a11y_room_placeholder
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RoomsScreen(
+    onNavigateToRoomDetail: (String) -> Unit = {},
     onNavigateToEditGroup: (String) -> Unit = {},
     onNavigateToNewGroup: () -> Unit = {},
     viewModel: RoomsViewModel = koinViewModel(),
@@ -122,7 +125,8 @@ fun RoomsScreen(
                 ) { summary ->
                     RoomCard(
                         summary = summary,
-                        onClick = { onNavigateToEditGroup(summary.room.id.value) },
+                        onClick = { onNavigateToRoomDetail(summary.room.id.value) },
+                        onEdit = { onNavigateToEditGroup(summary.room.id.value) },
                         onDelete = { viewModel.onDeleteRoom(summary.room.id) },
                     )
                 }
@@ -135,6 +139,7 @@ fun RoomsScreen(
 private fun RoomCard(
     summary: RoomCardInfo,
     onClick: () -> Unit,
+    onEdit: () -> Unit,
     onDelete: () -> Unit,
 ) {
     Card(
@@ -221,18 +226,26 @@ private fun RoomCard(
                 )
             }
 
-            // Delete button (top-left)
-            IconButton(
-                onClick = onDelete,
+            // Edit and delete buttons (top-left)
+            Row(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(4.dp),
             ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(Res.string.a11y_delete_group),
-                    tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-                )
+                IconButton(onClick = onEdit) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = stringResource(Res.string.a11y_edit_group),
+                        tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                    )
+                }
+                IconButton(onClick = onDelete) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(Res.string.a11y_delete_group),
+                        tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                    )
+                }
             }
 
             // Room name and active count (bottom)

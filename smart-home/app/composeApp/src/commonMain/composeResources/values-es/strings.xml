@@ -186,6 +186,7 @@
     <string name="a11y_play_video">Reproducir vídeo</string>
     <string name="a11y_lock_door">Cerrar cerradura</string>
     <string name="a11y_unlock_door">Abrir cerradura</string>
+    <string name="a11y_edit_group">Editar grupo</string>
     <string name="a11y_delete_group">Eliminar grupo</string>
     <string name="a11y_add_time_slot">Añadir franja horaria</string>
     <string name="a11y_remove_time_slot">Eliminar franja horaria</string>

@@ -18,6 +18,9 @@ data class EditGroup(val roomId: String? = null)
 object Devices
 
 @Serializable
+data class RoomDetail(val roomId: String)
+
+@Serializable
 data class DeviceDetail(val deviceId: String)
 
 @Serializable

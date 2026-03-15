@@ -12,6 +12,7 @@ import com.vpedrosa.smarthome.ui.screens.DashboardScreen
 import com.vpedrosa.smarthome.ui.screens.DeviceDetailScreen
 import com.vpedrosa.smarthome.ui.screens.DevicesScreen
 import com.vpedrosa.smarthome.ui.screens.EditGroupScreen
+import com.vpedrosa.smarthome.ui.screens.RoomDetailScreen
 import com.vpedrosa.smarthome.ui.screens.NotificationsScreen
 import com.vpedrosa.smarthome.ui.screens.RoomsScreen
 import com.vpedrosa.smarthome.ui.screens.SettingsScreen
@@ -48,12 +49,29 @@ fun SmartHomeNavHost(
 
         composable<Rooms> {
             RoomsScreen(
+                onNavigateToRoomDetail = { roomId ->
+                    navController.navigate(RoomDetail(roomId = roomId))
+                },
                 onNavigateToEditGroup = { roomId ->
                     navController.navigate(EditGroup(roomId = roomId))
                 },
                 onNavigateToNewGroup = {
                     navController.navigate(EditGroup())
                 },
+            )
+        }
+
+        composable<RoomDetail> { backStackEntry ->
+            val route = backStackEntry.toRoute<RoomDetail>()
+            RoomDetailScreen(
+                roomId = route.roomId,
+                onNavigateToDeviceDetail = { deviceId ->
+                    navController.navigate(DeviceDetail(deviceId))
+                },
+                onNavigateToEditGroup = {
+                    navController.navigate(EditGroup(roomId = route.roomId))
+                },
+                onNavigateBack = { navController.popBackStack() },
             )
         }
 

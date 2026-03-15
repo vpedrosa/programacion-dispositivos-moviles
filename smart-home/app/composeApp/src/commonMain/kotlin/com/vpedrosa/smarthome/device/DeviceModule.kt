@@ -14,6 +14,7 @@ import com.vpedrosa.smarthome.device.domain.ports.DeviceEventRepository
 import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.ports.RoomRepository
 import com.vpedrosa.smarthome.device.domain.ports.SpeechRecognizerPort
+import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeInRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.CommissionDeviceUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ExecuteVoiceCommandUseCase
@@ -47,6 +48,7 @@ import com.vpedrosa.smarthome.ui.screens.DeviceDetailViewModel
 import com.vpedrosa.smarthome.ui.screens.DevicesViewModel
 import com.vpedrosa.smarthome.ui.screens.EditGroupViewModel
 import com.vpedrosa.smarthome.ui.screens.NotificationsViewModel
+import com.vpedrosa.smarthome.ui.screens.RoomDetailViewModel
 import com.vpedrosa.smarthome.ui.screens.RoomsViewModel
 import com.vpedrosa.smarthome.ui.screens.SettingsViewModel
 import com.vpedrosa.smarthome.ui.screens.VoiceControlViewModel
@@ -83,6 +85,7 @@ val deviceModule = module {
     factory { ObserveRoomUseCase(get()) }
     factory { ObserveDeviceEventsUseCase(get()) }
     factory { BulkToggleDevicesByTypeUseCase(get(), get()) }
+    factory { BulkToggleDevicesByTypeInRoomUseCase(get(), get(), get()) }
     factory { SaveRoomUseCase(get()) }
     factory { DeleteRoomUseCase(get()) }
     factory { AddDeviceEventUseCase(get()) }
@@ -114,6 +117,7 @@ val deviceModule = module {
     viewModelOf(::AntiSquatterViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::VoiceControlViewModel)
+    viewModel { params -> RoomDetailViewModel(params.get(), get(), get(), get(), get()) }
     viewModel { params -> DeviceDetailViewModel(params.get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { params -> EditGroupViewModel(params.getOrNull(), get(), get(), get()) }
 }

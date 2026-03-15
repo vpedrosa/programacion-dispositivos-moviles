@@ -153,7 +153,7 @@ fun DevicesScreen(
 }
 
 @Composable
-private fun DeviceCategorySectionHeader(
+internal fun DeviceCategorySectionHeader(
     type: DeviceType,
     count: Int,
 ) {
@@ -169,7 +169,7 @@ private fun DeviceCategorySectionHeader(
 }
 
 @Composable
-private fun DeviceRow(
+internal fun DeviceRow(
     device: Device,
     roomName: String?,
     isToggleable: Boolean,
@@ -233,7 +233,7 @@ private fun DeviceRow(
 }
 
 @Composable
-private fun BulkToggleButton(
+internal fun BulkToggleButton(
     allActive: Boolean,
     onBulkToggle: (turnOn: Boolean) -> Unit,
 ) {
@@ -257,10 +257,10 @@ private fun BulkToggleButton(
     }
 }
 
-private fun buildSubtitle(roomName: String?, stateLabel: String): String =
+internal fun buildSubtitle(roomName: String?, stateLabel: String): String =
     if (roomName != null) "$roomName - $stateLabel" else stateLabel
 
-private fun DeviceType.icon(): ImageVector = when (this) {
+internal fun DeviceType.icon(): ImageVector = when (this) {
     DeviceType.LIGHT -> Icons.Default.Lightbulb
     DeviceType.LOCK -> Icons.Default.Lock
     DeviceType.BLIND -> Icons.Default.Blinds
@@ -273,7 +273,7 @@ private fun DeviceType.icon(): ImageVector = when (this) {
     DeviceType.SMART_TV -> Icons.Default.Tv
 }
 
-private fun DeviceType.pluralLabelRes(): StringResource = when (this) {
+internal fun DeviceType.pluralLabelRes(): StringResource = when (this) {
     DeviceType.LIGHT -> Res.string.device_type_lights
     DeviceType.LOCK -> Res.string.device_type_locks
     DeviceType.BLIND -> Res.string.device_type_blinds

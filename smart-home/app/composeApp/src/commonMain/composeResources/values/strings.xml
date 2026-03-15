@@ -186,6 +186,7 @@
     <string name="a11y_play_video">Play video</string>
     <string name="a11y_lock_door">Lock door</string>
     <string name="a11y_unlock_door">Unlock door</string>
+    <string name="a11y_edit_group">Edit group</string>
     <string name="a11y_delete_group">Delete group</string>
     <string name="a11y_add_time_slot">Add time slot</string>
     <string name="a11y_remove_time_slot">Remove time slot</string>
