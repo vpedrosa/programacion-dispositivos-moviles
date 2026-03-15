@@ -39,7 +39,7 @@ import com.vpedrosa.smarthome.device.domain.usecases.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateLightUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.DeleteRoomUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.UpdateThermostatUseCase
-import com.vpedrosa.smarthome.device.domain.SensorEventSimulator
+import com.vpedrosa.smarthome.device.adapters.simulation.SensorEventSimulator
 import com.vpedrosa.smarthome.device.domain.usecases.AddDeviceEventUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

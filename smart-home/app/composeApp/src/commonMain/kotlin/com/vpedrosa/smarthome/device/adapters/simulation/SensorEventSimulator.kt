@@ -1,5 +1,14 @@
-package com.vpedrosa.smarthome.device.domain
+package com.vpedrosa.smarthome.device.adapters.simulation
 
+import com.vpedrosa.smarthome.device.domain.ContactSensor
+import com.vpedrosa.smarthome.device.domain.Device
+import com.vpedrosa.smarthome.device.domain.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.DeviceId
+import com.vpedrosa.smarthome.device.domain.SmokeSensor
+import com.vpedrosa.smarthome.device.domain.TemperatureSensor
+import com.vpedrosa.smarthome.device.domain.Thermostat
+import com.vpedrosa.smarthome.device.domain.WaterLeakSensor
 import com.vpedrosa.smarthome.device.domain.ports.DeviceRepository
 import com.vpedrosa.smarthome.device.domain.usecases.AddDeviceEventUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
