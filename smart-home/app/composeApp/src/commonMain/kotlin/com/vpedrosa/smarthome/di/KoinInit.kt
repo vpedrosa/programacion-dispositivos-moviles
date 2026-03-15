@@ -5,5 +5,5 @@ import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 
 fun initKoin(): KoinApplication = startKoin {
-    modules(deviceModule)
+    modules(platformModule, deviceModule)
 }
