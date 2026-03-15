@@ -81,13 +81,13 @@ fun DeviceType.isToggleable(): Boolean = when (this) {
     DeviceType.LOCK,
     DeviceType.SWITCH,
     DeviceType.SMART_TV,
-    DeviceType.THERMOSTAT,
-    DeviceType.CONTACT_SENSOR -> true
+    DeviceType.THERMOSTAT -> true
 
     DeviceType.BLIND,
     DeviceType.SMOKE_SENSOR,
     DeviceType.WATER_LEAK_SENSOR,
-    DeviceType.TEMPERATURE_SENSOR -> false
+    DeviceType.TEMPERATURE_SENSOR,
+    DeviceType.CONTACT_SENSOR -> false
 }
 
 /**
