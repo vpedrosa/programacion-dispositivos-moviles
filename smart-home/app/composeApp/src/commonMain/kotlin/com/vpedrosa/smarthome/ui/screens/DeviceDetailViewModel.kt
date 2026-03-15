@@ -30,7 +30,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -67,27 +68,25 @@ class DeviceDetailViewModel(
 
     private fun observeDeviceAndRoom() {
         viewModelScope.launch {
-            observeDevice(deviceId).collect { device ->
-                if (device != null && device.roomId != null) {
-                    observeRoom(RoomId(device.roomId!!)).collect { room ->
-                        _uiState.update {
-                            it.copy(
-                                device = device,
-                                roomName = room?.name,
-                                isLoading = false,
-                            )
+            observeDevice(deviceId)
+                .flatMapLatest { device ->
+                    if (device?.roomId != null) {
+                        observeRoom(RoomId(device.roomId!!)).map { room ->
+                            device to room
                         }
+                    } else {
+                        flowOf(device to null)
                     }
-                } else {
+                }
+                .collect { (device, room) ->
                     _uiState.update {
                         it.copy(
                             device = device,
-                            roomName = null,
+                            roomName = room?.name,
                             isLoading = false,
                         )
                     }
                 }
-            }
         }
     }
 
