@@ -5,10 +5,13 @@ on:
     branches: [master]
     paths:
       - 'smart-home/app/**'
+      - '.github/workflows/smart-home-ci.yml'
   pull_request:
     branches: [master]
     paths:
       - 'smart-home/app/**'
+      - '.github/workflows/smart-home-ci.yml'
+  workflow_dispatch:
 
 defaults:
   run:
