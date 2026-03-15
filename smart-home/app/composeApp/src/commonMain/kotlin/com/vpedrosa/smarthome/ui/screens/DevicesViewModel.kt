@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.vpedrosa.smarthome.device.domain.Device
 import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.DeviceType
+import com.vpedrosa.smarthome.device.domain.RoomId
 import com.vpedrosa.smarthome.device.domain.usecases.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllDevicesUseCase
 import com.vpedrosa.smarthome.device.domain.usecases.ObserveAllRoomsUseCase
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 
 data class DevicesUiState(
     val devicesByType: Map<DeviceType, List<Device>> = emptyMap(),
-    val roomNames: Map<String, String> = emptyMap(),
+    val roomNames: Map<RoomId, String> = emptyMap(),
 )
 
 class DevicesViewModel(
@@ -35,7 +36,7 @@ class DevicesViewModel(
             .groupBy { it.type }
             .toSortedMap(compareBy { it.ordinal })
 
-        val roomNamesMap = rooms.associate { it.id.value to it.name }
+        val roomNamesMap = rooms.associate { it.id to it.name }
 
         DevicesUiState(
             devicesByType = grouped,

@@ -50,10 +50,10 @@ class SimulatePresenceUseCase(
             .toSet()
 
         val lightsInConfiguredRooms = lights
-            .filter { light -> allConfiguredRoomIds.any { it.value == light.roomId } }
+            .filter { light -> light.roomId in allConfiguredRoomIds }
 
         lightsInConfiguredRooms.forEach { light ->
-            val shouldBeOn = activeRoomIds.any { it.value == light.roomId }
+            val shouldBeOn = light.roomId in activeRoomIds
             if (light.isOn != shouldBeOn) {
                 deviceRepository.save(light.copy(isOn = shouldBeOn))
             }

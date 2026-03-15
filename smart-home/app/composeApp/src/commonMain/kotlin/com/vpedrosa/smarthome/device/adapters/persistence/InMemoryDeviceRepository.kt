@@ -26,7 +26,7 @@ class InMemoryDeviceRepository(
 
     override fun observeDevicesByRoom(roomId: RoomId): Flow<List<Device>> =
         store.map { map ->
-            map.values.filter { it.roomId == roomId.value }
+            map.values.filter { it.roomId == roomId }
         }
 
     override fun observeDevicesByType(type: DeviceType): Flow<List<Device>> =

@@ -10,7 +10,6 @@ import com.vpedrosa.smarthome.device.domain.DeviceEvent
 import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.Light
 import com.vpedrosa.smarthome.device.domain.Lock
-import com.vpedrosa.smarthome.device.domain.RoomId
 import com.vpedrosa.smarthome.device.domain.SmartTv
 import com.vpedrosa.smarthome.device.domain.SmokeSensor
 import com.vpedrosa.smarthome.device.domain.Switch
@@ -30,6 +29,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -66,12 +66,13 @@ class DeviceDetailViewModel(
         observeEvents()
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun observeDeviceAndRoom() {
         viewModelScope.launch {
             observeDevice(deviceId)
                 .flatMapLatest { device ->
                     if (device?.roomId != null) {
-                        observeRoom(RoomId(device.roomId!!)).map { room ->
+                        observeRoom(device.roomId!!).map { room ->
                             device to room
                         }
                     } else {

@@ -3,14 +3,14 @@ package com.vpedrosa.smarthome.device.domain
 sealed interface Device {
     val id: DeviceId
     val name: String
-    val roomId: String?
+    val roomId: RoomId?
     val type: DeviceType
 }
 
 data class Light(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val isOn: Boolean,
     val color: Color,
     val brightness: Int,
@@ -31,7 +31,7 @@ data class Light(
 data class Lock(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val isLocked: Boolean,
 ) : Device {
     override val type: DeviceType get() = DeviceType.LOCK
@@ -42,7 +42,7 @@ data class Lock(
 data class Blind(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val openingLevel: Int,
 ) : Device {
     override val type: DeviceType get() = DeviceType.BLIND
@@ -57,7 +57,7 @@ data class Blind(
 data class Switch(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val isOn: Boolean,
 ) : Device {
     override val type: DeviceType get() = DeviceType.SWITCH
@@ -68,7 +68,7 @@ data class Switch(
 data class SmokeSensor(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val isSmokeDetected: Boolean,
 ) : Device {
     override val type: DeviceType get() = DeviceType.SMOKE_SENSOR
@@ -77,7 +77,7 @@ data class SmokeSensor(
 data class WaterLeakSensor(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val isLeakDetected: Boolean,
 ) : Device {
     override val type: DeviceType get() = DeviceType.WATER_LEAK_SENSOR
@@ -86,7 +86,7 @@ data class WaterLeakSensor(
 data class TemperatureSensor(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val currentTemperature: Double,
 ) : Device {
     override val type: DeviceType get() = DeviceType.TEMPERATURE_SENSOR
@@ -95,7 +95,7 @@ data class TemperatureSensor(
 data class ContactSensor(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val isOpen: Boolean,
 ) : Device {
     override val type: DeviceType get() = DeviceType.CONTACT_SENSOR
@@ -106,7 +106,7 @@ data class ContactSensor(
 data class Thermostat(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val currentTemperature: Double,
     val targetTemperature: Double,
     val isHeatingOn: Boolean,
@@ -121,7 +121,7 @@ data class Thermostat(
 data class SmartTv(
     override val id: DeviceId,
     override val name: String,
-    override val roomId: String?,
+    override val roomId: RoomId?,
     val isOn: Boolean,
     val isCasting: Boolean,
 ) : Device {

@@ -25,7 +25,7 @@ class SimulatePresenceUseCaseTest {
     private val lightSalon = Light(
         id = DeviceId("light-salon"),
         name = "Salon Light",
-        roomId = salonId.value,
+        roomId = salonId,
         isOn = false,
         color = Color.WHITE,
         brightness = 80,
@@ -34,7 +34,7 @@ class SimulatePresenceUseCaseTest {
     private val lightDormitorio = Light(
         id = DeviceId("light-dorm"),
         name = "Dorm Light",
-        roomId = dormitorioId.value,
+        roomId = dormitorioId,
         isOn = false,
         color = Color.WHITE,
         brightness = 60,
@@ -43,7 +43,7 @@ class SimulatePresenceUseCaseTest {
     private val smartTv = SmartTv(
         id = DeviceId("tv-salon"),
         name = "Salon TV",
-        roomId = salonId.value,
+        roomId = salonId,
         isOn = false,
         isCasting = false,
     )

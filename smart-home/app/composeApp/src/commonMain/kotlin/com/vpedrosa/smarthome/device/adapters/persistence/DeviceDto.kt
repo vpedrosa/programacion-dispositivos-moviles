@@ -7,6 +7,7 @@ import com.vpedrosa.smarthome.device.domain.Device
 import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.Light
 import com.vpedrosa.smarthome.device.domain.Lock
+import com.vpedrosa.smarthome.device.domain.RoomId
 import com.vpedrosa.smarthome.device.domain.SmartTv
 import com.vpedrosa.smarthome.device.domain.SmokeSensor
 import com.vpedrosa.smarthome.device.domain.Switch
@@ -40,7 +41,7 @@ data class LightDto(
     override fun toDomain(): Light = Light(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         isOn = isOn,
         color = Color(red, green, blue),
         brightness = brightness,
@@ -58,7 +59,7 @@ data class LockDto(
     override fun toDomain(): Lock = Lock(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         isLocked = isLocked,
     )
 }
@@ -74,7 +75,7 @@ data class BlindDto(
     override fun toDomain(): Blind = Blind(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         openingLevel = openingLevel,
     )
 }
@@ -90,7 +91,7 @@ data class SwitchDto(
     override fun toDomain(): Switch = Switch(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         isOn = isOn,
     )
 }
@@ -106,7 +107,7 @@ data class SmokeSensorDto(
     override fun toDomain(): SmokeSensor = SmokeSensor(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         isSmokeDetected = isSmokeDetected,
     )
 }
@@ -122,7 +123,7 @@ data class WaterLeakSensorDto(
     override fun toDomain(): WaterLeakSensor = WaterLeakSensor(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         isLeakDetected = isLeakDetected,
     )
 }
@@ -138,7 +139,7 @@ data class TemperatureSensorDto(
     override fun toDomain(): TemperatureSensor = TemperatureSensor(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         currentTemperature = currentTemperature,
     )
 }
@@ -154,7 +155,7 @@ data class ContactSensorDto(
     override fun toDomain(): ContactSensor = ContactSensor(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         isOpen = isOpen,
     )
 }
@@ -172,7 +173,7 @@ data class ThermostatDto(
     override fun toDomain(): Thermostat = Thermostat(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         currentTemperature = currentTemperature,
         targetTemperature = targetTemperature,
         isHeatingOn = isHeatingOn,
@@ -191,7 +192,7 @@ data class SmartTvDto(
     override fun toDomain(): SmartTv = SmartTv(
         id = DeviceId(id),
         name = name,
-        roomId = roomId,
+        roomId = roomId?.let { RoomId(it) },
         isOn = isOn,
         isCasting = isCasting,
     )
@@ -201,7 +202,7 @@ fun Device.toDto(): DeviceDto = when (this) {
     is Light -> LightDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         isOn = isOn,
         red = color.red,
         green = color.green,
@@ -211,49 +212,49 @@ fun Device.toDto(): DeviceDto = when (this) {
     is Lock -> LockDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         isLocked = isLocked,
     )
     is Blind -> BlindDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         openingLevel = openingLevel,
     )
     is Switch -> SwitchDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         isOn = isOn,
     )
     is SmokeSensor -> SmokeSensorDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         isSmokeDetected = isSmokeDetected,
     )
     is WaterLeakSensor -> WaterLeakSensorDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         isLeakDetected = isLeakDetected,
     )
     is TemperatureSensor -> TemperatureSensorDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         currentTemperature = currentTemperature,
     )
     is ContactSensor -> ContactSensorDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         isOpen = isOpen,
     )
     is Thermostat -> ThermostatDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         currentTemperature = currentTemperature,
         targetTemperature = targetTemperature,
         isHeatingOn = isHeatingOn,
@@ -261,7 +262,7 @@ fun Device.toDto(): DeviceDto = when (this) {
     is SmartTv -> SmartTvDto(
         id = id.value,
         name = name,
-        roomId = roomId,
+        roomId = roomId?.value,
         isOn = isOn,
         isCasting = isCasting,
     )

@@ -4,7 +4,6 @@ import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryDeviceReposito
 import com.vpedrosa.smarthome.device.adapters.persistence.InMemoryRoomRepository
 import com.vpedrosa.smarthome.device.domain.Blind
 import com.vpedrosa.smarthome.device.domain.Color
-import com.vpedrosa.smarthome.device.domain.ContactSensor
 import com.vpedrosa.smarthome.device.domain.DeviceId
 import com.vpedrosa.smarthome.device.domain.DeviceType
 import com.vpedrosa.smarthome.device.domain.Light
@@ -38,7 +37,7 @@ class ToggleDeviceUseCaseTest {
     private val light = Light(
         id = DeviceId("light-1"),
         name = "Lamp",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         isOn = false,
         color = Color.WHITE,
         brightness = 80,
@@ -46,26 +45,26 @@ class ToggleDeviceUseCaseTest {
     private val lock = Lock(
         id = DeviceId("lock-1"),
         name = "Front Door",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         isLocked = true,
     )
     private val switch = Switch(
         id = DeviceId("switch-1"),
         name = "Switch",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         isOn = false,
     )
     private val smartTv = SmartTv(
         id = DeviceId("tv-1"),
         name = "TV",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         isOn = false,
         isCasting = false,
     )
     private val thermostat = Thermostat(
         id = DeviceId("therm-1"),
         name = "Thermostat",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         currentTemperature = 20.0,
         targetTemperature = 22.0,
         isHeatingOn = false,
@@ -73,13 +72,13 @@ class ToggleDeviceUseCaseTest {
     private val blind = Blind(
         id = DeviceId("blind-1"),
         name = "Blind",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         openingLevel = 50,
     )
     private val smokeSensor = SmokeSensor(
         id = DeviceId("smoke-1"),
         name = "Smoke Sensor",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         isSmokeDetected = false,
     )
 
@@ -203,7 +202,7 @@ class UpdateLightUseCaseTest {
     private val light = Light(
         id = DeviceId("light-1"),
         name = "Lamp",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         isOn = true,
         color = Color.WHITE,
         brightness = 50,
@@ -247,7 +246,7 @@ class UpdateLightUseCaseTest {
 
     @Test
     fun updateNonLight_doesNothing() = runTest {
-        val lock = Lock(DeviceId("lock-1"), "Lock", "room-1", isLocked = true)
+        val lock = Lock(DeviceId("lock-1"), "Lock", RoomId("room-1"), isLocked = true)
         val repo = InMemoryDeviceRepository(listOf(lock))
         val useCase = UpdateLightUseCase(repo)
 
@@ -277,7 +276,7 @@ class UpdateBlindUseCaseTest {
     private val blind = Blind(
         id = DeviceId("blind-1"),
         name = "Blind",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         openingLevel = 50,
     )
 
@@ -316,7 +315,7 @@ class UpdateBlindUseCaseTest {
 
     @Test
     fun updateNonBlind_doesNothing() = runTest {
-        val light = Light(DeviceId("light-1"), "Lamp", "room-1", isOn = true, Color.WHITE, 80)
+        val light = Light(DeviceId("light-1"), "Lamp", RoomId("room-1"), isOn = true, Color.WHITE, 80)
         val repo = InMemoryDeviceRepository(listOf(light))
         val useCase = UpdateBlindUseCase(repo)
 
@@ -346,7 +345,7 @@ class UpdateThermostatUseCaseTest {
     private val thermostat = Thermostat(
         id = DeviceId("therm-1"),
         name = "Thermostat",
-        roomId = "room-1",
+        roomId = RoomId("room-1"),
         currentTemperature = 20.0,
         targetTemperature = 22.0,
         isHeatingOn = true,
@@ -390,7 +389,7 @@ class UpdateThermostatUseCaseTest {
 
     @Test
     fun updateNonThermostat_doesNothing() = runTest {
-        val light = Light(DeviceId("light-1"), "Lamp", "room-1", isOn = true, Color.WHITE, 80)
+        val light = Light(DeviceId("light-1"), "Lamp", RoomId("room-1"), isOn = true, Color.WHITE, 80)
         val repo = InMemoryDeviceRepository(listOf(light))
         val useCase = UpdateThermostatUseCase(repo)
 
@@ -419,9 +418,9 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun turnOnAllLights_setsAllLightsOn() = runTest {
-        val light1 = Light(DeviceId("l1"), "L1", "room-1", isOn = false, Color.WHITE, 80)
-        val light2 = Light(DeviceId("l2"), "L2", "room-1", isOn = false, Color.WHITE, 60)
-        val light3 = Light(DeviceId("l3"), "L3", "room-2", isOn = true, Color.WHITE, 50)
+        val light1 = Light(DeviceId("l1"), "L1", RoomId("room-1"), isOn = false, Color.WHITE, 80)
+        val light2 = Light(DeviceId("l2"), "L2", RoomId("room-1"), isOn = false, Color.WHITE, 60)
+        val light3 = Light(DeviceId("l3"), "L3", RoomId("room-2"), isOn = true, Color.WHITE, 50)
         val repo = InMemoryDeviceRepository(listOf(light1, light2, light3))
         val useCase = BulkToggleDevicesByTypeUseCase(repo)
 
@@ -433,8 +432,8 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun turnOffAllLights_setsAllLightsOff() = runTest {
-        val light1 = Light(DeviceId("l1"), "L1", "room-1", isOn = true, Color.WHITE, 80)
-        val light2 = Light(DeviceId("l2"), "L2", "room-1", isOn = true, Color.WHITE, 60)
+        val light1 = Light(DeviceId("l1"), "L1", RoomId("room-1"), isOn = true, Color.WHITE, 80)
+        val light2 = Light(DeviceId("l2"), "L2", RoomId("room-1"), isOn = true, Color.WHITE, 60)
         val repo = InMemoryDeviceRepository(listOf(light1, light2))
         val useCase = BulkToggleDevicesByTypeUseCase(repo)
 
@@ -446,8 +445,8 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun turnOnAllLights_doesNotAffectOtherDeviceTypes() = runTest {
-        val light = Light(DeviceId("l1"), "Lamp", "room-1", isOn = false, Color.WHITE, 80)
-        val lock = Lock(DeviceId("lk1"), "Lock", "room-1", isLocked = true)
+        val light = Light(DeviceId("l1"), "Lamp", RoomId("room-1"), isOn = false, Color.WHITE, 80)
+        val lock = Lock(DeviceId("lk1"), "Lock", RoomId("room-1"), isLocked = true)
         val repo = InMemoryDeviceRepository(listOf(light, lock))
         val useCase = BulkToggleDevicesByTypeUseCase(repo)
 
@@ -459,8 +458,8 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun bulkToggleLocks_locksAll() = runTest {
-        val lock1 = Lock(DeviceId("lk1"), "Lock 1", "room-1", isLocked = false)
-        val lock2 = Lock(DeviceId("lk2"), "Lock 2", "room-2", isLocked = false)
+        val lock1 = Lock(DeviceId("lk1"), "Lock 1", RoomId("room-1"), isLocked = false)
+        val lock2 = Lock(DeviceId("lk2"), "Lock 2", RoomId("room-2"), isLocked = false)
         val repo = InMemoryDeviceRepository(listOf(lock1, lock2))
         val useCase = BulkToggleDevicesByTypeUseCase(repo)
 
@@ -472,8 +471,8 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun bulkToggleSwitches_turnsOnAll() = runTest {
-        val sw1 = Switch(DeviceId("sw1"), "Switch 1", "room-1", isOn = false)
-        val sw2 = Switch(DeviceId("sw2"), "Switch 2", "room-1", isOn = true)
+        val sw1 = Switch(DeviceId("sw1"), "Switch 1", RoomId("room-1"), isOn = false)
+        val sw2 = Switch(DeviceId("sw2"), "Switch 2", RoomId("room-1"), isOn = true)
         val repo = InMemoryDeviceRepository(listOf(sw1, sw2))
         val useCase = BulkToggleDevicesByTypeUseCase(repo)
 
@@ -485,8 +484,8 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun bulkToggle_skipsAlreadyMatchingDevices() = runTest {
-        val light1 = Light(DeviceId("l1"), "L1", "room-1", isOn = true, Color.WHITE, 80)
-        val light2 = Light(DeviceId("l2"), "L2", "room-1", isOn = true, Color.WHITE, 60)
+        val light1 = Light(DeviceId("l1"), "L1", RoomId("room-1"), isOn = true, Color.WHITE, 80)
+        val light2 = Light(DeviceId("l2"), "L2", RoomId("room-1"), isOn = true, Color.WHITE, 60)
         val repo = InMemoryDeviceRepository(listOf(light1, light2))
         val useCase = BulkToggleDevicesByTypeUseCase(repo)
 
@@ -509,7 +508,7 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun bulkToggleThermostat_controlsHeating() = runTest {
-        val t1 = Thermostat(DeviceId("t1"), "Therm", "room-1", 20.0, 22.0, isHeatingOn = false)
+        val t1 = Thermostat(DeviceId("t1"), "Therm", RoomId("room-1"), 20.0, 22.0, isHeatingOn = false)
         val repo = InMemoryDeviceRepository(listOf(t1))
         val useCase = BulkToggleDevicesByTypeUseCase(repo)
 
@@ -521,7 +520,7 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun bulkToggleSmartTv_turnsOnAll() = runTest {
-        val tv = SmartTv(DeviceId("tv1"), "TV", "room-1", isOn = false, isCasting = false)
+        val tv = SmartTv(DeviceId("tv1"), "TV", RoomId("room-1"), isOn = false, isCasting = false)
         val repo = InMemoryDeviceRepository(listOf(tv))
         val useCase = BulkToggleDevicesByTypeUseCase(repo)
 

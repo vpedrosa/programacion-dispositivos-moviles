@@ -22,7 +22,7 @@ class InMemoryDeviceRepositoryTest {
     private val light = Light(
         id = DeviceId("light-1"),
         name = "Test Light",
-        roomId = "room-a",
+        roomId = RoomId("room-a"),
         isOn = false,
         color = Color.WHITE,
         brightness = 50,
@@ -30,13 +30,13 @@ class InMemoryDeviceRepositoryTest {
     private val lock = Lock(
         id = DeviceId("lock-1"),
         name = "Test Lock",
-        roomId = "room-a",
+        roomId = RoomId("room-a"),
         isLocked = true,
     )
     private val blind = Blind(
         id = DeviceId("blind-1"),
         name = "Test Blind",
-        roomId = "room-b",
+        roomId = RoomId("room-b"),
         openingLevel = 75,
     )
 
@@ -70,7 +70,7 @@ class InMemoryDeviceRepositoryTest {
         val repo = createRepository(light, lock, blind)
         val roomA = repo.observeDevicesByRoom(RoomId("room-a")).first()
         assertEquals(2, roomA.size)
-        assertTrue(roomA.all { it.roomId == "room-a" })
+        assertTrue(roomA.all { it.roomId == RoomId("room-a") })
 
         val roomB = repo.observeDevicesByRoom(RoomId("room-b")).first()
         assertEquals(1, roomB.size)
@@ -90,7 +90,7 @@ class InMemoryDeviceRepositoryTest {
         val newSwitch = Switch(
             id = DeviceId("switch-1"),
             name = "New Switch",
-            roomId = "room-a",
+            roomId = RoomId("room-a"),
             isOn = true,
         )
         repo.save(newSwitch)
