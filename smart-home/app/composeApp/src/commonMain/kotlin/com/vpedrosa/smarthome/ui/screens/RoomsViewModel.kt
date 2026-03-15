@@ -3,6 +3,7 @@ package com.vpedrosa.smarthome.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vpedrosa.smarthome.device.domain.Device
+import com.vpedrosa.smarthome.device.domain.isActive
 import com.vpedrosa.smarthome.device.domain.Room
 import com.vpedrosa.smarthome.device.domain.RoomId
 import com.vpedrosa.smarthome.device.domain.usecases.DeleteRoomUseCase

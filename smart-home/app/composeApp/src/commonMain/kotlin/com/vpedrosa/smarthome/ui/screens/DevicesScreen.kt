@@ -50,6 +50,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.vpedrosa.smarthome.device.domain.Device
 import com.vpedrosa.smarthome.device.domain.DeviceType
+import com.vpedrosa.smarthome.device.domain.allActive
+import com.vpedrosa.smarthome.device.domain.isActive
+import com.vpedrosa.smarthome.device.domain.isToggleable
+import com.vpedrosa.smarthome.device.domain.stateLabel
+import com.vpedrosa.smarthome.device.domain.supportsBulkToggle
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

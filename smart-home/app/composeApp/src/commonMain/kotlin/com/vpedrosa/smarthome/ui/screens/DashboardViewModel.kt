@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.vpedrosa.smarthome.device.domain.DeviceEvent
 import com.vpedrosa.smarthome.device.domain.DeviceEventType
 import com.vpedrosa.smarthome.device.domain.Light
+import com.vpedrosa.smarthome.device.domain.isActive
 import com.vpedrosa.smarthome.device.domain.Lock
 import com.vpedrosa.smarthome.device.domain.Room
 import com.vpedrosa.smarthome.device.domain.SmartTv

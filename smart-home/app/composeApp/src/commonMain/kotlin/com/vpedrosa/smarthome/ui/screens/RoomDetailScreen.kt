@@ -28,6 +28,9 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.vpedrosa.smarthome.device.domain.DeviceType
+import com.vpedrosa.smarthome.device.domain.allActive
+import com.vpedrosa.smarthome.device.domain.isToggleable
+import com.vpedrosa.smarthome.device.domain.supportsBulkToggle
 import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.a11y_edit_group
 import smarthome.composeapp.generated.resources.a11y_navigate_back
