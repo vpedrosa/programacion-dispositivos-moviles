@@ -3,8 +3,8 @@ package com.vpedrosa.smarthome.wearable
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
-import com.vpedrosa.smarthome.device.domain.usecases.ExecuteVoiceCommandUseCase
-import com.vpedrosa.smarthome.device.domain.usecases.ParseVoiceCommandUseCase
+import com.vpedrosa.smarthome.voice.application.ExecuteVoiceCommandUseCase
+import com.vpedrosa.smarthome.voice.application.ParseVoiceCommandUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
