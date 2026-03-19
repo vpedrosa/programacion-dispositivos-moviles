@@ -1,16 +1,16 @@
 package com.vpedrosa.smarthome.ui
 
-import com.vpedrosa.smarthome.ui.screens.AntiSquatterViewModel
-import com.vpedrosa.smarthome.ui.screens.CommissioningViewModel
-import com.vpedrosa.smarthome.ui.screens.DashboardViewModel
-import com.vpedrosa.smarthome.ui.screens.DeviceDetailViewModel
-import com.vpedrosa.smarthome.ui.screens.DevicesViewModel
-import com.vpedrosa.smarthome.ui.screens.EditGroupViewModel
-import com.vpedrosa.smarthome.ui.screens.NotificationsViewModel
-import com.vpedrosa.smarthome.ui.screens.RoomDetailViewModel
-import com.vpedrosa.smarthome.ui.screens.RoomsViewModel
-import com.vpedrosa.smarthome.ui.screens.SettingsViewModel
-import com.vpedrosa.smarthome.ui.screens.VoiceControlViewModel
+import com.vpedrosa.smarthome.ui.antisquatter.AntiSquatterViewModel
+import com.vpedrosa.smarthome.ui.commissioning.CommissioningViewModel
+import com.vpedrosa.smarthome.ui.dashboard.DashboardViewModel
+import com.vpedrosa.smarthome.ui.device.DeviceDetailViewModel
+import com.vpedrosa.smarthome.ui.device.DevicesViewModel
+import com.vpedrosa.smarthome.ui.room.EditGroupViewModel
+import com.vpedrosa.smarthome.ui.event.NotificationsViewModel
+import com.vpedrosa.smarthome.ui.room.RoomDetailViewModel
+import com.vpedrosa.smarthome.ui.room.RoomsViewModel
+import com.vpedrosa.smarthome.ui.settings.SettingsViewModel
+import com.vpedrosa.smarthome.ui.voice.VoiceControlViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module

@@ -19,7 +19,7 @@ import com.vpedrosa.smarthome.navigation.Rooms
 import com.vpedrosa.smarthome.navigation.Settings
 import com.vpedrosa.smarthome.navigation.SmartHomeNavHost
 import com.vpedrosa.smarthome.ui.components.BottomBarTab
-import com.vpedrosa.smarthome.device.adapters.simulation.SensorEventSimulator
+import com.vpedrosa.smarthome.event.infrastructure.simulation.SensorEventSimulator
 import com.vpedrosa.smarthome.ui.components.SmartHomeBottomBar
 import org.koin.compose.koinInject
 

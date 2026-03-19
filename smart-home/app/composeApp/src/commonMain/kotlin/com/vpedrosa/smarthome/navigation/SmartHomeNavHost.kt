@@ -6,18 +6,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.vpedrosa.smarthome.ui.screens.CommissioningScreen
-import com.vpedrosa.smarthome.ui.screens.AntiSquatterScreen
-import com.vpedrosa.smarthome.ui.screens.DashboardScreen
-import com.vpedrosa.smarthome.ui.screens.DeviceDetailScreen
-import com.vpedrosa.smarthome.ui.screens.DevicesScreen
-import com.vpedrosa.smarthome.ui.screens.EditGroupScreen
-import com.vpedrosa.smarthome.ui.screens.RoomDetailScreen
-import com.vpedrosa.smarthome.ui.screens.NotificationsScreen
-import com.vpedrosa.smarthome.ui.screens.RoomsScreen
-import com.vpedrosa.smarthome.ui.screens.SettingsScreen
-import com.vpedrosa.smarthome.ui.screens.SplashScreen
-import com.vpedrosa.smarthome.ui.screens.VoiceControlScreen
+import com.vpedrosa.smarthome.ui.commissioning.CommissioningScreen
+import com.vpedrosa.smarthome.ui.antisquatter.AntiSquatterScreen
+import com.vpedrosa.smarthome.ui.dashboard.DashboardScreen
+import com.vpedrosa.smarthome.ui.device.DeviceDetailScreen
+import com.vpedrosa.smarthome.ui.device.DevicesScreen
+import com.vpedrosa.smarthome.ui.room.EditGroupScreen
+import com.vpedrosa.smarthome.ui.room.RoomDetailScreen
+import com.vpedrosa.smarthome.ui.event.NotificationsScreen
+import com.vpedrosa.smarthome.ui.room.RoomsScreen
+import com.vpedrosa.smarthome.ui.settings.SettingsScreen
+import com.vpedrosa.smarthome.ui.dashboard.SplashScreen
+import com.vpedrosa.smarthome.ui.voice.VoiceControlScreen
 
 @Composable
 fun SmartHomeNavHost(

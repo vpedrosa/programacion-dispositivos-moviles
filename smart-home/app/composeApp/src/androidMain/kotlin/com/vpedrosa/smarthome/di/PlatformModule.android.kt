@@ -1,16 +1,16 @@
 package com.vpedrosa.smarthome.di
 
 import android.speech.SpeechRecognizer
-import com.vpedrosa.smarthome.device.adapters.matter.MatterCommissioningAdapter
-import com.vpedrosa.smarthome.device.adapters.matter.MatterControllerProvider
-import com.vpedrosa.smarthome.device.adapters.matter.MatterDeviceControlAdapter
-import com.vpedrosa.smarthome.device.adapters.notification.AndroidNotificationAdapter
-import com.vpedrosa.smarthome.device.adapters.speech.AndroidSpeechRecognizerAdapter
-import com.vpedrosa.smarthome.device.adapters.speech.FakeSpeechRecognizer
-import com.vpedrosa.smarthome.device.domain.ports.CommissioningPort
-import com.vpedrosa.smarthome.device.domain.ports.DeviceControlPort
-import com.vpedrosa.smarthome.device.domain.ports.NotificationPort
-import com.vpedrosa.smarthome.device.domain.ports.SpeechRecognizerPort
+import com.vpedrosa.smarthome.commissioning.infrastructure.matter.MatterCommissioningAdapter
+import com.vpedrosa.smarthome.shared.infrastructure.matter.MatterControllerProvider
+import com.vpedrosa.smarthome.shared.infrastructure.matter.MatterDeviceControlAdapter
+import com.vpedrosa.smarthome.event.infrastructure.notification.AndroidNotificationAdapter
+import com.vpedrosa.smarthome.voice.infrastructure.speech.AndroidSpeechRecognizerAdapter
+import com.vpedrosa.smarthome.voice.infrastructure.speech.FakeSpeechRecognizer
+import com.vpedrosa.smarthome.commissioning.domain.CommissioningPort
+import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
+import com.vpedrosa.smarthome.event.domain.NotificationPort
+import com.vpedrosa.smarthome.voice.domain.SpeechRecognizerPort
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
