@@ -54,13 +54,13 @@ class RoomDetailViewModel(
 
     fun onToggleDevice(deviceId: DeviceId) {
         viewModelScope.launch {
-            toggleDevice(deviceId)
+            runCatching { toggleDevice(deviceId) }
         }
     }
 
     fun onBulkToggle(type: DeviceType, turnOn: Boolean) {
         viewModelScope.launch {
-            bulkToggleByTypeInRoom(roomId, type, turnOn)
+            runCatching { bulkToggleByTypeInRoom(roomId, type, turnOn) }
         }
     }
 }

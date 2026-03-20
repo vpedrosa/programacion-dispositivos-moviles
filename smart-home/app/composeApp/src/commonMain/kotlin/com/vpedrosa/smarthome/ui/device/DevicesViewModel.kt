@@ -50,13 +50,13 @@ class DevicesViewModel(
 
     fun onToggleDevice(deviceId: DeviceId) {
         viewModelScope.launch {
-            toggleDevice(deviceId)
+            runCatching { toggleDevice(deviceId) }
         }
     }
 
     fun onBulkToggle(type: DeviceType, turnOn: Boolean) {
         viewModelScope.launch {
-            bulkToggleDevicesByType(type, turnOn)
+            runCatching { bulkToggleDevicesByType(type, turnOn) }
         }
     }
 }
