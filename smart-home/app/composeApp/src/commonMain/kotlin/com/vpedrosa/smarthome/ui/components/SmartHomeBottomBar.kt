@@ -14,6 +14,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import com.vpedrosa.smarthome.navigation.Dashboard
 import com.vpedrosa.smarthome.navigation.Devices as DevicesRoute
 import com.vpedrosa.smarthome.navigation.Notifications as NotificationsRoute
@@ -61,7 +63,14 @@ fun SmartHomeBottomBar(
                         contentDescription = label,
                     )
                 },
-                label = { Text(text = label) },
+                label = {
+                    Text(
+                        text = label,
+                        fontSize = 10.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     selectedTextColor = MaterialTheme.colorScheme.primary,
