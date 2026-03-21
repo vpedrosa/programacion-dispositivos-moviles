@@ -158,6 +158,9 @@
     <string name="settings_general">GENERAL</string>
     <string name="settings_matter_commissioning">Comisionamiento Matter</string>
     <string name="settings_manage_simulated">Gestionar dispositivos simulados</string>
+    <string name="settings_notification_permission">Notificaciones push</string>
+    <string name="settings_notification_granted">Permitidas</string>
+    <string name="settings_notification_denied">Denegadas - Toca para permitir</string>
     <string name="settings_sensor_alerts">Alertas de sensores</string>
 
     <!-- Anti-Squatter -->

@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.vpedrosa.smarthome.ui.components.NotificationPermissionHandler
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
@@ -47,6 +48,9 @@ import smarthome.composeapp.generated.resources.settings_language_value
 import smarthome.composeapp.generated.resources.settings_manage_simulated
 import smarthome.composeapp.generated.resources.settings_matter_commissioning
 import smarthome.composeapp.generated.resources.settings_modes
+import smarthome.composeapp.generated.resources.settings_notification_denied
+import smarthome.composeapp.generated.resources.settings_notification_granted
+import smarthome.composeapp.generated.resources.settings_notification_permission
 import smarthome.composeapp.generated.resources.settings_notifications_section
 import smarthome.composeapp.generated.resources.settings_sensor_alerts
 import smarthome.composeapp.generated.resources.settings_thermostat_events
@@ -104,6 +108,50 @@ fun SettingsScreen(
 
             // --- NOTIFICACIONES ---
             SectionHeader(text = stringResource(Res.string.settings_notifications_section))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            NotificationPermissionHandler(onPermissionResult = {}) { hasPermission, requestPermission ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { if (!hasPermission) requestPermission() },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (hasPermission) {
+                            ActiveGreen.copy(alpha = 0.1f)
+                        } else {
+                            Color(0xFFE53935).copy(alpha = 0.1f)
+                        },
+                    ),
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(Res.string.settings_notification_permission),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onBackground,
+                            )
+                            Text(
+                                text = if (hasPermission) {
+                                    stringResource(Res.string.settings_notification_granted)
+                                } else {
+                                    stringResource(Res.string.settings_notification_denied)
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (hasPermission) ActiveGreen else Color(0xFFE53935),
+                            )
+                        }
+                    }
+                }
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
             Card(
                 modifier = Modifier.fillMaxWidth(),

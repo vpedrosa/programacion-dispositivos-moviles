@@ -45,7 +45,7 @@ class SensorEventSimulator(
 
     private suspend fun emitTemperatureReadings() {
         while (true) {
-            delay(60_000L)
+            delay(3_000L)
             val sensors = findDevicesOfType<TemperatureSensor>()
             for (sensor in sensors) {
                 val temp = 18.0 + Random.nextDouble() * 10.0
@@ -65,7 +65,7 @@ class SensorEventSimulator(
 
     private suspend fun emitContactSensorEvents() {
         while (true) {
-            delay(90_000L)
+            delay(10_000L)
             val sensors = findDevicesOfType<ContactSensor>()
             for (sensor in sensors) {
                 val toggled = sensor.toggle()
@@ -85,10 +85,10 @@ class SensorEventSimulator(
 
     private suspend fun emitSmokeAlerts() {
         while (true) {
-            delay(180_000L)
+            delay(5_000L)
             val sensors = findDevicesOfType<SmokeSensor>()
             for (sensor in sensors) {
-                if (Random.nextFloat() < 0.15f) {
+                if (Random.nextFloat() < 0.5f) {
                     addDeviceEvent(
                         DeviceEvent(
                             id = randomId(),
@@ -105,10 +105,10 @@ class SensorEventSimulator(
 
     private suspend fun emitWaterLeakAlerts() {
         while (true) {
-            delay(240_000L)
+            delay(5_000L)
             val sensors = findDevicesOfType<WaterLeakSensor>()
             for (sensor in sensors) {
-                if (Random.nextFloat() < 0.1f) {
+                if (Random.nextFloat() < 0.5f) {
                     addDeviceEvent(
                         DeviceEvent(
                             id = randomId(),

@@ -20,6 +20,7 @@ import com.vpedrosa.smarthome.navigation.Settings
 import com.vpedrosa.smarthome.navigation.SmartHomeNavHost
 import com.vpedrosa.smarthome.ui.components.BottomBarTab
 import com.vpedrosa.smarthome.event.infrastructure.simulation.SensorEventSimulator
+import com.vpedrosa.smarthome.ui.components.NotificationPermissionHandler
 import com.vpedrosa.smarthome.ui.components.SmartHomeBottomBar
 import org.koin.compose.koinInject
 
@@ -51,6 +52,11 @@ private val screensWithBottomBar = setOf(
 fun App() {
     val simulator = koinInject<SensorEventSimulator>()
     LaunchedEffect(Unit) { simulator.start() }
+
+    // Request notification permission at startup (Android 13+)
+    NotificationPermissionHandler(onPermissionResult = {}) { _, requestPermission ->
+        LaunchedEffect(Unit) { requestPermission() }
+    }
 
     MaterialTheme(colorScheme = SmartHomeColorScheme) {
         val navController = rememberNavController()
