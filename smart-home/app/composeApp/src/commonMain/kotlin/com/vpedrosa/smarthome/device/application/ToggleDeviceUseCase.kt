@@ -21,27 +21,15 @@ class ToggleDeviceUseCase(
 ) {
     suspend operator fun invoke(id: DeviceId) {
         val device = deviceRepository.observeDevice(id).first() ?: return
+
+        // Optimistic update: toggle in-memory state first so the UI always reflects the change.
+        // The Matter command is a best-effort side effect.
         val toggled = when (device) {
-            is Light -> {
-                deviceControlPort.toggleOnOff(id, !device.isOn)
-                device.toggle()
-            }
-            is Lock -> {
-                deviceControlPort.lockDoor(id, !device.isLocked)
-                device.toggle()
-            }
-            is Switch -> {
-                deviceControlPort.toggleOnOff(id, !device.isOn)
-                device.toggle()
-            }
-            is SmartTv -> {
-                deviceControlPort.toggleOnOff(id, !device.isOn)
-                device.toggle()
-            }
-            is Thermostat -> {
-                deviceControlPort.setThermostatMode(id, !device.isHeatingOn)
-                device.toggleHeating()
-            }
+            is Light -> device.toggle()
+            is Lock -> device.toggle()
+            is Switch -> device.toggle()
+            is SmartTv -> device.toggle()
+            is Thermostat -> device.toggleHeating()
             is Blind,
             is SmokeSensor,
             is WaterLeakSensor,
@@ -49,5 +37,19 @@ class ToggleDeviceUseCase(
             is ContactSensor -> return
         }
         deviceRepository.save(toggled)
+
+        // Fire Matter command — errors are caught and logged, not propagated.
+        try {
+            when (device) {
+                is Light -> deviceControlPort.toggleOnOff(id, !device.isOn)
+                is Lock -> deviceControlPort.lockDoor(id, !device.isLocked)
+                is Switch -> deviceControlPort.toggleOnOff(id, !device.isOn)
+                is SmartTv -> deviceControlPort.toggleOnOff(id, !device.isOn)
+                is Thermostat -> deviceControlPort.setThermostatMode(id, !device.isHeatingOn)
+                else -> {}
+            }
+        } catch (_: Exception) {
+            // Session expired or simulator unavailable — state already updated above.
+        }
     }
 }

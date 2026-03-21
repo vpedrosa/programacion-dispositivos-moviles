@@ -119,7 +119,11 @@ class MatterDeviceControlAdapter(
                 Log.w(TAG, "Command failed for ${deviceId.value}, re-establishing session", e)
                 invalidateSession(deviceId)
                 delay(RETRY_DELAY_MS)
-                block(getDevicePointer(deviceId))
+                try {
+                    block(getDevicePointer(deviceId))
+                } catch (retryError: Exception) {
+                    Log.e(TAG, "Retry also failed for ${deviceId.value}, session likely expired", retryError)
+                }
             }
         }
     }
