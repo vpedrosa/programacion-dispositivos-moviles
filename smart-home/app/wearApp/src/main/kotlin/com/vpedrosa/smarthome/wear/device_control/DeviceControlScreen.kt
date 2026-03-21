@@ -187,7 +187,7 @@ private fun WearDevice.icon(): ImageVector = when (type) {
 
 private fun WearDevice.statusLabel(): String = when (type) {
     "LIGHT", "SWITCH", "SMART_TV" -> if (isOn) "ON" else "OFF"
-    "LOCK" -> if (isLocked) "\uD83D\uDD12" else "\uD83D\uDD13"
+    "LOCK" -> ""
     "BLIND" -> "${openingLevel}%"
     "THERMOSTAT" -> "${currentTemperature.toInt()}°"
     "SMOKE_SENSOR" -> if (isSmokeDetected) "!!" else "OK"
