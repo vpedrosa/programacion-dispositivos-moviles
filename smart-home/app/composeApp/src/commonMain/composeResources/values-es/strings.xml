@@ -187,6 +187,14 @@
     <string name="voice_stop_listening">Dejar de escuchar</string>
     <string name="voice_start_listening">Empezar a escuchar</string>
 
+    <!-- Commissioning -->
+    <string name="commissioning_title">Comisionamiento Matter</string>
+    <string name="commissioning_button">Comisionar</string>
+    <string name="commissioning_devices_button">Comisionar dispositivos</string>
+    <string name="commissioning_all_done">Todos los dispositivos comisionados</string>
+    <string name="commissioning_devices_available">%1$d dispositivos disponibles</string>
+    <string name="commissioning_passcode">Código: %1$d</string>
+
     <!-- Accessibility -->
     <string name="action_back">Volver</string>
     <string name="a11y_navigate_back">Volver atrás</string>

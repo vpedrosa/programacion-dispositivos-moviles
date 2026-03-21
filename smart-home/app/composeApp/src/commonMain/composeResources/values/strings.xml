@@ -187,6 +187,14 @@
     <string name="voice_stop_listening">Stop listening</string>
     <string name="voice_start_listening">Start listening</string>
 
+    <!-- Commissioning -->
+    <string name="commissioning_title">Matter Commissioning</string>
+    <string name="commissioning_button">Commission</string>
+    <string name="commissioning_devices_button">Commission devices</string>
+    <string name="commissioning_all_done">All devices commissioned</string>
+    <string name="commissioning_devices_available">%1$d devices available</string>
+    <string name="commissioning_passcode">Passcode: %1$d</string>
+
     <!-- Accessibility -->
     <string name="action_back">Back</string>
     <string name="a11y_navigate_back">Go back</string>

@@ -40,7 +40,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.a11y_navigate_back
+import smarthome.composeapp.generated.resources.commissioning_all_done
+import smarthome.composeapp.generated.resources.commissioning_button
+import smarthome.composeapp.generated.resources.commissioning_devices_available
+import smarthome.composeapp.generated.resources.commissioning_passcode
+import smarthome.composeapp.generated.resources.commissioning_title
 
 private val ActiveGreen = Color(0xFF4CAF50)
 
@@ -60,7 +68,7 @@ fun CommissioningScreen(
         TopAppBar(
             title = {
                 Text(
-                    text = "Commissioning Matter",
+                    text = stringResource(Res.string.commissioning_title),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                 )
@@ -69,7 +77,7 @@ fun CommissioningScreen(
                 IconButton(onClick = onNavigateBack) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Volver",
+                        contentDescription = stringResource(Res.string.a11y_navigate_back),
                     )
                 }
             },
@@ -95,7 +103,7 @@ fun CommissioningScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Todos los dispositivos comisionados",
+                    text = stringResource(Res.string.commissioning_all_done),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
@@ -109,7 +117,7 @@ fun CommissioningScreen(
             ) {
                 item {
                     Text(
-                        text = "${state.availableDevices.size} dispositivos disponibles",
+                        text = stringResource(Res.string.commissioning_devices_available, state.availableDevices.size),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
@@ -177,7 +185,7 @@ private fun DiscoveredDeviceCard(
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 )
                 Text(
-                    text = "Passcode: ${device.passcode}",
+                    text = stringResource(Res.string.commissioning_passcode, device.passcode),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                 )
@@ -202,7 +210,7 @@ private fun DiscoveredDeviceCard(
                         modifier = Modifier.size(18.dp),
                     )
                     Text(
-                        text = "Comisionar",
+                        text = stringResource(Res.string.commissioning_button),
                         modifier = Modifier.padding(start = 4.dp),
                     )
                 }

@@ -67,6 +67,7 @@ import smarthome.composeapp.generated.resources.a11y_icon_temperature
 import smarthome.composeapp.generated.resources.a11y_icon_smart_tv
 import smarthome.composeapp.generated.resources.a11y_icon_home
 import smarthome.composeapp.generated.resources.a11y_room_placeholder
+import smarthome.composeapp.generated.resources.commissioning_devices_button
 
 private val Navy = Color(0xFF123458)
 private val CardBackground = Color(0xFFFFFFFF)
@@ -108,7 +109,7 @@ fun DashboardScreen(
                 modifier = Modifier.size(20.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Comisionar dispositivos")
+            Text(stringResource(Res.string.commissioning_devices_button))
         }
 
         Spacer(modifier = Modifier.height(24.dp))
