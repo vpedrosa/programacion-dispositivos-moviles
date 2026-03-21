@@ -2,7 +2,6 @@ package com.vpedrosa.smarthome.ui.commissioning
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 import com.vpedrosa.smarthome.commissioning.domain.DeviceDiscoveryPort
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
@@ -16,10 +15,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class CommissioningUiState(
-    val availableDevices: List<DiscoveredDevice> = emptyList(),
+    val allDevices: List<DiscoveredDevice> = emptyList(),
     val commissionedSerials: Set<String> = emptySet(),
     val commissioningInProgress: Set<String> = emptySet(),
     val lastError: String? = null,
+    val successMessage: String? = null,
 )
 
 class CommissioningViewModel(
@@ -30,19 +30,22 @@ class CommissioningViewModel(
 
     private val inProgress = MutableStateFlow<Set<String>>(emptySet())
     private val error = MutableStateFlow<String?>(null)
+    private val success = MutableStateFlow<String?>(null)
 
     val uiState: StateFlow<CommissioningUiState> = combine(
         discoveryPort.discoverDevices(),
         deviceRepository.observeAllDevices(),
         inProgress,
         error,
-    ) { discovered, commissioned, progressing, lastError ->
+        success,
+    ) { discovered, commissioned, progressing, lastError, successMsg ->
         val commissionedIds = commissioned.map { it.id.value }.toSet()
         CommissioningUiState(
-            availableDevices = discovered.filterNot { it.serialNumber in commissionedIds },
+            allDevices = discovered,
             commissionedSerials = commissionedIds,
             commissioningInProgress = progressing,
             lastError = lastError,
+            successMessage = successMsg,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CommissioningUiState())
 
@@ -50,8 +53,10 @@ class CommissioningViewModel(
         viewModelScope.launch {
             inProgress.update { it + device.serialNumber }
             error.value = null
+            success.value = null
 
             commissionDevice(device)
+                .onSuccess { success.value = device.name }
                 .onFailure { error.value = "${device.name}: ${it.message}" }
 
             inProgress.update { it - device.serialNumber }
@@ -60,5 +65,9 @@ class CommissioningViewModel(
 
     fun dismissError() {
         error.value = null
+    }
+
+    fun dismissSuccess() {
+        success.value = null
     }
 }

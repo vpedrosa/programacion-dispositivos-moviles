@@ -46,8 +46,10 @@ import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.a11y_navigate_back
 import smarthome.composeapp.generated.resources.commissioning_all_done
 import smarthome.composeapp.generated.resources.commissioning_button
+import smarthome.composeapp.generated.resources.commissioning_commissioned
 import smarthome.composeapp.generated.resources.commissioning_devices_available
 import smarthome.composeapp.generated.resources.commissioning_passcode
+import smarthome.composeapp.generated.resources.commissioning_success
 import smarthome.composeapp.generated.resources.commissioning_title
 
 private val ActiveGreen = Color(0xFF4CAF50)
@@ -59,6 +61,7 @@ fun CommissioningScreen(
     viewModel: CommissioningViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
+    val pendingDevices = state.allDevices.filterNot { it.serialNumber in state.commissionedSerials }
 
     Column(
         modifier = Modifier
@@ -87,7 +90,7 @@ fun CommissioningScreen(
             ),
         )
 
-        if (state.availableDevices.isEmpty()) {
+        if (pendingDevices.isEmpty() && state.allDevices.isNotEmpty()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -117,7 +120,7 @@ fun CommissioningScreen(
             ) {
                 item {
                     Text(
-                        text = stringResource(Res.string.commissioning_devices_available, state.availableDevices.size),
+                        text = stringResource(Res.string.commissioning_devices_available, state.allDevices.size),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
@@ -125,15 +128,34 @@ fun CommissioningScreen(
                     )
                 }
 
-                items(state.availableDevices, key = { it.serialNumber }) { device ->
+                items(state.allDevices, key = { it.serialNumber }) { device ->
+                    val isCommissioned = device.serialNumber in state.commissionedSerials
                     DiscoveredDeviceCard(
                         device = device,
+                        isCommissioned = isCommissioned,
                         isCommissioning = device.serialNumber in state.commissioningInProgress,
                         onCommission = { viewModel.commission(device) },
                     )
                 }
 
                 item { Spacer(modifier = Modifier.height(16.dp)) }
+            }
+        }
+
+        state.successMessage?.let { deviceName ->
+            Snackbar(
+                modifier = Modifier.padding(16.dp),
+                containerColor = ActiveGreen,
+                action = {
+                    TextButton(onClick = { viewModel.dismissSuccess() }) {
+                        Text("OK", color = Color.White)
+                    }
+                },
+            ) {
+                Text(
+                    stringResource(Res.string.commissioning_success, deviceName),
+                    color = Color.White,
+                )
             }
         }
 
@@ -155,6 +177,7 @@ fun CommissioningScreen(
 @Composable
 private fun DiscoveredDeviceCard(
     device: DiscoveredDevice,
+    isCommissioned: Boolean,
     isCommissioning: Boolean,
     onCommission: () -> Unit,
 ) {
@@ -162,7 +185,11 @@ private fun DiscoveredDeviceCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f),
+            containerColor = if (isCommissioned) {
+                ActiveGreen.copy(alpha = 0.1f)
+            } else {
+                MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+            },
         ),
     ) {
         Row(
@@ -191,28 +218,48 @@ private fun DiscoveredDeviceCard(
                 )
             }
 
-            if (isCommissioning) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(32.dp),
-                    strokeWidth = 3.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-            } else {
-                Button(
-                    onClick = onCommission,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                    ),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Sensors,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
+            when {
+                isCommissioned -> {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.CheckCircle,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                            tint = ActiveGreen,
+                        )
+                        Text(
+                            text = stringResource(Res.string.commissioning_commissioned),
+                            modifier = Modifier.padding(start = 4.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = ActiveGreen,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
+                isCommissioning -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(32.dp),
+                        strokeWidth = 3.dp,
+                        color = MaterialTheme.colorScheme.primary,
                     )
-                    Text(
-                        text = stringResource(Res.string.commissioning_button),
-                        modifier = Modifier.padding(start = 4.dp),
-                    )
+                }
+                else -> {
+                    Button(
+                        onClick = onCommission,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                        ),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Sensors,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Text(
+                            text = stringResource(Res.string.commissioning_button),
+                            modifier = Modifier.padding(start = 4.dp),
+                        )
+                    }
                 }
             }
         }

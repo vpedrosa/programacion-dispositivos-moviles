@@ -194,6 +194,8 @@
     <string name="commissioning_all_done">Todos los dispositivos comisionados</string>
     <string name="commissioning_devices_available">%1$d dispositivos disponibles</string>
     <string name="commissioning_passcode">Código: %1$d</string>
+    <string name="commissioning_success">%1$s comisionado con éxito</string>
+    <string name="commissioning_commissioned">Comisionado</string>
 
     <!-- Accessibility -->
     <string name="action_back">Volver</string>
