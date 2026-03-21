@@ -53,6 +53,9 @@ cd smart-home/app
 
 ## Simulación Matter
 
+Ver [MATTER.md](MATTER.md) para documentación detallada sobre la integración Matter, limitaciones del SDK y decisiones de diseño.
+
+
 ```bash
 # Setup inicial (una sola vez)
 git submodule update --init smart-home/simulation/third_party/connectedhomeip

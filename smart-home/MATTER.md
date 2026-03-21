@@ -1,187 +1,122 @@
-# Integración Matter SDK
+# Integracion Matter - Limitaciones y decisiones
 
-Documento de decisiones técnicas sobre la integración del protocolo Matter en la aplicación Smart Home.
+Este documento describe como la app interactua con el protocolo Matter, las limitaciones del SDK de demo y las decisiones de diseno tomadas.
 
-## Contexto
-
-La aplicación Smart Home controla 27 dispositivos simulados mediante [matter.js](https://github.com/project-chip/matter.js), que implementa el protocolo Matter completo sobre UDP. Los dispositivos virtuales son indistinguibles de hardware real para cualquier controlador Matter.
-
-La app KMP necesita descubrir, comisionar y controlar estos dispositivos usando el SDK Matter de Android.
-
-## Decisiones de arquitectura
-
-### 1. SDK elegido: `matter-android-demo-sdk`
-
-| Opción evaluada | Resultado |
-|---|---|
-| `com.google.android.gms:play-services-home` | Solo commissioning de alto nivel. No expone `CHIPDeviceController` ni permite control directo de clusters. Requiere Google Home ecosystem para control post-commissioning. |
-| Compilar connectedhomeip desde fuente | SDK de 2.6 GB, requiere toolchain C++ completo, tiempos de compilación >10 min por target. Inviable para el entorno de desarrollo del proyecto. |
-| `com.google.matter:matter-android-demo-sdk:1.0` | AAR precompilado publicado por Google en Maven Central. Incluye `CHIPDeviceController` + librerías nativas `.so`. Permite commissioning (PASE) y control directo de clusters Matter sobre UDP. |
-
-**Decision:** Se utiliza `matter-android-demo-sdk:1.0`.
-
-- Publicado por Google (Apache 2.0).
-- Usado en la [sample app oficial de Google para Matter](https://github.com/google-home/sample-apps-for-matter-android).
-- Etiquetado como "demo/development only", lo cual es adecuado para un proyecto academico.
-- No requiere compilar codigo nativo ni descargar el repositorio connectedhomeip.
-
-### 2. Sesiones PASE over IP (sin BLE ni CASE)
-
-#### Flujo Matter estandar vs. implementacion en emulador
-
-El flujo completo de commissioning Matter consta de varias fases:
+## Arquitectura de comunicacion
 
 ```
-PASE (autenticacion por passcode)
-  → NOC (instalar certificados operacionales)
-    → FindOperational (descubrir dispositivo via mDNS con su identidad operacional)
-      → CASE (establecer sesion operacional con certificados)
-        → Cluster Commands (control del dispositivo)
+┌─────────────────────┐          PASE           ┌─────────────────────┐
+│   App Android       │◄────────────────────────►│  Simulador Matter   │
+│   (ChipDeviceCtrl)  │   passcode + host:port   │  (matter.js)        │
+└─────────────────────┘                          └─────────────────────┘
 ```
 
-En el emulador Android, **FindOperational falla** porque utiliza mDNS (`_matter._tcp`) y el emulador usa NAT, que impide el trafico multicast. El SDK intenta resolver la direccion operacional durante ~45 segundos antes de dar timeout (error 0x32). Esto provoca que `commissionDevice()` falle en el paso `FindOperational → Cleanup` y el dispositivo revierta la fabric instalada.
+La app se comunica con el simulador Matter usando **sesiones PASE** (Passcode-Authenticated Session Establishment). No se usa CASE (Certificate Authenticated Session Establishment).
 
-#### PASE vs CASE
+## PASE vs CASE
 
 | | PASE | CASE |
 |---|---|---|
-| Autenticacion | Passcode (SPAKE2+) | Certificados (NOC) |
-| Cifrado | AES-CCM (sesion derivada) | AES-CCM (sesion derivada) |
-| Canal seguro | Si | Si |
-| Cluster commands | Si | Si |
-| Requiere mDNS | No | Si |
-| Diseñado para | Commissioning | Operacion permanente |
-| Limitacion | Requiere conocer passcode | Requiere commissioning completo |
+| **Proposito** | Comisionamiento (emparejar) | Control continuo |
+| **Duracion** | Temporal (minutos) | Larga duracion |
+| **Autenticacion** | Passcode (setup code) | Certificados (fabric/NOC) |
+| **Estado en el proyecto** | Unico metodo usado | No soportado |
 
-Ambos tipos de sesion son **canales autenticados y cifrados del protocolo Matter**. La diferencia es el mecanismo de autenticacion (passcode vs certificados), no la seguridad del canal ni los comandos que se pueden enviar.
+### Por que no se usa CASE
 
-#### Decision
+1. **FindOperational (mDNS/CASE) no funciona en el emulador Android** - el descubrimiento operacional post-comisionamiento falla
+2. **No se hace comisionamiento completo** - la app usa `establishPaseConnection()` en lugar de `commissionDevice()`, que seria necesario para establecer fabric y certificados NOC
+3. **SDK de demo** (`matter-android-demo-sdk:1.0`) tiene limitaciones frente al SDK completo de produccion
 
-Se utiliza **PASE over IP** tanto para verificar conectividad como para el control de dispositivos, sin llamar a `commissionDevice()`:
-
-```kotlin
-// Commissioning: solo PASE para verificar conectividad
-chipDeviceController.establishPaseConnection(nodeId, ip, port, passcode)
-
-// Control: re-establecer PASE y enviar cluster commands
-chipDeviceController.establishPaseConnection(nodeId, ip, port, passcode)
-val pointer = chipDeviceController.getDeviceBeingCommissionedPointer(nodeId)
-ChipClusters.OnOffCluster(pointer, endpoint).on(callback)
-```
-
-- Los dispositivos matter.js escuchan en puertos UDP conocidos (5540-5566).
-- Desde el emulador Android, el host es accesible en `10.0.2.2`.
-- Elimina la dependencia de hardware BLE y de mDNS, permitiendo desarrollo completo en emulador.
-- PASE es un mecanismo estandar del protocolo Matter (RFC, no workaround).
-- Los comandos de cluster viajan cifrados sobre la sesion PASE igual que lo harian sobre CASE.
-
-#### Preparacion para CASE en produccion
-
-En un entorno con red local real (mDNS funciona), el adapter de control se reemplazaria por uno que use `commissionDevice()` + `getConnectedDevicePointer()` (CASE). Ningun cambio en puertos, use cases ni UI gracias a la arquitectura hexagonal.
-
-### 3. Descubrimiento: adaptador estatico (emulador)
-
-El descubrimiento de dispositivos Matter en la red local se realiza mediante **mDNS/DNS-SD** (servicio `_matterc._udp.local`). En Android, se implementa con `NsdManager`.
-
-**Problema:** El emulador Android usa NAT, lo que impide que el trafico multicast de mDNS llegue a la red del host. Alternativas evaluadas:
-
-| Opcion | Viabilidad |
-|---|---|
-| Dispositivo fisico en misma WiFi | mDNS funciona, pero requiere hardware |
-| Emulador en modo bridge (QEMU) | Funciona, pero requiere configuracion de red a nivel de sistema (bridge, TAP, permisos root) |
-| Discovery estatico | Los dispositivos simulados tienen direcciones y puertos conocidos. Se pueden hardcodear. |
-
-**Decision:** Se implementa un adaptador de descubrimiento estatico (`StaticDeviceDiscoveryAdapter`) que devuelve la lista de dispositivos de la simulacion con sus direcciones conocidas.
-
-Este adaptador implementa el mismo puerto (`DeviceDiscoveryPort`) que implementaria un adaptador mDNS en produccion. Gracias a la inyeccion de dependencias (Koin), el cambio a produccion consiste en sustituir el binding:
-
-```kotlin
-// Desarrollo (emulador)
-single<DeviceDiscoveryPort> { StaticDeviceDiscoveryAdapter() }
-
-// Produccion (dispositivo fisico)
-single<DeviceDiscoveryPort> { MdnsDeviceDiscoveryAdapter(androidContext()) }
-```
-
-### 4. Arquitectura de puertos y adaptadores
-
-La integracion sigue la **arquitectura hexagonal** existente en la app. Los puertos se definen en `commonMain` (Kotlin Multiplatform) y los adaptadores en `androidMain` o `commonMain` segun la dependencia de plataforma:
+## Flujo de comisionamiento
 
 ```
-commonMain (puertos)                     androidMain (adaptadores)
-┌──────────────────────┐                ┌────────────────────────────────┐
-│ DeviceDiscoveryPort  │◄───────────────│ StaticDeviceDiscoveryAdapter   │
-│                      │                │ (hardcoded, emulador)          │
-│                      │    futuro      │                                │
-│                      │◄──────────── ─ │ MdnsDeviceDiscoveryAdapter     │
-│                      │                │ (NsdManager, produccion)       │
-└──────────────────────┘                └────────────────────────────────┘
-
-┌──────────────────────┐                ┌────────────────────────────────┐
-│ CommissioningPort    │◄───────────────│ MatterCommissioningAdapter     │
-│                      │                │ (CHIPDeviceController)         │
-└──────────────────────┘                └────────────────────────────────┘
-
-┌──────────────────────┐                ┌────────────────────────────────┐
-│ DeviceControlPort    │◄───────────────│ MatterDeviceControlAdapter     │
-│                      │                │ (CHIPClusters.*)               │
-└──────────────────────┘                └────────────────────────────────┘
+1. Usuario pulsa "Comisionar" en la app
+2. MatterCommissioningAdapter.commission(device)
+   └── establishPaseConnection(nodeId, host, port, passcode)
+       └── chipController.establishPaseConnection(...)
+           └── onPairingComplete(code=0) → PASE OK
+3. Se cachea el device pointer para uso posterior
+4. Se crea el Device en memoria (Light, Lock, etc.)
 ```
 
-### 5. Control de dispositivos: clusters Matter
+**Nota:** No se llama a `commissionDevice()` porque `FindOperational` no funciona en el emulador. El "comisionamiento" es en realidad solo una verificacion de conectividad PASE.
 
-Tras establecer la sesion PASE, `MatterDeviceControlAdapter` re-establece PASE con la direccion conocida del dispositivo y envia comandos a los clusters Matter estandar:
-
-| Cluster Matter | Dispositivos | Operaciones |
-|---|---|---|
-| `OnOff` | Bombillas, interruptores, Smart TV | on, off, toggle |
-| `LevelControl` | Bombillas | moveToLevel (brillo) |
-| `DoorLock` | Cerraduras | lockDoor, unlockDoor |
-| `WindowCovering` | Persianas | goToLiftPercentage |
-| `Thermostat` | Termostato | setpointRaiseLower |
-| `BooleanState` | Sensor contacto | lectura (suscripcion) |
-| `SmokeCoAlarm` | Sensor humo | lectura (suscripcion) |
-| `WaterLeakDetector` | Sensor fugas | lectura (suscripcion) |
-| `TemperatureMeasurement` | Sensor temperatura | lectura (suscripcion) |
-
-## Flujo completo
+## Flujo de control de dispositivos
 
 ```
-┌─────────────┐    mDNS/estatico    ┌─────────────────┐
-│  matter.js   │◄──────────────────│  App Android      │
-│  (27 devices)│    PASE over IP   │                   │
-│              │◄──────────────────│  CHIPDevice-       │
-│  UDP :5540-  │    Matter/UDP     │  Controller       │
-│       :5566  │◄──────────────────│                   │
-└─────────────┘                    └─────────────────┘
-     HOST                            EMULADOR
-   (simulacion)                    (10.0.2.2 → host)
+1. Usuario interactua con un dispositivo (toggle, slider, etc.)
+2. ToggleDeviceUseCase → deviceControlPort.toggleOnOff(id, on)
+3. MatterDeviceControlAdapter.executeWithRetry(deviceId)
+   ├── Intenta con el pointer cacheado
+   ├── Si falla (sesion expirada):
+   │   ├── Invalida cache
+   │   ├── Espera 1s
+   │   ├── Crea PASE nueva con nodeId temporal (fuerza sesion fresca)
+   │   └── Reintenta el comando
+   └── Si el retry tambien falla → lanza excepcion
+4. ToggleDeviceUseCase captura la excepcion
+   └── Si Matter falla, el estado NO se actualiza en memoria
 ```
 
-1. **Descubrimiento**: El adaptador estatico proporciona la lista de dispositivos con IP `10.0.2.2` y puertos 5540-5566.
-2. **Commissioning (PASE)**: `CHIPDeviceController.establishPaseConnection()` realiza PASE (SPAKE2+) sobre UDP con el passcode del dispositivo. Verifica conectividad y establece sesion cifrada. No se llama a `commissionDevice()` (ver seccion 2).
-3. **Registro**: `DeviceControlPort.registerDevice()` almacena la informacion de conexion (host, puerto, passcode) para poder re-establecer PASE en operaciones de control posteriores.
-4. **Control**: Para cada comando, `MatterDeviceControlAdapter` re-establece PASE con la direccion conocida, obtiene el device pointer via `getDeviceBeingCommissionedPointer()`, y envia el cluster command (`ChipClusters.*`) sobre la sesion PASE cifrada.
-5. **Suscripciones**: (Pendiente) La app se suscribiria a cambios de atributos (sensores) para recibir actualizaciones en tiempo real.
+## Expiracion de sesiones PASE
 
-## Preparacion para produccion
+Las sesiones PASE son temporales por diseno. Cuando el simulador las expira (por inactividad), los comandos fallan con `ChipClusterException: CHIP cluster error: 1` y el simulador reporta `Ignoring message for unknown session`.
 
-Para pasar a produccion con dispositivos reales, los cambios son exclusivamente en la capa de adaptadores:
+### Problema del re-establecimiento
 
-| Componente | Desarrollo (emulador) | Produccion (dispositivo fisico) |
-|---|---|---|
-| Discovery | `StaticDeviceDiscoveryAdapter` | `MdnsDeviceDiscoveryAdapter` (NsdManager) |
-| Commissioning | PASE over IP (solo verificacion) | PASE + `commissionDevice()` (NOC + CASE) |
-| Control | PASE directo (`getDeviceBeingCommissionedPointer`) | CASE operacional (`getConnectedDevicePointer`) |
-| Permisos | `INTERNET`, `ACCESS_WIFI_STATE`, `CHANGE_WIFI_MULTICAST_STATE` | + `BLUETOOTH_SCAN` + `BLUETOOTH_CONNECT` + `ACCESS_FINE_LOCATION` |
+`chipController.establishPaseConnection(nodeId)` con el **mismo nodeId** no crea una sesion nueva. El controller internamente reutiliza la sesion existente (mismo LSID), aunque el simulador ya la olvido.
 
-Ningun use case, view model ni pantalla necesita modificacion. La inyeccion de dependencias (Koin) gestiona el intercambio de adaptadores.
+### Solucion: nodeId temporal
 
-## Referencias
+El retry usa un nodeId temporal incremental (`100000+`) que fuerza al controller a crear una sesion PASE completamente nueva. El simulador acepta la conexion basandose en el passcode, independientemente del nodeId. El pointer resultante se cachea contra el nodeId original del dispositivo.
 
-- [Matter Specification](https://csa-iot.org/developer-resource/specifications-download-request/)
-- [matter.js (simulacion)](https://github.com/project-chip/matter.js)
-- [Google Sample App for Matter](https://github.com/google-home/sample-apps-for-matter-android)
-- [matter-android-demo-sdk (Maven)](https://central.sonatype.com/artifact/com.google.matter/matter-android-demo-sdk)
-- [connectedhomeip (CHIP)](https://github.com/project-chip/connectedhomeip)
-- [PASE over IP (Matter spec 4.13)](https://csa-iot.org/developer-resource/specifications-download-request/)
+### Timeout de comandos
+
+Los comandos Matter tienen un timeout de 3 segundos. Si el SDK no recibe respuesta en ese tiempo, el comando falla inmediatamente y se activa el retry con sesion nueva. Sin este timeout, el SDK reintenta internamente 4 veces con backoff exponencial (~15 segundos).
+
+## Simulacion de eventos de sensores
+
+Los eventos de sensores (temperatura, humo, fugas, contacto de puerta) son **generados localmente** por el `SensorEventSimulator` dentro de la app. **No provienen del simulador Matter externo.**
+
+```
+SensorEventSimulator (en la app)
+├── emitTemperatureReadings()    → valores aleatorios cada 3s
+├── emitContactSensorEvents()   → toggle puerta cada 10s
+├── emitSmokeAlerts()           → 50% probabilidad cada 5s
+├── emitWaterLeakAlerts()       → 50% probabilidad cada 5s
+├── emitThermostatAdjustments() → ajustes aleatorios cada 2min
+└── monitorDoorOpenDuration()   → alerta si puerta abierta >2min
+```
+
+### Por que la simulacion es local
+
+Para recibir eventos reales del simulador Matter se necesitarian **suscripciones a atributos** (attribute subscriptions), que requieren sesiones CASE activas. Como CASE no esta soportado, los eventos se simulan localmente:
+
+- El `SensorEventSimulator` genera eventos periodicos y los guarda en `DeviceEventRepository`
+- Para sensores de contacto, ademas **modifica el estado del dispositivo** (`sensor.toggle()` + `deviceRepository.save()`) para simular apertura/cierre de puertas
+- Los valores de temperatura son aleatorios (18-28 C), no lecturas reales del simulador
+
+### Que se comunica realmente con Matter
+
+| Operacion | Usa Matter? | Descripcion |
+|-----------|-------------|-------------|
+| Comisionamiento | Si (PASE) | Verifica conectividad con el simulador |
+| Toggle luz/switch/TV | Si (PASE) | Envia comando OnOff al simulador |
+| Lock/Unlock cerradura | Si (PASE) | Envia comando DoorLock al simulador |
+| Ajustar termostato | Si (PASE) | Envia setpoint/modo al simulador |
+| Mover persiana | Si (PASE) | Envia posicion WindowCovering al simulador |
+| Eventos de sensores | No | Generados localmente por SensorEventSimulator |
+| Notificaciones push | No | Generadas localmente por AndroidNotificationAdapter |
+| Lectura de temperatura | No | Valor aleatorio, no lectura real |
+| Estado de puerta | No | Toggle automatico local, no lectura real |
+
+## Archivos clave
+
+| Archivo | Responsabilidad |
+|---------|-----------------|
+| `MatterControllerProvider.kt` | Crea el `ChipDeviceController` singleton |
+| `MatterCommissioningAdapter.kt` | Establece PASE durante comisionamiento |
+| `MatterDeviceControlAdapter.kt` | Envia comandos a dispositivos via PASE |
+| `SensorEventSimulator.kt` | Genera eventos de sensores localmente |
+| `StaticDeviceDiscoveryAdapter.kt` | Lista dispositivos disponibles para comisionar |
