@@ -12,6 +12,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.Optional
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -22,6 +23,13 @@ class MatterDeviceControlAdapter(
     private val deviceConnections = ConcurrentHashMap<Long, ConnectionInfo>()
     private val cachedPointers = ConcurrentHashMap<Long, Long>()
     private val controlMutex = Mutex()
+
+    /**
+     * Counter to generate unique temporary nodeIds for PASE re-establishment.
+     * The ChipDeviceController reuses internal sessions when called with the
+     * same nodeId, so we use a different one each time to force a fresh session.
+     */
+    private val retryNodeIdCounter = AtomicLong(RETRY_NODE_ID_BASE)
 
     override fun registerDevice(deviceId: DeviceId, discoveredDevice: DiscoveredDevice) {
         val nodeId = deviceId.value.toLong()
@@ -106,7 +114,8 @@ class MatterDeviceControlAdapter(
      *
      * Usa el pointer cacheado de la sesión PASE del comisionamiento.
      * Si el comando falla (sesión expirada), invalida la caché,
-     * re-establece PASE y reintenta una vez.
+     * re-establece PASE con un nodeId temporal (para forzar sesión nueva)
+     * y reintenta una vez.
      */
     private suspend fun executeWithRetry(
         deviceId: DeviceId,
@@ -120,19 +129,18 @@ class MatterDeviceControlAdapter(
                 invalidateSession(deviceId)
                 delay(RETRY_DELAY_MS)
                 try {
-                    block(getDevicePointer(deviceId))
+                    block(getFreshDevicePointer(deviceId))
                 } catch (retryError: Exception) {
-                    Log.e(TAG, "Retry also failed for ${deviceId.value}, session likely expired", retryError)
+                    Log.e(TAG, "Retry also failed for ${deviceId.value}", retryError)
+                    throw retryError
                 }
             }
         }
     }
 
     /**
-     * Obtiene un device pointer, reutilizando la sesión PASE del comisionamiento.
-     *
-     * Solo re-establece PASE si no hay pointer cacheado (primer uso o tras
-     * invalidación por error).
+     * Obtiene el pointer cacheado, o establece PASE con el nodeId original
+     * si no hay caché (primer uso tras comisionamiento).
      */
     private suspend fun getDevicePointer(deviceId: DeviceId): Long {
         val nodeId = deviceId.value.toLong()
@@ -144,6 +152,28 @@ class MatterDeviceControlAdapter(
 
         establishPaseForControl(nodeId, conn)
         val pointer = chipController.getDeviceBeingCommissionedPointer(nodeId)
+        cachedPointers[nodeId] = pointer
+        return pointer
+    }
+
+    /**
+     * Fuerza una sesión PASE completamente nueva usando un nodeId temporal.
+     *
+     * El ChipDeviceController reutiliza sesiones internas cuando se llama
+     * a establishPaseConnection con el mismo nodeId. Usando un nodeId
+     * diferente cada vez, forzamos la creación de una sesión nueva con
+     * un LSID nuevo que el simulador reconoce.
+     */
+    private suspend fun getFreshDevicePointer(deviceId: DeviceId): Long {
+        val nodeId = deviceId.value.toLong()
+        val conn = deviceConnections[nodeId]
+            ?: throw IllegalStateException("Device $nodeId not registered for control")
+
+        val tempNodeId = retryNodeIdCounter.getAndIncrement()
+        Log.d(TAG, "Re-establishing PASE with temp nodeId $tempNodeId for device ${deviceId.value}")
+
+        establishPaseForControl(tempNodeId, conn)
+        val pointer = chipController.getDeviceBeingCommissionedPointer(tempNodeId)
         cachedPointers[nodeId] = pointer
         return pointer
     }
@@ -222,5 +252,6 @@ class MatterDeviceControlAdapter(
         const val SYSTEM_MODE_OFF = 0
         const val SYSTEM_MODE_HEAT = 4
         const val RETRY_DELAY_MS = 1_000L
+        const val RETRY_NODE_ID_BASE = 100_000L
     }
 }
