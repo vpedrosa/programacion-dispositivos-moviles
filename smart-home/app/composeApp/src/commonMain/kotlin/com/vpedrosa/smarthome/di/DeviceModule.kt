@@ -17,6 +17,8 @@ import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.commissioning.application.CommissionDeviceUseCase
 import com.vpedrosa.smarthome.voice.application.ExecuteVoiceCommandUseCase
 import com.vpedrosa.smarthome.voice.application.ParseVoiceCommandUseCase
+import com.vpedrosa.smarthome.voice.domain.VoiceCommandRepository
+import com.vpedrosa.smarthome.voice.infrastructure.persistence.InMemoryVoiceCommandRepository
 import com.vpedrosa.smarthome.antisquatter.application.SimulatePresenceUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.application.UpdateBlindUseCase
@@ -37,6 +39,7 @@ val deviceModule = module {
     single<DeviceEventRepository> { InMemoryDeviceEventRepository() }
     single<AntiSquatterRepository> { InMemoryAntiSquatterRepository() }
     single<AppSettingsRepository> { InMemoryAppSettingsRepository() }
+    single<VoiceCommandRepository> { InMemoryVoiceCommandRepository() }
 
     // Use cases
     factory { ToggleDeviceUseCase(get(), get()) }
