@@ -73,9 +73,18 @@ class VoiceControlViewModel(
     }
 
     private fun processCommand(text: String) {
+        if (text.isBlank()) return
         viewModelScope.launch {
-            val parsed = parseVoiceCommand(text)
-            val result = executeVoiceCommand(parsed)
+            val result = try {
+                val parsed = parseVoiceCommand(text)
+                executeVoiceCommand(parsed)
+            } catch (e: Exception) {
+                VoiceCommandResult(
+                    success = false,
+                    message = e.message ?: "Error executing command",
+                    devicesAffected = 0,
+                )
+            }
 
             val command = VoiceCommand(
                 text = text,

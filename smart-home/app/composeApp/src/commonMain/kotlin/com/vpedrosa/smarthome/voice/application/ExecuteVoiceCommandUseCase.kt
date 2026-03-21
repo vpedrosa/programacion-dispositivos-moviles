@@ -47,7 +47,11 @@ class ExecuteVoiceCommandUseCase(
         }
 
         val toggled = devices.mapNotNull { device ->
-            toggleDevice(device, cmd.turnOn, deviceControlPort)
+            try {
+                toggleDevice(device, cmd.turnOn, deviceControlPort)
+            } catch (_: Exception) {
+                null
+            }
         }
 
         if (toggled.isNotEmpty()) {
@@ -56,9 +60,9 @@ class ExecuteVoiceCommandUseCase(
 
         val action = if (cmd.turnOn) "turned on" else "turned off"
         return VoiceCommandResult(
-            success = true,
-            message = "${cmd.deviceType.name.lowercase().replaceFirstChar { it.uppercase() }} $action${roomSuffix(cmd.roomName)} (${devices.size})",
-            devicesAffected = devices.size,
+            success = toggled.isNotEmpty(),
+            message = "${cmd.deviceType.name.lowercase().replaceFirstChar { it.uppercase() }} $action${roomSuffix(cmd.roomName)} (${toggled.size})",
+            devicesAffected = toggled.size,
         )
     }
 
