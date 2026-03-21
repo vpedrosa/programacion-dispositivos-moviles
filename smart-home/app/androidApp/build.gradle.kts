@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 android {
@@ -53,6 +54,9 @@ dependencies {
 
     // Wearable Data Layer API (receive voice commands from Wear OS)
     implementation(libs.play.services.wearable)
+
+    // Serialization (for Wearable Data Layer JSON)
+    implementation(libs.kotlinx.serialization.json)
 
     // Coroutines (for WearableMessageListenerService)
     implementation(libs.kotlinx.coroutines.android)

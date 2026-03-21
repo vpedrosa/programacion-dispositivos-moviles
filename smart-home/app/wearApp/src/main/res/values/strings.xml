@@ -2,33 +2,13 @@
 <resources>
     <string name="app_name">Smart Home Wear</string>
 
-    <!-- Voice Control Screen -->
-    <string name="voice_tap_to_speak">Tap to speak</string>
-    <string name="voice_listening">Listening…</string>
-    <string name="voice_processing">Processing…</string>
-    <string name="voice_speech_prompt">Say a command</string>
-
-    <!-- Speech Recognition Errors -->
-    <string name="speech_no_text_recognized">No text was recognized</string>
-    <string name="speech_not_available">Speech recognition not available on this device</string>
-    <string name="speech_error_audio">Audio error</string>
-    <string name="speech_error_client">Client error</string>
-    <string name="speech_error_permission">Microphone permission denied</string>
-    <string name="speech_error_network">Network error</string>
-    <string name="speech_error_network_timeout">Network timeout</string>
-    <string name="speech_error_no_match">No command was recognized</string>
-    <string name="speech_error_busy">Recognizer is busy</string>
-    <string name="speech_error_server">Server error</string>
-    <string name="speech_error_speech_timeout">No speech detected</string>
-    <string name="speech_error_unknown">Unknown error (%1$d)</string>
+    <!-- Device Control Screen -->
+    <string name="device_loading">Loading devices…</string>
+    <string name="device_empty">No devices available</string>
+    <string name="device_no_room">Other devices</string>
 
     <!-- Wearable Communication -->
-    <string name="wear_phone_connect_error">Could not connect to phone: %1$s</string>
     <string name="wear_phone_not_connected">Phone not connected. Make sure the app is installed.</string>
-    <string name="wear_send_error">Error sending: %1$s</string>
     <string name="wear_timeout">Timed out. Phone did not respond.</string>
     <string name="wear_unknown_response">Unrecognized response: %1$s</string>
-
-    <!-- Accessibility -->
-    <string name="a11y_microphone">Microphone</string>
 </resources>

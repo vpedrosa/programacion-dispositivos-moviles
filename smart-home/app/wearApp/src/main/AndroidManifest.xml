@@ -3,9 +3,6 @@
 
     <uses-feature android:name="android.hardware.type.watch" />
 
-    <!-- Speech recognition requires microphone access -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
     <application
         android:name=".WearApplication"
         android:allowBackup="true"
