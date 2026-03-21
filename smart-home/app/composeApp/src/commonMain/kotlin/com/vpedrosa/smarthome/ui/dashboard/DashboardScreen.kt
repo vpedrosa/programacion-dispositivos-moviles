@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.LightbulbCircle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Thermostat
@@ -68,6 +69,7 @@ import smarthome.composeapp.generated.resources.a11y_icon_smart_tv
 import smarthome.composeapp.generated.resources.a11y_icon_home
 import smarthome.composeapp.generated.resources.a11y_room_placeholder
 import smarthome.composeapp.generated.resources.commissioning_devices_button
+import smarthome.composeapp.generated.resources.dashboard_voice_control
 
 private val Navy = Color(0xFF123458)
 private val CardBackground = Color(0xFFFFFFFF)
@@ -79,6 +81,7 @@ private val AlertBlue = Color(0xFF2196F3)
 @Composable
 fun DashboardScreen(
     onNavigateToCommissioning: () -> Unit = {},
+    onNavigateToVoiceControl: () -> Unit = {},
     viewModel: DashboardViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -110,6 +113,25 @@ fun DashboardScreen(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(stringResource(Res.string.commissioning_devices_button))
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // -- Voice control button --
+        Button(
+            onClick = onNavigateToVoiceControl,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Navy,
+            ),
+        ) {
+            Icon(
+                imageVector = Icons.Default.Mic,
+                contentDescription = null,
+                modifier = Modifier.size(20.dp),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(stringResource(Res.string.dashboard_voice_control))
         }
 
         Spacer(modifier = Modifier.height(24.dp))

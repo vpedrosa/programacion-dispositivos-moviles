@@ -197,6 +197,9 @@
     <string name="commissioning_success">%1$s commissioned successfully</string>
     <string name="commissioning_commissioned">Commissioned</string>
 
+    <!-- Dashboard quick actions -->
+    <string name="dashboard_voice_control">Voice control</string>
+
     <!-- Accessibility -->
     <string name="action_back">Back</string>
     <string name="a11y_navigate_back">Go back</string>

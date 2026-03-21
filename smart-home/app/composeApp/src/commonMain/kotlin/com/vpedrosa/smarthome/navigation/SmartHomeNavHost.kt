@@ -44,6 +44,9 @@ fun SmartHomeNavHost(
                 onNavigateToCommissioning = {
                     navController.navigate(Commissioning)
                 },
+                onNavigateToVoiceControl = {
+                    navController.navigate(VoiceControl)
+                },
             )
         }
 
