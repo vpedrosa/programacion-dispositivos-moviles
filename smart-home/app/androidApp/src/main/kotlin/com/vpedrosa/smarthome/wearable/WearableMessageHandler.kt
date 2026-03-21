@@ -39,9 +39,12 @@ class WearableMessageHandler(
     override fun onMessageReceived(messageEvent: MessageEvent) {
         val sourceNodeId = messageEvent.sourceNodeId
 
+        Log.d(TAG, "onMessageReceived path=${messageEvent.path} from=$sourceNodeId")
+
         when (messageEvent.path) {
             PATH_DEVICE_LIST_REQUEST -> handleDeviceListRequest(sourceNodeId)
             PATH_DEVICE_ACTION -> handleDeviceAction(sourceNodeId, messageEvent.data)
+            else -> Log.w(TAG, "Unknown path: ${messageEvent.path}")
         }
     }
 

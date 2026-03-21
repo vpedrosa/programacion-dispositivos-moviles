@@ -1,6 +1,7 @@
 package com.vpedrosa.smarthome.wear.device_control.adapters
 
 import android.content.Context
+import android.util.Log
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
@@ -37,6 +38,8 @@ class WearableDeviceCommandAdapter(
                 context.getString(R.string.wear_phone_not_connected)
             )
 
+        Log.d(TAG, "Requesting device list from phone node: $phoneNodeId")
+
         val response = sendAndAwait(
             nodeId = phoneNodeId,
             sendPath = PATH_DEVICE_LIST_REQUEST,
@@ -46,8 +49,10 @@ class WearableDeviceCommandAdapter(
 
         return try {
             val deviceList = json.decodeFromString<WearDeviceList>(response)
+            Log.d(TAG, "Received ${deviceList.devices.size} devices")
             DeviceListResult.Success(deviceList.devices)
         } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse device list: ${e.message}", e)
             DeviceListResult.Error(
                 context.getString(R.string.wear_unknown_response, e.message ?: "")
             )
@@ -64,6 +69,8 @@ class WearableDeviceCommandAdapter(
             WearDeviceAction.serializer(),
             WearDeviceAction(deviceId = deviceId, action = WearDeviceAction.TOGGLE),
         )
+
+        Log.d(TAG, "Sending toggle action for device $deviceId")
 
         val response = sendAndAwait(
             nodeId = phoneNodeId,
@@ -94,8 +101,11 @@ class WearableDeviceCommandAdapter(
 
     private suspend fun getPhoneNodeId(): String? {
         return try {
-            nodeClient.connectedNodes.await().firstOrNull()?.id
-        } catch (_: Exception) {
+            val nodes = nodeClient.connectedNodes.await()
+            Log.d(TAG, "Connected nodes: ${nodes.map { "${it.displayName}(${it.id})" }}")
+            nodes.firstOrNull()?.id
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to get connected nodes: ${e.message}", e)
             null
         }
     }
@@ -110,6 +120,7 @@ class WearableDeviceCommandAdapter(
             suspendCancellableCoroutine { continuation ->
                 val listener = object : MessageClient.OnMessageReceivedListener {
                     override fun onMessageReceived(event: MessageEvent) {
+                        Log.d(TAG, "Received message on path: ${event.path}")
                         if (event.path == responsePath) {
                             messageClient.removeListener(this)
                             if (continuation.isActive) {
@@ -122,19 +133,23 @@ class WearableDeviceCommandAdapter(
                 messageClient.addListener(listener)
                 continuation.invokeOnCancellation { messageClient.removeListener(listener) }
 
-                try {
-                    messageClient.sendMessage(nodeId, sendPath, payload)
-                } catch (e: Exception) {
-                    messageClient.removeListener(listener)
-                    if (continuation.isActive) {
-                        continuation.resume(null)
+                messageClient.sendMessage(nodeId, sendPath, payload)
+                    .addOnSuccessListener { messageId ->
+                        Log.d(TAG, "Message sent to $sendPath, messageId=$messageId")
                     }
-                }
+                    .addOnFailureListener { e ->
+                        Log.e(TAG, "Failed to send message to $sendPath: ${e.message}", e)
+                        messageClient.removeListener(listener)
+                        if (continuation.isActive) {
+                            continuation.resume(null)
+                        }
+                    }
             }
         }
     }
 
     companion object {
+        private const val TAG = "WearDeviceCommand"
         const val PATH_DEVICE_LIST_REQUEST = "/device_list_request"
         const val PATH_DEVICE_LIST_RESPONSE = "/device_list_response"
         const val PATH_DEVICE_ACTION = "/device_action"
