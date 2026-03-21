@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.wear.compose.material3)
     implementation(libs.wear.compose.foundation)
     implementation(libs.wear.compose.navigation)
+    implementation(platform("androidx.compose:compose-bom:2025.05.00"))
+    implementation("androidx.compose.material:material-icons-extended")
 
     // Koin for DI
     implementation(platform(libs.koin.bom))

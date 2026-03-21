@@ -29,12 +29,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.vpedrosa.smarthome.wear.R
 import androidx.wear.compose.material3.FilledIconButton
@@ -145,9 +148,10 @@ private fun MicButton(
             disabledContentColor = Linen.copy(alpha = 0.8f),
         ),
     ) {
-        Text(
-            text = "\uD83C\uDF99",  // Microphone emoji as icon placeholder
-            style = MaterialTheme.typography.titleLarge,
+        androidx.wear.compose.material3.Icon(
+            imageVector = Icons.Filled.Mic,
+            contentDescription = stringResource(R.string.a11y_microphone),
+            modifier = Modifier.size(32.dp),
         )
     }
 }
