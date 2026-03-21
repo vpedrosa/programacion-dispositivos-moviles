@@ -6,6 +6,7 @@
     <string name="voice_tap_to_speak">Toca para hablar</string>
     <string name="voice_listening">Escuchando…</string>
     <string name="voice_processing">Procesando…</string>
+    <string name="voice_speech_prompt">Di un comando</string>
 
     <!-- Speech Recognition Errors -->
     <string name="speech_no_text_recognized">No se reconoció ningún texto</string>
