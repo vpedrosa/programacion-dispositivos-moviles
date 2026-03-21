@@ -19,25 +19,35 @@ class AndroidNotificationAdapter(
         private const val CHANNEL_DESCRIPTION = NotificationChannels.SENSOR_ALERTS_DESCRIPTION
     }
 
+    private val criticalTypes = setOf(
+        DeviceEventType.SMOKE_ALERT,
+        DeviceEventType.WATER_LEAK_ALERT,
+        DeviceEventType.DOOR_OPEN_TOO_LONG,
+    )
+
     init {
         createNotificationChannel()
     }
 
     override fun showSensorAlert(event: DeviceEvent) {
         val (title, icon) = titleAndIconFor(event.type)
+        val priority = if (event.type in criticalTypes) {
+            NotificationCompat.PRIORITY_HIGH
+        } else {
+            NotificationCompat.PRIORITY_DEFAULT
+        }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(icon)
             .setContentTitle(title)
             .setContentText(event.message)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(priority)
             .setAutoCancel(true)
             .build()
 
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Use event id hashCode so each event gets its own notification
         notificationManager.notify(event.id.hashCode(), notification)
     }
 
@@ -45,7 +55,12 @@ class AndroidNotificationAdapter(
         DeviceEventType.SMOKE_ALERT -> "Smoke Alert" to android.R.drawable.ic_dialog_alert
         DeviceEventType.WATER_LEAK_ALERT -> "Water Leak Alert" to android.R.drawable.ic_dialog_alert
         DeviceEventType.DOOR_OPEN_TOO_LONG -> "Door Open Alert" to android.R.drawable.ic_lock_idle_alarm
-        else -> "Sensor Alert" to android.R.drawable.ic_dialog_info
+        DeviceEventType.DOOR_OPENED -> "Door Opened" to android.R.drawable.ic_lock_idle_lock
+        DeviceEventType.DOOR_CLOSED -> "Door Closed" to android.R.drawable.ic_lock_lock
+        DeviceEventType.TEMPERATURE_READING -> "Temperature" to android.R.drawable.ic_dialog_info
+        DeviceEventType.THERMOSTAT_ADJUSTED -> "Thermostat" to android.R.drawable.ic_dialog_info
+        DeviceEventType.DEVICE_TURNED_ON -> "Device On" to android.R.drawable.ic_dialog_info
+        DeviceEventType.DEVICE_TURNED_OFF -> "Device Off" to android.R.drawable.ic_dialog_info
     }
 
     private fun createNotificationChannel() {

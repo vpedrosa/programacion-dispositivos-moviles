@@ -11,15 +11,12 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 class AddDeviceEventUseCaseTest {
 
     private val eventRepository = InMemoryDeviceEventRepository()
     private val fakeNotification = FakeNotificationPort()
     private val useCase = AddDeviceEventUseCase(eventRepository, fakeNotification)
-
-    // region Critical events trigger notification
 
     @Test
     fun smokeAlert_persistsEventAndShowsNotification() = runTest {
@@ -53,76 +50,28 @@ class AddDeviceEventUseCaseTest {
         assertEquals(listOf(event), fakeNotification.shownEvents)
     }
 
-    // endregion
-
-    // region Non-critical events do NOT trigger notification
-
     @Test
-    fun temperatureReading_persistsButNoNotification() = runTest {
+    fun temperatureReading_persistsAndShowsNotification() = runTest {
         val event = createEvent(DeviceEventType.TEMPERATURE_READING, "22.5C")
 
         useCase(event)
 
         assertEquals(1, eventRepository.observeAllEvents().first().size)
-        assertTrue(fakeNotification.shownEvents.isEmpty())
+        assertEquals(listOf(event), fakeNotification.shownEvents)
     }
 
     @Test
-    fun doorOpened_persistsButNoNotification() = runTest {
+    fun doorOpened_persistsAndShowsNotification() = runTest {
         val event = createEvent(DeviceEventType.DOOR_OPENED, "Front door opened")
 
         useCase(event)
 
         assertEquals(1, eventRepository.observeAllEvents().first().size)
-        assertTrue(fakeNotification.shownEvents.isEmpty())
+        assertEquals(listOf(event), fakeNotification.shownEvents)
     }
 
     @Test
-    fun doorClosed_persistsButNoNotification() = runTest {
-        val event = createEvent(DeviceEventType.DOOR_CLOSED, "Front door closed")
-
-        useCase(event)
-
-        assertEquals(1, eventRepository.observeAllEvents().first().size)
-        assertTrue(fakeNotification.shownEvents.isEmpty())
-    }
-
-    @Test
-    fun thermostatAdjusted_persistsButNoNotification() = runTest {
-        val event = createEvent(DeviceEventType.THERMOSTAT_ADJUSTED, "Set to 23C")
-
-        useCase(event)
-
-        assertEquals(1, eventRepository.observeAllEvents().first().size)
-        assertTrue(fakeNotification.shownEvents.isEmpty())
-    }
-
-    @Test
-    fun deviceTurnedOn_persistsButNoNotification() = runTest {
-        val event = createEvent(DeviceEventType.DEVICE_TURNED_ON, "Light on")
-
-        useCase(event)
-
-        assertEquals(1, eventRepository.observeAllEvents().first().size)
-        assertTrue(fakeNotification.shownEvents.isEmpty())
-    }
-
-    @Test
-    fun deviceTurnedOff_persistsButNoNotification() = runTest {
-        val event = createEvent(DeviceEventType.DEVICE_TURNED_OFF, "Light off")
-
-        useCase(event)
-
-        assertEquals(1, eventRepository.observeAllEvents().first().size)
-        assertTrue(fakeNotification.shownEvents.isEmpty())
-    }
-
-    // endregion
-
-    // region Multiple events
-
-    @Test
-    fun multipleCriticalEvents_notifiesForEach() = runTest {
+    fun multipleEvents_notifiesForEach() = runTest {
         val smoke = createEvent(DeviceEventType.SMOKE_ALERT, "Smoke", id = "evt-1")
         val water = createEvent(DeviceEventType.WATER_LEAK_ALERT, "Water", id = "evt-2")
         val temp = createEvent(DeviceEventType.TEMPERATURE_READING, "22C", id = "evt-3")
@@ -132,14 +81,8 @@ class AddDeviceEventUseCaseTest {
         useCase(temp)
 
         assertEquals(3, eventRepository.observeAllEvents().first().size)
-        assertEquals(2, fakeNotification.shownEvents.size)
-        assertEquals(smoke, fakeNotification.shownEvents[0])
-        assertEquals(water, fakeNotification.shownEvents[1])
+        assertEquals(3, fakeNotification.shownEvents.size)
     }
-
-    // endregion
-
-    // region Helpers
 
     private fun createEvent(
         type: DeviceEventType,
@@ -152,8 +95,6 @@ class AddDeviceEventUseCaseTest {
         message = message,
         timestamp = Instant.fromEpochMilliseconds(1_000_000L),
     )
-
-    // endregion
 }
 
 /** Fake implementation of [NotificationPort] that records all calls for assertion. */
