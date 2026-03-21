@@ -174,6 +174,7 @@
     <string name="anti_squatter_tv_section">REPRODUCCION SMART TV</string>
     <string name="anti_squatter_play_video">Reproducir video</string>
     <string name="anti_squatter_time_range">Horario</string>
+    <string name="anti_squatter_tv_uses_light_slots">Usa las mismas franjas horarias que las luces</string>
     <string name="anti_squatter_video_url">URL del video</string>
     <string name="anti_squatter_change_video">Cambiar video</string>
 

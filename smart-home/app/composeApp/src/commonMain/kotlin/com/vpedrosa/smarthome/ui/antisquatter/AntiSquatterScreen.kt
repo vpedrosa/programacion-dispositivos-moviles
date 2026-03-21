@@ -57,6 +57,7 @@ import smarthome.composeapp.generated.resources.anti_squatter_summary_title
 import smarthome.composeapp.generated.resources.anti_squatter_summary_tv
 import smarthome.composeapp.generated.resources.anti_squatter_change_video
 import smarthome.composeapp.generated.resources.anti_squatter_inactive_subtitle
+import smarthome.composeapp.generated.resources.anti_squatter_tv_uses_light_slots
 import smarthome.composeapp.generated.resources.anti_squatter_lights_section
 import smarthome.composeapp.generated.resources.anti_squatter_play_video
 import smarthome.composeapp.generated.resources.anti_squatter_presence_simulation
@@ -252,11 +253,10 @@ fun AntiSquatterScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Time range display
                     Text(
-                        text = "${stringResource(Res.string.anti_squatter_time_range)}: ${state.videoConfig.formatTimeRange()}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                        text = stringResource(Res.string.anti_squatter_tv_uses_light_slots),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -398,9 +398,10 @@ private fun PatternSummaryCard(state: AntiSquatterUiState) {
                 add(stringResource(Res.string.anti_squatter_summary_lights_no_rooms, slot.formatTimeRange()))
             }
         }
-        if (state.videoConfig.isEnabled) {
+        if (state.videoConfig.isEnabled && state.timeSlots.isNotEmpty()) {
+            val slotsRange = state.timeSlots.joinToString(", ") { it.formatTimeRange() }
             val url = state.videoConfig.videoUrl.ifBlank { "—" }
-            add(stringResource(Res.string.anti_squatter_summary_tv, state.videoConfig.formatTimeRange(), url))
+            add(stringResource(Res.string.anti_squatter_summary_tv, slotsRange, url))
         }
     }
 

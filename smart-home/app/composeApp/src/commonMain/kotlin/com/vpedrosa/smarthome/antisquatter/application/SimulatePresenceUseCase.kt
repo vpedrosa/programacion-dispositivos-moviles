@@ -11,27 +11,21 @@ import kotlinx.coroutines.flow.first
 /**
  * Checks the current anti-squatter configuration against the given time
  * and turns lights on/off in the corresponding rooms.
- * Also controls Smart TVs based on the video configuration.
+ * Also controls Smart TVs using the same light time slots.
  */
 class SimulatePresenceUseCase(
     private val antiSquatterRepository: AntiSquatterRepository,
     private val deviceRepository: DeviceRepository,
 ) {
-    /**
-     * Evaluates time slots for the given [hour] and [minute].
-     * Lights in rooms that match an active time slot are turned ON;
-     * lights in rooms that were in any configured slot but do NOT match the current time are turned OFF.
-     * If the video config is enabled and the current time falls within its range,
-     * all Smart TVs are turned on and set to casting; otherwise they are turned off.
-     */
     suspend operator fun invoke(hour: Int, minute: Int) {
         val config = antiSquatterRepository.observeConfig().first()
         if (!config.isEnabled) return
 
         val allDevices = deviceRepository.observeAllDevices().first()
+        val anySlotActive = config.timeSlots.any { it.containsTime(hour, minute) }
 
         simulateLights(config.timeSlots, allDevices.filterIsInstance<Light>(), hour, minute)
-        simulateSmartTvs(config.videoConfig, allDevices.filterIsInstance<SmartTv>(), hour, minute)
+        simulateSmartTvs(config.videoConfig, allDevices.filterIsInstance<SmartTv>(), anySlotActive)
     }
 
     private suspend fun simulateLights(
@@ -60,20 +54,21 @@ class SimulatePresenceUseCase(
         }
     }
 
+    /**
+     * Smart TVs are activated during the same time slots as the lights.
+     * The video config only controls whether TV simulation is enabled and the video URL.
+     */
     private suspend fun simulateSmartTvs(
         videoConfig: VideoConfig,
         smartTvs: List<SmartTv>,
-        hour: Int,
-        minute: Int,
+        anySlotActive: Boolean,
     ) {
         if (!videoConfig.isEnabled) return
 
-        val shouldBeActive = videoConfig.containsTime(hour, minute)
-
         smartTvs.forEach { tv ->
-            val needsUpdate = tv.isOn != shouldBeActive || tv.isCasting != shouldBeActive
+            val needsUpdate = tv.isOn != anySlotActive || tv.isCasting != anySlotActive
             if (needsUpdate) {
-                deviceRepository.save(tv.copy(isOn = shouldBeActive, isCasting = shouldBeActive))
+                deviceRepository.save(tv.copy(isOn = anySlotActive, isCasting = anySlotActive))
             }
         }
     }
