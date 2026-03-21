@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Smart Home Wear</string>
+
+    <!-- Voice Control Screen -->
+    <string name="voice_tap_to_speak">Toca para hablar</string>
+    <string name="voice_listening">Escuchando…</string>
+    <string name="voice_processing">Procesando…</string>
+
+    <!-- Speech Recognition Errors -->
+    <string name="speech_no_text_recognized">No se reconoció ningún texto</string>
+    <string name="speech_not_available">Reconocimiento de voz no disponible en este dispositivo</string>
+    <string name="speech_error_audio">Error de audio</string>
+    <string name="speech_error_client">Error del cliente</string>
+    <string name="speech_error_permission">Permiso de micrófono denegado</string>
+    <string name="speech_error_network">Error de red</string>
+    <string name="speech_error_network_timeout">Tiempo de espera de red agotado</string>
+    <string name="speech_error_no_match">No se reconoció ningún comando</string>
+    <string name="speech_error_busy">Reconocedor ocupado</string>
+    <string name="speech_error_server">Error del servidor</string>
+    <string name="speech_error_speech_timeout">No se detectó voz</string>
+    <string name="speech_error_unknown">Error desconocido (%1$d)</string>
+
+    <!-- Wearable Communication -->
+    <string name="wear_phone_connect_error">No se pudo conectar con el teléfono: %1$s</string>
+    <string name="wear_phone_not_connected">Teléfono no conectado. Asegúrate de que la app está instalada.</string>
+    <string name="wear_send_error">Error al enviar: %1$s</string>
+    <string name="wear_timeout">Tiempo de espera agotado. El teléfono no respondió.</string>
+    <string name="wear_unknown_response">Respuesta no reconocida: %1$s</string>
+</resources>

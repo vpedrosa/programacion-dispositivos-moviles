@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
+import com.vpedrosa.smarthome.wear.R
 import com.vpedrosa.smarthome.wear.voice_control.domain.ports.VoiceCommandPort
 import com.vpedrosa.smarthome.wear.voice_control.domain.ports.VoiceCommandResult
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -37,13 +38,13 @@ class WearableVoiceCommandAdapter(
             nodeClient.connectedNodes.await()
         } catch (e: Exception) {
             return VoiceCommandResult.Error(
-                "No se pudo conectar con el teléfono: ${e.message}"
+                context.getString(R.string.wear_phone_connect_error, e.message ?: "")
             )
         }
 
         val phoneNode = nodes.firstOrNull()
             ?: return VoiceCommandResult.Error(
-                "Teléfono no conectado. Asegúrate de que la app está instalada."
+                context.getString(R.string.wear_phone_not_connected)
             )
 
         // Register a listener for the response before sending
@@ -79,7 +80,9 @@ class WearableVoiceCommandAdapter(
                     messageClient.removeListener(listener)
                     if (continuation.isActive) {
                         continuation.resume(
-                            VoiceCommandResult.Error("Error al enviar: ${e.message}")
+                            VoiceCommandResult.Error(
+                                context.getString(R.string.wear_send_error, e.message ?: "")
+                            )
                         )
                     }
                 }
@@ -87,7 +90,7 @@ class WearableVoiceCommandAdapter(
         }
 
         return response ?: VoiceCommandResult.Error(
-            "Tiempo de espera agotado. El teléfono no respondió."
+            context.getString(R.string.wear_timeout)
         )
     }
 
@@ -100,7 +103,9 @@ class WearableVoiceCommandAdapter(
                 VoiceCommandResult.Error(payload.removePrefix("ERROR:"))
             }
             else -> {
-                VoiceCommandResult.Error("Respuesta no reconocida: $payload")
+                VoiceCommandResult.Error(
+                    context.getString(R.string.wear_unknown_response, payload)
+                )
             }
         }
     }

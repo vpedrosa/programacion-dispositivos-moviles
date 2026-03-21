@@ -32,9 +32,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.vpedrosa.smarthome.wear.R
 import androidx.wear.compose.material3.FilledIconButton
 import androidx.wear.compose.material3.IconButtonDefaults
 import androidx.wear.compose.material3.MaterialTheme
@@ -163,21 +165,21 @@ private fun StatusText(uiState: VoiceControlUiState) {
             when (status) {
                 VoiceStatus.Idle -> {
                     Text(
-                        text = "Toca para hablar",
+                        text = stringResource(R.string.voice_tap_to_speak),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
                 }
                 VoiceStatus.Listening -> {
                     Text(
-                        text = "Escuchando...",
+                        text = stringResource(R.string.voice_listening),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary,
                     )
                 }
                 VoiceStatus.Processing -> {
                     Text(
-                        text = "Procesando...",
+                        text = stringResource(R.string.voice_processing),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

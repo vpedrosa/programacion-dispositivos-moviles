@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import com.vpedrosa.smarthome.wear.R
 import com.vpedrosa.smarthome.wear.voice_control.domain.ports.WearSpeechRecognizerPort
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -68,7 +69,7 @@ class WearSpeechRecognizerAdapter(
             if (bestResult != null) {
                 _recognizedText.tryEmit(bestResult)
             } else {
-                _errors.tryEmit("No se reconoció ningún texto")
+                _errors.tryEmit(context.getString(R.string.speech_no_text_recognized))
             }
         }
 
@@ -85,7 +86,7 @@ class WearSpeechRecognizerAdapter(
         if (_isListening.value) return
 
         if (!SpeechRecognizer.isRecognitionAvailable(context)) {
-            _errors.tryEmit("Reconocimiento de voz no disponible en este dispositivo")
+            _errors.tryEmit(context.getString(R.string.speech_not_available))
             return
         }
 
@@ -119,15 +120,15 @@ class WearSpeechRecognizerAdapter(
     }
 
     private fun mapSpeechError(errorCode: Int): String = when (errorCode) {
-        SpeechRecognizer.ERROR_AUDIO -> "Error de audio"
-        SpeechRecognizer.ERROR_CLIENT -> "Error del cliente"
-        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Permiso de micrófono denegado"
-        SpeechRecognizer.ERROR_NETWORK -> "Error de red"
-        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Tiempo de espera de red agotado"
-        SpeechRecognizer.ERROR_NO_MATCH -> "No se reconoció ningún comando"
-        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Reconocedor ocupado"
-        SpeechRecognizer.ERROR_SERVER -> "Error del servidor"
-        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No se detectó voz"
-        else -> "Error desconocido ($errorCode)"
+        SpeechRecognizer.ERROR_AUDIO -> context.getString(R.string.speech_error_audio)
+        SpeechRecognizer.ERROR_CLIENT -> context.getString(R.string.speech_error_client)
+        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> context.getString(R.string.speech_error_permission)
+        SpeechRecognizer.ERROR_NETWORK -> context.getString(R.string.speech_error_network)
+        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> context.getString(R.string.speech_error_network_timeout)
+        SpeechRecognizer.ERROR_NO_MATCH -> context.getString(R.string.speech_error_no_match)
+        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> context.getString(R.string.speech_error_busy)
+        SpeechRecognizer.ERROR_SERVER -> context.getString(R.string.speech_error_server)
+        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> context.getString(R.string.speech_error_speech_timeout)
+        else -> context.getString(R.string.speech_error_unknown, errorCode)
     }
 }
