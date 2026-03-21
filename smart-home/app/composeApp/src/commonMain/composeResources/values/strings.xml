@@ -228,4 +228,9 @@
     <string name="a11y_alert_thermostat">Thermostat event</string>
     <string name="a11y_photo_placeholder">Take or select photo</string>
     <string name="a11y_room_placeholder">Room</string>
+    <string name="a11y_device_type_icon">Device type</string>
+    <string name="a11y_commissioned_status">Commissioned</string>
+    <string name="a11y_command_success">Command succeeded</string>
+    <string name="a11y_command_error">Command failed</string>
+    <string name="a11y_toggle_device">Toggle device</string>
 </resources>

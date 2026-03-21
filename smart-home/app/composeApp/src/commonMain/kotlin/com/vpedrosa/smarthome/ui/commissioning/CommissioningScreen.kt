@@ -51,6 +51,7 @@ import smarthome.composeapp.generated.resources.commissioning_devices_available
 import smarthome.composeapp.generated.resources.commissioning_passcode
 import smarthome.composeapp.generated.resources.commissioning_success
 import smarthome.composeapp.generated.resources.commissioning_title
+import smarthome.composeapp.generated.resources.a11y_commissioned_status
 
 private val ActiveGreen = Color(0xFF4CAF50)
 
@@ -100,7 +101,7 @@ fun CommissioningScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
-                    contentDescription = null,
+                    contentDescription = stringResource(Res.string.commissioning_all_done),
                     modifier = Modifier.size(64.dp),
                     tint = ActiveGreen,
                 )
@@ -223,7 +224,7 @@ private fun DiscoveredDeviceCard(
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
-                            contentDescription = null,
+                            contentDescription = stringResource(Res.string.a11y_commissioned_status),
                             modifier = Modifier.size(20.dp),
                             tint = ActiveGreen,
                         )

@@ -228,4 +228,9 @@
     <string name="a11y_alert_thermostat">Evento de termostato</string>
     <string name="a11y_photo_placeholder">Tomar o seleccionar foto</string>
     <string name="a11y_room_placeholder">Habitación</string>
+    <string name="a11y_device_type_icon">Tipo de dispositivo</string>
+    <string name="a11y_commissioned_status">Comisionado</string>
+    <string name="a11y_command_success">Comando ejecutado</string>
+    <string name="a11y_command_error">Comando fallido</string>
+    <string name="a11y_toggle_device">Cambiar estado del dispositivo</string>
 </resources>

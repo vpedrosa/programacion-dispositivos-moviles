@@ -73,7 +73,9 @@ import smarthome.composeapp.generated.resources.device_type_switches
 import smarthome.composeapp.generated.resources.device_type_temperature_sensors
 import smarthome.composeapp.generated.resources.device_type_thermostats
 import smarthome.composeapp.generated.resources.device_type_water_leak_sensors
+import smarthome.composeapp.generated.resources.a11y_device_type_icon
 import smarthome.composeapp.generated.resources.a11y_navigate_back
+import smarthome.composeapp.generated.resources.a11y_toggle_device
 import smarthome.composeapp.generated.resources.title_devices
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -209,7 +211,7 @@ internal fun DeviceRow(
         ) {
             Icon(
                 imageVector = device.type.icon(),
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.a11y_device_type_icon),
                 modifier = Modifier.size(28.dp),
                 tint = MaterialTheme.colorScheme.primary,
             )

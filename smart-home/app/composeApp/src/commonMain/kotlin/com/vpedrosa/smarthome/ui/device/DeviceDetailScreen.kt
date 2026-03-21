@@ -87,6 +87,7 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.a11y_icon_temperature
 import smarthome.composeapp.generated.resources.a11y_cast_content
 import smarthome.composeapp.generated.resources.a11y_decrease_temperature
 import smarthome.composeapp.generated.resources.a11y_increase_temperature
@@ -1215,7 +1216,7 @@ private fun TemperatureSensorContent(device: TemperatureSensor) {
         ) {
             Icon(
                 imageVector = Icons.Default.Thermostat,
-                contentDescription = null,
+                contentDescription = stringResource(Res.string.a11y_icon_temperature),
                 modifier = Modifier.size(48.dp),
                 tint = MaterialTheme.colorScheme.primary,
             )
@@ -1255,7 +1256,9 @@ private fun ContactSensorContent(device: ContactSensor) {
             ) {
                 Icon(
                     imageVector = if (isOpen) Icons.Default.LockOpen else Icons.Default.Lock,
-                    contentDescription = null,
+                    contentDescription = stringResource(
+                        if (isOpen) Res.string.contact_open else Res.string.contact_closed,
+                    ),
                     modifier = Modifier.size(40.dp),
                     tint = if (isOpen) Color(0xFFD32F2F) else Color(0xFF388E3C),
                 )

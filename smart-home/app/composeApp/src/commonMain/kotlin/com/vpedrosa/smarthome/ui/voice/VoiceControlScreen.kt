@@ -68,6 +68,8 @@ import smarthome.composeapp.generated.resources.voice_devices_affected
 import smarthome.composeapp.generated.resources.voice_stop_listening
 import smarthome.composeapp.generated.resources.voice_start_listening
 import smarthome.composeapp.generated.resources.action_back
+import smarthome.composeapp.generated.resources.a11y_command_success
+import smarthome.composeapp.generated.resources.a11y_command_error
 
 // Color constants matching the project scheme
 private val Navy = Color(0xFF123458)
@@ -278,6 +280,7 @@ private fun ResultCard(result: VoiceCommandResult) {
     val cardColor = if (result.success) SuccessGreen.copy(alpha = 0.1f) else ErrorRed.copy(alpha = 0.1f)
     val iconColor = if (result.success) SuccessGreen else ErrorRed
     val icon = if (result.success) Icons.Filled.CheckCircle else Icons.Filled.Error
+    val iconDesc = if (result.success) Res.string.a11y_command_success else Res.string.a11y_command_error
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -290,7 +293,7 @@ private fun ResultCard(result: VoiceCommandResult) {
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = stringResource(iconDesc),
                 tint = iconColor,
                 modifier = Modifier.size(32.dp),
             )
@@ -321,6 +324,7 @@ private fun ResultCard(result: VoiceCommandResult) {
 private fun RecentCommandItem(command: VoiceCommand) {
     val iconColor = if (command.result.success) SuccessGreen else ErrorRed
     val icon = if (command.result.success) Icons.Filled.CheckCircle else Icons.Filled.Error
+    val iconDesc = if (command.result.success) Res.string.a11y_command_success else Res.string.a11y_command_error
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -333,7 +337,7 @@ private fun RecentCommandItem(command: VoiceCommand) {
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = stringResource(iconDesc),
                 tint = iconColor,
                 modifier = Modifier.size(20.dp),
             )
