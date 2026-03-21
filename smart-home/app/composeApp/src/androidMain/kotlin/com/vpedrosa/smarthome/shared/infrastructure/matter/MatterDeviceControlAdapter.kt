@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeout
 import java.util.Optional
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
@@ -230,17 +231,19 @@ class MatterDeviceControlAdapter(
 
     private suspend fun suspendClusterCommand(
         block: (ChipClusters.DefaultClusterCallback) -> Unit,
-    ) = suspendCancellableCoroutine { cont ->
-        block(object : ChipClusters.DefaultClusterCallback {
-            override fun onSuccess() {
-                if (cont.isActive) cont.resume(Unit)
-            }
+    ) = withTimeout(COMMAND_TIMEOUT_MS) {
+        suspendCancellableCoroutine { cont ->
+            block(object : ChipClusters.DefaultClusterCallback {
+                override fun onSuccess() {
+                    if (cont.isActive) cont.resume(Unit)
+                }
 
-            override fun onError(error: Exception) {
-                Log.e(TAG, "Cluster command error", error)
-                if (cont.isActive) cont.resumeWithException(error)
-            }
-        })
+                override fun onError(error: Exception) {
+                    Log.e(TAG, "Cluster command error", error)
+                    if (cont.isActive) cont.resumeWithException(error)
+                }
+            })
+        }
     }
 
     private data class ConnectionInfo(val host: String, val port: Int, val passcode: Long)
@@ -252,6 +255,7 @@ class MatterDeviceControlAdapter(
         const val SYSTEM_MODE_OFF = 0
         const val SYSTEM_MODE_HEAT = 4
         const val RETRY_DELAY_MS = 1_000L
+        const val COMMAND_TIMEOUT_MS = 3_000L
         const val RETRY_NODE_ID_BASE = 100_000L
     }
 }
