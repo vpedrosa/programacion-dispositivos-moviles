@@ -56,6 +56,7 @@ dependencies {
 
     // Coroutines (for WearableMessageListenerService)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     debugImplementation(libs.compose.uiTooling)
 }

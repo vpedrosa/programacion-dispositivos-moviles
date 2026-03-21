@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.inject
 
 /**
@@ -35,13 +36,14 @@ class WearableMessageListenerService : WearableListenerService() {
         val sourceNodeId = messageEvent.sourceNodeId
 
         serviceScope.launch {
-            val parsed = parseVoiceCommand(commandText)
-            val result = executeVoiceCommand(parsed)
+            val responsePayload = try {
+                val parsed = parseVoiceCommand(commandText)
+                val result = executeVoiceCommand(parsed)
 
-            val responsePayload = if (result.success) {
-                "OK:${result.message}"
-            } else {
-                "ERROR:${result.message}"
+                if (result.success) "OK:${result.message}" else "ERROR:${result.message}"
+            } catch (e: Exception) {
+                android.util.Log.e(TAG, "Error processing command: ${e.message}", e)
+                "ERROR:${e.message ?: "Unknown error"}"
             }
 
             try {
@@ -51,13 +53,9 @@ class WearableMessageListenerService : WearableListenerService() {
                         RESULT_PATH,
                         responsePayload.toByteArray(Charsets.UTF_8),
                     )
+                    .await()
             } catch (e: Exception) {
-                // Best effort: if we can't send the result back, the watch
-                // will time out and show an error.
-                android.util.Log.e(
-                    TAG,
-                    "Failed to send result back to watch: ${e.message}",
-                )
+                android.util.Log.e(TAG, "Failed to send result to watch: ${e.message}", e)
             }
         }
     }
