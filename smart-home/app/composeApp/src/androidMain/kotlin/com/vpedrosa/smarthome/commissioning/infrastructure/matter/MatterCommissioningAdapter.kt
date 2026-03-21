@@ -49,20 +49,24 @@ class MatterCommissioningAdapter(
             override fun onPairingComplete(code: Int) {
                 if (code == 0) {
                     Log.d(TAG, "PASE connection established: ${device.name}")
-                    cont.resume(Unit)
+                    if (cont.isActive) cont.resume(Unit)
                 } else {
                     Log.e(TAG, "PASE failed with code $code: ${device.name}")
-                    cont.resumeWithException(
-                        RuntimeException("PASE failed with code $code for ${device.name}"),
-                    )
+                    if (cont.isActive) {
+                        cont.resumeWithException(
+                            RuntimeException("PASE failed with code $code for ${device.name}"),
+                        )
+                    }
                 }
             }
 
             override fun onError(error: Throwable?) {
                 Log.e(TAG, "PASE connection failed: ${device.name}", error)
-                cont.resumeWithException(
-                    error ?: RuntimeException("PASE failed for ${device.name}"),
-                )
+                if (cont.isActive) {
+                    cont.resumeWithException(
+                        error ?: RuntimeException("PASE failed for ${device.name}"),
+                    )
+                }
             }
 
             override fun onConnectDeviceComplete() {}

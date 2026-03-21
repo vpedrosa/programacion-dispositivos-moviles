@@ -6,6 +6,7 @@ import chip.devicecontroller.ChipDeviceController
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -104,13 +105,22 @@ class MatterDeviceControlAdapter(
      * No usa getConnectedDevicePointer (que necesita mDNS/CASE) porque mDNS
      * no funciona en el emulador Android. En su lugar, re-establece PASE
      * con la dirección conocida y usa getDeviceBeingCommissioned.
+     *
+     * Si la primera conexión falla (sesión stale tras un comisionamiento fallido),
+     * espera brevemente y reintenta una vez para recuperar la conectividad.
      */
     private suspend fun getDevicePointer(deviceId: DeviceId): Long {
         val nodeId = deviceId.value.toLong()
         val conn = deviceConnections[nodeId]
             ?: throw IllegalStateException("Device $nodeId not registered for control")
 
-        establishPaseForControl(nodeId, conn)
+        try {
+            establishPaseForControl(nodeId, conn)
+        } catch (e: Exception) {
+            Log.w(TAG, "PASE failed for $nodeId, retrying after delay", e)
+            delay(RETRY_DELAY_MS)
+            establishPaseForControl(nodeId, conn)
+        }
         return chipController.getDeviceBeingCommissionedPointer(nodeId)
     }
 
@@ -120,8 +130,17 @@ class MatterDeviceControlAdapter(
     ) = suspendCancellableCoroutine { cont ->
         chipController.setCompletionListener(object : ChipDeviceController.CompletionListener {
             override fun onPairingComplete(code: Int) {
-                Log.d(TAG, "PASE for control: node $nodeId, code=$code")
-                if (cont.isActive) cont.resume(Unit)
+                if (code == 0) {
+                    Log.d(TAG, "PASE for control: node $nodeId OK")
+                    if (cont.isActive) cont.resume(Unit)
+                } else {
+                    Log.e(TAG, "PASE for control failed: node $nodeId, code=$code")
+                    if (cont.isActive) {
+                        cont.resumeWithException(
+                            RuntimeException("PASE failed with code $code for node $nodeId"),
+                        )
+                    }
+                }
             }
 
             override fun onError(error: Throwable?) {
@@ -172,5 +191,6 @@ class MatterDeviceControlAdapter(
         const val TIMED_INVOKE_TIMEOUT = 10_000
         const val SYSTEM_MODE_OFF = 0
         const val SYSTEM_MODE_HEAT = 4
+        const val RETRY_DELAY_MS = 1_000L
     }
 }
