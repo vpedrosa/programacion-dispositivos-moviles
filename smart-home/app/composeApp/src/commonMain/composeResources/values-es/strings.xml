@@ -162,6 +162,10 @@
     <string name="settings_notification_granted">Permitidas</string>
     <string name="settings_notification_denied">Denegadas - Toca para permitir</string>
     <string name="settings_sensor_alerts">Alertas de sensores</string>
+    <string name="settings_smartwatch_section">SMARTWATCH</string>
+    <string name="settings_watch_connected">Conectado</string>
+    <string name="settings_watch_not_connected">No conectado</string>
+    <string name="settings_watch_connection">Conexión del reloj</string>
 
     <!-- Anti-Squatter -->
     <string name="anti_squatter_presence_simulation">Simulacion de presencia</string>

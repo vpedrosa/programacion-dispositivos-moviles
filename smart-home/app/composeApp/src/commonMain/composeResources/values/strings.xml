@@ -162,6 +162,10 @@
     <string name="settings_notification_granted">Allowed</string>
     <string name="settings_notification_denied">Denied - Tap to allow</string>
     <string name="settings_sensor_alerts">Sensor alerts</string>
+    <string name="settings_smartwatch_section">SMARTWATCH</string>
+    <string name="settings_watch_connected">Connected</string>
+    <string name="settings_watch_not_connected">Not connected</string>
+    <string name="settings_watch_connection">Watch connection</string>
 
     <!-- Anti-Squatter -->
     <string name="anti_squatter_presence_simulation">Presence simulation</string>

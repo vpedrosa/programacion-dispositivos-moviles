@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.vpedrosa.smarthome.ui.components.NotificationPermissionHandler
+import com.vpedrosa.smarthome.ui.components.WatchConnectionHandler
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
@@ -53,8 +54,12 @@ import smarthome.composeapp.generated.resources.settings_notification_granted
 import smarthome.composeapp.generated.resources.settings_notification_permission
 import smarthome.composeapp.generated.resources.settings_notifications_section
 import smarthome.composeapp.generated.resources.settings_sensor_alerts
+import smarthome.composeapp.generated.resources.settings_smartwatch_section
 import smarthome.composeapp.generated.resources.settings_thermostat_events
 import smarthome.composeapp.generated.resources.settings_thermostat_events_subtitle
+import smarthome.composeapp.generated.resources.settings_watch_connected
+import smarthome.composeapp.generated.resources.settings_watch_connection
+import smarthome.composeapp.generated.resources.settings_watch_not_connected
 import smarthome.composeapp.generated.resources.a11y_navigate_forward
 import smarthome.composeapp.generated.resources.title_anti_squatter
 import smarthome.composeapp.generated.resources.title_settings
@@ -190,6 +195,52 @@ fun SettingsScreen(
                 title = stringResource(Res.string.title_anti_squatter),
                 onClick = onNavigateToAntiSquatter,
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // --- SMARTWATCH ---
+            SectionHeader(text = stringResource(Res.string.settings_smartwatch_section))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            WatchConnectionHandler { isConnected, watchName ->
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isConnected) {
+                            ActiveGreen.copy(alpha = 0.1f)
+                        } else {
+                            Color(0xFFE53935).copy(alpha = 0.1f)
+                        },
+                    ),
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = stringResource(Res.string.settings_watch_connection),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onBackground,
+                            )
+                            Text(
+                                text = if (isConnected) {
+                                    watchName ?: stringResource(Res.string.settings_watch_connected)
+                                } else {
+                                    stringResource(Res.string.settings_watch_not_connected)
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (isConnected) ActiveGreen else Color(0xFFE53935),
+                            )
+                        }
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 
