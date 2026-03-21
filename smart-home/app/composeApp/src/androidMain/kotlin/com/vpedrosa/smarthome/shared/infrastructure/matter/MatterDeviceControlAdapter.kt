@@ -20,16 +20,23 @@ class MatterDeviceControlAdapter(
 ) : DeviceControlPort {
 
     private val deviceConnections = ConcurrentHashMap<Long, ConnectionInfo>()
+    private val cachedPointers = ConcurrentHashMap<Long, Long>()
     private val controlMutex = Mutex()
 
     override fun registerDevice(deviceId: DeviceId, discoveredDevice: DiscoveredDevice) {
         val nodeId = deviceId.value.toLong()
         deviceConnections[nodeId] = ConnectionInfo(discoveredDevice.host, discoveredDevice.port, discoveredDevice.passcode)
+        try {
+            val pointer = chipController.getDeviceBeingCommissionedPointer(nodeId)
+            cachedPointers[nodeId] = pointer
+            Log.d(TAG, "Cached pointer for node $nodeId from commissioning session")
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not cache pointer for node $nodeId at registration", e)
+        }
     }
 
     override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {
-        controlMutex.withLock {
-            val pointer = getDevicePointer(deviceId)
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.OnOffCluster(pointer, ENDPOINT_ID)
             suspendClusterCommand { cb ->
                 if (on) cluster.on(cb) else cluster.off(cb)
@@ -39,8 +46,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun setLevel(deviceId: DeviceId, level: Int) {
-        controlMutex.withLock {
-            val pointer = getDevicePointer(deviceId)
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.LevelControlCluster(pointer, ENDPOINT_ID)
             val matterLevel = (level * 254 / 100).coerceIn(0, 254)
             suspendClusterCommand { cb ->
@@ -51,8 +57,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {
-        controlMutex.withLock {
-            val pointer = getDevicePointer(deviceId)
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.DoorLockCluster(pointer, ENDPOINT_ID)
             val noPin = Optional.empty<ByteArray>()
             suspendClusterCommand { cb ->
@@ -64,8 +69,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {
-        controlMutex.withLock {
-            val pointer = getDevicePointer(deviceId)
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.ThermostatCluster(pointer, ENDPOINT_ID)
             val matterTemp = (temperatureCelsius * 100).toInt()
             suspendClusterCommand { cb ->
@@ -76,8 +80,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {
-        controlMutex.withLock {
-            val pointer = getDevicePointer(deviceId)
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.ThermostatCluster(pointer, ENDPOINT_ID)
             val mode = if (heating) SYSTEM_MODE_HEAT else SYSTEM_MODE_OFF
             suspendClusterCommand { cb ->
@@ -88,8 +91,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun setWindowCoveringPosition(deviceId: DeviceId, openPercent: Int) {
-        controlMutex.withLock {
-            val pointer = getDevicePointer(deviceId)
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.WindowCoveringCluster(pointer, ENDPOINT_ID)
             val percent100ths = (openPercent * 100).coerceIn(0, 10000)
             suspendClusterCommand { cb ->
@@ -100,28 +102,52 @@ class MatterDeviceControlAdapter(
     }
 
     /**
-     * Obtiene un device pointer estableciendo una conexión PASE directa.
+     * Ejecuta un comando con reintentos automáticos.
      *
-     * No usa getConnectedDevicePointer (que necesita mDNS/CASE) porque mDNS
-     * no funciona en el emulador Android. En su lugar, re-establece PASE
-     * con la dirección conocida y usa getDeviceBeingCommissioned.
+     * Usa el pointer cacheado de la sesión PASE del comisionamiento.
+     * Si el comando falla (sesión expirada), invalida la caché,
+     * re-establece PASE y reintenta una vez.
+     */
+    private suspend fun executeWithRetry(
+        deviceId: DeviceId,
+        block: suspend (Long) -> Unit,
+    ) {
+        controlMutex.withLock {
+            try {
+                block(getDevicePointer(deviceId))
+            } catch (e: Exception) {
+                Log.w(TAG, "Command failed for ${deviceId.value}, re-establishing session", e)
+                invalidateSession(deviceId)
+                delay(RETRY_DELAY_MS)
+                block(getDevicePointer(deviceId))
+            }
+        }
+    }
+
+    /**
+     * Obtiene un device pointer, reutilizando la sesión PASE del comisionamiento.
      *
-     * Si la primera conexión falla (sesión stale tras un comisionamiento fallido),
-     * espera brevemente y reintenta una vez para recuperar la conectividad.
+     * Solo re-establece PASE si no hay pointer cacheado (primer uso o tras
+     * invalidación por error).
      */
     private suspend fun getDevicePointer(deviceId: DeviceId): Long {
         val nodeId = deviceId.value.toLong()
+
+        cachedPointers[nodeId]?.let { return it }
+
         val conn = deviceConnections[nodeId]
             ?: throw IllegalStateException("Device $nodeId not registered for control")
 
-        try {
-            establishPaseForControl(nodeId, conn)
-        } catch (e: Exception) {
-            Log.w(TAG, "PASE failed for $nodeId, retrying after delay", e)
-            delay(RETRY_DELAY_MS)
-            establishPaseForControl(nodeId, conn)
-        }
-        return chipController.getDeviceBeingCommissionedPointer(nodeId)
+        establishPaseForControl(nodeId, conn)
+        val pointer = chipController.getDeviceBeingCommissionedPointer(nodeId)
+        cachedPointers[nodeId] = pointer
+        return pointer
+    }
+
+    private fun invalidateSession(deviceId: DeviceId) {
+        val nodeId = deviceId.value.toLong()
+        cachedPointers.remove(nodeId)
+        Log.d(TAG, "Invalidated cached session for node $nodeId")
     }
 
     private suspend fun establishPaseForControl(
