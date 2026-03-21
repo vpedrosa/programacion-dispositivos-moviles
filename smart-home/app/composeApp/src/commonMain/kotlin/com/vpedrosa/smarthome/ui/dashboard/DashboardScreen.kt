@@ -47,6 +47,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
+import com.vpedrosa.smarthome.ui.components.UriImage
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
@@ -347,7 +348,6 @@ private fun RoomCard(room: RoomSummary) {
         modifier = Modifier.width(140.dp),
     ) {
         Column {
-            // Photo placeholder
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -355,12 +355,20 @@ private fun RoomCard(room: RoomSummary) {
                     .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(
-                    imageVector = Icons.Default.Home,
-                    contentDescription = stringResource(Res.string.a11y_room_placeholder),
-                    tint = Navy.copy(alpha = 0.4f),
-                    modifier = Modifier.size(32.dp),
-                )
+                if (room.photoUri != null) {
+                    UriImage(
+                        uri = room.photoUri,
+                        contentDescription = room.name,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Home,
+                        contentDescription = stringResource(Res.string.a11y_room_placeholder),
+                        tint = Navy.copy(alpha = 0.4f),
+                        modifier = Modifier.size(32.dp),
+                    )
+                }
             }
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(
