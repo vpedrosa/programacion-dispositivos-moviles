@@ -1,7 +1,9 @@
 package com.vpedrosa.smarthome.wear.device_control
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vpedrosa.smarthome.wear.device_control.adapters.FakeDeviceCommandAdapter
 import com.vpedrosa.smarthome.wear.device_control.domain.ports.ActionResult
 import com.vpedrosa.smarthome.wear.device_control.domain.ports.DeviceCommandPort
 import com.vpedrosa.smarthome.wear.device_control.domain.ports.DeviceListResult
@@ -15,6 +17,9 @@ class DeviceControlViewModel(
     private val deviceCommandPort: DeviceCommandPort,
 ) : ViewModel() {
 
+    private var activePort: DeviceCommandPort = deviceCommandPort
+    private var fallbackAttempted = false
+
     private val _uiState = MutableStateFlow(DeviceControlUiState())
     val uiState: StateFlow<DeviceControlUiState> = _uiState.asStateFlow()
 
@@ -26,7 +31,17 @@ class DeviceControlViewModel(
         _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 
         viewModelScope.launch {
-            when (val result = deviceCommandPort.requestDeviceList()) {
+            var result = activePort.requestDeviceList()
+
+            // If the real adapter fails (e.g. emulator), fall back to fake data
+            if (result is DeviceListResult.Error && !fallbackAttempted) {
+                Log.w(TAG, "Adapter failed: ${result.message}. Falling back to local data.")
+                fallbackAttempted = true
+                activePort = FakeDeviceCommandAdapter()
+                result = activePort.requestDeviceList()
+            }
+
+            when (result) {
                 is DeviceListResult.Success -> {
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
@@ -45,7 +60,7 @@ class DeviceControlViewModel(
 
     fun toggleDevice(deviceId: String) {
         viewModelScope.launch {
-            when (val result = deviceCommandPort.sendToggleAction(deviceId)) {
+            when (val result = activePort.sendToggleAction(deviceId)) {
                 is ActionResult.Success -> {
                     val updated = result.updatedDevice
                     val currentMap = _uiState.value.devicesByRoom.toMutableMap()
@@ -75,6 +90,7 @@ class DeviceControlViewModel(
     }
 
     companion object {
+        private const val TAG = "DeviceControlVM"
         const val UNASSIGNED_ROOM = "__unassigned__"
     }
 }

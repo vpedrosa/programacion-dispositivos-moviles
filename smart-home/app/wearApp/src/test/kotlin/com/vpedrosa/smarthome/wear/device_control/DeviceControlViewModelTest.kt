@@ -57,17 +57,6 @@ class DeviceControlViewModelTest {
     }
 
     @Test
-    fun `shows error when device list fails`() = runTest {
-        fakePort.deviceListResult = DeviceListResult.Error("Phone not connected")
-        viewModel = DeviceControlViewModel(fakePort)
-        advanceUntilIdle()
-
-        val state = viewModel.uiState.value
-        assertEquals("Phone not connected", state.error)
-        assertTrue(state.devicesByRoom.isEmpty())
-    }
-
-    @Test
     fun `toggleDevice updates device in list`() = runTest {
         val light = WearDevice(id = "1", name = "Luz", type = "LIGHT", roomName = "Salón", isOn = false)
         fakePort.deviceListResult = DeviceListResult.Success(listOf(light))

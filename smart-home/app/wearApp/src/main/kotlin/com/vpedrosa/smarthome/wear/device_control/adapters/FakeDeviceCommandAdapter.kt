@@ -24,12 +24,10 @@ class FakeDeviceCommandAdapter : DeviceCommandPort {
     )
 
     override suspend fun requestDeviceList(): DeviceListResult {
-        delay(500)
         return DeviceListResult.Success(devices.toList())
     }
 
     override suspend fun sendToggleAction(deviceId: String): ActionResult {
-        delay(300)
         val index = devices.indexOfFirst { it.id == deviceId }
         if (index == -1) return ActionResult.Error("Device not found")
 
