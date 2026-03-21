@@ -201,14 +201,16 @@ private fun SummaryGrid(state: DashboardUiState) {
                 label = stringResource(Res.string.dashboard_temperature),
                 iconTint = AlertOrange,
             )
-            SummaryCard(
-                modifier = Modifier.weight(1f),
-                icon = Icons.Default.Tv,
-                iconDescription = stringResource(Res.string.a11y_icon_smart_tv),
-                value = if (state.isSmartTvOn) stringResource(Res.string.action_on) else stringResource(Res.string.action_off),
-                label = stringResource(Res.string.dashboard_smart_tv),
-                iconTint = AlertBlue,
-            )
+            if (state.hasSmartTv) {
+                SummaryCard(
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Default.Tv,
+                    iconDescription = stringResource(Res.string.a11y_icon_smart_tv),
+                    value = if (state.isSmartTvOn) stringResource(Res.string.action_on) else stringResource(Res.string.action_off),
+                    label = stringResource(Res.string.dashboard_smart_tv),
+                    iconTint = AlertBlue,
+                )
+            }
         }
     }
 }
