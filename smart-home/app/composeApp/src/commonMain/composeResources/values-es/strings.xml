@@ -197,6 +197,7 @@
     <string name="commissioning_passcode">Código: %1$d</string>
     <string name="commissioning_success">%1$s comisionado con éxito</string>
     <string name="commissioning_commissioned">Comisionado</string>
+    <string name="commissioning_recommission">Recomisionar</string>
 
     <!-- Dashboard quick actions -->
     <string name="dashboard_voice_control">Control por voz</string>

@@ -197,6 +197,7 @@
     <string name="commissioning_passcode">Passcode: %1$d</string>
     <string name="commissioning_success">%1$s commissioned successfully</string>
     <string name="commissioning_commissioned">Commissioned</string>
+    <string name="commissioning_recommission">Re-commission</string>
 
     <!-- Dashboard quick actions -->
     <string name="dashboard_voice_control">Voice control</string>

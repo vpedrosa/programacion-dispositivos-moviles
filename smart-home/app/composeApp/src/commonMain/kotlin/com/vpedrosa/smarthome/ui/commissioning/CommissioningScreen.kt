@@ -52,6 +52,7 @@ import smarthome.composeapp.generated.resources.commissioning_passcode
 import smarthome.composeapp.generated.resources.commissioning_success
 import smarthome.composeapp.generated.resources.commissioning_title
 import smarthome.composeapp.generated.resources.a11y_commissioned_status
+import smarthome.composeapp.generated.resources.commissioning_recommission
 
 private val ActiveGreen = Color(0xFF4CAF50)
 
@@ -221,20 +222,40 @@ private fun DiscoveredDeviceCard(
 
             when {
                 isCommissioned -> {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = stringResource(Res.string.a11y_commissioned_status),
-                            modifier = Modifier.size(20.dp),
-                            tint = ActiveGreen,
-                        )
-                        Text(
-                            text = stringResource(Res.string.commissioning_commissioned),
-                            modifier = Modifier.padding(start = 4.dp),
-                            style = MaterialTheme.typography.labelMedium,
-                            color = ActiveGreen,
-                            fontWeight = FontWeight.SemiBold,
-                        )
+                    Column(horizontalAlignment = Alignment.End) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = stringResource(Res.string.a11y_commissioned_status),
+                                modifier = Modifier.size(16.dp),
+                                tint = ActiveGreen,
+                            )
+                            Text(
+                                text = stringResource(Res.string.commissioning_commissioned),
+                                modifier = Modifier.padding(start = 4.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = ActiveGreen,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Button(
+                            onClick = onCommission,
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.secondary,
+                            ),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Sensors,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                            )
+                            Text(
+                                text = stringResource(Res.string.commissioning_recommission),
+                                modifier = Modifier.padding(start = 4.dp),
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        }
                     }
                 }
                 isCommissioning -> {
