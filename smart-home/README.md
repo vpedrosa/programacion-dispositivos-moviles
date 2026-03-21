@@ -1,6 +1,6 @@
 # Smart Home
 
-Aplicación multiplataforma de gestión de casa inteligente con **Kotlin Multiplatform** (Compose Multiplatform). Dispositivos Matter simulados, control por voz, modo antiokupas y módulo Wear OS.
+Aplicación multiplataforma de gestión de casa inteligente con **Kotlin Multiplatform** (Compose Multiplatform). Dispositivos Matter simulados, modo antiokupas y control remoto desde Wear OS.
 
 ## Estructura
 
@@ -9,7 +9,7 @@ smart-home/
 ├── app/                    # App KMP (Android + Wear OS)
 │   ├── composeApp/         # Código compartido (commonMain)
 │   ├── androidApp/         # Entry point Android
-│   └── wearApp/            # Entry point Wear OS
+│   └── wearApp/            # App Wear OS (acciones rápidas)
 ├── simulation/             # Simulación Matter (connectedhomeip)
 │   ├── scripts/            # Scripts de setup, build y control
 │   ├── web/                # Backend (FastAPI) + Frontend
@@ -33,11 +33,15 @@ cd smart-home/app
 
 ## App Wear OS
 
+La app del smartwatch muestra una lista de dispositivos agrupados por habitación con acciones rápidas de un toque (toggle on/off, lock/unlock, abrir/cerrar persianas, etc.). Se comunica con la app del teléfono via Google Wearable Data Layer API.
+
 ```bash
 cd smart-home/app
 ./gradlew :wearApp:assembleDebug
 ./gradlew :wearApp:installDebug          # requiere emulador Wear OS API 35+
 ```
+
+Ver [WEAR-OS.md](WEAR-OS.md) para documentación detallada.
 
 ## Tests
 
@@ -78,6 +82,6 @@ cd smart-home/simulation
 
 ## Stack
 
-Kotlin 2.3, Compose Multiplatform 1.10, Material 3, Koin 4.1, kotlinx.serialization, Jetpack Navigation, Wear Compose Material 3, connectedhomeip (Matter), FastAPI.
+Kotlin 2.3, Compose Multiplatform 1.10, Material 3, Koin 4.1, kotlinx.serialization, Jetpack Navigation, Wear Compose Material 3, Google Wearable Data Layer API, connectedhomeip (Matter), FastAPI.
 
-Arquitectura hexagonal con vertical slicing. i18n en inglés y español (23 strings de accesibilidad).
+Arquitectura hexagonal con vertical slicing. i18n en ingles y espanol (23 strings de accesibilidad).
