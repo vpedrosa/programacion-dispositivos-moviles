@@ -22,23 +22,7 @@ class ToggleDeviceUseCase(
     suspend operator fun invoke(id: DeviceId) {
         val device = deviceRepository.observeDevice(id).first() ?: return
 
-        // Optimistic update: toggle in-memory state first so the UI always reflects the change.
-        // The Matter command is a best-effort side effect.
-        val toggled = when (device) {
-            is Light -> device.toggle()
-            is Lock -> device.toggle()
-            is Switch -> device.toggle()
-            is SmartTv -> device.toggle()
-            is Thermostat -> device.toggleHeating()
-            is Blind,
-            is SmokeSensor,
-            is WaterLeakSensor,
-            is TemperatureSensor,
-            is ContactSensor -> return
-        }
-        deviceRepository.save(toggled)
-
-        // Fire Matter command — errors are caught and logged, not propagated.
+        // Send Matter command first — this is the source of truth.
         try {
             when (device) {
                 is Light -> deviceControlPort.toggleOnOff(id, !device.isOn)
@@ -46,10 +30,23 @@ class ToggleDeviceUseCase(
                 is Switch -> deviceControlPort.toggleOnOff(id, !device.isOn)
                 is SmartTv -> deviceControlPort.toggleOnOff(id, !device.isOn)
                 is Thermostat -> deviceControlPort.setThermostatMode(id, !device.isHeatingOn)
-                else -> {}
+                else -> return
             }
         } catch (_: Exception) {
-            // Session expired or simulator unavailable — state already updated above.
+            // Matter command failed — do NOT update in-memory state
+            // so the UI reflects the real device state.
+            return
         }
+
+        // Matter succeeded — update in-memory state to match.
+        val toggled = when (device) {
+            is Light -> device.toggle()
+            is Lock -> device.toggle()
+            is Switch -> device.toggle()
+            is SmartTv -> device.toggle()
+            is Thermostat -> device.toggleHeating()
+            else -> return
+        }
+        deviceRepository.save(toggled)
     }
 }
