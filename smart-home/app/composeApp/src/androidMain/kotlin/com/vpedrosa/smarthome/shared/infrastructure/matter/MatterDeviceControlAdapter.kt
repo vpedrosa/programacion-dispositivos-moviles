@@ -6,6 +6,7 @@ import chip.devicecontroller.ChipDeviceController
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -17,19 +18,21 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 /**
- * Establece una sesión PASE fresca antes de cada comando.
+ * Controla dispositivos Matter usando la sesión PASE del comisionamiento.
  *
- * El handshake PASE es prácticamente instantáneo (<1ms) y evita
- * completamente el problema de sesiones expiradas, eliminando la
- * necesidad de cache de pointers y lógica de reintentos.
+ * Cachea el pointer obtenido durante el comisionamiento y lo reutiliza.
+ * Si la sesión expira, intenta re-establecer PASE con un nodeId temporal
+ * para forzar una sesión nueva. Si el simulador ha cerrado la ventana de
+ * comisionamiento, el retry también fallará.
  */
 class MatterDeviceControlAdapter(
     private val chipController: ChipDeviceController,
 ) : DeviceControlPort {
 
     private val deviceConnections = ConcurrentHashMap<Long, ConnectionInfo>()
+    private val cachedPointers = ConcurrentHashMap<Long, Long>()
     private val controlMutex = Mutex()
-    private val paseNodeIdCounter = AtomicLong(PASE_NODE_ID_BASE)
+    private val retryNodeIdCounter = AtomicLong(RETRY_NODE_ID_BASE)
 
     override fun registerDevice(deviceId: DeviceId, discoveredDevice: DiscoveredDevice) {
         val nodeId = deviceId.value.toLong()
@@ -38,11 +41,17 @@ class MatterDeviceControlAdapter(
             discoveredDevice.port,
             discoveredDevice.passcode,
         )
-        Log.d(TAG, "Registered device $nodeId for control")
+        try {
+            val pointer = chipController.getDeviceBeingCommissionedPointer(nodeId)
+            cachedPointers[nodeId] = pointer
+            Log.d(TAG, "Cached pointer for node $nodeId (port ${discoveredDevice.port})")
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not cache pointer for node $nodeId", e)
+        }
     }
 
     override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {
-        executeCommand(deviceId) { pointer ->
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.OnOffCluster(pointer, ENDPOINT_ID)
             suspendClusterCommand { cb ->
                 if (on) cluster.on(cb) else cluster.off(cb)
@@ -52,7 +61,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun setLevel(deviceId: DeviceId, level: Int) {
-        executeCommand(deviceId) { pointer ->
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.LevelControlCluster(pointer, ENDPOINT_ID)
             val matterLevel = (level * 254 / 100).coerceIn(0, 254)
             suspendClusterCommand { cb ->
@@ -63,7 +72,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {
-        executeCommand(deviceId) { pointer ->
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.DoorLockCluster(pointer, ENDPOINT_ID)
             val noPin = Optional.empty<ByteArray>()
             suspendClusterCommand { cb ->
@@ -75,7 +84,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {
-        executeCommand(deviceId) { pointer ->
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.ThermostatCluster(pointer, ENDPOINT_ID)
             val matterTemp = (temperatureCelsius * 100).toInt()
             suspendClusterCommand { cb ->
@@ -86,7 +95,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {
-        executeCommand(deviceId) { pointer ->
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.ThermostatCluster(pointer, ENDPOINT_ID)
             val mode = if (heating) SYSTEM_MODE_HEAT else SYSTEM_MODE_OFF
             suspendClusterCommand { cb ->
@@ -97,7 +106,7 @@ class MatterDeviceControlAdapter(
     }
 
     override suspend fun setWindowCoveringPosition(deviceId: DeviceId, openPercent: Int) {
-        executeCommand(deviceId) { pointer ->
+        executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.WindowCoveringCluster(pointer, ENDPOINT_ID)
             val percent100ths = (openPercent * 100).coerceIn(0, 10000)
             suspendClusterCommand { cb ->
@@ -108,74 +117,94 @@ class MatterDeviceControlAdapter(
     }
 
     /**
-     * Establece PASE fresco y ejecuta el comando.
-     *
-     * Usa un nodeId temporal único para cada llamada, forzando al
-     * ChipDeviceController a crear una sesión nueva en lugar de
-     * reutilizar una posiblemente expirada.
+     * Ejecuta un comando usando el pointer cacheado del comisionamiento.
+     * Si falla (sesión expirada), intenta re-establecer PASE con nodeId
+     * temporal para forzar sesión nueva.
      */
-    private suspend fun executeCommand(
+    private suspend fun executeWithRetry(
         deviceId: DeviceId,
         block: suspend (Long) -> Unit,
     ) {
         controlMutex.withLock {
-            val pointer = freshDevicePointer(deviceId)
-            block(pointer)
+            try {
+                block(getDevicePointer(deviceId))
+            } catch (e: Exception) {
+                Log.w(TAG, "Command failed for ${deviceId.value}, trying fresh PASE", e)
+                cachedPointers.remove(deviceId.value.toLong())
+                delay(RETRY_DELAY_MS)
+                block(getFreshPointer(deviceId))
+            }
         }
     }
 
-    private suspend fun freshDevicePointer(deviceId: DeviceId): Long {
+    private fun getDevicePointer(deviceId: DeviceId): Long {
+        val nodeId = deviceId.value.toLong()
+        return cachedPointers[nodeId]
+            ?: throw IllegalStateException("No cached pointer for device $nodeId")
+    }
+
+    /**
+     * Fuerza sesión PASE nueva con nodeId temporal.
+     * Solo funciona si el simulador tiene la ventana de comisionamiento abierta.
+     */
+    private suspend fun getFreshPointer(deviceId: DeviceId): Long {
         val nodeId = deviceId.value.toLong()
         val conn = deviceConnections[nodeId]
-            ?: throw IllegalStateException("Device $nodeId not registered for control")
+            ?: throw IllegalStateException("Device $nodeId not registered")
 
-        val paseNodeId = paseNodeIdCounter.getAndIncrement()
-        establishPase(paseNodeId, conn)
-        return chipController.getDeviceBeingCommissionedPointer(paseNodeId)
+        val tempNodeId = retryNodeIdCounter.getAndIncrement()
+        Log.d(TAG, "Fresh PASE: tempNode=$tempNodeId for device ${deviceId.value} (port ${conn.port})")
+
+        establishPase(tempNodeId, conn)
+        val pointer = chipController.getDeviceBeingCommissionedPointer(tempNodeId)
+        cachedPointers[nodeId] = pointer
+        return pointer
     }
 
     private suspend fun establishPase(
         nodeId: Long,
         conn: ConnectionInfo,
-    ) = suspendCancellableCoroutine { cont ->
-        chipController.setCompletionListener(object : ChipDeviceController.CompletionListener {
-            override fun onPairingComplete(code: Int) {
-                if (code == 0) {
-                    Log.d(TAG, "PASE OK: node $nodeId")
-                    if (cont.isActive) cont.resume(Unit)
-                } else {
-                    Log.e(TAG, "PASE failed: node $nodeId, code=$code")
+    ) = withTimeout(PASE_TIMEOUT_MS) {
+        suspendCancellableCoroutine { cont ->
+            chipController.setCompletionListener(object : ChipDeviceController.CompletionListener {
+                override fun onPairingComplete(code: Int) {
+                    if (code == 0) {
+                        Log.d(TAG, "PASE OK: node $nodeId")
+                        if (cont.isActive) cont.resume(Unit)
+                    } else {
+                        Log.e(TAG, "PASE failed: node $nodeId, code=$code")
+                        if (cont.isActive) {
+                            cont.resumeWithException(
+                                RuntimeException("PASE failed code=$code node=$nodeId"),
+                            )
+                        }
+                    }
+                }
+
+                override fun onError(error: Throwable?) {
+                    Log.e(TAG, "PASE error: node $nodeId", error)
                     if (cont.isActive) {
                         cont.resumeWithException(
-                            RuntimeException("PASE failed with code $code for node $nodeId"),
+                            error ?: RuntimeException("PASE failed node=$nodeId"),
                         )
                     }
                 }
-            }
 
-            override fun onError(error: Throwable?) {
-                Log.e(TAG, "PASE error: node $nodeId", error)
-                if (cont.isActive) {
-                    cont.resumeWithException(
-                        error ?: RuntimeException("PASE failed for node $nodeId"),
-                    )
-                }
-            }
+                override fun onConnectDeviceComplete() {}
+                override fun onStatusUpdate(status: Int) {}
+                override fun onPairingDeleted(code: Int) {}
+                override fun onCommissioningComplete(nodeId: Long, errorCode: Int) {}
+                override fun onCommissioningStatusUpdate(nodeId: Long, stage: String?, errorCode: Int) {}
+                override fun onNotifyChipConnectionClosed() {}
+                override fun onCloseBleComplete() {}
+                override fun onReadCommissioningInfo(
+                    vendorId: Int, productId: Int, wifiEndpointId: Int, threadEndpointId: Int,
+                ) {}
+                override fun onOpCSRGenerationComplete(csr: ByteArray?) {}
+            })
 
-            override fun onConnectDeviceComplete() {}
-            override fun onStatusUpdate(status: Int) {}
-            override fun onPairingDeleted(code: Int) {}
-            override fun onCommissioningComplete(nodeId: Long, errorCode: Int) {}
-            override fun onCommissioningStatusUpdate(nodeId: Long, stage: String?, errorCode: Int) {}
-            override fun onNotifyChipConnectionClosed() {}
-            override fun onCloseBleComplete() {}
-            override fun onReadCommissioningInfo(
-                vendorId: Int, productId: Int, wifiEndpointId: Int, threadEndpointId: Int,
-            ) {}
-            override fun onOpCSRGenerationComplete(csr: ByteArray?) {}
-        })
-
-        chipController.establishPaseConnection(nodeId, conn.host, conn.port, conn.passcode)
+            chipController.establishPaseConnection(nodeId, conn.host, conn.port, conn.passcode)
+        }
     }
 
     private suspend fun suspendClusterCommand(
@@ -204,6 +233,8 @@ class MatterDeviceControlAdapter(
         const val SYSTEM_MODE_OFF = 0
         const val SYSTEM_MODE_HEAT = 4
         const val COMMAND_TIMEOUT_MS = 3_000L
-        const val PASE_NODE_ID_BASE = 100_000L
+        const val PASE_TIMEOUT_MS = 5_000L
+        const val RETRY_DELAY_MS = 500L
+        const val RETRY_NODE_ID_BASE = 100_000L
     }
 }
