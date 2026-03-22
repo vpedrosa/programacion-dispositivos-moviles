@@ -12,6 +12,7 @@ import com.vpedrosa.smarthome.shared.domain.model.SmartTv
 import com.vpedrosa.smarthome.shared.domain.model.TemperatureSensor
 import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
+import com.vpedrosa.smarthome.shared.domain.EnvironmentPort
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,7 @@ data class DashboardUiState(
     val isSmartTvOn: Boolean = false,
     val recentAlerts: List<AlertItem> = emptyList(),
     val rooms: List<RoomSummary> = emptyList(),
+    val showCommissioningButton: Boolean = false,
 )
 
 data class AlertItem(
@@ -45,7 +47,10 @@ class DashboardViewModel(
     deviceRepository: DeviceRepository,
     roomRepository: RoomRepository,
     deviceEventRepository: DeviceEventRepository,
+    environmentPort: EnvironmentPort,
 ) : ViewModel() {
+
+    val showCommissioningButton: Boolean = environmentPort.isEmulator
 
     val uiState: StateFlow<DashboardUiState> = combine(
         deviceRepository.observeAllDevices(),
@@ -87,6 +92,7 @@ class DashboardViewModel(
             isSmartTvOn = tvOn,
             recentAlerts = recentAlerts,
             rooms = roomSummaries,
+            showCommissioningButton = showCommissioningButton,
         )
     }.stateIn(
         scope = viewModelScope,

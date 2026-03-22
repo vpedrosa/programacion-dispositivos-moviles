@@ -98,24 +98,26 @@ fun DashboardScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // -- Quick commissioning button --
-        Button(
-            onClick = onNavigateToCommissioning,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Navy,
-            ),
-        ) {
-            Icon(
-                imageVector = Icons.Default.AddCircleOutline,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(Res.string.commissioning_devices_button))
-        }
+        // -- Quick commissioning button (emulator only) --
+        if (state.showCommissioningButton) {
+            Button(
+                onClick = onNavigateToCommissioning,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Navy,
+                ),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddCircleOutline,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(stringResource(Res.string.commissioning_devices_button))
+            }
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         // -- Voice control button --
         Button(
