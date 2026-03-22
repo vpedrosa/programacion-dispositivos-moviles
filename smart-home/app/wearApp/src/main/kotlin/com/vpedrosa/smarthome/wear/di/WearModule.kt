@@ -2,6 +2,7 @@ package com.vpedrosa.smarthome.wear.di
 
 import com.vpedrosa.smarthome.wear.ui.device_control.DeviceControlViewModel
 import com.vpedrosa.smarthome.wear.device_control.infrastructure.wearable.FakeDeviceCommandAdapter
+import com.vpedrosa.smarthome.wear.device_control.infrastructure.wearable.FallbackDeviceCommandAdapter
 import com.vpedrosa.smarthome.wear.device_control.infrastructure.wearable.WearableDeviceCommandAdapter
 import com.vpedrosa.smarthome.wear.device_control.domain.DeviceCommandPort
 import org.koin.android.ext.koin.androidContext
@@ -12,11 +13,12 @@ val wearModule = module {
 
     single<DeviceCommandPort> {
         val context = androidContext()
-        try {
+        val primary = try {
             WearableDeviceCommandAdapter(context)
         } catch (_: Exception) {
             FakeDeviceCommandAdapter()
         }
+        FallbackDeviceCommandAdapter(primary)
     }
 
     viewModel { DeviceControlViewModel(get()) }
