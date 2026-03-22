@@ -51,13 +51,12 @@ import smarthome.composeapp.generated.resources.a11y_alert_temperature
 import smarthome.composeapp.generated.resources.a11y_alert_door
 import smarthome.composeapp.generated.resources.a11y_alert_door_open_too_long
 import smarthome.composeapp.generated.resources.a11y_alert_thermostat
-
-private val AlertRed = Color(0xFFF44336)
-private val AlertOrange = Color(0xFFFF9800)
-private val AlertYellow = Color(0xFFFFC107)
-private val AlertBlue = Color(0xFF2196F3)
-private val AlertGreen = Color(0xFF4CAF50)
-private val CardBackground = Color(0xFFFFFFFF)
+import com.vpedrosa.smarthome.ui.theme.AlertRed
+import com.vpedrosa.smarthome.ui.theme.AlertOrange
+import com.vpedrosa.smarthome.ui.theme.AlertYellow
+import com.vpedrosa.smarthome.ui.theme.AlertBlue
+import com.vpedrosa.smarthome.ui.theme.AlertGreen
+import com.vpedrosa.smarthome.ui.theme.CardBackground
 
 @Composable
 fun NotificationsScreen(

@@ -53,8 +53,7 @@ import smarthome.composeapp.generated.resources.commissioning_success
 import smarthome.composeapp.generated.resources.commissioning_title
 import smarthome.composeapp.generated.resources.a11y_commissioned_status
 import smarthome.composeapp.generated.resources.commissioning_recommission
-
-private val ActiveGreen = Color(0xFF4CAF50)
+import com.vpedrosa.smarthome.ui.theme.ActiveGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

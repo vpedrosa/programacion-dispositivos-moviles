@@ -71,13 +71,12 @@ import smarthome.composeapp.generated.resources.a11y_icon_home
 import smarthome.composeapp.generated.resources.a11y_room_placeholder
 import smarthome.composeapp.generated.resources.commissioning_devices_button
 import smarthome.composeapp.generated.resources.dashboard_voice_control
-
-private val Navy = Color(0xFF123458)
-private val CardBackground = Color(0xFFFFFFFF)
-private val AlertGreen = Color(0xFF4CAF50)
-private val AlertOrange = Color(0xFFFF9800)
-private val AlertRed = Color(0xFFF44336)
-private val AlertBlue = Color(0xFF2196F3)
+import com.vpedrosa.smarthome.ui.theme.Navy
+import com.vpedrosa.smarthome.ui.theme.CardBackground
+import com.vpedrosa.smarthome.ui.theme.AlertGreen
+import com.vpedrosa.smarthome.ui.theme.AlertOrange
+import com.vpedrosa.smarthome.ui.theme.AlertRed
+import com.vpedrosa.smarthome.ui.theme.AlertBlue
 
 @Composable
 fun DashboardScreen(

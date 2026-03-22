@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vpedrosa.smarthome.navigation.Dashboard
@@ -22,12 +21,11 @@ import com.vpedrosa.smarthome.ui.components.BottomBarTab
 import com.vpedrosa.smarthome.event.domain.BackgroundSimulatorPort
 import com.vpedrosa.smarthome.ui.components.NotificationPermissionHandler
 import com.vpedrosa.smarthome.ui.components.SmartHomeBottomBar
+import com.vpedrosa.smarthome.ui.theme.Black
+import com.vpedrosa.smarthome.ui.theme.Linen
+import com.vpedrosa.smarthome.ui.theme.Navy
+import com.vpedrosa.smarthome.ui.theme.WarmGray
 import org.koin.compose.koinInject
-
-private val Linen = Color(0xFFF1EFEC)
-private val WarmGray = Color(0xFFD4C9BE)
-private val Navy = Color(0xFF123458)
-private val Black = Color(0xFF030303)
 
 private val SmartHomeColorScheme = darkColorScheme(
     primary = Navy,

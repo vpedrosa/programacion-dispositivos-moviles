@@ -70,14 +70,12 @@ import smarthome.composeapp.generated.resources.voice_start_listening
 import smarthome.composeapp.generated.resources.action_back
 import smarthome.composeapp.generated.resources.a11y_command_success
 import smarthome.composeapp.generated.resources.a11y_command_error
-
-// Color constants matching the project scheme
-private val Navy = Color(0xFF123458)
-private val Linen = Color(0xFFF1EFEC)
-private val WarmGray = Color(0xFFD4C9BE)
-private val Black = Color(0xFF030303)
-private val SuccessGreen = Color(0xFF4CAF50)
-private val ErrorRed = Color(0xFFE53935)
+import com.vpedrosa.smarthome.ui.theme.Navy
+import com.vpedrosa.smarthome.ui.theme.Linen
+import com.vpedrosa.smarthome.ui.theme.WarmGray
+import com.vpedrosa.smarthome.ui.theme.Black
+import com.vpedrosa.smarthome.ui.theme.SuccessGreen
+import com.vpedrosa.smarthome.ui.theme.ErrorRed
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

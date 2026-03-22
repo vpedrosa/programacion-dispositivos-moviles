@@ -63,8 +63,7 @@ import smarthome.composeapp.generated.resources.settings_watch_not_connected
 import smarthome.composeapp.generated.resources.a11y_navigate_forward
 import smarthome.composeapp.generated.resources.title_anti_squatter
 import smarthome.composeapp.generated.resources.title_settings
-
-private val ActiveGreen = Color(0xFF4CAF50)
+import com.vpedrosa.smarthome.ui.theme.ActiveGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

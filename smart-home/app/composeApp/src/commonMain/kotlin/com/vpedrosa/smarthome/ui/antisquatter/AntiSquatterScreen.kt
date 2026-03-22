@@ -68,8 +68,7 @@ import smarthome.composeapp.generated.resources.a11y_add_time_slot
 import smarthome.composeapp.generated.resources.a11y_navigate_back
 import smarthome.composeapp.generated.resources.a11y_remove_time_slot
 import smarthome.composeapp.generated.resources.title_anti_squatter
-
-private val ActiveGreen = Color(0xFF4CAF50)
+import com.vpedrosa.smarthome.ui.theme.ActiveGreen
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
