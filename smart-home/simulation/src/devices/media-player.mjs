@@ -6,7 +6,9 @@ import { KeypadInputServer } from "@matter/main/behaviors/keypad-input";
 import { VENDOR_ID, VENDOR_NAME } from "../config.mjs";
 import { bus } from "../event-bus.mjs";
 
-class SmartTvContentLauncher extends ContentLauncherServer {
+const UrlContentLauncher = ContentLauncherServer.with("UrlPlayback");
+
+class SmartTvContentLauncher extends UrlContentLauncher {
     async launchUrl({ contentUrl, displayString }) {
         const devId = this.endpoint.owner.id;
         console.log(`[Smart TV] LaunchURL: ${contentUrl} (${displayString || ""})`);
@@ -51,6 +53,10 @@ export async function createMediaPlayer(dev) {
         {
             id: "player",
             mediaPlayback: { currentState: 0 },
+            contentLauncher: {
+                acceptHeader: ["video/mp4", "application/x-mpegURL", "application/dash+xml"],
+                supportedStreamingProtocols: { dash: true, hls: true },
+            },
         },
     );
     await node.add(player);
