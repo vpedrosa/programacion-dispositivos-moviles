@@ -33,6 +33,7 @@ class MdnsDeviceDiscoveryAdapter(
 
             override fun onServiceFound(serviceInfo: NsdServiceInfo) {
                 Log.d(TAG, "Service found: ${serviceInfo.serviceName}")
+                @Suppress("DEPRECATION")
                 nsdManager.resolveService(
                     serviceInfo,
                     object : NsdManager.ResolveListener {
@@ -41,8 +42,9 @@ class MdnsDeviceDiscoveryAdapter(
                         }
 
                         override fun onServiceResolved(si: NsdServiceInfo) {
-                            Log.d(TAG, "Resolved: ${si.serviceName} at ${si.host}:${si.port}")
-                            val device = si.toDiscoveredDevice() ?: return
+                            val hostAddress = si.hostAddress ?: return
+                            Log.d(TAG, "Resolved: ${si.serviceName} at $hostAddress:${si.port}")
+                            val device = si.toDiscoveredDevice(hostAddress) ?: return
                             discovered[device.serialNumber] = device
                             trySend(discovered.values.toList())
                         }
@@ -81,15 +83,17 @@ class MdnsDeviceDiscoveryAdapter(
         }
     }
 
-    private fun NsdServiceInfo.toDiscoveredDevice(): DiscoveredDevice? {
-        val hostAddress = host?.hostAddress ?: return null
+    private val NsdServiceInfo.hostAddress: String?
+        get() = hostAddresses.firstOrNull()?.hostAddress
+
+    private fun NsdServiceInfo.toDiscoveredDevice(hostAddr: String): DiscoveredDevice? {
         val deviceName = serviceName ?: "Matter Device"
         val serialNumber = serviceName ?: "MDNS-${port}"
 
         return DiscoveredDevice(
             name = deviceName,
             type = DeviceType.LIGHT, // Default; actual type determined during commissioning
-            host = hostAddress,
+            host = hostAddr,
             port = port,
             discriminator = extractDiscriminator(),
             passcode = DEFAULT_PASSCODE,

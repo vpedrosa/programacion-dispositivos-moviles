@@ -6,7 +6,7 @@ import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

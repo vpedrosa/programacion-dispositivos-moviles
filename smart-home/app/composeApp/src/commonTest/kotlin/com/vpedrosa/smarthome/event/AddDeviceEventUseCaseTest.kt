@@ -8,7 +8,7 @@ import com.vpedrosa.smarthome.event.domain.NotificationPort
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

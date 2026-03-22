@@ -1,6 +1,6 @@
 package com.vpedrosa.smarthome.shared.domain.model
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 data class DeviceEvent(
     val id: String,

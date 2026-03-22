@@ -3,7 +3,7 @@ package com.vpedrosa.smarthome.shared.domain.dto
 import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
 import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable

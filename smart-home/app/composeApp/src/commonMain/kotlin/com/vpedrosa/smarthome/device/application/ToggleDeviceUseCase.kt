@@ -30,7 +30,7 @@ class ToggleDeviceUseCase(
                 is Switch -> deviceControlPort.toggleOnOff(id, !device.isOn)
                 is SmartTv -> deviceControlPort.toggleOnOff(id, !device.isOn)
                 is Thermostat -> deviceControlPort.setThermostatMode(id, !device.isHeatingOn)
-                else -> return
+                is Blind, is ContactSensor, is SmokeSensor, is WaterLeakSensor, is TemperatureSensor -> return
             }
         } catch (_: Exception) {
             // Matter command failed — do NOT update in-memory state
@@ -45,7 +45,7 @@ class ToggleDeviceUseCase(
             is Switch -> device.toggle()
             is SmartTv -> device.toggle()
             is Thermostat -> device.toggleHeating()
-            else -> return
+            is Blind, is ContactSensor, is SmokeSensor, is WaterLeakSensor, is TemperatureSensor -> return
         }
         deviceRepository.save(toggled)
     }
