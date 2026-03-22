@@ -1,13 +1,17 @@
 package com.vpedrosa.smarthome.di
 
 import android.speech.SpeechRecognizer
+import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.MdnsDeviceDiscoveryAdapter
+import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.StaticDeviceDiscoveryAdapter
 import com.vpedrosa.smarthome.commissioning.infrastructure.matter.MatterCommissioningAdapter
+import com.vpedrosa.smarthome.commissioning.infrastructure.matter.ProductionCommissioningAdapter
 import com.vpedrosa.smarthome.shared.infrastructure.matter.MatterControllerProvider
 import com.vpedrosa.smarthome.shared.infrastructure.matter.MatterDeviceControlAdapter
 import com.vpedrosa.smarthome.event.infrastructure.notification.AndroidNotificationAdapter
 import com.vpedrosa.smarthome.voice.infrastructure.speech.AndroidSpeechRecognizerAdapter
 import com.vpedrosa.smarthome.voice.infrastructure.speech.FakeSpeechRecognizer
 import com.vpedrosa.smarthome.commissioning.domain.CommissioningPort
+import com.vpedrosa.smarthome.commissioning.domain.DeviceDiscoveryPort
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
 import com.vpedrosa.smarthome.shared.domain.EnvironmentPort
 import com.vpedrosa.smarthome.shared.infrastructure.AndroidEnvironmentAdapter
@@ -23,9 +27,29 @@ import org.koin.dsl.module
 actual val platformModule: Module = module {
     single<EnvironmentPort> { AndroidEnvironmentAdapter() }
     single { MatterControllerProvider(androidContext()) }
-    single<CommissioningPort> { MatterCommissioningAdapter(get<MatterControllerProvider>().controller) }
     single<DeviceControlPort> { MatterDeviceControlAdapter(get<MatterControllerProvider>().controller) }
     single<NotificationPort> { AndroidNotificationAdapter(androidContext()) }
+
+    // Commissioning: PASE for emulator, BLE+mDNS for production
+    single<CommissioningPort> {
+        val env = get<EnvironmentPort>()
+        val controller = get<MatterControllerProvider>().controller
+        if (env.isEmulator) {
+            MatterCommissioningAdapter(controller)
+        } else {
+            ProductionCommissioningAdapter(controller)
+        }
+    }
+
+    // Discovery: static list for emulator, mDNS for production
+    single<DeviceDiscoveryPort> {
+        val env = get<EnvironmentPort>()
+        if (env.isEmulator) {
+            StaticDeviceDiscoveryAdapter()
+        } else {
+            MdnsDeviceDiscoveryAdapter(androidContext())
+        }
+    }
 
     // Speech recognizer: use real Android adapter when available, fall back to fake
     single<SpeechRecognizerPort> {

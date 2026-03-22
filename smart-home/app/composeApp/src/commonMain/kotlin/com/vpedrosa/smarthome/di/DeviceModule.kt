@@ -1,6 +1,5 @@
 package com.vpedrosa.smarthome.di
 
-import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.StaticDeviceDiscoveryAdapter
 import com.vpedrosa.smarthome.antisquatter.infrastructure.persistence.InMemoryAntiSquatterRepository
 import com.vpedrosa.smarthome.settings.infrastructure.persistence.InMemoryAppSettingsRepository
 import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceEventRepository
@@ -8,7 +7,6 @@ import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceRe
 import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryRoomRepository
 import com.vpedrosa.smarthome.antisquatter.domain.AntiSquatterRepository
 import com.vpedrosa.smarthome.settings.domain.AppSettingsRepository
-import com.vpedrosa.smarthome.commissioning.domain.DeviceDiscoveryPort
 import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
@@ -37,7 +35,6 @@ import org.koin.dsl.module
 
 val deviceModule = module {
     // Driven ports (adapters)
-    single<DeviceDiscoveryPort> { StaticDeviceDiscoveryAdapter() }
     single<DeviceRepository> { InMemoryDeviceRepository() }
     single<RoomRepository> { InMemoryRoomRepository() }
     single<DeviceEventRepository> { InMemoryDeviceEventRepository() }
