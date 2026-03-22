@@ -1,21 +1,31 @@
 import { ServerNode, Endpoint } from "@matter/main";
-import { CastingVideoPlayerDevice } from "@matter/main/devices/casting-video-player";
+import { BasicVideoPlayerDevice } from "@matter/main/devices/basic-video-player";
 import { ContentLauncherServer } from "@matter/main/behaviors/content-launcher";
+import { MediaPlaybackServer } from "@matter/main/behaviors/media-playback";
+import { KeypadInputServer } from "@matter/main/behaviors/keypad-input";
 import { VENDOR_ID, VENDOR_NAME } from "../config.mjs";
 import { bus } from "../event-bus.mjs";
 
-const UrlContentLauncher = ContentLauncherServer.with("UrlPlayback");
-
-class SmartTvContentLauncher extends UrlContentLauncher {
+class SmartTvContentLauncher extends ContentLauncherServer {
     async launchUrl({ contentUrl, displayString }) {
-        const name = this.endpoint.owner.id;
-        console.log(`[${name}] LaunchURL: ${contentUrl} (${displayString || ""})`);
+        const devId = this.endpoint.owner.id;
+        console.log(`[Smart TV] LaunchURL: ${contentUrl} (${displayString || ""})`);
         bus.emit("stateChange", {
-            id: name,
+            id: devId,
             state: { contentUrl },
         });
         return { status: 0, data: contentUrl };
     }
+}
+
+class SmartTvMediaPlayback extends MediaPlaybackServer {
+    async play()  { return { status: 0 }; }
+    async pause() { return { status: 0 }; }
+    async stop()  { return { status: 0 }; }
+}
+
+class SmartTvKeypadInput extends KeypadInputServer {
+    async sendKey() { return { status: 0 }; }
 }
 
 export async function createMediaPlayer(dev) {
@@ -33,14 +43,14 @@ export async function createMediaPlayer(dev) {
     });
 
     const player = new Endpoint(
-        CastingVideoPlayerDevice.with(SmartTvContentLauncher),
+        BasicVideoPlayerDevice.with(
+            SmartTvMediaPlayback,
+            SmartTvKeypadInput,
+            SmartTvContentLauncher,
+        ),
         {
             id: "player",
-            mediaPlayback: { currentState: 2 },
-            contentLauncher: {
-                acceptHeader: ["video/mp4", "application/x-mpegURL", "application/dash+xml"],
-                supportedStreamingProtocols: 3,
-            },
+            mediaPlayback: { currentState: 0 },
         },
     );
     await node.add(player);
@@ -50,7 +60,7 @@ export async function createMediaPlayer(dev) {
         name: dev.name,
         type: dev.type,
         port: dev.port,
-        state: { onOff: false, playbackState: 2, contentUrl: null },
+        state: { onOff: false, playbackState: 0, contentUrl: null },
     });
 
     player.events.onOff.onOff$Changed.on(value => {
