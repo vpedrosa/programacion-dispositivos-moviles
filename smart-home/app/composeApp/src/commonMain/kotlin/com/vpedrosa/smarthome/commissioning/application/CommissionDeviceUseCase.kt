@@ -1,6 +1,7 @@
 package com.vpedrosa.smarthome.commissioning.application
 
 import com.vpedrosa.smarthome.shared.domain.model.Device
+import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 import com.vpedrosa.smarthome.commissioning.domain.CommissioningPort
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
@@ -13,7 +14,12 @@ class CommissionDeviceUseCase(
 ) {
     suspend operator fun invoke(device: DiscoveredDevice): Result<Device> {
         return commissioningPort.commission(device).onSuccess { commissioned ->
-            deviceControlPort.registerDevice(commissioned.id, device)
+            val connectionInfo = DeviceConnectionInfo(
+                host = device.host,
+                port = device.port,
+                passcode = device.passcode,
+            )
+            deviceControlPort.registerDevice(commissioned.id, connectionInfo)
             deviceRepository.save(commissioned)
         }
     }

@@ -3,8 +3,8 @@ package com.vpedrosa.smarthome.shared.infrastructure.matter
 import android.util.Log
 import chip.devicecontroller.ChipClusters
 import chip.devicecontroller.ChipDeviceController
+import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -34,17 +34,17 @@ class MatterDeviceControlAdapter(
     private val controlMutex = Mutex()
     private val retryNodeIdCounter = AtomicLong(RETRY_NODE_ID_BASE)
 
-    override fun registerDevice(deviceId: DeviceId, discoveredDevice: DiscoveredDevice) {
+    override fun registerDevice(deviceId: DeviceId, connectionInfo: DeviceConnectionInfo) {
         val nodeId = deviceId.value.toLong()
         deviceConnections[nodeId] = ConnectionInfo(
-            discoveredDevice.host,
-            discoveredDevice.port,
-            discoveredDevice.passcode,
+            connectionInfo.host,
+            connectionInfo.port,
+            connectionInfo.passcode,
         )
         try {
             val pointer = chipController.getDeviceBeingCommissionedPointer(nodeId)
             cachedPointers[nodeId] = pointer
-            Log.d(TAG, "Cached pointer for node $nodeId (port ${discoveredDevice.port})")
+            Log.d(TAG, "Cached pointer for node $nodeId (port ${connectionInfo.port})")
         } catch (e: Exception) {
             Log.w(TAG, "Could not cache pointer for node $nodeId", e)
         }

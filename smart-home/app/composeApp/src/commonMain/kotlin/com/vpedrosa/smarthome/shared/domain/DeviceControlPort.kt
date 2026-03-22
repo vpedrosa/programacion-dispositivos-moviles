@@ -1,10 +1,10 @@
 package com.vpedrosa.smarthome.shared.domain
 
+import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 
 interface DeviceControlPort {
-    fun registerDevice(deviceId: DeviceId, discoveredDevice: DiscoveredDevice)
+    fun registerDevice(deviceId: DeviceId, connectionInfo: DeviceConnectionInfo)
     suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean)
     suspend fun setLevel(deviceId: DeviceId, level: Int)
     suspend fun lockDoor(deviceId: DeviceId, lock: Boolean)
