@@ -108,6 +108,10 @@ Cada dispositivo muestra su **manual pairing code** y **QR code** en el log al a
 |:-:|--------|:------:|:-------------:|:--------:|
 | 27 | Termostato | 5566 | 3866 | 20202047 |
 
+## Requisitos
+
+- **Node.js** v24.14.0 o superior
+
 ## Uso
 
 ### Arrancar
