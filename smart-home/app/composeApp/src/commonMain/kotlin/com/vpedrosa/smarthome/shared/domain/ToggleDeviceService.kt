@@ -1,4 +1,4 @@
-package com.vpedrosa.smarthome.device.application
+package com.vpedrosa.smarthome.shared.domain
 
 import com.vpedrosa.smarthome.shared.domain.model.Blind
 import com.vpedrosa.smarthome.shared.domain.model.Device
@@ -7,13 +7,12 @@ import com.vpedrosa.smarthome.shared.domain.model.Lock
 import com.vpedrosa.smarthome.shared.domain.model.SmartTv
 import com.vpedrosa.smarthome.shared.domain.model.Switch
 import com.vpedrosa.smarthome.shared.domain.model.Thermostat
-import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
 
 /**
  * Toggles a single device to the desired [turnOn] state via [controlPort],
  * returning the updated [Device] copy, or `null` if it was already in that state.
  */
-internal suspend fun toggleDevice(
+suspend fun toggleDevice(
     device: Device,
     turnOn: Boolean,
     controlPort: DeviceControlPort,

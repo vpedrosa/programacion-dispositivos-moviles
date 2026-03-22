@@ -7,7 +7,7 @@ import com.vpedrosa.smarthome.shared.domain.model.Lock
 import com.vpedrosa.smarthome.voice.domain.model.ParsedVoiceCommand
 import com.vpedrosa.smarthome.shared.domain.model.Thermostat
 import com.vpedrosa.smarthome.voice.domain.model.VoiceCommandResult
-import com.vpedrosa.smarthome.device.application.toggleDevice
+import com.vpedrosa.smarthome.shared.domain.toggleDevice
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
