@@ -131,27 +131,30 @@ internal data class WearDevice(
     val isContactOpen: Boolean = false,
 )
 
-internal fun DeviceWithRoom.toWearDevice(): WearDevice = WearDevice(
-    id = device.id.value,
-    name = device.name,
-    type = device.type.name,
-    roomName = roomName,
-    isOn = when (device) {
-        is Light -> device.isOn
-        is Switch -> device.isOn
-        is SmartTv -> device.isOn
-        else -> false
-    },
-    isLocked = (device as? Lock)?.isLocked ?: false,
-    openingLevel = (device as? Blind)?.openingLevel ?: 0,
-    currentTemperature = when (device) {
-        is Thermostat -> device.currentTemperature
-        is TemperatureSensor -> device.currentTemperature
-        else -> 0.0
-    },
-    targetTemperature = (device as? Thermostat)?.targetTemperature ?: 0.0,
-    isHeatingOn = (device as? Thermostat)?.isHeatingOn ?: false,
-    isSmokeDetected = (device as? SmokeSensor)?.isSmokeDetected ?: false,
-    isLeakDetected = (device as? WaterLeakSensor)?.isLeakDetected ?: false,
-    isContactOpen = (device as? ContactSensor)?.isOpen ?: false,
-)
+internal fun DeviceWithRoom.toWearDevice(): WearDevice {
+    val d = device
+    return WearDevice(
+        id = d.id.value,
+        name = d.name,
+        type = d.type.name,
+        roomName = roomName,
+        isOn = when (d) {
+            is Light -> d.isOn
+            is Switch -> d.isOn
+            is SmartTv -> d.isOn
+            else -> false
+        },
+        isLocked = (d as? Lock)?.isLocked ?: false,
+        openingLevel = (d as? Blind)?.openingLevel ?: 0,
+        currentTemperature = when (d) {
+            is Thermostat -> d.currentTemperature
+            is TemperatureSensor -> d.currentTemperature
+            else -> 0.0
+        },
+        targetTemperature = (d as? Thermostat)?.targetTemperature ?: 0.0,
+        isHeatingOn = (d as? Thermostat)?.isHeatingOn ?: false,
+        isSmokeDetected = (d as? SmokeSensor)?.isSmokeDetected ?: false,
+        isLeakDetected = (d as? WaterLeakSensor)?.isLeakDetected ?: false,
+        isContactOpen = (d as? ContactSensor)?.isOpen ?: false,
+    )
+}
