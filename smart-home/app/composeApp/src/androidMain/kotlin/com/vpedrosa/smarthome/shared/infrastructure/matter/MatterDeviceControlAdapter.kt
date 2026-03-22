@@ -118,31 +118,46 @@ class MatterDeviceControlAdapter(
 
     override suspend fun launchContent(deviceId: DeviceId, url: String) {
         executeWithRetry(deviceId) { pointer ->
-            val cluster = ChipClusters.ContentLauncherCluster(pointer, ENDPOINT_ID)
-            suspendContentLaunch(cluster, url)
+            suspendContentLaunch(pointer, url)
             Log.d(TAG, "${deviceId.value}: LaunchURL -> $url")
         }
     }
 
     private suspend fun suspendContentLaunch(
-        cluster: ChipClusters.ContentLauncherCluster,
+        devicePtr: Long,
         url: String,
     ) = withTimeout(COMMAND_TIMEOUT_MS) {
         suspendCancellableCoroutine { cont ->
-            cluster.launchURL(
-                object : ChipClusters.ContentLauncherCluster.LauncherResponseCallback {
-                    override fun onSuccess(status: Int, data: Optional<String>) {
+            val tlvWriter = chip.tlv.TlvWriter()
+            tlvWriter.startStructure(chip.tlv.AnonymousTag)
+            tlvWriter.put(chip.tlv.ContextSpecificTag(0), url) // contentUrl (field 0)
+            tlvWriter.endStructure()
+
+            chipController.invoke(
+                object : chip.devicecontroller.InvokeCallback {
+                    override fun onResponse(
+                        invokeElement: chip.devicecontroller.model.InvokeElement?,
+                        successCode: Long,
+                    ) {
+                        Log.d(TAG, "LaunchURL invoke success: $successCode")
                         if (cont.isActive) cont.resume(Unit)
                     }
 
                     override fun onError(error: Exception) {
-                        Log.e(TAG, "LaunchURL error", error)
+                        Log.e(TAG, "LaunchURL invoke error", error)
                         if (cont.isActive) cont.resumeWithException(error)
                     }
                 },
-                url,
-                Optional.empty(), // displayString (omit to avoid TLV serialization issues)
-                Optional.empty(), // brandingInformation
+                devicePtr,
+                chip.devicecontroller.model.InvokeElement.newInstance(
+                    ENDPOINT_ID.toLong(),
+                    CONTENT_LAUNCHER_CLUSTER_ID,
+                    LAUNCH_URL_COMMAND_ID,
+                    tlvWriter.getEncoded(),
+                    null,
+                ),
+                0, // timedRequestTimeoutMs (0 = no timed invoke)
+                0, // imTimeoutMs
             )
         }
     }
@@ -267,5 +282,7 @@ class MatterDeviceControlAdapter(
         const val PASE_TIMEOUT_MS = 5_000L
         const val RETRY_DELAY_MS = 500L
         const val RETRY_NODE_ID_BASE = 100_000L
+        const val CONTENT_LAUNCHER_CLUSTER_ID = 0x050AL
+        const val LAUNCH_URL_COMMAND_ID = 0x01L
     }
 }
