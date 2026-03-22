@@ -1,4 +1,4 @@
-package com.vpedrosa.smarthome.wear.device_control
+package com.vpedrosa.smarthome.wear.ui.device_control
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,7 @@ import androidx.wear.compose.material3.ListHeader
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import com.vpedrosa.smarthome.wear.R
-import com.vpedrosa.smarthome.wear.device_control.model.WearDevice
+import com.vpedrosa.smarthome.wear.device_control.domain.model.WearDevice
 import com.vpedrosa.smarthome.wear.theme.ErrorRed
 import com.vpedrosa.smarthome.wear.theme.SuccessGreen
 import com.vpedrosa.smarthome.wear.theme.WarmGray

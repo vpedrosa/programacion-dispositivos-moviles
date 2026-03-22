@@ -1,4 +1,4 @@
-package com.vpedrosa.smarthome.wear.device_control.adapters
+package com.vpedrosa.smarthome.wear.device_control.infrastructure.wearable
 
 import android.content.Context
 import android.util.Log
@@ -6,12 +6,12 @@ import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
 import com.vpedrosa.smarthome.wear.R
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.ActionResult
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.DeviceCommandPort
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.DeviceListResult
-import com.vpedrosa.smarthome.wear.device_control.model.WearDevice
-import com.vpedrosa.smarthome.wear.device_control.model.WearDeviceAction
-import com.vpedrosa.smarthome.wear.device_control.model.WearDeviceList
+import com.vpedrosa.smarthome.wear.device_control.domain.ActionResult
+import com.vpedrosa.smarthome.wear.device_control.domain.DeviceCommandPort
+import com.vpedrosa.smarthome.wear.device_control.domain.DeviceListResult
+import com.vpedrosa.smarthome.wear.device_control.domain.model.WearDevice
+import com.vpedrosa.smarthome.wear.device_control.domain.model.WearDeviceAction
+import com.vpedrosa.smarthome.wear.device_control.domain.model.WearDeviceList
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withTimeoutOrNull

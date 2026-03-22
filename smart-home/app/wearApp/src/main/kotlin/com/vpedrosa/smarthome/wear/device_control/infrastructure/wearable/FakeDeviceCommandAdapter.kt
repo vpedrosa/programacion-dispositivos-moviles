@@ -1,10 +1,9 @@
-package com.vpedrosa.smarthome.wear.device_control.adapters
+package com.vpedrosa.smarthome.wear.device_control.infrastructure.wearable
 
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.ActionResult
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.DeviceCommandPort
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.DeviceListResult
-import com.vpedrosa.smarthome.wear.device_control.model.WearDevice
-import kotlinx.coroutines.delay
+import com.vpedrosa.smarthome.wear.device_control.domain.ActionResult
+import com.vpedrosa.smarthome.wear.device_control.domain.DeviceCommandPort
+import com.vpedrosa.smarthome.wear.device_control.domain.DeviceListResult
+import com.vpedrosa.smarthome.wear.device_control.domain.model.WearDevice
 
 /**
  * Fake adapter for testing and emulators without Play Services.

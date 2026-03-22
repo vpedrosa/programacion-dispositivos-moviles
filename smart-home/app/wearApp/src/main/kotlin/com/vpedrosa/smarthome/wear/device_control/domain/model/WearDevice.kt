@@ -1,4 +1,4 @@
-package com.vpedrosa.smarthome.wear.device_control.model
+package com.vpedrosa.smarthome.wear.device_control.domain.model
 
 import kotlinx.serialization.Serializable
 

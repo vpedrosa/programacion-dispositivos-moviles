@@ -1,6 +1,6 @@
-package com.vpedrosa.smarthome.wear.device_control.domain.ports
+package com.vpedrosa.smarthome.wear.device_control.domain
 
-import com.vpedrosa.smarthome.wear.device_control.model.WearDevice
+import com.vpedrosa.smarthome.wear.device_control.domain.model.WearDevice
 
 /**
  * Driven port for communicating with the phone app to fetch

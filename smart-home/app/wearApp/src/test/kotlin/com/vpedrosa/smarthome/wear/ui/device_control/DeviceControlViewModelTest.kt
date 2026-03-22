@@ -1,9 +1,9 @@
-package com.vpedrosa.smarthome.wear.device_control
+package com.vpedrosa.smarthome.wear.ui.device_control
 
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.ActionResult
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.DeviceCommandPort
-import com.vpedrosa.smarthome.wear.device_control.domain.ports.DeviceListResult
-import com.vpedrosa.smarthome.wear.device_control.model.WearDevice
+import com.vpedrosa.smarthome.wear.device_control.domain.ActionResult
+import com.vpedrosa.smarthome.wear.device_control.domain.DeviceCommandPort
+import com.vpedrosa.smarthome.wear.device_control.domain.DeviceListResult
+import com.vpedrosa.smarthome.wear.device_control.domain.model.WearDevice
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
