@@ -141,7 +141,7 @@ class MatterDeviceControlAdapter(
                     }
                 },
                 url,
-                Optional.of(url), // displayString
+                Optional.empty(), // displayString (omit to avoid TLV serialization issues)
                 Optional.empty(), // brandingInformation
             )
         }
