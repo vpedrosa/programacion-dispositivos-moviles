@@ -25,5 +25,11 @@ export async function createWindow(dev) {
 
     bus.emit("register", { id: dev.serialNumber, name: dev.name, type: dev.type, port: dev.port, state: { liftPercent: 0 } });
 
+    shade.events.windowCovering.currentPositionLiftPercent100ths$Changed.on(value => {
+        const percent = Math.round((value ?? 0) / 100);
+        console.log(`[${dev.name}] Apertura: ${percent}%`);
+        bus.emit("stateChange", { id: dev.serialNumber, state: { liftPercent: percent } });
+    });
+
     return node;
 }
