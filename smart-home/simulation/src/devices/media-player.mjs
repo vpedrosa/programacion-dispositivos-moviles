@@ -6,6 +6,18 @@ import { bus } from "../event-bus.mjs";
 
 const UrlContentLauncher = ContentLauncherServer.with("UrlPlayback");
 
+class SmartTvContentLauncher extends UrlContentLauncher {
+    async launchUrl({ contentUrl, displayString }) {
+        const name = this.endpoint.owner.id;
+        console.log(`[${name}] LaunchURL: ${contentUrl} (${displayString || ""})`);
+        bus.emit("stateChange", {
+            id: name,
+            state: { contentUrl },
+        });
+        return { status: 0, data: contentUrl };
+    }
+}
+
 export async function createMediaPlayer(dev) {
     const node = await ServerNode.create({
         id: dev.serialNumber,
@@ -21,13 +33,13 @@ export async function createMediaPlayer(dev) {
     });
 
     const player = new Endpoint(
-        CastingVideoPlayerDevice.with(UrlContentLauncher),
+        CastingVideoPlayerDevice.with(SmartTvContentLauncher),
         {
             id: "player",
             mediaPlayback: { currentState: 2 },
             contentLauncher: {
                 acceptHeader: ["video/mp4", "application/x-mpegURL", "application/dash+xml"],
-                supportedStreamingProtocols: 3, // DASH + HLS
+                supportedStreamingProtocols: 3,
             },
         },
     );
@@ -44,29 +56,6 @@ export async function createMediaPlayer(dev) {
     player.events.onOff.onOff$Changed.on(value => {
         console.log(`[${dev.name}] ${value ? "ON" : "OFF"}`);
         bus.emit("stateChange", { id: dev.serialNumber, state: { onOff: value } });
-    });
-
-    player.events.contentLauncher.acceptHeader$Changed.on(() => {
-        console.log(`[${dev.name}] ContentLauncher updated`);
-    });
-
-    // Override launchUrl to log and broadcast the URL
-    const originalLaunchUrl = player.behaviors.supported.get(UrlContentLauncher);
-    player.act(agent => {
-        const launcher = agent.get(UrlContentLauncher);
-        launcher.reactTo(player.events.contentLauncher.acceptHeader$Changed, () => {});
-    });
-
-    // Listen for LaunchURL commands via command handler override
-    player.behaviors.require(UrlContentLauncher, {
-        launchUrl({ contentUrl, displayString }) {
-            console.log(`[${dev.name}] LaunchURL: ${contentUrl} (${displayString || ""})`);
-            bus.emit("stateChange", {
-                id: dev.serialNumber,
-                state: { contentUrl },
-            });
-            return { status: 0, data: contentUrl };
-        },
     });
 
     return node;
