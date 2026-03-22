@@ -1,0 +1,11 @@
+--- a/node_modules/@matter/types/dist/esm/tlv/TlvObject.js
++++ b/node_modules/@matter/types/dist/esm/tlv/TlvObject.js
+@@ -191,7 +191,7 @@
+           field.schema.validate(fieldValue);
+           value[k] = fieldValue;
+         }
+-      } else {
++      } else if (value[k] !== undefined) {
+         value[k] = field.schema.injectField(value[k], fieldId, fieldValue, injectChecker);
+       }
+     }

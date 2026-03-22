@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node src/main.mjs",
-    "stop": "kill $(cat logs/matter.pid 2>/dev/null) 2>/dev/null; echo 'Stopped'"
+    "stop": "kill $(cat logs/matter.pid 2>/dev/null) 2>/dev/null; echo 'Stopped'",
+    "postinstall": "node -e \"const fs=require('fs');const f='node_modules/@matter/types/dist/esm/tlv/TlvObject.js';let s=fs.readFileSync(f,'utf8');if(s.includes('} else {\\n        value[k] = field.schema.injectField')){s=s.replace('} else {\\n        value[k] = field.schema.injectField','} else if (value[k] !== undefined) {\\n        value[k] = field.schema.injectField');fs.writeFileSync(f,s);console.log('Patched TlvObject.js: fix injectField for undefined nested optionals')}else{console.log('TlvObject.js already patched or patch not needed')}\""
   },
   "dependencies": {
     "@matter/main": "^0.16.10",
