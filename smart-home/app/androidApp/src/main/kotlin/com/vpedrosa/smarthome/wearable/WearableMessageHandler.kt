@@ -5,9 +5,9 @@ import android.util.Log
 import com.google.android.gms.wearable.MessageClient
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Wearable
+import com.vpedrosa.smarthome.device.application.DeviceWithRoom
+import com.vpedrosa.smarthome.device.application.GetAllDevicesWithRoomUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
-import com.vpedrosa.smarthome.shared.domain.RoomRepository
 import com.vpedrosa.smarthome.shared.domain.model.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,8 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 /**
  * Handles device control messages from the Wear OS app.
@@ -27,11 +25,9 @@ import org.koin.core.component.inject
  */
 class WearableMessageHandler(
     private val context: Context,
-) : MessageClient.OnMessageReceivedListener, KoinComponent {
-
-    private val deviceRepository: DeviceRepository by inject()
-    private val roomRepository: RoomRepository by inject()
-    private val toggleDevice: ToggleDeviceUseCase by inject()
+    private val getAllDevicesWithRoom: GetAllDevicesWithRoomUseCase,
+    private val toggleDevice: ToggleDeviceUseCase,
+) : MessageClient.OnMessageReceivedListener {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val json = Json { ignoreUnknownKeys = true }
@@ -51,13 +47,9 @@ class WearableMessageHandler(
     private fun handleDeviceListRequest(sourceNodeId: String) {
         scope.launch {
             val responsePayload = try {
-                val devices = deviceRepository.observeAllDevices().first()
-                val rooms = roomRepository.observeAllRooms().first()
-                val roomMap = rooms.associateBy { it.id }
+                val devicesWithRoom = getAllDevicesWithRoom()
 
-                val wearDevices = devices.map { device ->
-                    device.toWearDevice(roomMap[device.roomId]?.name)
-                }
+                val wearDevices = devicesWithRoom.map { it.toWearDevice() }
 
                 json.encodeToString(WearDeviceList.serializer(), WearDeviceList(wearDevices))
             } catch (e: Exception) {
@@ -78,15 +70,13 @@ class WearableMessageHandler(
                 val deviceId = DeviceId(action.deviceId)
                 toggleDevice(deviceId)
 
-                val updated = deviceRepository.observeDevice(deviceId).first()
+                val devicesWithRoom = getAllDevicesWithRoom()
+                val updated = devicesWithRoom.find { it.device.id == deviceId }
                     ?: throw IllegalStateException("Device not found after toggle")
-
-                val rooms = roomRepository.observeAllRooms().first()
-                val roomName = rooms.find { it.id == updated.roomId }?.name
 
                 "OK:" + json.encodeToString(
                     WearDevice.serializer(),
-                    updated.toWearDevice(roomName),
+                    updated.toWearDevice(),
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Error executing action: ${e.message}", e)
@@ -141,27 +131,27 @@ internal data class WearDevice(
     val isContactOpen: Boolean = false,
 )
 
-internal fun Device.toWearDevice(roomName: String?): WearDevice = WearDevice(
-    id = id.value,
-    name = name,
-    type = type.name,
+internal fun DeviceWithRoom.toWearDevice(): WearDevice = WearDevice(
+    id = device.id.value,
+    name = device.name,
+    type = device.type.name,
     roomName = roomName,
-    isOn = when (this) {
-        is Light -> isOn
-        is Switch -> isOn
-        is SmartTv -> isOn
+    isOn = when (device) {
+        is Light -> device.isOn
+        is Switch -> device.isOn
+        is SmartTv -> device.isOn
         else -> false
     },
-    isLocked = (this as? Lock)?.isLocked ?: false,
-    openingLevel = (this as? Blind)?.openingLevel ?: 0,
-    currentTemperature = when (this) {
-        is Thermostat -> currentTemperature
-        is TemperatureSensor -> currentTemperature
+    isLocked = (device as? Lock)?.isLocked ?: false,
+    openingLevel = (device as? Blind)?.openingLevel ?: 0,
+    currentTemperature = when (device) {
+        is Thermostat -> device.currentTemperature
+        is TemperatureSensor -> device.currentTemperature
         else -> 0.0
     },
-    targetTemperature = (this as? Thermostat)?.targetTemperature ?: 0.0,
-    isHeatingOn = (this as? Thermostat)?.isHeatingOn ?: false,
-    isSmokeDetected = (this as? SmokeSensor)?.isSmokeDetected ?: false,
-    isLeakDetected = (this as? WaterLeakSensor)?.isLeakDetected ?: false,
-    isContactOpen = (this as? ContactSensor)?.isOpen ?: false,
+    targetTemperature = (device as? Thermostat)?.targetTemperature ?: 0.0,
+    isHeatingOn = (device as? Thermostat)?.isHeatingOn ?: false,
+    isSmokeDetected = (device as? SmokeSensor)?.isSmokeDetected ?: false,
+    isLeakDetected = (device as? WaterLeakSensor)?.isLeakDetected ?: false,
+    isContactOpen = (device as? ContactSensor)?.isOpen ?: false,
 )

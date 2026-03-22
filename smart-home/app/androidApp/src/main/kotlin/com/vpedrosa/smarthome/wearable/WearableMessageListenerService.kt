@@ -2,6 +2,7 @@ package com.vpedrosa.smarthome.wearable
 
 import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.WearableListenerService
+import org.koin.android.ext.android.get
 
 /**
  * Background service that receives device control messages from
@@ -10,7 +11,7 @@ import com.google.android.gms.wearable.WearableListenerService
  */
 class WearableMessageListenerService : WearableListenerService() {
 
-    private val handler by lazy { WearableMessageHandler(this) }
+    private val handler by lazy { get<WearableMessageHandler>() }
 
     override fun onMessageReceived(messageEvent: MessageEvent) {
         handler.onMessageReceived(messageEvent)
