@@ -9,6 +9,8 @@ import com.vpedrosa.smarthome.voice.infrastructure.speech.AndroidSpeechRecognize
 import com.vpedrosa.smarthome.voice.infrastructure.speech.FakeSpeechRecognizer
 import com.vpedrosa.smarthome.commissioning.domain.CommissioningPort
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
+import com.vpedrosa.smarthome.shared.domain.EnvironmentPort
+import com.vpedrosa.smarthome.shared.infrastructure.AndroidEnvironmentAdapter
 import com.vpedrosa.smarthome.event.domain.NotificationPort
 import com.vpedrosa.smarthome.voice.domain.SpeechRecognizerPort
 import kotlinx.coroutines.CoroutineScope
@@ -19,6 +21,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 actual val platformModule: Module = module {
+    single<EnvironmentPort> { AndroidEnvironmentAdapter() }
     single { MatterControllerProvider(androidContext()) }
     single<CommissioningPort> { MatterCommissioningAdapter(get<MatterControllerProvider>().controller) }
     single<DeviceControlPort> { MatterDeviceControlAdapter(get<MatterControllerProvider>().controller) }
