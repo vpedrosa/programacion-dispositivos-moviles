@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 
 data class NotificationsUiState(
     val groupedEvents: List<EventGroup> = emptyList(),
@@ -65,7 +65,7 @@ class NotificationsViewModel(
         )
 }
 
-private fun DeviceEvent.toEventItem(now: kotlinx.datetime.Instant): EventItem {
+private fun DeviceEvent.toEventItem(now: kotlin.time.Instant): EventItem {
     val diffMs = (now - timestamp).inWholeMilliseconds
     val diffMin = diffMs / 60_000
     val diffHours = diffMin / 60

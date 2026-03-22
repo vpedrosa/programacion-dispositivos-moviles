@@ -14,7 +14,7 @@ import com.vpedrosa.smarthome.shared.domain.model.SmartTv
 import com.vpedrosa.smarthome.shared.domain.model.SmokeSensor
 import com.vpedrosa.smarthome.shared.domain.model.Switch
 import com.vpedrosa.smarthome.shared.domain.model.Thermostat
-import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
+import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
@@ -31,7 +31,7 @@ import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 internal class FakeDeviceControlPort : DeviceControlPort {
-    override fun registerDevice(deviceId: DeviceId, discoveredDevice: DiscoveredDevice) {}
+    override fun registerDevice(deviceId: DeviceId, connectionInfo: DeviceConnectionInfo) {}
     override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {}
     override suspend fun setLevel(deviceId: DeviceId, level: Int) {}
     override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {}

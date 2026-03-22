@@ -2,7 +2,6 @@ package com.vpedrosa.smarthome.commissioning.infrastructure.matter
 
 import android.util.Log
 import chip.devicecontroller.ChipDeviceController
-import chip.devicecontroller.NetworkCredentials
 import com.vpedrosa.smarthome.shared.domain.model.Blind
 import com.vpedrosa.smarthome.shared.domain.model.ContactSensor
 import com.vpedrosa.smarthome.shared.domain.model.Device
@@ -99,12 +98,17 @@ class ProductionCommissioningAdapter(
                 override fun onOpCSRGenerationComplete(csr: ByteArray?) {}
             })
 
-            chipController.pairDevice(
+            // Step 1: Establish PASE session via IP (same network)
+            chipController.establishPaseConnection(
                 nodeId,
-                device.discriminator,
+                device.host,
+                device.port,
                 device.passcode,
-                null, // Wi-Fi credentials (null = no network commissioning)
             )
+            // Step 2: commissionDevice handles NOC provisioning and
+            // operational discovery (mDNS/CASE). This is the full
+            // Matter commissioning flow beyond what the emulator adapter does.
+            chipController.commissionDevice(nodeId, null)
         }
     }
 
