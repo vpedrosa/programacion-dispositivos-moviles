@@ -10,7 +10,6 @@ import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
 import com.vpedrosa.smarthome.shared.domain.model.Light
 import com.vpedrosa.smarthome.shared.domain.model.Lock
-import com.vpedrosa.smarthome.shared.domain.model.SmartTv
 import com.vpedrosa.smarthome.shared.domain.model.SmokeSensor
 import com.vpedrosa.smarthome.shared.domain.model.Switch
 import com.vpedrosa.smarthome.shared.domain.model.TemperatureSensor
@@ -19,6 +18,7 @@ import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
 import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.device.application.ToggleCastingUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.application.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.application.UpdateLightUseCase
@@ -29,7 +29,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -52,6 +51,7 @@ class DeviceDetailViewModel(
     private val updateLight: UpdateLightUseCase,
     private val updateBlind: UpdateBlindUseCase,
     private val updateThermostat: UpdateThermostatUseCase,
+    private val toggleCasting: ToggleCastingUseCase,
 ) : ViewModel() {
 
     private val deviceId = DeviceId(deviceIdValue)
@@ -130,11 +130,7 @@ class DeviceDetailViewModel(
     }
 
     fun onToggleCasting() {
-        viewModelScope.launch {
-            val device = deviceRepository.observeDevice(deviceId).first() ?: return@launch
-            if (device !is SmartTv) return@launch
-            deviceRepository.save(device.toggleCasting())
-        }
+        viewModelScope.launch { runCatching { toggleCasting(deviceId) } }
     }
 
     private fun debouncedControl(block: suspend () -> Unit) {

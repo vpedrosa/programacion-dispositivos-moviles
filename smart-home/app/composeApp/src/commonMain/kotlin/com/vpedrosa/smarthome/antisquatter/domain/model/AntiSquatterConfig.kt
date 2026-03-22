@@ -1,6 +1,7 @@
 package com.vpedrosa.smarthome.antisquatter.domain.model
 
 import com.vpedrosa.smarthome.shared.domain.model.RoomId
+import kotlin.random.Random
 
 data class LightTimeSlot(
     val id: String,
@@ -30,6 +31,25 @@ data class LightTimeSlot(
         val start = "${startHour.toString().padStart(2, '0')}:${startMinute.toString().padStart(2, '0')}"
         val end = "${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}"
         return "$start - $end"
+    }
+
+    companion object {
+        fun createRandom(): LightTimeSlot {
+            val startH = Random.nextInt(19, 21)
+            val startM = listOf(0, 15, 30, 45).random()
+            val durationMinutes = Random.nextInt(90, 181)
+            val endTotal = startH * 60 + startM + durationMinutes
+            val endH = (endTotal / 60).coerceAtMost(23)
+            val endM = if (endTotal / 60 > 23) 30 else endTotal % 60
+            return LightTimeSlot(
+                id = "slot-${Random.nextInt(100_000, 999_999)}",
+                startHour = startH,
+                startMinute = startM,
+                endHour = endH,
+                endMinute = endM,
+                roomIds = emptyList(),
+            )
+        }
     }
 }
 

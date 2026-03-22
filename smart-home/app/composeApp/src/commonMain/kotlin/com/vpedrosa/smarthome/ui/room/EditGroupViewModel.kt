@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vpedrosa.smarthome.shared.domain.model.Device
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.model.Room
 import com.vpedrosa.smarthome.shared.domain.model.RoomId
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.room.application.SaveRoomUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 data class EditGroupUiState(
     val name: String = "",
@@ -30,6 +29,7 @@ class EditGroupViewModel(
     private val roomIdValue: String?,
     deviceRepository: DeviceRepository,
     private val roomRepository: RoomRepository,
+    private val saveRoom: SaveRoomUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditGroupUiState())
@@ -87,21 +87,13 @@ class EditGroupViewModel(
         val state = _uiState.value
         if (state.name.isBlank()) return
 
-        val roomId = if (roomIdValue != null) {
-            RoomId(roomIdValue)
-        } else {
-            RoomId("room-${state.name.lowercase().replace(" ", "-")}-${Random.nextInt(100_000, 999_999)}")
-        }
-
-        val room = Room(
-            id = roomId,
-            name = state.name.trim(),
-            photoUri = state.photoUri,
-            deviceIds = state.selectedDeviceIds.toList(),
-        )
-
         viewModelScope.launch {
-            roomRepository.save(room)
+            saveRoom(
+                existingRoomId = roomIdValue?.let { RoomId(it) },
+                name = state.name,
+                photoUri = state.photoUri,
+                deviceIds = state.selectedDeviceIds.toList(),
+            )
             _uiState.update { it.copy(isSaved = true) }
         }
     }

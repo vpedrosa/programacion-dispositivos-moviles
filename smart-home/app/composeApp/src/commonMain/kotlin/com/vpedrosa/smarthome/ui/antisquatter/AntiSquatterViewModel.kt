@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 data class AntiSquatterUiState(
     val isEnabled: Boolean = false,
@@ -64,20 +63,7 @@ class AntiSquatterViewModel(
 
     fun addTimeSlot() {
         val current = uiState.value
-        val startH = Random.nextInt(19, 21)       // 19:00 - 20:59
-        val startM = listOf(0, 15, 30, 45).random()
-        val durationMinutes = Random.nextInt(90, 181) // 1.5h - 3h
-        val endTotal = startH * 60 + startM + durationMinutes
-        val endH = (endTotal / 60).coerceAtMost(23)
-        val endM = if (endTotal / 60 > 23) 30 else endTotal % 60
-        val newSlot = LightTimeSlot(
-            id = "slot-${Random.nextInt(100_000, 999_999)}",
-            startHour = startH,
-            startMinute = startM,
-            endHour = endH,
-            endMinute = endM,
-            roomIds = emptyList(),
-        )
+        val newSlot = LightTimeSlot.createRandom()
         saveCurrentConfig(
             AntiSquatterConfig(
                 isEnabled = current.isEnabled,
