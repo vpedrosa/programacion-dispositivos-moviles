@@ -79,7 +79,14 @@ class ExecuteVoiceCommandUseCase(
         val targetLevel = if (cmd.open) 100 else 0
         val updated = devices.filterIsInstance<Blind>()
             .filter { it.openingLevel != targetLevel }
-            .map { it.changeOpeningLevel(targetLevel) }
+            .mapNotNull { blind ->
+                try {
+                    deviceControlPort.setWindowCoveringPosition(blind.id, targetLevel)
+                    blind.changeOpeningLevel(targetLevel)
+                } catch (_: Exception) {
+                    null
+                }
+            }
 
         if (updated.isNotEmpty()) {
             deviceRepository.saveAll(updated)
@@ -87,9 +94,9 @@ class ExecuteVoiceCommandUseCase(
 
         val action = if (cmd.open) "opened" else "closed"
         return VoiceCommandResult(
-            success = true,
-            message = "Blinds $action${roomSuffix(cmd.roomName)} (${devices.size})",
-            devicesAffected = devices.size,
+            success = updated.isNotEmpty(),
+            message = "Blinds $action${roomSuffix(cmd.roomName)} (${updated.size})",
+            devicesAffected = updated.size,
         )
     }
 
@@ -104,16 +111,23 @@ class ExecuteVoiceCommandUseCase(
         }
 
         val updated = devices.filterIsInstance<Thermostat>()
-            .map { it.adjustTarget(cmd.targetTemperature) }
+            .mapNotNull { thermostat ->
+                try {
+                    deviceControlPort.setThermostatSetpoint(thermostat.id, cmd.targetTemperature)
+                    thermostat.adjustTarget(cmd.targetTemperature)
+                } catch (_: Exception) {
+                    null
+                }
+            }
 
         if (updated.isNotEmpty()) {
             deviceRepository.saveAll(updated)
         }
 
         return VoiceCommandResult(
-            success = true,
-            message = "Temperature set to ${cmd.targetTemperature.toInt()}\u00B0${roomSuffix(cmd.roomName)} (${devices.size})",
-            devicesAffected = devices.size,
+            success = updated.isNotEmpty(),
+            message = "Temperature set to ${cmd.targetTemperature.toInt()}\u00B0${roomSuffix(cmd.roomName)} (${updated.size})",
+            devicesAffected = updated.size,
         )
     }
 
@@ -141,7 +155,14 @@ class ExecuteVoiceCommandUseCase(
 
         val updated = locks
             .filter { it.isLocked != cmd.lock }
-            .map { it.copy(isLocked = cmd.lock) }
+            .mapNotNull { lock ->
+                try {
+                    deviceControlPort.lockDoor(lock.id, cmd.lock)
+                    lock.toggle()
+                } catch (_: Exception) {
+                    null
+                }
+            }
 
         if (updated.isNotEmpty()) {
             deviceRepository.saveAll(updated)
@@ -149,9 +170,9 @@ class ExecuteVoiceCommandUseCase(
 
         val action = if (cmd.lock) "locked" else "unlocked"
         return VoiceCommandResult(
-            success = true,
-            message = "Door $action (${locks.size})",
-            devicesAffected = locks.size,
+            success = updated.isNotEmpty(),
+            message = "Door $action (${updated.size})",
+            devicesAffected = updated.size,
         )
     }
 
