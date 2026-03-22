@@ -1,6 +1,7 @@
 package com.vpedrosa.smarthome.voice.domain.model
 
 import com.vpedrosa.smarthome.shared.domain.model.DeviceType
+import kotlinx.datetime.Instant
 
 /**
  * Represents the result of parsing and executing a voice command.
@@ -17,7 +18,7 @@ data class VoiceCommandResult(
 data class VoiceCommand(
     val text: String,
     val result: VoiceCommandResult,
-    val timestamp: kotlin.time.Instant,
+    val timestamp: Instant,
 )
 
 /**

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Clock
+import kotlinx.datetime.Clock
 
 data class VoiceControlUiState(
     val isListening: Boolean = false,

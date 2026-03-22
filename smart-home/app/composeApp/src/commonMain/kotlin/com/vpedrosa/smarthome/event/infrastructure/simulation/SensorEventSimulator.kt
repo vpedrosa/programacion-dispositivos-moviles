@@ -16,9 +16,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.random.Random
-import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
 
 class SensorEventSimulator(
