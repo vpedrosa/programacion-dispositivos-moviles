@@ -40,6 +40,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -247,7 +249,7 @@ fun DeviceDetailScreen(
                             device = device,
                             roomName = state.roomName,
                             onToggle = viewModel::onToggle,
-                            onToggleCasting = viewModel::onToggleCasting,
+                            onLaunchContent = viewModel::onLaunchContent,
                         )
                         is Switch -> SwitchContent(
                             device = device,
@@ -967,7 +969,7 @@ private fun SmartTvContent(
     device: SmartTv,
     roomName: String?,
     onToggle: () -> Unit,
-    onToggleCasting: () -> Unit,
+    onLaunchContent: (String) -> Unit,
 ) {
     val navy = MaterialTheme.colorScheme.primary
 
@@ -1030,12 +1032,21 @@ private fun SmartTvContent(
             contentAlignment = Alignment.Center,
         ) {
             if (device.isCasting) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = stringResource(Res.string.a11y_play_video),
-                    modifier = Modifier.size(48.dp),
-                    tint = Color.White.copy(alpha = 0.8f),
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = stringResource(Res.string.a11y_play_video),
+                        modifier = Modifier.size(48.dp),
+                        tint = Color.White.copy(alpha = 0.8f),
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = device.contentUrl ?: "",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.White.copy(alpha = 0.5f),
+                        maxLines = 2,
+                    )
+                }
             } else {
                 Icon(
                     imageVector = Icons.Default.CastConnected,
@@ -1057,15 +1068,34 @@ private fun SmartTvContent(
         )
 
         Spacer(modifier = Modifier.height(12.dp))
+
+        var urlInput by remember { mutableStateOf("") }
+
+        OutlinedTextField(
+            value = urlInput,
+            onValueChange = { urlInput = it },
+            label = { Text("URL") },
+            placeholder = { Text("https://example.com/video.mp4") },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            enabled = device.isOn,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = navy,
+                cursorColor = navy,
+                focusedLabelColor = navy,
+            ),
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
         Button(
-            onClick = onToggleCasting,
+            onClick = { onLaunchContent(urlInput) },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = navy,
                 contentColor = Color.White,
             ),
             shape = RoundedCornerShape(12.dp),
-            enabled = device.isOn,
+            enabled = device.isOn && urlInput.isNotBlank(),
         ) {
             Icon(
                 imageVector = Icons.Default.CastConnected,

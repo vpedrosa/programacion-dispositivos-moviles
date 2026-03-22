@@ -31,6 +31,7 @@ internal class FakeVoiceDeviceControlPort : DeviceControlPort {
     override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {}
     override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {}
     override suspend fun setWindowCoveringPosition(deviceId: DeviceId, openPercent: Int) {}
+    override suspend fun launchContent(deviceId: DeviceId, url: String) {}
 }
 
 class ExecuteVoiceCommandUseCaseTest {
@@ -82,7 +83,7 @@ class ExecuteVoiceCommandUseCaseTest {
 
     @Test
     fun turnOffTv() = runTest {
-        val tv = SmartTv(DeviceId("tv1"), "Smart TV", RoomId("room-1"), isOn = true, isCasting = false)
+        val tv = SmartTv(DeviceId("tv1"), "Smart TV", RoomId("room-1"), isOn = true)
         deviceRepo.save(tv)
 
         val result = execute(ParsedVoiceCommand.ToggleDevices(DeviceType.SMART_TV, turnOn = false))

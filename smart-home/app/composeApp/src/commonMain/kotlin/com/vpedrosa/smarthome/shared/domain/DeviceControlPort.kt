@@ -11,4 +11,5 @@ interface DeviceControlPort {
     suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double)
     suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean)
     suspend fun setWindowCoveringPosition(deviceId: DeviceId, openPercent: Int)
+    suspend fun launchContent(deviceId: DeviceId, url: String)
 }

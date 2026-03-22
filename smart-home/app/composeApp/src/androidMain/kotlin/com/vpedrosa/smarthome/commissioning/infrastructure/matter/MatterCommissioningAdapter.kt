@@ -101,7 +101,7 @@ class MatterCommissioningAdapter(
             DeviceType.LOCK -> Lock(id, device.name, null, isLocked = true)
             DeviceType.BLIND -> Blind(id, device.name, null, openingLevel = 0)
             DeviceType.CONTACT_SENSOR -> ContactSensor(id, device.name, null, isOpen = false)
-            DeviceType.SMART_TV -> SmartTv(id, device.name, null, isOn = false, isCasting = false)
+            DeviceType.SMART_TV -> SmartTv(id, device.name, null, isOn = false)
             DeviceType.SMOKE_SENSOR -> SmokeSensor(id, device.name, null, isSmokeDetected = false)
             DeviceType.WATER_LEAK_SENSOR -> WaterLeakSensor(id, device.name, null, isLeakDetected = false)
             DeviceType.TEMPERATURE_SENSOR -> TemperatureSensor(id, device.name, null, currentTemperature = 21.0)

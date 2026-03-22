@@ -38,6 +38,7 @@ internal class FakeDeviceControlPort : DeviceControlPort {
     override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {}
     override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {}
     override suspend fun setWindowCoveringPosition(deviceId: DeviceId, openPercent: Int) {}
+    override suspend fun launchContent(deviceId: DeviceId, url: String) {}
 }
 
 // region ToggleDeviceUseCase
@@ -69,7 +70,7 @@ class ToggleDeviceUseCaseTest {
         name = "TV",
         roomId = RoomId("room-1"),
         isOn = false,
-        isCasting = false,
+        contentUrl = null,
     )
     private val thermostat = Thermostat(
         id = DeviceId("therm-1"),
@@ -530,7 +531,7 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
     @Test
     fun bulkToggleSmartTv_turnsOnAll() = runTest {
-        val tv = SmartTv(DeviceId("tv1"), "TV", RoomId("room-1"), isOn = false, isCasting = false)
+        val tv = SmartTv(DeviceId("tv1"), "TV", RoomId("room-1"), isOn = false)
         val repo = InMemoryDeviceRepository(listOf(tv))
         val useCase = BulkToggleDevicesByTypeUseCase(repo, FakeDeviceControlPort())
 

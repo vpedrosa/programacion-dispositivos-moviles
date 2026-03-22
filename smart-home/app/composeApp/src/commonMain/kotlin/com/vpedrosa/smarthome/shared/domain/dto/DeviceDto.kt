@@ -187,14 +187,14 @@ data class SmartTvDto(
     override val name: String,
     override val roomId: String?,
     val isOn: Boolean,
-    val isCasting: Boolean,
+    val contentUrl: String? = null,
 ) : DeviceDto {
     override fun toDomain(): SmartTv = SmartTv(
         id = DeviceId(id),
         name = name,
         roomId = roomId?.let { RoomId(it) },
         isOn = isOn,
-        isCasting = isCasting,
+        contentUrl = contentUrl,
     )
 }
 
@@ -264,6 +264,6 @@ fun Device.toDto(): DeviceDto = when (this) {
         name = name,
         roomId = roomId?.value,
         isOn = isOn,
-        isCasting = isCasting,
+        contentUrl = contentUrl,
     )
 }

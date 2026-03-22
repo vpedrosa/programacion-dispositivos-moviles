@@ -13,7 +13,7 @@ import com.vpedrosa.smarthome.shared.domain.RoomRepository
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeInRoomUseCase
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.application.GetAllDevicesWithRoomUseCase
-import com.vpedrosa.smarthome.device.application.ToggleCastingUseCase
+import com.vpedrosa.smarthome.device.application.LaunchContentUseCase
 import com.vpedrosa.smarthome.room.application.SaveRoomUseCase
 import com.vpedrosa.smarthome.commissioning.application.CommissionDeviceUseCase
 import com.vpedrosa.smarthome.voice.application.ExecuteVoiceCommandUseCase
@@ -44,7 +44,7 @@ val deviceModule = module {
 
     // Use cases
     factory { GetAllDevicesWithRoomUseCase(get(), get()) }
-    factory { ToggleCastingUseCase(get()) }
+    factory { LaunchContentUseCase(get(), get()) }
     factory { SaveRoomUseCase(get()) }
     factory { ToggleDeviceUseCase(get(), get()) }
     factory { UpdateLightUseCase(get(), get()) }

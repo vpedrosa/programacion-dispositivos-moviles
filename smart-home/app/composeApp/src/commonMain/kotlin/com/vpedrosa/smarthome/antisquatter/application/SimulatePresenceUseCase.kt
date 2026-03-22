@@ -65,10 +65,12 @@ class SimulatePresenceUseCase(
     ) {
         if (!videoConfig.isEnabled) return
 
+        val simulatedUrl = videoConfig.videoUrl.ifBlank { null }
         smartTvs.forEach { tv ->
-            val needsUpdate = tv.isOn != anySlotActive || tv.isCasting != anySlotActive
+            val targetUrl = if (anySlotActive) simulatedUrl else null
+            val needsUpdate = tv.isOn != anySlotActive || tv.contentUrl != targetUrl
             if (needsUpdate) {
-                deviceRepository.save(tv.copy(isOn = anySlotActive, isCasting = anySlotActive))
+                deviceRepository.save(tv.copy(isOn = anySlotActive, contentUrl = targetUrl))
             }
         }
     }

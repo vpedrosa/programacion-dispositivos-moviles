@@ -116,6 +116,37 @@ class MatterDeviceControlAdapter(
         }
     }
 
+    override suspend fun launchContent(deviceId: DeviceId, url: String) {
+        executeWithRetry(deviceId) { pointer ->
+            val cluster = ChipClusters.ContentLauncherCluster(pointer, ENDPOINT_ID)
+            suspendContentLaunch(cluster, url)
+            Log.d(TAG, "${deviceId.value}: LaunchURL -> $url")
+        }
+    }
+
+    private suspend fun suspendContentLaunch(
+        cluster: ChipClusters.ContentLauncherCluster,
+        url: String,
+    ) = withTimeout(COMMAND_TIMEOUT_MS) {
+        suspendCancellableCoroutine { cont ->
+            cluster.launchURL(
+                object : ChipClusters.ContentLauncherCluster.LauncherResponseCallback {
+                    override fun onSuccess(status: Int, data: Optional<String>) {
+                        if (cont.isActive) cont.resume(Unit)
+                    }
+
+                    override fun onError(error: Exception) {
+                        Log.e(TAG, "LaunchURL error", error)
+                        if (cont.isActive) cont.resumeWithException(error)
+                    }
+                },
+                url,
+                Optional.of(url), // displayString
+                Optional.empty(), // brandingInformation
+            )
+        }
+    }
+
     /**
      * Ejecuta un comando usando el pointer cacheado del comisionamiento.
      * Si falla (sesión expirada), intenta re-establecer PASE con nodeId

@@ -45,7 +45,6 @@ class SimulatePresenceUseCaseTest {
         name = "Salon TV",
         roomId = salonId,
         isOn = false,
-        isCasting = false,
     )
 
     private val defaultVideoConfig = VideoConfig(
@@ -193,7 +192,7 @@ class SimulatePresenceUseCaseTest {
 
     @Test
     fun turnsOffTvOutsideLightSlots() = runTest {
-        val tvOn = smartTv.copy(isOn = true, isCasting = true)
+        val tvOn = smartTv.copy(isOn = true, contentUrl = "https://example.com/video")
         val deviceRepo = InMemoryDeviceRepository(listOf(tvOn))
         val config = AntiSquatterConfig(
             isEnabled = true,

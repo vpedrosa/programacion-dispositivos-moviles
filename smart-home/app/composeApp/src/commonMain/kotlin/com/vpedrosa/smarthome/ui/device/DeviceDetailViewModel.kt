@@ -18,7 +18,7 @@ import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
 import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
-import com.vpedrosa.smarthome.device.application.ToggleCastingUseCase
+import com.vpedrosa.smarthome.device.application.LaunchContentUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.application.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.application.UpdateLightUseCase
@@ -51,7 +51,7 @@ class DeviceDetailViewModel(
     private val updateLight: UpdateLightUseCase,
     private val updateBlind: UpdateBlindUseCase,
     private val updateThermostat: UpdateThermostatUseCase,
-    private val toggleCasting: ToggleCastingUseCase,
+    private val launchContent: LaunchContentUseCase,
 ) : ViewModel() {
 
     private val deviceId = DeviceId(deviceIdValue)
@@ -129,8 +129,8 @@ class DeviceDetailViewModel(
         }
     }
 
-    fun onToggleCasting() {
-        viewModelScope.launch { runCatching { toggleCasting(deviceId) } }
+    fun onLaunchContent(url: String) {
+        viewModelScope.launch { runCatching { launchContent(deviceId, url) } }
     }
 
     private fun debouncedControl(block: suspend () -> Unit) {
