@@ -19,7 +19,7 @@ import com.vpedrosa.smarthome.navigation.Rooms
 import com.vpedrosa.smarthome.navigation.Settings
 import com.vpedrosa.smarthome.navigation.SmartHomeNavHost
 import com.vpedrosa.smarthome.ui.components.BottomBarTab
-import com.vpedrosa.smarthome.event.infrastructure.simulation.SensorEventSimulator
+import com.vpedrosa.smarthome.event.domain.BackgroundSimulatorPort
 import com.vpedrosa.smarthome.ui.components.NotificationPermissionHandler
 import com.vpedrosa.smarthome.ui.components.SmartHomeBottomBar
 import org.koin.compose.koinInject
@@ -50,7 +50,7 @@ private val screensWithBottomBar = setOf(
 
 @Composable
 fun App() {
-    val simulator = koinInject<SensorEventSimulator>()
+    val simulator = koinInject<BackgroundSimulatorPort>()
     LaunchedEffect(Unit) { simulator.start() }
 
     // Request notification permission at startup (Android 13+)

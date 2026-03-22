@@ -25,6 +25,7 @@ import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.application.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.application.UpdateLightUseCase
 import com.vpedrosa.smarthome.device.application.UpdateThermostatUseCase
+import com.vpedrosa.smarthome.event.domain.BackgroundSimulatorPort
 import com.vpedrosa.smarthome.event.infrastructure.simulation.SensorEventSimulator
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
 import kotlinx.coroutines.CoroutineScope
@@ -57,7 +58,7 @@ val deviceModule = module {
     factory { ExecuteVoiceCommandUseCase(get(), get(), get()) }
 
     // Sensor event simulator (singleton, lazy start)
-    single {
+    single<BackgroundSimulatorPort> {
         SensorEventSimulator(
             addDeviceEvent = get(),
             deviceRepository = get(),

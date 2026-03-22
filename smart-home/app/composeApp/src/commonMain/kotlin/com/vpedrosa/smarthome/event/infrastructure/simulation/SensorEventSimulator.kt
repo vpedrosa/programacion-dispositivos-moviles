@@ -11,6 +11,7 @@ import com.vpedrosa.smarthome.shared.domain.model.Thermostat
 import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
+import com.vpedrosa.smarthome.event.domain.BackgroundSimulatorPort
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -24,14 +25,14 @@ class SensorEventSimulator(
     private val addDeviceEvent: AddDeviceEventUseCase,
     private val deviceRepository: DeviceRepository,
     private val scope: CoroutineScope,
-) {
+) : BackgroundSimulatorPort {
 
     private var started = false
 
     /** Tracks when each ContactSensor was first detected as open. */
     private val doorOpenSince = mutableMapOf<DeviceId, Instant>()
 
-    fun start() {
+    override fun start() {
         if (started) return
         started = true
 
