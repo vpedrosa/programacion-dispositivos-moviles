@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FinanzApp — Dashboard</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Variables ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0f0f14;
+      --surface: #1a1a24;
+      --surface-hover: #22222e;
+      --border: #2a2a38;
+      --text: #eaeaf0;
+      --text-secondary: #8888a0;
+      --accent: #6c5ce7;
+      --accent-light: #a29bfe;
+      --green: #00d2a0;
+      --green-bg: rgba(0, 210, 160, 0.12);
+      --red: #ff6b81;
+      --red-bg: rgba(255, 107, 129, 0.12);
+      --yellow: #ffc048;
+      --yellow-bg: rgba(255, 192, 72, 0.12);
+      --blue: #54a0ff;
+      --blue-bg: rgba(84, 160, 255, 0.12);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+      padding-bottom: 88px;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ── App Container ── */
+    .app {
+      max-width: 430px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(to bottom, var(--bg) 60%, transparent);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .header-left { display: flex; align-items: center; gap: 12px; }
+
+    .avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 16px;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .greeting { font-size: 13px; color: var(--text-secondary); }
+    .user-name { font-size: 17px; font-weight: 700; margin-top: 1px; }
+
+    .header-actions { display: flex; gap: 8px; }
+
+    .icon-btn {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .icon-btn:hover { background: var(--surface-hover); color: var(--text); }
+    .icon-btn .badge {
+      position: absolute; top: -3px; right: -3px;
+      width: 10px; height: 10px;
+      background: var(--red);
+      border-radius: 50%;
+      border: 2px solid var(--bg);
+    }
+
+    /* ── Balance Card ── */
+    .balance-card {
+      margin: 8px 20px 20px;
+      background: linear-gradient(135deg, #6c5ce7, #a29bfe 50%, #74b9ff);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(108, 92, 231, 0.3);
+    }
+
+    .balance-card::before {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      top: -80px; right: -40px;
+    }
+    .balance-card::after {
+      content: '';
+      position: absolute;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      bottom: -50px; left: -20px;
+    }
+
+    .balance-label {
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 8px;
+    }
+    .balance-amount {
+      font-size: 36px;
+      font-weight: 800;
+      color: white;
+      letter-spacing: -1px;
+    }
+    .balance-amount .cents { font-size: 22px; font-weight: 600; opacity: 0.8; }
+
+    .balance-change {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 10px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.18);
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+
+    /* ── Quick Actions ── */
+    .quick-actions {
+      display: flex;
+      gap: 12px;
+      padding: 0 20px;
+      margin-bottom: 24px;
+    }
+
+    .quick-action {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 8px;
+      padding: 16px 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quick-action:hover { background: var(--surface-hover); transform: translateY(-2px); }
+
+    .quick-action-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quick-action-icon.send { background: var(--blue-bg); color: var(--blue); }
+    .quick-action-icon.receive { background: var(--green-bg); color: var(--green); }
+    .quick-action-icon.budget { background: var(--yellow-bg); color: var(--yellow); }
+    .quick-action-icon.more { background: rgba(136, 136, 160, 0.12); color: var(--text-secondary); }
+
+    .quick-action span {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* ── Section ── */
+    .section {
+      padding: 0 20px;
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .section-link {
+      font-size: 13px;
+      color: var(--accent-light);
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .section-link:hover { text-decoration: underline; }
+
+    /* ── Income / Expense Row ── */
+    .stats-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stat-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-icon {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stat-icon.income { background: var(--green-bg); color: var(--green); }
+    .stat-icon.expense { background: var(--red-bg); color: var(--red); }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .stat-amount {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Chart ── */
+    .chart-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .chart-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 20px;
+    }
+
+    .chart-tab {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: none;
+    }
+    .chart-tab.active {
+      background: var(--accent);
+      color: white;
+    }
+    .chart-tab:hover:not(.active) { color: var(--text); }
+
+    .chart-area {
+      position: relative;
+      height: 180px;
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      padding-bottom: 28px;
+    }
+
+    .chart-bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+    }
+
+    .chart-bars {
+      display: flex;
+      gap: 3px;
+      align-items: flex-end;
+      width: 100%;
+      justify-content: center;
+      height: 140px;
+    }
+
+    .chart-bar {
+      width: 12px;
+      border-radius: 6px 6px 3px 3px;
+      transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      position: relative;
+    }
+    .chart-bar.income { background: var(--green); opacity: 0.85; }
+    .chart-bar.income:hover { opacity: 1; }
+    .chart-bar.expense { background: var(--red); opacity: 0.85; }
+    .chart-bar.expense:hover { opacity: 1; }
+
+    .chart-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      position: absolute;
+      bottom: 0;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .legend-dot.income { background: var(--green); }
+    .legend-dot.expense { background: var(--red); }
+
+    /* ── Budget Progress ── */
+    .budget-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .budget-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .budget-item:hover { background: var(--surface-hover); }
+
+    .budget-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .budget-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .budget-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+
+    .budget-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .budget-amounts {
+      text-align: right;
+    }
+
+    .budget-spent {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .budget-total {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .budget-bar {
+      height: 6px;
+      background: var(--bg);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .budget-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ── Transactions ── */
+    .transaction-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .transaction {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .transaction:hover { background: var(--surface); }
+
+    .tx-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tx-details { flex: 1; min-width: 0; }
+    .tx-name {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tx-category {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .tx-right { text-align: right; flex-shrink: 0; }
+    .tx-amount {
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .tx-amount.negative { color: var(--red); }
+    .tx-amount.positive { color: var(--green); }
+    .tx-date {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* ── Savings Goals ── */
+    .goals-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 0 20px 4px;
+      margin: 0 -20px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .goals-scroll::-webkit-scrollbar { display: none; }
+
+    .goal-card {
+      min-width: 200px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      scroll-snap-align: start;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .goal-card:hover { background: var(--surface-hover); transform: translateY(-2px); }
+
+    .goal-emoji { font-size: 28px; margin-bottom: 10px; }
+
+    .goal-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .goal-amounts {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .goal-amounts strong { color: var(--text); font-weight: 700; }
+
+    .goal-bar {
+      height: 6px;
+      background: var(--bg);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .goal-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .goal-percent {
+      font-size: 11px;
+      color: var(--accent-light);
+      font-weight: 600;
+    }
+
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 430px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      z-index: 200;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .nav-item {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 4px;
+      padding: 6px 16px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+      border: none;
+      background: none;
+      font-family: inherit;
+    }
+    .nav-item.active { color: var(--accent-light); }
+    .nav-item:hover { color: var(--text); }
+    .nav-item span { font-size: 10px; font-weight: 600; }
+
+    .nav-add {
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-light));
+      border: none;
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(108, 92, 231, 0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: -20px;
+    }
+    .nav-add:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(108, 92, 231, 0.5); }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate {
+      animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .delay-1 { animation-delay: 0.05s; }
+    .delay-2 { animation-delay: 0.1s; }
+    .delay-3 { animation-delay: 0.15s; }
+    .delay-4 { animation-delay: 0.2s; }
+    .delay-5 { animation-delay: 0.25s; }
+    .delay-6 { animation-delay: 0.3s; }
+
+    /* ── Tooltip ── */
+    .tooltip {
+      position: absolute;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: all 0.2s;
+      white-space: nowrap;
+      z-index: 50;
+      box-shadow: var(--shadow);
+    }
+    .tooltip.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header animate">
+      <div class="header-left">
+        <div class="avatar">AM</div>
+        <div>
+          <div class="greeting">Buenos dias</div>
+          <div class="user-name">Alejandro M.</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn">
+          <i data-lucide="search" style="width:18px;height:18px"></i>
+        </button>
+        <button class="icon-btn">
+          <i data-lucide="bell" style="width:18px;height:18px"></i>
+          <span class="badge"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Balance Card -->
+    <div class="balance-card animate delay-1">
+      <div class="balance-label">
+        <i data-lucide="wallet" style="width:14px;height:14px"></i>
+        Saldo total
+      </div>
+      <div class="balance-amount">
+        12.458<span class="cents">,75 &euro;</span>
+      </div>
+      <div class="balance-change">
+        <i data-lucide="trending-up" style="width:13px;height:13px"></i>
+        +8,3% este mes
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions animate delay-2">
+      <div class="quick-action">
+        <div class="quick-action-icon send">
+          <i data-lucide="send" style="width:18px;height:18px"></i>
+        </div>
+        <span>Enviar</span>
+      </div>
+      <div class="quick-action">
+        <div class="quick-action-icon receive">
+          <i data-lucide="download" style="width:18px;height:18px"></i>
+        </div>
+        <span>Recibir</span>
+      </div>
+      <div class="quick-action">
+        <div class="quick-action-icon budget">
+          <i data-lucide="pie-chart" style="width:18px;height:18px"></i>
+        </div>
+        <span>Presupuesto</span>
+      </div>
+      <div class="quick-action">
+        <div class="quick-action-icon more">
+          <i data-lucide="grid-3x3" style="width:18px;height:18px"></i>
+        </div>
+        <span>Mas</span>
+      </div>
+    </div>
+
+    <!-- Income / Expense -->
+    <div class="section animate delay-2">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon income">
+              <i data-lucide="arrow-down-left" style="width:16px;height:16px"></i>
+            </div>
+            <span class="stat-label">Ingresos</span>
+          </div>
+          <div class="stat-amount" style="color:var(--green)">4.850 &euro;</div>
+          <div class="stat-sub">Marzo 2026</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon expense">
+              <i data-lucide="arrow-up-right" style="width:16px;height:16px"></i>
+            </div>
+            <span class="stat-label">Gastos</span>
+          </div>
+          <div class="stat-amount" style="color:var(--red)">2.340 &euro;</div>
+          <div class="stat-sub">Marzo 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="section animate delay-3">
+      <div class="section-header">
+        <div class="section-title">Resumen mensual</div>
+      </div>
+      <div class="chart-container">
+        <div class="chart-tabs">
+          <button class="chart-tab active" data-period="6m">6 meses</button>
+          <button class="chart-tab" data-period="1y">1 ano</button>
+          <button class="chart-tab" data-period="all">Todo</button>
+        </div>
+        <div class="chart-area" id="chart"></div>
+        <div class="chart-legend">
+          <div class="legend-item"><span class="legend-dot income"></span>Ingresos</div>
+          <div class="legend-item"><span class="legend-dot expense"></span>Gastos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Budget -->
+    <div class="section animate delay-4">
+      <div class="section-header">
+        <div class="section-title">Presupuestos</div>
+        <a class="section-link">Ver todo</a>
+      </div>
+      <div class="budget-list" id="budgets"></div>
+    </div>
+
+    <!-- Savings Goals -->
+    <div class="section animate delay-5">
+      <div class="section-header">
+        <div class="section-title">Metas de ahorro</div>
+        <a class="section-link">Ver todo</a>
+      </div>
+      <div class="goals-scroll" id="goals"></div>
+    </div>
+
+    <!-- Transactions -->
+    <div class="section animate delay-6">
+      <div class="section-header">
+        <div class="section-title">Ultimas transacciones</div>
+        <a class="section-link">Ver todo</a>
+      </div>
+      <div class="transaction-list" id="transactions"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-item active">
+      <i data-lucide="layout-dashboard" style="width:20px;height:20px"></i>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item">
+      <i data-lucide="bar-chart-3" style="width:20px;height:20px"></i>
+      <span>Estadisticas</span>
+    </button>
+    <button class="nav-add">
+      <i data-lucide="plus" style="width:24px;height:24px"></i>
+    </button>
+    <button class="nav-item">
+      <i data-lucide="credit-card" style="width:20px;height:20px"></i>
+      <span>Tarjetas</span>
+    </button>
+    <button class="nav-item">
+      <i data-lucide="settings" style="width:20px;height:20px"></i>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    // ── Data ──
+    const chartData = {
+      '6m': {
+        labels: ['Oct', 'Nov', 'Dic', 'Ene', 'Feb', 'Mar'],
+        income:  [3800, 4200, 5100, 4000, 4600, 4850],
+        expense: [2600, 2900, 3400, 2200, 2500, 2340],
+      },
+      '1y': {
+        labels: ['Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic','Ene','Feb','Mar'],
+        income:  [3500,3900,4100,3700,4000,3600,3800,4200,5100,4000,4600,4850],
+        expense: [2200,2500,2700,2400,2600,2800,2600,2900,3400,2200,2500,2340],
+      },
+      'all': {
+        labels: ['2024-H1','2024-H2','2025-H1','2025-H2','2026-H1'],
+        income:  [22000,24000,25500,27000,14300],
+        expense: [16000,17500,18200,17000,7080],
+      }
+    };
+
+    const budgets = [
+      { name: 'Alimentacion',   icon: '🛒', spent: 320, limit: 450, color: 'var(--green)' },
+      { name: 'Transporte',     icon: '🚗', spent: 180, limit: 200, color: 'var(--yellow)' },
+      { name: 'Ocio',           icon: '🎬', spent: 245, limit: 250, color: 'var(--red)' },
+      { name: 'Subscripciones', icon: '📱', spent: 42,  limit: 80,  color: 'var(--blue)' },
+    ];
+
+    const goals = [
+      { emoji: '✈️', name: 'Vacaciones',     current: 1800, target: 3000 },
+      { emoji: '💻', name: 'MacBook Pro',     current: 1200, target: 2500 },
+      { emoji: '🏠', name: 'Fondo vivienda', current: 8500, target: 30000 },
+      { emoji: '🚗', name: 'Coche nuevo',    current: 4200, target: 15000 },
+    ];
+
+    const transactions = [
+      { name: 'Mercadona',       category: 'Alimentacion',   amount: -67.30,  date: 'Hoy',  bg: 'var(--green-bg)',  color: 'var(--green)',  icon: 'shopping-cart' },
+      { name: 'Nomina Empresa',  category: 'Salario',        amount: 2850.00, date: 'Ayer', bg: 'var(--blue-bg)',   color: 'var(--blue)',   icon: 'building-2' },
+      { name: 'Netflix',         category: 'Entretenimiento', amount: -17.99,  date: '20 Mar', bg: 'var(--red-bg)',  color: 'var(--red)',    icon: 'tv' },
+      { name: 'Gasolinera Repsol', category: 'Transporte',   amount: -55.00,  date: '19 Mar', bg: 'var(--yellow-bg)', color: 'var(--yellow)', icon: 'fuel' },
+      { name: 'Bizum recibido',  category: 'Transferencia',  amount: 25.00,   date: '18 Mar', bg: 'var(--green-bg)', color: 'var(--green)',  icon: 'arrow-down-left' },
+      { name: 'Gimnasio',        category: 'Salud',          amount: -39.90,  date: '17 Mar', bg: 'var(--accent)', color: 'var(--accent-light)', icon: 'dumbbell' },
+    ];
+
+    // ── Render Chart ──
+    function renderChart(period) {
+      const data = chartData[period];
+      const chart = document.getElementById('chart');
+      const maxVal = Math.max(...data.income, ...data.expense);
+      const maxHeight = 130;
+
+      chart.innerHTML = data.labels.map((label, i) => {
+        const incomeH = (data.income[i] / maxVal) * maxHeight;
+        const expenseH = (data.expense[i] / maxVal) * maxHeight;
+        return `
+          <div class="chart-bar-group">
+            <div class="chart-bars">
+              <div class="chart-bar income" style="height:0px"
+                   data-target-height="${incomeH}"
+                   data-value="${data.income[i].toLocaleString('es-ES')} €"
+                   data-type="Ingresos"></div>
+              <div class="chart-bar expense" style="height:0px"
+                   data-target-height="${expenseH}"
+                   data-value="${data.expense[i].toLocaleString('es-ES')} €"
+                   data-type="Gastos"></div>
+            </div>
+            <span class="chart-label">${label}</span>
+          </div>`;
+      }).join('');
+
+      // Animate bars
+      requestAnimationFrame(() => {
+        chart.querySelectorAll('.chart-bar').forEach((bar, i) => {
+          setTimeout(() => {
+            bar.style.height = bar.dataset.targetHeight + 'px';
+          }, i * 40);
+        });
+      });
+
+      // Tooltips
+      chart.querySelectorAll('.chart-bar').forEach(bar => {
+        bar.addEventListener('mouseenter', (e) => showTooltip(e, `${bar.dataset.type}: ${bar.dataset.value}`));
+        bar.addEventListener('mouseleave', hideTooltip);
+      });
+    }
+
+    // ── Tooltip ──
+    const tooltip = document.getElementById('tooltip');
+    function showTooltip(e, text) {
+      tooltip.textContent = text;
+      tooltip.classList.add('visible');
+      const rect = e.target.getBoundingClientRect();
+      const appRect = document.querySelector('.app').getBoundingClientRect();
+      tooltip.style.left = (rect.left - appRect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+      tooltip.style.top = (rect.top - appRect.top - 36) + 'px';
+    }
+    function hideTooltip() {
+      tooltip.classList.remove('visible');
+    }
+
+    // ── Render Budgets ──
+    function renderBudgets() {
+      const container = document.getElementById('budgets');
+      container.innerHTML = budgets.map(b => {
+        const pct = Math.min((b.spent / b.limit) * 100, 100);
+        const fillColor = pct >= 90 ? 'var(--red)' : pct >= 70 ? 'var(--yellow)' : b.color;
+        return `
+          <div class="budget-item">
+            <div class="budget-top">
+              <div class="budget-info">
+                <div class="budget-icon" style="background:${b.color}22;font-size:18px">${b.icon}</div>
+                <div class="budget-name">${b.name}</div>
+              </div>
+              <div class="budget-amounts">
+                <div class="budget-spent">${b.spent} &euro;</div>
+                <div class="budget-total">de ${b.limit} &euro;</div>
+              </div>
+            </div>
+            <div class="budget-bar">
+              <div class="budget-fill" style="width:0%;background:${fillColor}" data-target-width="${pct}%"></div>
+            </div>
+          </div>`;
+      }).join('');
+
+      // Animate
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          container.querySelectorAll('.budget-fill').forEach(fill => {
+            fill.style.width = fill.dataset.targetWidth;
+          });
+        }, 200);
+      });
+    }
+
+    // ── Render Goals ──
+    function renderGoals() {
+      const container = document.getElementById('goals');
+      container.innerHTML = goals.map(g => {
+        const pct = Math.round((g.current / g.target) * 100);
+        return `
+          <div class="goal-card">
+            <div class="goal-emoji">${g.emoji}</div>
+            <div class="goal-name">${g.name}</div>
+            <div class="goal-amounts">
+              <strong>${g.current.toLocaleString('es-ES')} &euro;</strong> / ${g.target.toLocaleString('es-ES')} &euro;
+            </div>
+            <div class="goal-bar">
+              <div class="goal-fill" style="width:0%" data-target-width="${pct}%"></div>
+            </div>
+            <div class="goal-percent">${pct}% completado</div>
+          </div>`;
+      }).join('');
+
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          container.querySelectorAll('.goal-fill').forEach(fill => {
+            fill.style.width = fill.dataset.targetWidth;
+          });
+        }, 400);
+      });
+    }
+
+    // ── Render Transactions ──
+    function renderTransactions() {
+      const container = document.getElementById('transactions');
+      container.innerHTML = transactions.map(tx => `
+        <div class="transaction">
+          <div class="tx-icon" style="background:${tx.bg}; color:${tx.color}">
+            <i data-lucide="${tx.icon}" style="width:20px;height:20px"></i>
+          </div>
+          <div class="tx-details">
+            <div class="tx-name">${tx.name}</div>
+            <div class="tx-category">${tx.category}</div>
+          </div>
+          <div class="tx-right">
+            <div class="tx-amount ${tx.amount < 0 ? 'negative' : 'positive'}">
+              ${tx.amount < 0 ? '' : '+'}${tx.amount.toLocaleString('es-ES', { minimumFractionDigits: 2 })} &euro;
+            </div>
+            <div class="tx-date">${tx.date}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // Re-initialize lucide icons for dynamically created elements
+      lucide.createIcons();
+    }
+
+    // ── Chart Tab Switching ──
+    document.querySelectorAll('.chart-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        renderChart(tab.dataset.period);
+      });
+    });
+
+    // ── Greeting based on time ──
+    function updateGreeting() {
+      const h = new Date().getHours();
+      const greeting = h < 12 ? 'Buenos dias' : h < 20 ? 'Buenas tardes' : 'Buenas noches';
+      document.querySelector('.greeting').textContent = greeting;
+    }
+
+    // ── Init ──
+    updateGreeting();
+    renderChart('6m');
+    renderBudgets();
+    renderGoals();
+    renderTransactions();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
