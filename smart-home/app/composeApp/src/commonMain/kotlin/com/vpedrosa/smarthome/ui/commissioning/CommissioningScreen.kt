@@ -83,6 +83,9 @@ fun CommissioningScreen(
     deviceToName?.let { device ->
         AlertDialog(
             onDismissRequest = { deviceToName = null },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
             title = { Text(stringResource(Res.string.commissioning_name_dialog_title)) },
             text = {
                 Column {
