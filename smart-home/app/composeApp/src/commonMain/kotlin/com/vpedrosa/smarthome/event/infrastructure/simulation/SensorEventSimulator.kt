@@ -32,6 +32,9 @@ class SensorEventSimulator(
     /** Tracks when each ContactSensor was first detected as open. */
     private val doorOpenSince = mutableMapOf<DeviceId, Instant>()
 
+    /** Tracks last notified temperature per sensor to filter small variations. */
+    private val lastNotifiedTemp = mutableMapOf<DeviceId, Double>()
+
     override fun start() {
         if (started) return
         started = true
@@ -51,6 +54,9 @@ class SensorEventSimulator(
             for (sensor in sensors) {
                 val temp = 18.0 + Random.nextDouble() * 10.0
                 val rounded = (temp * 10).toLong() / 10.0
+                val previous = lastNotifiedTemp[sensor.id]
+                if (previous != null && kotlin.math.abs(rounded - previous) <= 1.0) continue
+                lastNotifiedTemp[sensor.id] = rounded
                 addDeviceEvent(
                     DeviceEvent(
                         id = randomId(),
