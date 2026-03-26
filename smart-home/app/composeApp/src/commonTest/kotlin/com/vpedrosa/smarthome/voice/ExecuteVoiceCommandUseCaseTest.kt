@@ -76,7 +76,7 @@ class ExecuteVoiceCommandUseCaseTest {
         val room = Room(RoomId("room-1"), "Salon", null, listOf(DeviceId("l1")))
         roomRepo.save(room)
 
-        val result = execute(ParsedVoiceCommand.ToggleDevices(DeviceType.LIGHT, turnOn = true, roomName = "salon"))
+        val result = execute(ParsedVoiceCommand.ToggleDevices(DeviceType.LIGHT, turnOn = true, roomName = "salon"), "enciende las luces del salon")
 
         assertTrue(result.success)
         assertEquals(1, result.devicesAffected)

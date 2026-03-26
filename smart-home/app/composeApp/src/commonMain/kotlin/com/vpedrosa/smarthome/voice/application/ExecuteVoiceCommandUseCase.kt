@@ -26,11 +26,11 @@ class ExecuteVoiceCommandUseCase(
     private val bulkToggle: BulkToggleDevicesByTypeUseCase,
     private val bulkToggleInRoom: BulkToggleDevicesByTypeInRoomUseCase,
 ) {
-    suspend operator fun invoke(command: ParsedVoiceCommand): VoiceCommandResult {
+    suspend operator fun invoke(command: ParsedVoiceCommand, rawText: String = ""): VoiceCommandResult {
         return when (command) {
-            is ParsedVoiceCommand.ToggleDevices -> executeToggle(command)
-            is ParsedVoiceCommand.SetBlinds -> executeBlinds(command)
-            is ParsedVoiceCommand.SetThermostat -> executeThermostat(command)
+            is ParsedVoiceCommand.ToggleDevices -> executeToggle(command, rawText)
+            is ParsedVoiceCommand.SetBlinds -> executeBlinds(command, rawText)
+            is ParsedVoiceCommand.SetThermostat -> executeThermostat(command, rawText)
             is ParsedVoiceCommand.ToggleLock -> executeLock(command)
             is ParsedVoiceCommand.Unknown -> VoiceCommandResult(
                 success = false,
@@ -40,32 +40,30 @@ class ExecuteVoiceCommandUseCase(
         }
     }
 
-    private suspend fun executeToggle(cmd: ParsedVoiceCommand.ToggleDevices): VoiceCommandResult {
-        val affected = if (cmd.roomName != null) {
-            val roomId = findRoomIdByName(cmd.roomName) ?: return VoiceCommandResult(
-                success = false,
-                message = "No ${cmd.deviceType.name.lowercase()} devices found in ${cmd.roomName}",
-                devicesAffected = 0,
-            )
-            bulkToggleInRoom(roomId, cmd.deviceType, cmd.turnOn)
+    private suspend fun executeToggle(cmd: ParsedVoiceCommand.ToggleDevices, rawText: String): VoiceCommandResult {
+        val room = findRoomInText(rawText)
+        val affected = if (room != null) {
+            bulkToggleInRoom(room.first, cmd.deviceType, cmd.turnOn)
         } else {
             bulkToggle(cmd.deviceType, cmd.turnOn)
         }
 
         val action = if (cmd.turnOn) "turned on" else "turned off"
+        val roomLabel = room?.second
         return VoiceCommandResult(
             success = affected > 0,
-            message = "${cmd.deviceType.name.lowercase().replaceFirstChar { it.uppercase() }} $action${roomSuffix(cmd.roomName)} ($affected)",
+            message = "${cmd.deviceType.name.lowercase().replaceFirstChar { it.uppercase() }} $action${roomSuffix(roomLabel)} ($affected)",
             devicesAffected = affected,
         )
     }
 
-    private suspend fun executeBlinds(cmd: ParsedVoiceCommand.SetBlinds): VoiceCommandResult {
-        val devices = getDevicesByTypeAndRoom(DeviceType.BLIND, cmd.roomName)
+    private suspend fun executeBlinds(cmd: ParsedVoiceCommand.SetBlinds, rawText: String): VoiceCommandResult {
+        val room = findRoomInText(rawText)
+        val devices = getDevicesByTypeAndRoom(DeviceType.BLIND, room?.first)
         if (devices.isEmpty()) {
             return VoiceCommandResult(
                 success = false,
-                message = "No blinds found${roomSuffix(cmd.roomName)}",
+                message = "No blinds found${roomSuffix(room?.second)}",
                 devicesAffected = 0,
             )
         }
@@ -89,17 +87,18 @@ class ExecuteVoiceCommandUseCase(
         val action = if (cmd.open) "opened" else "closed"
         return VoiceCommandResult(
             success = updated.isNotEmpty(),
-            message = "Blinds $action${roomSuffix(cmd.roomName)} (${updated.size})",
+            message = "Blinds $action${roomSuffix(room?.second)} (${updated.size})",
             devicesAffected = updated.size,
         )
     }
 
-    private suspend fun executeThermostat(cmd: ParsedVoiceCommand.SetThermostat): VoiceCommandResult {
-        val devices = getDevicesByTypeAndRoom(DeviceType.THERMOSTAT, cmd.roomName)
+    private suspend fun executeThermostat(cmd: ParsedVoiceCommand.SetThermostat, rawText: String): VoiceCommandResult {
+        val room = findRoomInText(rawText)
+        val devices = getDevicesByTypeAndRoom(DeviceType.THERMOSTAT, room?.first)
         if (devices.isEmpty()) {
             return VoiceCommandResult(
                 success = false,
-                message = "No thermostats found${roomSuffix(cmd.roomName)}",
+                message = "No thermostats found${roomSuffix(room?.second)}",
                 devicesAffected = 0,
             )
         }
@@ -120,7 +119,7 @@ class ExecuteVoiceCommandUseCase(
 
         return VoiceCommandResult(
             success = updated.isNotEmpty(),
-            message = "Temperature set to ${cmd.targetTemperature.toInt()}\u00B0${roomSuffix(cmd.roomName)} (${updated.size})",
+            message = "Temperature set to ${cmd.targetTemperature.toInt()}\u00B0${roomSuffix(room?.second)} (${updated.size})",
             devicesAffected = updated.size,
         )
     }
@@ -171,31 +170,35 @@ class ExecuteVoiceCommandUseCase(
     }
 
     /**
-     * Returns devices of [type], optionally filtered by room name.
-     * Room matching is case-insensitive and accent-insensitive.
+     * Returns devices of [type], optionally filtered by room ID.
      */
     private suspend fun getDevicesByTypeAndRoom(
         type: DeviceType,
-        roomName: String?,
+        roomId: RoomId?,
     ): List<Device> {
         val allOfType = deviceRepository.observeDevicesByType(type).first()
-        if (roomName == null) return allOfType
+        if (roomId == null) return allOfType
 
-        val rooms = roomRepository.observeAllRooms().first()
-        val normalizedRoomName = roomName.normalizeForComparison()
-
-        val matchingRoom = rooms.find { room ->
-            room.name.lowercase().normalizeForComparison().contains(normalizedRoomName)
-        } ?: return emptyList()
-
-        val roomDeviceIds = matchingRoom.deviceIds.map { it.value }.toSet()
+        val room = roomRepository.observeRoom(roomId).first() ?: return allOfType
+        val roomDeviceIds = room.deviceIds.map { it.value }.toSet()
         return allOfType.filter { it.id.value in roomDeviceIds }
     }
 
-    private suspend fun findRoomIdByName(roomName: String): RoomId? {
-        val normalized = roomName.normalizeForComparison()
+    /**
+     * Searches for any known room name in the raw command text.
+     * Returns (RoomId, displayName) if found, null otherwise.
+     */
+    private suspend fun findRoomInText(text: String): Pair<RoomId, String>? {
+        if (text.isBlank()) return null
+        val normalizedText = text.normalizeForComparison()
         val rooms = roomRepository.observeAllRooms().first()
-        return rooms.find { it.name.lowercase().normalizeForComparison().contains(normalized) }?.id
+        return rooms
+            .sortedByDescending { it.name.length }
+            .firstOrNull { room ->
+                val normalizedName = room.name.normalizeForComparison()
+                normalizedText.contains(normalizedName)
+            }
+            ?.let { it.id to it.name }
     }
 
     private fun roomSuffix(roomName: String?): String =

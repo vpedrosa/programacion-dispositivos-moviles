@@ -97,7 +97,7 @@ class VoiceControlViewModel(
 
             val result = try {
                 val parsed = parseVoiceCommand(text)
-                executeVoiceCommand(parsed)
+                executeVoiceCommand(parsed, text)
             } catch (e: Exception) {
                 VoiceCommandResult(
                     success = false,
