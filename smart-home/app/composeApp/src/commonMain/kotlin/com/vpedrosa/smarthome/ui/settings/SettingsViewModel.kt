@@ -11,9 +11,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class SettingsUiState(
-    val sensorAlertsEnabled: Boolean = true,
-    val doorAlertEnabled: Boolean = true,
-    val thermostatEventsEnabled: Boolean = false,
+    val notificationsEnabled: Boolean = true,
 )
 
 class SettingsViewModel(
@@ -23,9 +21,7 @@ class SettingsViewModel(
     val uiState: StateFlow<SettingsUiState> = appSettingsRepository.observeSettings()
         .map { settings ->
             SettingsUiState(
-                sensorAlertsEnabled = settings.sensorAlertsEnabled,
-                doorAlertEnabled = settings.doorAlertEnabled,
-                thermostatEventsEnabled = settings.thermostatEventsEnabled,
+                notificationsEnabled = settings.notificationsEnabled,
             )
         }
         .stateIn(
@@ -34,42 +30,12 @@ class SettingsViewModel(
             initialValue = SettingsUiState(),
         )
 
-    fun toggleSensorAlerts() {
+    fun toggleNotifications() {
         val current = uiState.value
-        saveCurrentSettings(
-            AppSettings(
-                sensorAlertsEnabled = !current.sensorAlertsEnabled,
-                doorAlertEnabled = current.doorAlertEnabled,
-                thermostatEventsEnabled = current.thermostatEventsEnabled,
-            )
-        )
-    }
-
-    fun toggleDoorAlert() {
-        val current = uiState.value
-        saveCurrentSettings(
-            AppSettings(
-                sensorAlertsEnabled = current.sensorAlertsEnabled,
-                doorAlertEnabled = !current.doorAlertEnabled,
-                thermostatEventsEnabled = current.thermostatEventsEnabled,
-            )
-        )
-    }
-
-    fun toggleThermostatEvents() {
-        val current = uiState.value
-        saveCurrentSettings(
-            AppSettings(
-                sensorAlertsEnabled = current.sensorAlertsEnabled,
-                doorAlertEnabled = current.doorAlertEnabled,
-                thermostatEventsEnabled = !current.thermostatEventsEnabled,
-            )
-        )
-    }
-
-    private fun saveCurrentSettings(settings: AppSettings) {
         viewModelScope.launch {
-            appSettingsRepository.saveSettings(settings)
+            appSettingsRepository.saveSettings(
+                AppSettings(notificationsEnabled = !current.notificationsEnabled),
+            )
         }
     }
 }

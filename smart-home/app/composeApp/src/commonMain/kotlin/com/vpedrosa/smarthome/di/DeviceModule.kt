@@ -52,7 +52,7 @@ val deviceModule = module {
     factory { UpdateThermostatUseCase(get(), get()) }
     factory { BulkToggleDevicesByTypeUseCase(get(), get()) }
     factory { BulkToggleDevicesByTypeInRoomUseCase(get(), get(), get()) }
-    factory { AddDeviceEventUseCase(get(), get()) }
+    factory { AddDeviceEventUseCase(get(), get(), get()) }
     factory { SimulatePresenceUseCase(get(), get(), get()) }
     factory { ParseVoiceCommandUseCase() }
     factory { CommissionDeviceUseCase(get(), get(), get()) }

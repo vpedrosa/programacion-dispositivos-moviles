@@ -41,8 +41,6 @@ import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.settings_about
 import smarthome.composeapp.generated.resources.settings_about_value
 import smarthome.composeapp.generated.resources.settings_devices
-import smarthome.composeapp.generated.resources.settings_door_alerts
-import smarthome.composeapp.generated.resources.settings_door_alerts_subtitle
 import smarthome.composeapp.generated.resources.settings_general
 import smarthome.composeapp.generated.resources.settings_language
 import smarthome.composeapp.generated.resources.settings_language_value
@@ -53,10 +51,9 @@ import smarthome.composeapp.generated.resources.settings_notification_denied
 import smarthome.composeapp.generated.resources.settings_notification_granted
 import smarthome.composeapp.generated.resources.settings_notification_permission
 import smarthome.composeapp.generated.resources.settings_notifications_section
-import smarthome.composeapp.generated.resources.settings_sensor_alerts
+import smarthome.composeapp.generated.resources.settings_notifications_toggle
+import smarthome.composeapp.generated.resources.settings_notifications_toggle_subtitle
 import smarthome.composeapp.generated.resources.settings_smartwatch_section
-import smarthome.composeapp.generated.resources.settings_thermostat_events
-import smarthome.composeapp.generated.resources.settings_thermostat_events_subtitle
 import smarthome.composeapp.generated.resources.settings_watch_connected
 import smarthome.composeapp.generated.resources.settings_watch_connection
 import smarthome.composeapp.generated.resources.settings_watch_not_connected
@@ -166,21 +163,10 @@ fun SettingsScreen(
             ) {
                 Column(modifier = Modifier.padding(4.dp)) {
                     SettingsToggleItem(
-                        title = stringResource(Res.string.settings_sensor_alerts),
-                        isChecked = state.sensorAlertsEnabled,
-                        onToggle = { viewModel.toggleSensorAlerts() },
-                    )
-                    SettingsToggleItem(
-                        title = stringResource(Res.string.settings_door_alerts),
-                        subtitle = stringResource(Res.string.settings_door_alerts_subtitle),
-                        isChecked = state.doorAlertEnabled,
-                        onToggle = { viewModel.toggleDoorAlert() },
-                    )
-                    SettingsToggleItem(
-                        title = stringResource(Res.string.settings_thermostat_events),
-                        subtitle = stringResource(Res.string.settings_thermostat_events_subtitle),
-                        isChecked = state.thermostatEventsEnabled,
-                        onToggle = { viewModel.toggleThermostatEvents() },
+                        title = stringResource(Res.string.settings_notifications_toggle),
+                        subtitle = stringResource(Res.string.settings_notifications_toggle_subtitle),
+                        isChecked = state.notificationsEnabled,
+                        onToggle = { viewModel.toggleNotifications() },
                     )
                 }
             }

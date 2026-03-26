@@ -13,6 +13,7 @@ import com.vpedrosa.smarthome.shared.domain.model.RoomId
 import com.vpedrosa.smarthome.antisquatter.application.SimulatePresenceUseCase
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
 import com.vpedrosa.smarthome.event.domain.NotificationPort
+import com.vpedrosa.smarthome.settings.infrastructure.persistence.InMemoryAppSettingsRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -56,7 +57,7 @@ class SimulatePresenceUseCaseTest {
     ): Triple<SimulatePresenceUseCase, InMemoryDeviceRepository, InMemoryAntiSquatterRepository> {
         val deviceRepo = InMemoryDeviceRepository(devices)
         val eventRepo = InMemoryDeviceEventRepository()
-        val addEvent = AddDeviceEventUseCase(eventRepo, fakeNotificationPort)
+        val addEvent = AddDeviceEventUseCase(eventRepo, fakeNotificationPort, InMemoryAppSettingsRepository())
         val antiSquatterRepo = InMemoryAntiSquatterRepository()
         kotlinx.coroutines.runBlocking { antiSquatterRepo.saveConfig(config) }
         return Triple(SimulatePresenceUseCase(antiSquatterRepo, deviceRepo, addEvent), deviceRepo, antiSquatterRepo)

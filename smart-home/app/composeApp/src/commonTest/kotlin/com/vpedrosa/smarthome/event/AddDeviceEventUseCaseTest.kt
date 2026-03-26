@@ -6,6 +6,7 @@ import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
 import com.vpedrosa.smarthome.shared.domain.model.DeviceId
 import com.vpedrosa.smarthome.event.domain.NotificationPort
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
+import com.vpedrosa.smarthome.settings.infrastructure.persistence.InMemoryAppSettingsRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.time.Instant
@@ -16,7 +17,8 @@ class AddDeviceEventUseCaseTest {
 
     private val eventRepository = InMemoryDeviceEventRepository()
     private val fakeNotification = FakeNotificationPort()
-    private val useCase = AddDeviceEventUseCase(eventRepository, fakeNotification)
+    private val settingsRepository = InMemoryAppSettingsRepository()
+    private val useCase = AddDeviceEventUseCase(eventRepository, fakeNotification, settingsRepository)
 
     @Test
     fun smokeAlert_persistsEventAndShowsNotification() = runTest {

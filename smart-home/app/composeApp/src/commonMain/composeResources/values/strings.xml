@@ -145,13 +145,8 @@
     <!-- Settings -->
     <string name="settings_devices">DEVICES</string>
     <string name="settings_notifications_section">NOTIFICATIONS</string>
-    <string name="settings_smoke_alerts">Smoke alerts</string>
-    <string name="settings_water_leak_alerts">Water leak alerts</string>
-    <string name="settings_temperature_alerts">Temperature alerts</string>
-    <string name="settings_door_alerts">Door open alerts</string>
-    <string name="settings_door_alerts_subtitle">Notify if it remains open</string>
-    <string name="settings_thermostat_events">Thermostat events</string>
-    <string name="settings_thermostat_events_subtitle">Temperature changes</string>
+    <string name="settings_notifications_toggle">Push notifications</string>
+    <string name="settings_notifications_toggle_subtitle">Receive alerts from sensors and devices</string>
     <string name="settings_modes">MODES</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_value">English</string>
@@ -163,7 +158,6 @@
     <string name="settings_notification_permission">Push notifications</string>
     <string name="settings_notification_granted">Allowed</string>
     <string name="settings_notification_denied">Denied - Tap to allow</string>
-    <string name="settings_sensor_alerts">Sensor alerts</string>
     <string name="settings_smartwatch_section">SMARTWATCH</string>
     <string name="settings_watch_connected">Connected</string>
     <string name="settings_watch_not_connected">Not connected</string>
