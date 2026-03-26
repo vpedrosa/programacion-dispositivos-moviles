@@ -49,15 +49,16 @@ class CommissioningViewModel(
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CommissioningUiState())
 
-    fun commission(device: DiscoveredDevice) {
+    fun commission(device: DiscoveredDevice, customName: String? = null) {
         viewModelScope.launch {
             inProgress.update { it + device.serialNumber }
             error.value = null
             success.value = null
 
-            commissionDevice(device)
-                .onSuccess { success.value = device.name }
-                .onFailure { error.value = "${device.name}: ${it.message}" }
+            val displayName = customName?.takeIf { it.isNotBlank() } ?: device.name
+            commissionDevice(device, customName)
+                .onSuccess { success.value = displayName }
+                .onFailure { error.value = "$displayName: ${it.message}" }
 
             inProgress.update { it - device.serialNumber }
         }

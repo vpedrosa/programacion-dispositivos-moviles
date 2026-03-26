@@ -16,7 +16,7 @@ export function DeviceCard({ device }: { device: Device }) {
       <CardHeader>
         <CardTitle>{device.name}</CardTitle>
         <CardDescription>
-          Puerto {device.port}
+          {device.id} · Puerto {device.port}
         </CardDescription>
       </CardHeader>
       <CardContent>

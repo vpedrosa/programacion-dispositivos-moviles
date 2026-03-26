@@ -12,15 +12,24 @@ class CommissionDeviceUseCase(
     private val deviceRepository: DeviceRepository,
     private val deviceControlPort: DeviceControlPort,
 ) {
-    suspend operator fun invoke(device: DiscoveredDevice): Result<Device> {
-        return commissioningPort.commission(device).onSuccess { commissioned ->
+    suspend operator fun invoke(
+        device: DiscoveredDevice,
+        customName: String? = null,
+    ): Result<Device> {
+        return commissioningPort.commission(device).map { commissioned ->
+            val named = if (!customName.isNullOrBlank()) {
+                commissioned.withName(customName)
+            } else {
+                commissioned
+            }
             val connectionInfo = DeviceConnectionInfo(
                 host = device.host,
                 port = device.port,
                 passcode = device.passcode,
             )
-            deviceControlPort.registerDevice(commissioned.id, connectionInfo)
-            deviceRepository.save(commissioned)
+            deviceControlPort.registerDevice(named.id, connectionInfo)
+            deviceRepository.save(named)
+            named
         }
     }
 }

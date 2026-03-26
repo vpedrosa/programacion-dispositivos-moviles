@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Sensors
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,6 +27,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -34,6 +37,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,6 +59,10 @@ import smarthome.composeapp.generated.resources.commissioning_success
 import smarthome.composeapp.generated.resources.commissioning_title
 import smarthome.composeapp.generated.resources.a11y_commissioned_status
 import smarthome.composeapp.generated.resources.commissioning_recommission
+import smarthome.composeapp.generated.resources.commissioning_name_dialog_title
+import smarthome.composeapp.generated.resources.commissioning_name_dialog_message
+import smarthome.composeapp.generated.resources.commissioning_name_label
+import smarthome.composeapp.generated.resources.action_cancel
 import com.vpedrosa.smarthome.ui.theme.ActiveGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,6 +73,56 @@ fun CommissioningScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val pendingDevices = state.allDevices.filterNot { it.serialNumber in state.commissionedSerials }
+
+    var deviceToName by remember { mutableStateOf<DiscoveredDevice?>(null) }
+    var nameInput by remember { mutableStateOf("") }
+
+    deviceToName?.let { device ->
+        AlertDialog(
+            onDismissRequest = { deviceToName = null },
+            title = { Text(stringResource(Res.string.commissioning_name_dialog_title)) },
+            text = {
+                Column {
+                    Text(
+                        text = stringResource(Res.string.commissioning_name_dialog_message),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    OutlinedTextField(
+                        value = nameInput,
+                        onValueChange = { nameInput = it },
+                        label = { Text(stringResource(Res.string.commissioning_name_label)) },
+                        placeholder = { Text(device.name) },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            cursorColor = MaterialTheme.colorScheme.primary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                        ),
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    val customName = nameInput.takeIf { it.isNotBlank() }
+                    viewModel.commission(device, customName)
+                    deviceToName = null
+                    nameInput = ""
+                }) {
+                    Text(stringResource(Res.string.commissioning_button))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    deviceToName = null
+                    nameInput = ""
+                }) {
+                    Text(stringResource(Res.string.action_cancel))
+                }
+            },
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -135,7 +195,10 @@ fun CommissioningScreen(
                         device = device,
                         isCommissioned = isCommissioned,
                         isCommissioning = device.serialNumber in state.commissioningInProgress,
-                        onCommission = { viewModel.commission(device) },
+                        onCommission = {
+                            nameInput = device.name
+                            deviceToName = device
+                        },
                     )
                 }
 

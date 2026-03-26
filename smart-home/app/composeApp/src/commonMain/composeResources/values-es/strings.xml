@@ -207,6 +207,9 @@
     <string name="commissioning_success">%1$s registrado con éxito</string>
     <string name="commissioning_commissioned">Registrado</string>
     <string name="commissioning_recommission">Volver a registrar</string>
+    <string name="commissioning_name_dialog_title">Nombra tu dispositivo</string>
+    <string name="commissioning_name_dialog_message">Introduce un nombre para este dispositivo. Puedes usar el nombre sugerido o escribir uno personalizado.</string>
+    <string name="commissioning_name_label">Nombre del dispositivo</string>
 
     <!-- Dashboard quick actions -->
     <string name="dashboard_voice_control">Control por voz</string>
