@@ -77,6 +77,7 @@ actual fun QrScannerScreen(
     var scanned by remember { mutableStateOf(false) }
     var useCamera by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+    Log.d("QrScanner", "Recompose: scanned=$scanned useCamera=$useCamera")
     var cameraPermissionGranted by remember { mutableStateOf(hasCamera) }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
@@ -161,8 +162,10 @@ actual fun QrScannerScreen(
             ) {
                 CameraPreviewWithAnalysis(
                     onBarcodeDetected = { rawValue ->
+                        Log.d("QrScanner", "onBarcodeDetected: raw=$rawValue scanned=$scanned")
                         if (!scanned && rawValue.startsWith("MT:")) {
                             scanned = true
+                            Log.d("QrScanner", "Calling onQrScanned with $rawValue")
                             onQrScanned(rawValue)
                         }
                     },
@@ -300,9 +303,8 @@ private fun CameraPreviewWithAnalysis(
                             barcodeScanner.process(inputImage)
                                 .addOnSuccessListener { barcodes ->
                                     for (barcode in barcodes) {
-                                        if (barcode.valueType == Barcode.TYPE_TEXT) {
-                                            barcode.rawValue?.let(onBarcodeDetected)
-                                        }
+                                        Log.d("QrScanner", "Camera barcode: format=${barcode.format} valueType=${barcode.valueType} raw=${barcode.rawValue}")
+                                        barcode.rawValue?.let(onBarcodeDetected)
                                     }
                                 }
                                 .addOnCompleteListener {

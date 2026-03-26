@@ -23,7 +23,8 @@ class MdnsSimulatorDiscoveryAdapter(
         val nsdManager = context.getSystemService(Context.NSD_SERVICE) as NsdManager
         var resolved = false
 
-        val discoveryListener = object : NsdManager.DiscoveryListener {
+        var discoveryListener: NsdManager.DiscoveryListener? = null
+        discoveryListener = object : NsdManager.DiscoveryListener {
             override fun onDiscoveryStarted(serviceType: String) {
                 Log.d(TAG, "mDNS discovery started for $serviceType")
             }
@@ -31,22 +32,33 @@ class MdnsSimulatorDiscoveryAdapter(
             override fun onServiceFound(serviceInfo: NsdServiceInfo) {
                 Log.d(TAG, "Service found: ${serviceInfo.serviceName} type=${serviceInfo.serviceType}")
                 if (resolved) return
-                nsdManager.resolveService(serviceInfo, object : NsdManager.ResolveListener {
-                    override fun onResolveFailed(si: NsdServiceInfo, errorCode: Int) {
-                        Log.w(TAG, "Resolve failed: ${si.serviceName} error=$errorCode")
-                    }
-
-                    override fun onServiceResolved(si: NsdServiceInfo) {
-                        if (resolved) return
-                        val host = si.host?.hostAddress
-                        Log.d(TAG, "Resolved: ${si.serviceName} -> $host:${si.port}")
-                        if (host != null) {
-                            resolved = true
-                            try { nsdManager.stopServiceDiscovery(this@object) } catch (_: Exception) {}
-                            if (cont.isActive) cont.resume(host)
+                nsdManager.registerServiceInfoCallback(
+                    serviceInfo,
+                    { it.run() },
+                    object : NsdManager.ServiceInfoCallback {
+                        override fun onServiceInfoCallbackRegistrationFailed(errorCode: Int) {
+                            Log.w(TAG, "ServiceInfo registration failed: error=$errorCode")
                         }
-                    }
-                })
+
+                        override fun onServiceUpdated(si: NsdServiceInfo) {
+                            if (resolved) return
+                            val host = si.hostAddresses.firstOrNull()?.hostAddress
+                            Log.d(TAG, "Resolved: ${si.serviceName} -> $host:${si.port}")
+                            if (host != null) {
+                                resolved = true
+                                nsdManager.unregisterServiceInfoCallback(this)
+                                try { nsdManager.stopServiceDiscovery(discoveryListener!!) } catch (_: Exception) {}
+                                if (cont.isActive) cont.resume(host)
+                            }
+                        }
+
+                        override fun onServiceLost() {
+                            Log.d(TAG, "Service lost during resolve")
+                        }
+
+                        override fun onServiceInfoCallbackUnregistered() {}
+                    },
+                )
             }
 
             override fun onServiceLost(serviceInfo: NsdServiceInfo) {
@@ -76,7 +88,7 @@ class MdnsSimulatorDiscoveryAdapter(
 
     private companion object {
         const val TAG = "MdnsSimDiscovery"
-        const val SERVICE_TYPE = "_matter._tcp"
+        const val SERVICE_TYPE = "_smarthome-hub._tcp"
         const val DISCOVERY_TIMEOUT_MS = 10_000L
     }
 }

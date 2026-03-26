@@ -31,6 +31,9 @@ fi
 
 export MATTER_LOG_LEVEL="${MATTER_LOG_LEVEL:-notice}"
 
+# Limpiar estado de comisionamiento previo (factory reset de dispositivos simulados)
+rm -rf "$HOME/.matter"
+
 echo "--- Arrancando simulación Matter (puerto 5540-5566, WS 8085) ---"
 (cd "$SIM_DIR" && node src/main.mjs) &
 SIM_PID=$!

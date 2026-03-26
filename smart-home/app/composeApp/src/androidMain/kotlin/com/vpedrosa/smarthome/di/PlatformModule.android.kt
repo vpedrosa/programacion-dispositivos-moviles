@@ -3,12 +3,10 @@ package com.vpedrosa.smarthome.di
 import android.speech.SpeechRecognizer
 import com.vpedrosa.smarthome.commissioning.domain.SimulatorDiscoveryPort
 import com.vpedrosa.smarthome.commissioning.domain.SimulatorHostRepository
-import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.MdnsDeviceDiscoveryAdapter
 import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.MdnsSimulatorDiscoveryAdapter
 import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.StaticDeviceDiscoveryAdapter
 import com.vpedrosa.smarthome.commissioning.infrastructure.persistence.InMemorySimulatorHostRepository
 import com.vpedrosa.smarthome.commissioning.infrastructure.matter.MatterCommissioningAdapter
-import com.vpedrosa.smarthome.commissioning.infrastructure.matter.ProductionCommissioningAdapter
 import com.vpedrosa.smarthome.shared.infrastructure.matter.MatterControllerProvider
 import com.vpedrosa.smarthome.shared.infrastructure.matter.MatterDeviceControlAdapter
 import com.vpedrosa.smarthome.event.infrastructure.notification.AndroidNotificationAdapter
@@ -36,26 +34,14 @@ actual val platformModule: Module = module {
     single<SimulatorHostRepository> { InMemorySimulatorHostRepository() }
     single<SimulatorDiscoveryPort> { MdnsSimulatorDiscoveryAdapter(androidContext()) }
 
-    // Commissioning: PASE for emulator, BLE+mDNS for production
+    // Commissioning: PASE over network (works for both emulator and simulated hub)
     single<CommissioningPort> {
-        val env = get<EnvironmentPort>()
         val controller = get<MatterControllerProvider>().controller
-        if (env.isEmulator) {
-            MatterCommissioningAdapter(controller)
-        } else {
-            ProductionCommissioningAdapter(controller)
-        }
+        MatterCommissioningAdapter(controller)
     }
 
-    // Discovery: static list for emulator, mDNS for production
-    single<DeviceDiscoveryPort> {
-        val env = get<EnvironmentPort>()
-        if (env.isEmulator) {
-            StaticDeviceDiscoveryAdapter(get())
-        } else {
-            MdnsDeviceDiscoveryAdapter(androidContext())
-        }
-    }
+    // Discovery: static list from the discovered hub host
+    single<DeviceDiscoveryPort> { StaticDeviceDiscoveryAdapter(get()) }
 
     // Speech recognizer: use real Android adapter when available, fall back to fake
     single<SpeechRecognizerPort> {

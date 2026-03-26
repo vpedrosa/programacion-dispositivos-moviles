@@ -136,7 +136,9 @@ fun SmartHomeNavHost(
 
             QrScannerScreen(
                 onQrScanned = { qrCode ->
+                    println("SmartHomeNavHost: onQrScanned called with: $qrCode")
                     val payload = parseMatterQrCode(qrCode)
+                    println("SmartHomeNavHost: parsed payload: $payload")
                     if (payload != null) {
                         commissioningVm.onQrScanned(payload.discriminator, payload.passcode)
                     }
