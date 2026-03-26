@@ -20,6 +20,7 @@ data class CommissioningUiState(
     val commissioningInProgress: Set<String> = emptySet(),
     val lastError: String? = null,
     val successMessage: String? = null,
+    val qrMatchedDevice: DiscoveredDevice? = null,
 )
 
 class CommissioningViewModel(
@@ -31,14 +32,15 @@ class CommissioningViewModel(
     private val inProgress = MutableStateFlow<Set<String>>(emptySet())
     private val error = MutableStateFlow<String?>(null)
     private val success = MutableStateFlow<String?>(null)
+    private val qrMatch = MutableStateFlow<DiscoveredDevice?>(null)
 
     val uiState: StateFlow<CommissioningUiState> = combine(
         discoveryPort.discoverDevices(),
         deviceRepository.observeAllDevices(),
         inProgress,
         error,
-        success,
-    ) { discovered, commissioned, progressing, lastError, successMsg ->
+        combine(success, qrMatch) { s, q -> s to q },
+    ) { discovered, commissioned, progressing, lastError, (successMsg, qrDevice) ->
         val commissionedIds = commissioned.map { it.id.value }.toSet()
         CommissioningUiState(
             allDevices = discovered,
@@ -46,6 +48,7 @@ class CommissioningViewModel(
             commissioningInProgress = progressing,
             lastError = lastError,
             successMessage = successMsg,
+            qrMatchedDevice = qrDevice,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), CommissioningUiState())
 
@@ -70,5 +73,21 @@ class CommissioningViewModel(
 
     fun dismissSuccess() {
         success.value = null
+    }
+
+    fun onQrScanned(discriminator: Int, passcode: Long) {
+        val devices = uiState.value.allDevices
+        val matched = devices.find {
+            it.discriminator == discriminator && it.passcode == passcode
+        }
+        if (matched != null) {
+            qrMatch.value = matched
+        } else {
+            error.value = "QR code not recognized (disc=$discriminator)"
+        }
+    }
+
+    fun dismissQrMatch() {
+        qrMatch.value = null
     }
 }

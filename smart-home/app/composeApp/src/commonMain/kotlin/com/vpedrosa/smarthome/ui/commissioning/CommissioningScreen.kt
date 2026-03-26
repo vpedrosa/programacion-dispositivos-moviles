@@ -62,13 +62,16 @@ import smarthome.composeapp.generated.resources.commissioning_recommission
 import smarthome.composeapp.generated.resources.commissioning_name_dialog_title
 import smarthome.composeapp.generated.resources.commissioning_name_dialog_message
 import smarthome.composeapp.generated.resources.commissioning_name_label
+import smarthome.composeapp.generated.resources.commissioning_scan_qr
 import smarthome.composeapp.generated.resources.action_cancel
+import androidx.compose.material.icons.filled.QrCodeScanner
 import com.vpedrosa.smarthome.ui.theme.ActiveGreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommissioningScreen(
     onNavigateBack: () -> Unit = {},
+    onNavigateToQrScanner: () -> Unit = {},
     viewModel: CommissioningViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -145,11 +148,29 @@ fun CommissioningScreen(
                     )
                 }
             },
+            actions = {
+                IconButton(onClick = onNavigateToQrScanner) {
+                    Icon(
+                        imageVector = Icons.Default.QrCodeScanner,
+                        contentDescription = stringResource(Res.string.commissioning_scan_qr),
+                    )
+                }
+            },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 titleContentColor = MaterialTheme.colorScheme.onBackground,
+                actionIconContentColor = MaterialTheme.colorScheme.onBackground,
             ),
         )
+
+        // Handle QR match: show name dialog for matched device
+        state.qrMatchedDevice?.let { matched ->
+            if (deviceToName == null) {
+                nameInput = matched.name
+                deviceToName = matched
+                viewModel.dismissQrMatch()
+            }
+        }
 
         if (pendingDevices.isEmpty() && state.allDevices.isNotEmpty()) {
             Column(

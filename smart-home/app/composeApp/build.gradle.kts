@@ -25,6 +25,12 @@ kotlin {
             implementation(libs.matter.android.demo.sdk)
             implementation(libs.play.services.wearable)
             implementation(libs.kotlinx.coroutines.play.services)
+            implementation(libs.mlkit.barcode.scanning)
+            implementation(libs.camerax.core)
+            implementation(libs.camerax.camera2)
+            implementation(libs.camerax.lifecycle)
+            implementation(libs.camerax.view)
+            implementation(libs.camerax.mlkit.vision)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)

@@ -210,6 +210,9 @@
     <string name="commissioning_name_dialog_title">Name your device</string>
     <string name="commissioning_name_dialog_message">Enter a name for this device. You can use the suggested name or type a custom one.</string>
     <string name="commissioning_name_label">Device name</string>
+    <string name="commissioning_scan_qr">Scan QR code</string>
+    <string name="commissioning_qr_title">Scan QR Code</string>
+    <string name="commissioning_qr_hint">Point the camera at a Matter device QR code</string>
 
     <!-- Dashboard quick actions -->
     <string name="dashboard_voice_control">Voice control</string>

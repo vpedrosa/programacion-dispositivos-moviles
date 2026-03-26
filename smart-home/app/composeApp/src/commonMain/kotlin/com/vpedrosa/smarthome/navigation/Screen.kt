@@ -36,4 +36,7 @@ object VoiceControl
 object Commissioning
 
 @Serializable
+object QrScanner
+
+@Serializable
 object Settings

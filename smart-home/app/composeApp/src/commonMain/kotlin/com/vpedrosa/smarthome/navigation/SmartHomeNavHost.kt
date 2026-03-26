@@ -1,12 +1,16 @@
 package com.vpedrosa.smarthome.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.vpedrosa.smarthome.ui.commissioning.CommissioningScreen
+import com.vpedrosa.smarthome.ui.commissioning.CommissioningViewModel
+import com.vpedrosa.smarthome.ui.commissioning.QrScannerScreen
+import com.vpedrosa.smarthome.commissioning.domain.parseMatterQrCode
 import com.vpedrosa.smarthome.ui.antisquatter.AntiSquatterScreen
 import com.vpedrosa.smarthome.ui.dashboard.DashboardScreen
 import com.vpedrosa.smarthome.ui.device.DeviceDetailScreen
@@ -120,6 +124,24 @@ fun SmartHomeNavHost(
 
         composable<Commissioning> {
             CommissioningScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToQrScanner = { navController.navigate(QrScanner) },
+            )
+        }
+
+        composable<QrScanner> {
+            val commissioningEntry = remember { navController.getBackStackEntry(Commissioning) }
+            val commissioningVm: CommissioningViewModel =
+                org.koin.compose.viewmodel.koinViewModel(viewModelStoreOwner = commissioningEntry)
+
+            QrScannerScreen(
+                onQrScanned = { qrCode ->
+                    val payload = parseMatterQrCode(qrCode)
+                    if (payload != null) {
+                        commissioningVm.onQrScanned(payload.discriminator, payload.passcode)
+                    }
+                    navController.popBackStack()
+                },
                 onNavigateBack = { navController.popBackStack() },
             )
         }
