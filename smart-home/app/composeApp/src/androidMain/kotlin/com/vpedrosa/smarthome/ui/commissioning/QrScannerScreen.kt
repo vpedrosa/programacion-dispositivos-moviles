@@ -71,16 +71,12 @@ actual fun QrScannerScreen(
     onNavigateBack: () -> Unit,
 ) {
     val context = LocalContext.current
+    val hasCamera = ContextCompat.checkSelfPermission(
+        context, Manifest.permission.CAMERA,
+    ) == PackageManager.PERMISSION_GRANTED
     var scanned by remember { mutableStateOf(false) }
     var useCamera by remember { mutableStateOf(false) }
-    var cameraPermissionGranted by remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.CAMERA,
-            ) == PackageManager.PERMISSION_GRANTED
-        )
-    }
+    var cameraPermissionGranted by remember { mutableStateOf(hasCamera) }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
