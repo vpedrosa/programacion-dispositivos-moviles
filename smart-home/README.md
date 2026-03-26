@@ -83,6 +83,51 @@ cd smart-home/simulation
 ./scripts/control.sh trigger smoke-alarm 3  # disparar alarma de humo
 ```
 
+## Control por voz
+
+La app soporta comandos de voz en **espanol** e **ingles** mediante reconocimiento de voz nativo. Se accede desde la pantalla de control por voz.
+
+### Luces
+
+| Accion | Espanol | Ingles |
+|--------|---------|--------|
+| Encender | "Enciende las luces" | "Turn on the lights" |
+| Apagar | "Apaga las luces" | "Turn off the lights" |
+| En habitacion | "Enciende las luces del salon" | "Turn on the lights in the living room" |
+
+### Persianas
+
+| Accion | Espanol | Ingles |
+|--------|---------|--------|
+| Abrir | "Abre las persianas" | "Open the blinds" |
+| Cerrar | "Cierra las persianas" | "Close the blinds" |
+| En habitacion | "Abre las persianas del dormitorio" | "Open the blinds in the bedroom" |
+
+### Cerraduras
+
+| Accion | Espanol | Ingles |
+|--------|---------|--------|
+| Cerrar | "Cierra la puerta" | "Lock the door" |
+| Abrir | "Abre la puerta" | "Unlock the door" |
+| Puerta especifica | "Cierra la puerta de entrada" | "Lock the door of garage" |
+
+### Termostato
+
+| Accion | Espanol | Ingles |
+|--------|---------|--------|
+| Ajustar | "Pon la temperatura a 22 grados" | "Set temperature to 22 degrees" |
+| En habitacion | "Sube la temperatura a 24 grados del salon" | "Set temperature to 24 in the living room" |
+
+### TV / Interruptores
+
+| Accion | Espanol | Ingles |
+|--------|---------|--------|
+| Encender TV | "Enciende la television" | "Turn on the TV" |
+| Apagar TV | "Apaga la tele" | "Turn off the TV" |
+| Interruptores | "Enciende los interruptores" | "Turn on the switches" |
+
+> **Nota:** los comandos soportan variaciones naturales (ej. "activa", "prende", "switch on"). Se puede especificar habitacion con "del/de la/in the" + nombre.
+
 ## Stack
 
 Kotlin 2.3, Compose Multiplatform 1.10, Material 3, Koin 4.1, kotlinx.serialization, Jetpack Navigation, Wear Compose Material 3, Google Wearable Data Layer API, connectedhomeip (Matter), FastAPI.
