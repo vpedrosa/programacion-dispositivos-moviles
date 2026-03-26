@@ -14,13 +14,10 @@ import kotlin.random.Random
 import kotlin.time.Clock
 
 /**
- * Simulates presence by toggling lights and blinds randomly within
- * the configured time window.
+ * Simulates presence by toggling lights and blinds at each action-duration
+ * boundary within the configured time window.
  *
- * Formula: n_actions = maxActions - X, where X ∈ [0, maxActions - 1],
- * ensuring at least 1 action is always executed.
- *
- * Actions are distributed at random timestamps within the interval.
+ * Example: start=21:00, end=23:00, duration=30min → toggles at 21:00, 21:30, 22:00, 22:30.
  */
 class SimulatePresenceUseCase(
     private val antiSquatterRepository: AntiSquatterRepository,
@@ -41,9 +38,7 @@ class SimulatePresenceUseCase(
         val endMinutes = config.endHour * 60 + config.endMinute
 
         if (currentMinutes !in startMinutes until endMinutes) return
-
-        val actionSlots = computeActionSlots(config)
-        if (currentMinutes !in actionSlots) return
+        if (!isActionSlot(config, currentMinutes)) return
 
         // Determine target state from current majority state
         val allDevices = deviceRepository.observeAllDevices().first()
@@ -83,26 +78,12 @@ class SimulatePresenceUseCase(
         }
     }
 
-    /**
-     * Computes which minute-offsets within the interval have scheduled actions.
-     *
-     * n_actions = maxActions - X, X ∈ [0, maxActions - 1] → at least 1
-     * The actions are distributed randomly within the interval.
-     */
-    private fun computeActionSlots(
+    private fun isActionSlot(
         config: com.vpedrosa.smarthome.antisquatter.domain.model.AntiSquatterConfig,
-    ): Set<Int> {
-        val maxActions = config.maxActions
-        if (maxActions <= 0) return emptySet()
-
-        val x = Random.nextInt(0, maxActions) // 0..maxActions-1
-        val nActions = maxActions - x // 1..maxActions
-
+        currentMinutes: Int,
+    ): Boolean {
         val startMinutes = config.startHour * 60 + config.startMinute
-        val possibleSlots = (0 until maxActions).map { i ->
-            startMinutes + i * config.actionDurationMinutes
-        }.shuffled()
-
-        return possibleSlots.take(nActions).toSet()
+        val offset = currentMinutes - startMinutes
+        return offset >= 0 && offset % config.actionDurationMinutes == 0
     }
 }
