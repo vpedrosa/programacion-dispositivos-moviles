@@ -21,6 +21,7 @@ import kotlin.time.Clock
 
 data class VoiceControlUiState(
     val isListening: Boolean = false,
+    val isProcessing: Boolean = false,
     val recognizedText: String = "",
     val lastResult: VoiceCommandResult? = null,
     val recentCommands: List<VoiceCommand> = emptyList(),
@@ -42,6 +43,7 @@ class VoiceControlViewModel(
     ) { local, commands ->
         VoiceControlUiState(
             isListening = local.isListening,
+            isProcessing = local.isProcessing,
             recognizedText = local.recognizedText,
             lastResult = local.lastResult,
             recentCommands = commands,
@@ -91,6 +93,8 @@ class VoiceControlViewModel(
     private fun processCommand(text: String) {
         if (text.isBlank()) return
         viewModelScope.launch {
+            _localState.update { it.copy(isProcessing = true) }
+
             val result = try {
                 val parsed = parseVoiceCommand(text)
                 executeVoiceCommand(parsed)
@@ -110,12 +114,13 @@ class VoiceControlViewModel(
                 )
             )
 
-            _localState.update { it.copy(lastResult = result, isListening = false) }
+            _localState.update { it.copy(lastResult = result, isListening = false, isProcessing = false) }
         }
     }
 
     private data class LocalState(
         val isListening: Boolean = false,
+        val isProcessing: Boolean = false,
         val recognizedText: String = "",
         val lastResult: VoiceCommandResult? = null,
         val error: String? = null,

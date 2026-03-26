@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -149,6 +150,16 @@ fun VoiceControlScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
+
+            // Loading indicator
+            if (state.isProcessing) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(32.dp),
+                    strokeWidth = 3.dp,
+                    color = Navy,
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+            }
 
             // Result card
             if (state.lastResult != null) {
