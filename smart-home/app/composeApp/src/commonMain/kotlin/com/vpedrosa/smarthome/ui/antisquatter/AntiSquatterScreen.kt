@@ -345,6 +345,9 @@ private fun TimePickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surface,
+        titleContentColor = MaterialTheme.colorScheme.onSurface,
+        textContentColor = MaterialTheme.colorScheme.onSurface,
         confirmButton = {
             TextButton(onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }) {
                 Text(stringResource(Res.string.action_save))

@@ -194,6 +194,9 @@ fun DeviceDetailScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
+            containerColor = MaterialTheme.colorScheme.surface,
+            titleContentColor = MaterialTheme.colorScheme.onSurface,
+            textContentColor = MaterialTheme.colorScheme.onSurface,
             title = { Text(stringResource(Res.string.device_delete_confirm)) },
             text = { Text(stringResource(Res.string.device_delete_confirm_body)) },
             confirmButton = {
