@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 data class CommissioningUiState(
     val allDevices: List<DiscoveredDevice> = emptyList(),
-    val commissionedSerials: Set<String> = emptySet(),
+    val registeredDeviceNames: List<Pair<String, String>> = emptyList(),
     val commissioningInProgress: Set<String> = emptySet(),
     val lastError: String? = null,
     val successMessage: String? = null,
@@ -40,11 +40,10 @@ class CommissioningViewModel(
         inProgress,
         error,
         combine(success, qrMatch) { s, q -> s to q },
-    ) { discovered, commissioned, progressing, lastError, (successMsg, qrDevice) ->
-        val commissionedIds = commissioned.map { it.id.value }.toSet()
+    ) { discovered, registered, progressing, lastError, (successMsg, qrDevice) ->
         CommissioningUiState(
             allDevices = discovered,
-            commissionedSerials = commissionedIds,
+            registeredDeviceNames = registered.map { it.id.value to it.name },
             commissioningInProgress = progressing,
             lastError = lastError,
             successMessage = successMsg,

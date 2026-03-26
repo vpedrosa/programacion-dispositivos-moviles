@@ -10,13 +10,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Sensors
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,28 +45,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
+import com.vpedrosa.smarthome.ui.theme.ActiveGreen
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.a11y_commissioned_status
 import smarthome.composeapp.generated.resources.a11y_navigate_back
-import smarthome.composeapp.generated.resources.commissioning_all_done
+import smarthome.composeapp.generated.resources.action_cancel
 import smarthome.composeapp.generated.resources.commissioning_button
 import smarthome.composeapp.generated.resources.commissioning_commissioned
-import smarthome.composeapp.generated.resources.commissioning_devices_available
-import smarthome.composeapp.generated.resources.commissioning_passcode
+import smarthome.composeapp.generated.resources.commissioning_name_dialog_message
+import smarthome.composeapp.generated.resources.commissioning_name_dialog_title
+import smarthome.composeapp.generated.resources.commissioning_name_label
+import smarthome.composeapp.generated.resources.commissioning_registered_section
+import smarthome.composeapp.generated.resources.commissioning_scan_qr
+import smarthome.composeapp.generated.resources.commissioning_scan_qr_description
 import smarthome.composeapp.generated.resources.commissioning_success
 import smarthome.composeapp.generated.resources.commissioning_title
-import smarthome.composeapp.generated.resources.a11y_commissioned_status
-import smarthome.composeapp.generated.resources.commissioning_recommission
-import smarthome.composeapp.generated.resources.commissioning_name_dialog_title
-import smarthome.composeapp.generated.resources.commissioning_name_dialog_message
-import smarthome.composeapp.generated.resources.commissioning_name_label
-import smarthome.composeapp.generated.resources.commissioning_scan_qr
-import smarthome.composeapp.generated.resources.action_cancel
-import androidx.compose.material.icons.filled.QrCodeScanner
-import com.vpedrosa.smarthome.ui.theme.ActiveGreen
+import smarthome.composeapp.generated.resources.commissioning_no_devices
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,11 +75,11 @@ fun CommissioningScreen(
     viewModel: CommissioningViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
-    val pendingDevices = state.allDevices.filterNot { it.serialNumber in state.commissionedSerials }
 
     var deviceToName by remember { mutableStateOf<DiscoveredDevice?>(null) }
     var nameInput by remember { mutableStateOf("") }
 
+    // Name dialog
     deviceToName?.let { device ->
         AlertDialog(
             onDismissRequest = { deviceToName = null },
@@ -148,18 +148,9 @@ fun CommissioningScreen(
                     )
                 }
             },
-            actions = {
-                IconButton(onClick = onNavigateToQrScanner) {
-                    Icon(
-                        imageVector = Icons.Default.QrCodeScanner,
-                        contentDescription = stringResource(Res.string.commissioning_scan_qr),
-                    )
-                }
-            },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background,
                 titleContentColor = MaterialTheme.colorScheme.onBackground,
-                actionIconContentColor = MaterialTheme.colorScheme.onBackground,
             ),
         )
 
@@ -172,61 +163,153 @@ fun CommissioningScreen(
             }
         }
 
-        if (pendingDevices.isEmpty() && state.allDevices.isNotEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(32.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = stringResource(Res.string.commissioning_all_done),
-                    modifier = Modifier.size(64.dp),
-                    tint = ActiveGreen,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = stringResource(Res.string.commissioning_all_done),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                item {
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            // Scan QR button (prominent)
+            item {
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = onNavigateToQrScanner,
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.QrCodeScanner,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
                     Text(
-                        text = stringResource(Res.string.commissioning_devices_available, state.allDevices.size),
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                        text = stringResource(Res.string.commissioning_scan_qr),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(vertical = 8.dp),
                     )
                 }
+            }
 
-                items(state.allDevices, key = { it.serialNumber }) { device ->
-                    val isCommissioned = device.serialNumber in state.commissionedSerials
-                    DiscoveredDeviceCard(
-                        device = device,
-                        isCommissioned = isCommissioned,
-                        isCommissioning = device.serialNumber in state.commissioningInProgress,
-                        onCommission = {
-                            nameInput = device.name
-                            deviceToName = device
-                        },
+            item {
+                Text(
+                    text = stringResource(Res.string.commissioning_scan_qr_description),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+
+            // Commissioning in progress
+            if (state.commissioningInProgress.isNotEmpty()) {
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                        ),
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(24.dp),
+                                strokeWidth = 3.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = "Registering device...",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onBackground,
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Registered devices section
+            if (state.registeredDeviceNames.isNotEmpty()) {
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = stringResource(Res.string.commissioning_registered_section),
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                     )
                 }
 
-                item { Spacer(modifier = Modifier.height(16.dp)) }
+                items(
+                    items = state.registeredDeviceNames,
+                    key = { it.first },
+                ) { (id, name) ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = ActiveGreen.copy(alpha = 0.1f),
+                        ),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = stringResource(Res.string.a11y_commissioned_status),
+                                modifier = Modifier.size(20.dp),
+                                tint = ActiveGreen,
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = name,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                )
+                                Text(
+                                    text = id,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                                )
+                            }
+                            Text(
+                                text = stringResource(Res.string.commissioning_commissioned),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = ActiveGreen,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
+                    }
+                }
+            } else {
+                item {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = stringResource(Res.string.commissioning_no_devices),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
+
+            item { Spacer(modifier = Modifier.height(16.dp)) }
         }
 
+        // Snackbars
         state.successMessage?.let { deviceName ->
             Snackbar(
                 modifier = Modifier.padding(16.dp),
@@ -254,118 +337,6 @@ fun CommissioningScreen(
                 },
             ) {
                 Text(errorMsg)
-            }
-        }
-    }
-}
-
-@Composable
-private fun DiscoveredDeviceCard(
-    device: DiscoveredDevice,
-    isCommissioned: Boolean,
-    isCommissioning: Boolean,
-    onCommission: () -> Unit,
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isCommissioned) {
-                ActiveGreen.copy(alpha = 0.1f)
-            } else {
-                MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-            },
-        ),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = device.name,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
-                Text(
-                    text = "${device.type.name} · ${device.host}:${device.port}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                )
-                Text(
-                    text = stringResource(Res.string.commissioning_passcode, device.passcode),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                )
-            }
-
-            when {
-                isCommissioned -> {
-                    Column(horizontalAlignment = Alignment.End) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.CheckCircle,
-                                contentDescription = stringResource(Res.string.a11y_commissioned_status),
-                                modifier = Modifier.size(16.dp),
-                                tint = ActiveGreen,
-                            )
-                            Text(
-                                text = stringResource(Res.string.commissioning_commissioned),
-                                modifier = Modifier.padding(start = 4.dp),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = ActiveGreen,
-                                fontWeight = FontWeight.SemiBold,
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Button(
-                            onClick = onCommission,
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.secondary,
-                            ),
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Sensors,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                            )
-                            Text(
-                                text = stringResource(Res.string.commissioning_recommission),
-                                modifier = Modifier.padding(start = 4.dp),
-                                style = MaterialTheme.typography.labelMedium,
-                            )
-                        }
-                    }
-                }
-                isCommissioning -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(32.dp),
-                        strokeWidth = 3.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                }
-                else -> {
-                    Button(
-                        onClick = onCommission,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                        ),
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Sensors,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp),
-                        )
-                        Text(
-                            text = stringResource(Res.string.commissioning_button),
-                            modifier = Modifier.padding(start = 4.dp),
-                        )
-                    }
-                }
             }
         }
     }

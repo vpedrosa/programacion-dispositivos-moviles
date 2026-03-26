@@ -206,8 +206,13 @@
     <string name="commissioning_name_dialog_message">Introduce un nombre para este dispositivo. Puedes usar el nombre sugerido o escribir uno personalizado.</string>
     <string name="commissioning_name_label">Nombre del dispositivo</string>
     <string name="commissioning_scan_qr">Escanear código QR</string>
+    <string name="commissioning_scan_qr_description">Escanea el código QR de un dispositivo Matter para registrarlo. Puedes usar la cámara o seleccionar una imagen de la galería.</string>
+    <string name="commissioning_registered_section">DISPOSITIVOS REGISTRADOS</string>
+    <string name="commissioning_no_devices">No hay dispositivos registrados. Escanea un código QR para añadir tu primer dispositivo.</string>
     <string name="commissioning_qr_title">Escanear código QR</string>
-    <string name="commissioning_qr_hint">Apunta la cámara al código QR del dispositivo Matter</string>
+    <string name="commissioning_qr_hint">Escanea el código QR del dispositivo Matter</string>
+    <string name="commissioning_qr_pick_image">Seleccionar imagen de la galería</string>
+    <string name="commissioning_qr_use_camera">Usar cámara</string>
 
     <!-- Dashboard quick actions -->
     <string name="dashboard_voice_control">Control por voz</string>
