@@ -52,7 +52,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -71,17 +70,17 @@ actual fun QrScannerScreen(
     onQrScanned: (String) -> Unit,
     onNavigateBack: () -> Unit,
 ) {
+    val context = LocalContext.current
     var scanned by remember { mutableStateOf(false) }
     var useCamera by remember { mutableStateOf(false) }
     var cameraPermissionGranted by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
-                androidx.compose.ui.platform.LocalContext.current,
+                context,
                 Manifest.permission.CAMERA,
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
-    val context = LocalContext.current
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
