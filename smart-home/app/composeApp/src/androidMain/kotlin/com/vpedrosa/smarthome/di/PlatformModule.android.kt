@@ -1,8 +1,12 @@
 package com.vpedrosa.smarthome.di
 
 import android.speech.SpeechRecognizer
+import com.vpedrosa.smarthome.commissioning.domain.SimulatorDiscoveryPort
+import com.vpedrosa.smarthome.commissioning.domain.SimulatorHostRepository
 import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.MdnsDeviceDiscoveryAdapter
+import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.MdnsSimulatorDiscoveryAdapter
 import com.vpedrosa.smarthome.commissioning.infrastructure.discovery.StaticDeviceDiscoveryAdapter
+import com.vpedrosa.smarthome.commissioning.infrastructure.persistence.InMemorySimulatorHostRepository
 import com.vpedrosa.smarthome.commissioning.infrastructure.matter.MatterCommissioningAdapter
 import com.vpedrosa.smarthome.commissioning.infrastructure.matter.ProductionCommissioningAdapter
 import com.vpedrosa.smarthome.shared.infrastructure.matter.MatterControllerProvider
@@ -29,6 +33,8 @@ actual val platformModule: Module = module {
     single { MatterControllerProvider(androidContext()) }
     single<DeviceControlPort> { MatterDeviceControlAdapter(get<MatterControllerProvider>().controller) }
     single<NotificationPort> { AndroidNotificationAdapter(androidContext()) }
+    single<SimulatorHostRepository> { InMemorySimulatorHostRepository() }
+    single<SimulatorDiscoveryPort> { MdnsSimulatorDiscoveryAdapter(androidContext()) }
 
     // Commissioning: PASE for emulator, BLE+mDNS for production
     single<CommissioningPort> {
@@ -45,7 +51,7 @@ actual val platformModule: Module = module {
     single<DeviceDiscoveryPort> {
         val env = get<EnvironmentPort>()
         if (env.isEmulator) {
-            StaticDeviceDiscoveryAdapter()
+            StaticDeviceDiscoveryAdapter(get())
         } else {
             MdnsDeviceDiscoveryAdapter(androidContext())
         }

@@ -10,13 +10,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -53,6 +60,11 @@ import smarthome.composeapp.generated.resources.settings_notification_permission
 import smarthome.composeapp.generated.resources.settings_notifications_section
 import smarthome.composeapp.generated.resources.settings_notifications_toggle
 import smarthome.composeapp.generated.resources.settings_notifications_toggle_subtitle
+import smarthome.composeapp.generated.resources.settings_simulator_section
+import smarthome.composeapp.generated.resources.settings_simulator_search
+import smarthome.composeapp.generated.resources.settings_simulator_connected
+import smarthome.composeapp.generated.resources.settings_simulator_not_found
+import smarthome.composeapp.generated.resources.settings_simulator_searching
 import smarthome.composeapp.generated.resources.settings_smartwatch_section
 import smarthome.composeapp.generated.resources.settings_watch_connected
 import smarthome.composeapp.generated.resources.settings_watch_connection
@@ -104,6 +116,95 @@ fun SettingsScreen(
                 subtitle = stringResource(Res.string.settings_manage_simulated),
                 onClick = onNavigateToCommissioning,
             )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // --- SIMULADOR ---
+            SectionHeader(text = stringResource(Res.string.settings_simulator_section))
+            Spacer(modifier = Modifier.height(8.dp))
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (state.simulatorHost != null) {
+                        ActiveGreen.copy(alpha = 0.1f)
+                    } else {
+                        MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+                    },
+                ),
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Wifi,
+                            contentDescription = null,
+                            tint = if (state.simulatorHost != null) ActiveGreen
+                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            if (state.simulatorHost != null) {
+                                Text(
+                                    text = stringResource(Res.string.settings_simulator_connected),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                )
+                                Text(
+                                    text = state.simulatorHost!!,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = ActiveGreen,
+                                )
+                            } else if (state.isSearching) {
+                                Text(
+                                    text = stringResource(Res.string.settings_simulator_searching),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                )
+                            } else if (state.searchError) {
+                                Text(
+                                    text = stringResource(Res.string.settings_simulator_not_found),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = Color(0xFFE53935),
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Button(
+                        onClick = { viewModel.searchSimulator() },
+                        enabled = !state.isSearching,
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                        ),
+                    ) {
+                        if (state.isSearching) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(18.dp),
+                                strokeWidth = 2.dp,
+                                color = Color.White,
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                        }
+                        Text(
+                            text = stringResource(Res.string.settings_simulator_search),
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(24.dp))
 

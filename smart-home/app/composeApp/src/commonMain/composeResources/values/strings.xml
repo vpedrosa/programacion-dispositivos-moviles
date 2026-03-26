@@ -147,6 +147,11 @@
     <string name="settings_notifications_section">NOTIFICATIONS</string>
     <string name="settings_notifications_toggle">Push notifications</string>
     <string name="settings_notifications_toggle_subtitle">Receive alerts from sensors and devices</string>
+    <string name="settings_simulator_section">SIMULATOR</string>
+    <string name="settings_simulator_search">Search simulator on network</string>
+    <string name="settings_simulator_connected">Simulator found</string>
+    <string name="settings_simulator_not_found">No simulator found on local network</string>
+    <string name="settings_simulator_searching">Searching...</string>
     <string name="settings_modes">MODES</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_value">English</string>
