@@ -60,9 +60,11 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.action_close_all
+import smarthome.composeapp.generated.resources.action_lock_all
 import smarthome.composeapp.generated.resources.action_open_all
 import smarthome.composeapp.generated.resources.action_turn_off_all
 import smarthome.composeapp.generated.resources.action_turn_on_all
+import smarthome.composeapp.generated.resources.action_unlock_all
 import smarthome.composeapp.generated.resources.device_type_blinds
 import smarthome.composeapp.generated.resources.device_type_contact_sensors
 import smarthome.composeapp.generated.resources.device_type_lights
@@ -144,19 +146,13 @@ fun DevicesScreen(
 
                 if (type.supportsBulkToggle()) {
                     item(key = "bulk_$type") {
-                        if (type == DeviceType.BLIND) {
-                            BulkToggleButton(
-                                allActive = devices.allActive(),
-                                onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
-                                activeLabel = stringResource(Res.string.action_close_all),
-                                inactiveLabel = stringResource(Res.string.action_open_all),
-                            )
-                        } else {
-                            BulkToggleButton(
-                                allActive = devices.allActive(),
-                                onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
-                            )
-                        }
+                        val (active, inactive) = type.bulkToggleLabels()
+                        BulkToggleButton(
+                            allActive = devices.allActive(),
+                            onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
+                            activeLabel = stringResource(active),
+                            inactiveLabel = stringResource(inactive),
+                        )
                     }
                 }
 
@@ -285,6 +281,12 @@ internal fun DeviceType.icon(): ImageVector = when (this) {
     DeviceType.CONTACT_SENSOR -> Icons.Default.Sensors
     DeviceType.THERMOSTAT -> Icons.Default.Thermostat
     DeviceType.SMART_TV -> Icons.Default.Tv
+}
+
+internal fun DeviceType.bulkToggleLabels(): Pair<StringResource, StringResource> = when (this) {
+    DeviceType.BLIND -> Res.string.action_close_all to Res.string.action_open_all
+    DeviceType.LOCK -> Res.string.action_lock_all to Res.string.action_unlock_all
+    else -> Res.string.action_turn_off_all to Res.string.action_turn_on_all
 }
 
 internal fun DeviceType.pluralLabelRes(): StringResource = when (this) {

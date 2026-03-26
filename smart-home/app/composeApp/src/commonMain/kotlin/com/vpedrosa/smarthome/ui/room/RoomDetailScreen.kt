@@ -34,11 +34,10 @@ import com.vpedrosa.smarthome.shared.domain.model.supportsBulkToggle
 import com.vpedrosa.smarthome.ui.device.BulkToggleButton
 import com.vpedrosa.smarthome.ui.device.DeviceCategorySectionHeader
 import com.vpedrosa.smarthome.ui.device.DeviceRow
+import com.vpedrosa.smarthome.ui.device.bulkToggleLabels
 import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.a11y_edit_group
 import smarthome.composeapp.generated.resources.a11y_navigate_back
-import smarthome.composeapp.generated.resources.action_close_all
-import smarthome.composeapp.generated.resources.action_open_all
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -115,19 +114,13 @@ fun RoomDetailScreen(
 
                 if (type.supportsBulkToggle()) {
                     item(key = "bulk_$type") {
-                        if (type == DeviceType.BLIND) {
-                            BulkToggleButton(
-                                allActive = devices.allActive(),
-                                onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
-                                activeLabel = stringResource(Res.string.action_close_all),
-                                inactiveLabel = stringResource(Res.string.action_open_all),
-                            )
-                        } else {
-                            BulkToggleButton(
-                                allActive = devices.allActive(),
-                                onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
-                            )
-                        }
+                        val (active, inactive) = type.bulkToggleLabels()
+                        BulkToggleButton(
+                            allActive = devices.allActive(),
+                            onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
+                            activeLabel = stringResource(active),
+                            inactiveLabel = stringResource(inactive),
+                        )
                     }
                 }
 

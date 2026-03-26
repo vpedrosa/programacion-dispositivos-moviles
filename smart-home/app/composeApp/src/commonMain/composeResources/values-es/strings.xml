@@ -74,6 +74,8 @@
     <string name="action_turn_off_all">Apagar todas</string>
     <string name="action_open_all">Abrir todas</string>
     <string name="action_close_all">Cerrar todas</string>
+    <string name="action_lock_all">Cerrar todas</string>
+    <string name="action_unlock_all">Abrir todas</string>
 
     <!-- Device controls -->
     <string name="control_brightness">Intensidad</string>
