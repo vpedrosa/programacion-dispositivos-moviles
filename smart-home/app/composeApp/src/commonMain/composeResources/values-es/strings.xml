@@ -89,6 +89,8 @@
     <string name="device_detail_state">Estado</string>
     <string name="device_detail_recent_history">Historial reciente</string>
     <string name="device_detail_no_events">Sin eventos registrados</string>
+    <string name="device_delete_confirm">Eliminar este dispositivo?</string>
+    <string name="device_delete_confirm_body">El dispositivo sera eliminado y necesitaras comisionarlo de nuevo para usarlo.</string>
 
     <!-- Lock -->
     <string name="lock_closed">Cerrada</string>
@@ -228,6 +230,7 @@
     <string name="a11y_unlock_door">Abrir cerradura</string>
     <string name="a11y_edit_group">Editar grupo</string>
     <string name="a11y_delete_group">Eliminar grupo</string>
+    <string name="a11y_delete_device">Eliminar dispositivo</string>
     <string name="a11y_add_time_slot">Añadir franja horaria</string>
     <string name="a11y_remove_time_slot">Eliminar franja horaria</string>
     <string name="a11y_icon_lights">Luces</string>

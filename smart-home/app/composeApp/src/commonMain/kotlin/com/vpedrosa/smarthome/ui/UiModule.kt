@@ -25,6 +25,6 @@ val uiModule = module {
     viewModelOf(::SettingsViewModel)
     viewModelOf(::VoiceControlViewModel)
     viewModel { params -> RoomDetailViewModel(params.get(), get(), get(), get(), get()) }
-    viewModel { params -> DeviceDetailViewModel(params.get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { params -> DeviceDetailViewModel(params.get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { params -> EditGroupViewModel(params.getOrNull(), get(), get(), get()) }
 }

@@ -24,11 +24,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CastConnected
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.LockOpen
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Thermostat
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -45,9 +47,11 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -92,6 +96,7 @@ import smarthome.composeapp.generated.resources.Res
 import smarthome.composeapp.generated.resources.a11y_icon_temperature
 import smarthome.composeapp.generated.resources.a11y_cast_content
 import smarthome.composeapp.generated.resources.a11y_decrease_temperature
+import smarthome.composeapp.generated.resources.a11y_delete_device
 import smarthome.composeapp.generated.resources.a11y_increase_temperature
 import smarthome.composeapp.generated.resources.a11y_lock_door
 import smarthome.composeapp.generated.resources.a11y_navigate_back
@@ -111,6 +116,8 @@ import smarthome.composeapp.generated.resources.control_current_temperature
 import smarthome.composeapp.generated.resources.control_heating
 import smarthome.composeapp.generated.resources.control_opening_level
 import smarthome.composeapp.generated.resources.control_target_temperature
+import smarthome.composeapp.generated.resources.device_delete_confirm
+import smarthome.composeapp.generated.resources.device_delete_confirm_body
 import smarthome.composeapp.generated.resources.device_detail_no_events
 import smarthome.composeapp.generated.resources.device_detail_recent_history
 import smarthome.composeapp.generated.resources.device_detail_state
@@ -127,7 +134,9 @@ import smarthome.composeapp.generated.resources.sensor_no_leak
 import smarthome.composeapp.generated.resources.sensor_no_smoke
 import smarthome.composeapp.generated.resources.sensor_smoke_detected
 import smarthome.composeapp.generated.resources.sensor_water_leak
+import smarthome.composeapp.generated.resources.action_cancel
 import smarthome.composeapp.generated.resources.action_close
+import smarthome.composeapp.generated.resources.action_delete
 import smarthome.composeapp.generated.resources.action_on
 import smarthome.composeapp.generated.resources.action_off
 import smarthome.composeapp.generated.resources.action_open
@@ -176,6 +185,35 @@ fun DeviceDetailScreen(
     viewModel: DeviceDetailViewModel = koinViewModel { parametersOf(deviceId) },
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigateBack.collect { onNavigateBack() }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text(stringResource(Res.string.device_delete_confirm)) },
+            text = { Text(stringResource(Res.string.device_delete_confirm_body)) },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    viewModel.onDeregister()
+                }) {
+                    Text(
+                        stringResource(Res.string.action_delete),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text(stringResource(Res.string.action_cancel))
+                }
+            },
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -194,6 +232,15 @@ fun DeviceDetailScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(Res.string.a11y_navigate_back),
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = { showDeleteDialog = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.Delete,
+                        contentDescription = stringResource(Res.string.a11y_delete_device),
+                        tint = MaterialTheme.colorScheme.error,
                     )
                 }
             },

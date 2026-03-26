@@ -18,6 +18,7 @@ import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
 import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.device.application.DeregisterDeviceUseCase
 import com.vpedrosa.smarthome.device.application.LaunchContentUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.application.UpdateBlindUseCase
@@ -25,8 +26,11 @@ import com.vpedrosa.smarthome.device.application.UpdateLightUseCase
 import com.vpedrosa.smarthome.device.application.UpdateThermostatUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
@@ -53,6 +57,7 @@ class DeviceDetailViewModel(
     private val updateBlind: UpdateBlindUseCase,
     private val updateThermostat: UpdateThermostatUseCase,
     private val launchContent: LaunchContentUseCase,
+    private val deregisterDevice: DeregisterDeviceUseCase,
 ) : ViewModel() {
 
     private val deviceId = DeviceId(deviceIdValue)
@@ -60,6 +65,9 @@ class DeviceDetailViewModel(
 
     private val _uiState = MutableStateFlow(DeviceDetailUiState())
     val uiState: StateFlow<DeviceDetailUiState> = _uiState.asStateFlow()
+
+    private val _navigateBack = MutableSharedFlow<Unit>()
+    val navigateBack: SharedFlow<Unit> = _navigateBack.asSharedFlow()
 
     init {
         observeDeviceAndRoom()
@@ -127,6 +135,13 @@ class DeviceDetailViewModel(
     }
 
     fun onLaunchContent(url: String) = withActionLoading { launchContent(deviceId, url) }
+
+    fun onDeregister() {
+        viewModelScope.launch {
+            deregisterDevice(deviceId)
+            _navigateBack.emit(Unit)
+        }
+    }
 
     private fun withActionLoading(block: suspend () -> Unit) {
         viewModelScope.launch {

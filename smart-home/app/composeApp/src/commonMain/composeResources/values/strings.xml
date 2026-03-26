@@ -89,6 +89,8 @@
     <string name="device_detail_state">State</string>
     <string name="device_detail_recent_history">Recent history</string>
     <string name="device_detail_no_events">No events recorded</string>
+    <string name="device_delete_confirm">Delete this device?</string>
+    <string name="device_delete_confirm_body">The device will be removed and you will need to commission it again to use it.</string>
 
     <!-- Lock -->
     <string name="lock_closed">Locked</string>
@@ -228,6 +230,7 @@
     <string name="a11y_unlock_door">Unlock door</string>
     <string name="a11y_edit_group">Edit group</string>
     <string name="a11y_delete_group">Delete group</string>
+    <string name="a11y_delete_device">Delete device</string>
     <string name="a11y_add_time_slot">Add time slot</string>
     <string name="a11y_remove_time_slot">Remove time slot</string>
     <string name="a11y_icon_lights">Lights</string>
