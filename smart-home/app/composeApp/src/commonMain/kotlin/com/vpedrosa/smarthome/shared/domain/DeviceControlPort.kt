@@ -5,6 +5,7 @@ import com.vpedrosa.smarthome.shared.domain.model.DeviceId
 
 interface DeviceControlPort {
     fun registerDevice(deviceId: DeviceId, connectionInfo: DeviceConnectionInfo)
+    fun deregisterDevice(deviceId: DeviceId)
     suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean)
     suspend fun setLevel(deviceId: DeviceId, level: Int)
     suspend fun lockDoor(deviceId: DeviceId, lock: Boolean)

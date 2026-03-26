@@ -50,6 +50,13 @@ class MatterDeviceControlAdapter(
         }
     }
 
+    override fun deregisterDevice(deviceId: DeviceId) {
+        val nodeId = deviceId.value.toLong()
+        cachedPointers.remove(nodeId)
+        deviceConnections.remove(nodeId)
+        Log.d(TAG, "Deregistered device $nodeId")
+    }
+
     override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {
         executeWithRetry(deviceId) { pointer ->
             val cluster = ChipClusters.OnOffCluster(pointer, ENDPOINT_ID)

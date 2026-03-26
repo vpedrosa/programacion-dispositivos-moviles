@@ -25,6 +25,7 @@ import kotlin.test.assertTrue
 
 internal class FakeVoiceDeviceControlPort : DeviceControlPort {
     override fun registerDevice(deviceId: DeviceId, connectionInfo: DeviceConnectionInfo) {}
+    override fun deregisterDevice(deviceId: DeviceId) {}
     override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {}
     override suspend fun setLevel(deviceId: DeviceId, level: Int) {}
     override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {}
