@@ -147,10 +147,10 @@
     <string name="settings_notifications_section">NOTIFICACIONES</string>
     <string name="settings_notifications_toggle">Notificaciones push</string>
     <string name="settings_notifications_toggle_subtitle">Recibir alertas de sensores y dispositivos</string>
-    <string name="settings_simulator_section">SIMULADOR</string>
-    <string name="settings_simulator_search">Buscar simulador en la red</string>
-    <string name="settings_simulator_connected">Simulador encontrado</string>
-    <string name="settings_simulator_not_found">No se encontró simulador en la red local</string>
+    <string name="settings_simulator_section">HUB</string>
+    <string name="settings_simulator_search">Buscar hub en la red</string>
+    <string name="settings_simulator_connected">Hub encontrado</string>
+    <string name="settings_simulator_not_found">No se encontró hub en la red local</string>
     <string name="settings_simulator_searching">Buscando...</string>
     <string name="settings_modes">MODOS</string>
     <string name="settings_language">Idioma</string>
