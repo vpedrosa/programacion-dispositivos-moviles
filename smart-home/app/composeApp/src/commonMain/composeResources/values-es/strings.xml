@@ -156,7 +156,7 @@
     <string name="settings_about">Acerca de</string>
     <string name="settings_about_value">Smart Home v1.0</string>
     <string name="settings_general">GENERAL</string>
-    <string name="settings_matter_commissioning">Comisionamiento Matter</string>
+    <string name="settings_matter_commissioning">Registro de dispositivos</string>
     <string name="settings_manage_simulated">Gestionar dispositivos simulados</string>
     <string name="settings_notification_permission">Notificaciones push</string>
     <string name="settings_notification_granted">Permitidas</string>
@@ -195,16 +195,16 @@
     <string name="voice_stop_listening">Dejar de escuchar</string>
     <string name="voice_start_listening">Empezar a escuchar</string>
 
-    <!-- Commissioning -->
-    <string name="commissioning_title">Comisionamiento Matter</string>
-    <string name="commissioning_button">Comisionar</string>
-    <string name="commissioning_devices_button">Comisionar dispositivos</string>
-    <string name="commissioning_all_done">Todos los dispositivos comisionados</string>
+    <!-- Commissioning / Registration -->
+    <string name="commissioning_title">Registro de dispositivos</string>
+    <string name="commissioning_button">Registrar</string>
+    <string name="commissioning_devices_button">Registrar dispositivos</string>
+    <string name="commissioning_all_done">Todos los dispositivos registrados</string>
     <string name="commissioning_devices_available">%1$d dispositivos disponibles</string>
     <string name="commissioning_passcode">Código: %1$d</string>
-    <string name="commissioning_success">%1$s comisionado con éxito</string>
-    <string name="commissioning_commissioned">Comisionado</string>
-    <string name="commissioning_recommission">Recomisionar</string>
+    <string name="commissioning_success">%1$s registrado con éxito</string>
+    <string name="commissioning_commissioned">Registrado</string>
+    <string name="commissioning_recommission">Volver a registrar</string>
 
     <!-- Dashboard quick actions -->
     <string name="dashboard_voice_control">Control por voz</string>
@@ -237,7 +237,7 @@
     <string name="a11y_photo_placeholder">Tomar o seleccionar foto</string>
     <string name="a11y_room_placeholder">Habitación</string>
     <string name="a11y_device_type_icon">Tipo de dispositivo</string>
-    <string name="a11y_commissioned_status">Comisionado</string>
+    <string name="a11y_commissioned_status">Registrado</string>
     <string name="a11y_command_success">Comando ejecutado</string>
     <string name="a11y_command_error">Comando fallido</string>
     <string name="a11y_toggle_device">Cambiar estado del dispositivo</string>

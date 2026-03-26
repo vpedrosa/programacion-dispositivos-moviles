@@ -156,7 +156,7 @@
     <string name="settings_about">About</string>
     <string name="settings_about_value">Smart Home v1.0</string>
     <string name="settings_general">GENERAL</string>
-    <string name="settings_matter_commissioning">Matter Commissioning</string>
+    <string name="settings_matter_commissioning">Device Registration</string>
     <string name="settings_manage_simulated">Manage simulated devices</string>
     <string name="settings_notification_permission">Push notifications</string>
     <string name="settings_notification_granted">Allowed</string>
@@ -195,16 +195,16 @@
     <string name="voice_stop_listening">Stop listening</string>
     <string name="voice_start_listening">Start listening</string>
 
-    <!-- Commissioning -->
-    <string name="commissioning_title">Matter Commissioning</string>
-    <string name="commissioning_button">Commission</string>
-    <string name="commissioning_devices_button">Commission devices</string>
-    <string name="commissioning_all_done">All devices commissioned</string>
+    <!-- Commissioning / Registration -->
+    <string name="commissioning_title">Device Registration</string>
+    <string name="commissioning_button">Register</string>
+    <string name="commissioning_devices_button">Register devices</string>
+    <string name="commissioning_all_done">All devices registered</string>
     <string name="commissioning_devices_available">%1$d devices available</string>
     <string name="commissioning_passcode">Passcode: %1$d</string>
-    <string name="commissioning_success">%1$s commissioned successfully</string>
-    <string name="commissioning_commissioned">Commissioned</string>
-    <string name="commissioning_recommission">Re-commission</string>
+    <string name="commissioning_success">%1$s registered successfully</string>
+    <string name="commissioning_commissioned">Registered</string>
+    <string name="commissioning_recommission">Re-register</string>
 
     <!-- Dashboard quick actions -->
     <string name="dashboard_voice_control">Voice control</string>
@@ -237,7 +237,7 @@
     <string name="a11y_photo_placeholder">Take or select photo</string>
     <string name="a11y_room_placeholder">Room</string>
     <string name="a11y_device_type_icon">Device type</string>
-    <string name="a11y_commissioned_status">Commissioned</string>
+    <string name="a11y_commissioned_status">Registered</string>
     <string name="a11y_command_success">Command succeeded</string>
     <string name="a11y_command_error">Command failed</string>
     <string name="a11y_toggle_device">Toggle device</string>
