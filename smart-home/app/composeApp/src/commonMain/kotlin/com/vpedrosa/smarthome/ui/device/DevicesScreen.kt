@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.Water
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -135,10 +136,12 @@ fun DevicesScreen(
                     items = devices,
                     key = { it.id.value },
                 ) { device ->
+                    val isToggling = device.id in state.togglingDevices
                     DeviceRow(
                         device = device,
                         roomName = device.roomId?.let { state.roomNames[it] },
                         isToggleable = type.isToggleable(),
+                        isToggling = isToggling,
                         onToggle = { viewModel.onToggleDevice(device.id) },
                         onClick = { onNavigateToDeviceDetail(device.id.value) },
                     )
@@ -147,11 +150,13 @@ fun DevicesScreen(
                 if (type.supportsBulkToggle()) {
                     item(key = "bulk_$type") {
                         val (active, inactive) = type.bulkToggleLabels()
+                        val isBulkLoading = type in state.bulkTogglingTypes
                         BulkToggleButton(
                             allActive = devices.allActive(),
                             onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
                             activeLabel = stringResource(active),
                             inactiveLabel = stringResource(inactive),
+                            isLoading = isBulkLoading,
                         )
                     }
                 }
@@ -185,6 +190,7 @@ internal fun DeviceRow(
     device: Device,
     roomName: String?,
     isToggleable: Boolean,
+    isToggling: Boolean = false,
     onToggle: () -> Unit,
     onClick: () -> Unit,
 ) {
@@ -229,16 +235,24 @@ internal fun DeviceRow(
             }
 
             if (isToggleable) {
-                Switch(
-                    checked = device.isActive(),
-                    onCheckedChange = { onToggle() },
-                    colors = SwitchDefaults.colors(
-                        checkedTrackColor = MaterialTheme.colorScheme.primary,
-                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                        uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
-                        uncheckedThumbColor = MaterialTheme.colorScheme.onSecondary,
-                    ),
-                )
+                if (isToggling) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 2.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                } else {
+                    Switch(
+                        checked = device.isActive(),
+                        onCheckedChange = { onToggle() },
+                        colors = SwitchDefaults.colors(
+                            checkedTrackColor = MaterialTheme.colorScheme.primary,
+                            checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.onSecondary,
+                        ),
+                    )
+                }
             }
         }
     }
@@ -250,11 +264,13 @@ internal fun BulkToggleButton(
     onBulkToggle: (turnOn: Boolean) -> Unit,
     activeLabel: String = stringResource(Res.string.action_turn_off_all),
     inactiveLabel: String = stringResource(Res.string.action_turn_on_all),
+    isLoading: Boolean = false,
 ) {
     val label = if (allActive) activeLabel else inactiveLabel
 
     OutlinedButton(
         onClick = { onBulkToggle(!allActive) },
+        enabled = !isLoading,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
@@ -263,6 +279,14 @@ internal fun BulkToggleButton(
             contentColor = MaterialTheme.colorScheme.primary,
         ),
     ) {
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(18.dp),
+                strokeWidth = 2.dp,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         Text(text = label)
     }
 }

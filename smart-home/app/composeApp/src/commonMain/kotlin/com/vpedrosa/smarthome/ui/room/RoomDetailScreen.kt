@@ -103,10 +103,12 @@ fun RoomDetailScreen(
                     items = devices,
                     key = { it.id.value },
                 ) { device ->
+                    val isToggling = device.id in state.togglingDevices
                     DeviceRow(
                         device = device,
                         roomName = null,
                         isToggleable = type.isToggleable(),
+                        isToggling = isToggling,
                         onToggle = { viewModel.onToggleDevice(device.id) },
                         onClick = { onNavigateToDeviceDetail(device.id.value) },
                     )
@@ -115,11 +117,13 @@ fun RoomDetailScreen(
                 if (type.supportsBulkToggle()) {
                     item(key = "bulk_$type") {
                         val (active, inactive) = type.bulkToggleLabels()
+                        val isBulkLoading = type in state.bulkTogglingTypes
                         BulkToggleButton(
                             allActive = devices.allActive(),
                             onBulkToggle = { turnOn -> viewModel.onBulkToggle(type, turnOn) },
                             activeLabel = stringResource(active),
                             inactiveLabel = stringResource(inactive),
+                            isLoading = isBulkLoading,
                         )
                     }
                 }

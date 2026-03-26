@@ -40,6 +40,7 @@ data class DeviceDetailUiState(
     val roomName: String? = null,
     val deviceEvents: List<DeviceEvent> = emptyList(),
     val isLoading: Boolean = true,
+    val isActionInProgress: Boolean = false,
 )
 
 class DeviceDetailViewModel(
@@ -100,44 +101,38 @@ class DeviceDetailViewModel(
         }
     }
 
-    fun onToggle() {
-        viewModelScope.launch { runCatching { toggleDevice(deviceId) } }
-    }
+    fun onToggle() = withActionLoading { toggleDevice(deviceId) }
 
-    fun onUpdateColor(color: DomainColor) {
-        viewModelScope.launch { runCatching { updateLight(deviceId, color = color) } }
-    }
+    fun onUpdateColor(color: DomainColor) = withActionLoading { updateLight(deviceId, color = color) }
 
-    fun onUpdateBrightness(brightness: Int) {
-        viewModelScope.launch { runCatching { updateLight(deviceId, brightness = brightness) } }
-    }
+    fun onUpdateBrightness(brightness: Int) = withActionLoading { updateLight(deviceId, brightness = brightness) }
 
-    fun onUpdateOpeningLevel(level: Int) {
-        viewModelScope.launch { runCatching { updateBlind(deviceId, level) } }
-    }
+    fun onUpdateOpeningLevel(level: Int) = withActionLoading { updateBlind(deviceId, level) }
 
     fun onUpdateTargetTemperature(temperature: Double) {
-        debouncedControl { updateThermostat(deviceId, targetTemperature = temperature) }
-    }
-
-    fun onToggleHeating() {
-        viewModelScope.launch {
-            val device = _uiState.value.device
-            if (device is Thermostat) {
-                runCatching { updateThermostat(deviceId, isHeatingOn = !device.isHeatingOn) }
-            }
-        }
-    }
-
-    fun onLaunchContent(url: String) {
-        viewModelScope.launch { runCatching { launchContent(deviceId, url) } }
-    }
-
-    private fun debouncedControl(block: suspend () -> Unit) {
         controlJob?.cancel()
         controlJob = viewModelScope.launch {
             delay(CONTROL_DEBOUNCE_MS)
+            _uiState.update { it.copy(isActionInProgress = true) }
+            runCatching { updateThermostat(deviceId, targetTemperature = temperature) }
+            _uiState.update { it.copy(isActionInProgress = false) }
+        }
+    }
+
+    fun onToggleHeating() {
+        val device = _uiState.value.device
+        if (device is Thermostat) {
+            withActionLoading { updateThermostat(deviceId, isHeatingOn = !device.isHeatingOn) }
+        }
+    }
+
+    fun onLaunchContent(url: String) = withActionLoading { launchContent(deviceId, url) }
+
+    private fun withActionLoading(block: suspend () -> Unit) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isActionInProgress = true) }
             runCatching { block() }
+            _uiState.update { it.copy(isActionInProgress = false) }
         }
     }
 

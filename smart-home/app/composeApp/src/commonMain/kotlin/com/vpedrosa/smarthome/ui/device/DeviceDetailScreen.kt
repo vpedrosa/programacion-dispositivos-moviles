@@ -222,10 +222,12 @@ fun DeviceDetailScreen(
                         .padding(bottom = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
+                    val actionInProgress = state.isActionInProgress
                     when (device) {
                         is Light -> LightContent(
                             device = device,
                             roomName = state.roomName,
+                            actionInProgress = actionInProgress,
                             onToggle = viewModel::onToggle,
                             onUpdateColor = viewModel::onUpdateColor,
                             onUpdateBrightness = viewModel::onUpdateBrightness,
@@ -234,26 +236,31 @@ fun DeviceDetailScreen(
                             device = device,
                             roomName = state.roomName,
                             events = state.deviceEvents,
+                            actionInProgress = actionInProgress,
                             onToggle = viewModel::onToggle,
                         )
                         is Blind -> BlindContent(
                             device = device,
+                            actionInProgress = actionInProgress,
                             onUpdateOpeningLevel = viewModel::onUpdateOpeningLevel,
                         )
                         is Thermostat -> ThermostatContent(
                             device = device,
+                            actionInProgress = actionInProgress,
                             onUpdateTargetTemp = viewModel::onUpdateTargetTemperature,
                             onToggleHeating = viewModel::onToggleHeating,
                         )
                         is SmartTv -> SmartTvContent(
                             device = device,
                             roomName = state.roomName,
+                            actionInProgress = actionInProgress,
                             onToggle = viewModel::onToggle,
                             onLaunchContent = viewModel::onLaunchContent,
                         )
                         is Switch -> SwitchContent(
                             device = device,
                             roomName = state.roomName,
+                            actionInProgress = actionInProgress,
                             onToggle = viewModel::onToggle,
                         )
                         is SmokeSensor -> SmokeSensorContent(device = device)
@@ -294,6 +301,7 @@ private fun SectionCard(
 private fun LightContent(
     device: Light,
     roomName: String?,
+    actionInProgress: Boolean,
     onToggle: () -> Unit,
     onUpdateColor: (DomainColor) -> Unit,
     onUpdateBrightness: (Int) -> Unit,
@@ -324,16 +332,24 @@ private fun LightContent(
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 )
             }
-            Switch(
-                checked = device.isOn,
-                onCheckedChange = { onToggle() },
-                colors = SwitchDefaults.colors(
-                    checkedTrackColor = MaterialTheme.colorScheme.primary,
-                    checkedThumbColor = Color.White,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
-                    uncheckedThumbColor = Color.White,
-                ),
-            )
+            if (actionInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            } else {
+                Switch(
+                    checked = device.isOn,
+                    onCheckedChange = { onToggle() },
+                    colors = SwitchDefaults.colors(
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedThumbColor = Color.White,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedThumbColor = Color.White,
+                    ),
+                )
+            }
         }
     }
 
@@ -473,6 +489,7 @@ private fun LockContent(
     device: Lock,
     roomName: String?,
     events: List<DeviceEvent>,
+    actionInProgress: Boolean,
     onToggle: () -> Unit,
 ) {
     val navy = MaterialTheme.colorScheme.primary
@@ -523,6 +540,7 @@ private fun LockContent(
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = onToggle,
+                enabled = !actionInProgress,
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = if (device.isLocked) Color(0xFFD32F2F) else navy,
@@ -530,6 +548,14 @@ private fun LockContent(
                 ),
                 shape = RoundedCornerShape(12.dp),
             ) {
+                if (actionInProgress) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp,
+                        color = Color.White,
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
                 Text(
                     text = stringResource(
                         if (device.isLocked) Res.string.lock_toggle_unlock
@@ -615,6 +641,7 @@ private fun EventRow(event: DeviceEvent) {
 @Composable
 private fun BlindContent(
     device: Blind,
+    actionInProgress: Boolean,
     onUpdateOpeningLevel: (Int) -> Unit,
 ) {
     val navy = MaterialTheme.colorScheme.primary
@@ -692,6 +719,7 @@ private fun BlindContent(
     ) {
         Button(
             onClick = { onUpdateOpeningLevel(0) },
+            enabled = !actionInProgress,
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary,
@@ -707,6 +735,7 @@ private fun BlindContent(
         }
         Button(
             onClick = { onUpdateOpeningLevel(100) },
+            enabled = !actionInProgress,
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = navy,
@@ -786,6 +815,7 @@ private fun BlindVisual(openingLevel: Int) {
 @Composable
 private fun ThermostatContent(
     device: Thermostat,
+    actionInProgress: Boolean,
     onUpdateTargetTemp: (Double) -> Unit,
     onToggleHeating: () -> Unit,
 ) {
@@ -948,16 +978,24 @@ private fun ThermostatContent(
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 )
             }
-            Switch(
-                checked = device.isHeatingOn,
-                onCheckedChange = { onToggleHeating() },
-                colors = SwitchDefaults.colors(
-                    checkedTrackColor = MaterialTheme.colorScheme.primary,
-                    checkedThumbColor = Color.White,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
-                    uncheckedThumbColor = Color.White,
-                ),
-            )
+            if (actionInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            } else {
+                Switch(
+                    checked = device.isHeatingOn,
+                    onCheckedChange = { onToggleHeating() },
+                    colors = SwitchDefaults.colors(
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedThumbColor = Color.White,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedThumbColor = Color.White,
+                    ),
+                )
+            }
         }
     }
 }
@@ -968,6 +1006,7 @@ private fun ThermostatContent(
 private fun SmartTvContent(
     device: SmartTv,
     roomName: String?,
+    actionInProgress: Boolean,
     onToggle: () -> Unit,
     onLaunchContent: (String) -> Unit,
 ) {
@@ -999,16 +1038,24 @@ private fun SmartTvContent(
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 )
             }
-            Switch(
-                checked = device.isOn,
-                onCheckedChange = { onToggle() },
-                colors = SwitchDefaults.colors(
-                    checkedTrackColor = navy,
-                    checkedThumbColor = Color.White,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
-                    uncheckedThumbColor = Color.White,
-                ),
-            )
+            if (actionInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp,
+                    color = navy,
+                )
+            } else {
+                Switch(
+                    checked = device.isOn,
+                    onCheckedChange = { onToggle() },
+                    colors = SwitchDefaults.colors(
+                        checkedTrackColor = navy,
+                        checkedThumbColor = Color.White,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedThumbColor = Color.White,
+                    ),
+                )
+            }
         }
     }
 
@@ -1095,7 +1142,7 @@ private fun SmartTvContent(
                 contentColor = Color.White,
             ),
             shape = RoundedCornerShape(12.dp),
-            enabled = device.isOn && urlInput.isNotBlank(),
+            enabled = device.isOn && urlInput.isNotBlank() && !actionInProgress,
         ) {
             Icon(
                 imageVector = Icons.Default.CastConnected,
@@ -1118,6 +1165,7 @@ private fun SmartTvContent(
 private fun SwitchContent(
     device: Switch,
     roomName: String?,
+    actionInProgress: Boolean,
     onToggle: () -> Unit,
 ) {
     SectionCard {
@@ -1145,16 +1193,24 @@ private fun SwitchContent(
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 )
             }
-            Switch(
-                checked = device.isOn,
-                onCheckedChange = { onToggle() },
-                colors = SwitchDefaults.colors(
-                    checkedTrackColor = MaterialTheme.colorScheme.primary,
-                    checkedThumbColor = Color.White,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
-                    uncheckedThumbColor = Color.White,
-                ),
-            )
+            if (actionInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            } else {
+                Switch(
+                    checked = device.isOn,
+                    onCheckedChange = { onToggle() },
+                    colors = SwitchDefaults.colors(
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedThumbColor = Color.White,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+                        uncheckedThumbColor = Color.White,
+                    ),
+                )
+            }
         }
     }
 }
