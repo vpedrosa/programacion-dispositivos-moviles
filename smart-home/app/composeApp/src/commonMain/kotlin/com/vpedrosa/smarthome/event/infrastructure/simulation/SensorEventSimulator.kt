@@ -9,6 +9,7 @@ import com.vpedrosa.smarthome.shared.domain.model.SmokeSensor
 import com.vpedrosa.smarthome.shared.domain.model.TemperatureSensor
 import com.vpedrosa.smarthome.shared.domain.model.Thermostat
 import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
+import com.vpedrosa.smarthome.antisquatter.application.SimulatePresenceUseCase
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
 import com.vpedrosa.smarthome.event.domain.BackgroundSimulatorPort
@@ -19,11 +20,14 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration.Companion.minutes
 
 class SensorEventSimulator(
     private val addDeviceEvent: AddDeviceEventUseCase,
     private val deviceRepository: DeviceRepository,
+    private val simulatePresence: SimulatePresenceUseCase,
     private val scope: CoroutineScope,
 ) : BackgroundSimulatorPort {
 
@@ -45,6 +49,7 @@ class SensorEventSimulator(
         scope.launch { emitWaterLeakAlerts() }
         scope.launch { emitThermostatAdjustments() }
         scope.launch { monitorDoorOpenDuration() }
+        scope.launch { runPresenceSimulation() }
     }
 
     private suspend fun emitTemperatureReadings() {
@@ -188,6 +193,14 @@ class SensorEventSimulator(
                     doorOpenSince.remove(sensor.id)
                 }
             }
+        }
+    }
+
+    private suspend fun runPresenceSimulation() {
+        while (true) {
+            delay(60_000L)
+            val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            simulatePresence(now.hour, now.minute)
         }
     }
 

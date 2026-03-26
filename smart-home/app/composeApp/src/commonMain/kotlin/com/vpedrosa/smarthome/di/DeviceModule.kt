@@ -65,6 +65,7 @@ val deviceModule = module {
         SensorEventSimulator(
             addDeviceEvent = get(),
             deviceRepository = get(),
+            simulatePresence = get(),
             scope = CoroutineScope(SupervisorJob() + Dispatchers.Default),
         )
     }
