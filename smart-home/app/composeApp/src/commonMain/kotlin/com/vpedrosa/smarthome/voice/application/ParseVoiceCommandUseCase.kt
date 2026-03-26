@@ -150,29 +150,29 @@ class ParseVoiceCommandUseCase {
     // -- Room name extraction --
 
     private fun extractRoomNameEs(text: String): String? {
-        // Matches "del salón", "de la cocina", "del dormitorio"
+        // Matches "del salón", "de la cocina", "de el salón", "en el salón", etc.
         // Word boundary prevents matching "de" inside words like "enciende"
-        val pattern = Regex("""\b(?:de las|de los|de la|del)\s+(.+?)(?:\s*$)""")
+        val pattern = Regex("""\b(?:de\s+las|de\s+los|de\s+la|de\s+el|del|en\s+las|en\s+los|en\s+la|en\s+el)\s+(.+?)[\s.,;!?]*$""")
         val match = pattern.find(text) ?: return null
         return match.groupValues[1].trim().ifBlank { null }
     }
 
     private fun extractRoomNameEn(text: String): String? {
         // Matches "in the living room", "in the kitchen"
-        val pattern = Regex("""(?:in the|in|of the|of)\s+(.+?)(?:\s*$)""")
+        val pattern = Regex("""(?:in the|in|of the|of)\s+(.+?)[\s.,;!?]*$""")
         val match = pattern.find(text) ?: return null
         return match.groupValues[1].trim().ifBlank { null }
     }
 
     private fun extractDoorNameEs(text: String): String? {
         // "puerta de entrada", "puerta del garaje"
-        val pattern = Regex("""puerta\s+(?:de(?:l)?\s+)?(.+?)(?:\s*$)""")
+        val pattern = Regex("""puerta\s+(?:de(?:l)?\s+)?(.+?)[\s.,;!?]*$""")
         val match = pattern.find(text) ?: return null
         return match.groupValues[1].trim().ifBlank { null }
     }
 
     private fun extractDoorNameEn(text: String): String? {
-        val pattern = Regex("""(?:door|lock)\s+(?:of the|of|in the|in)?\s*(.+?)(?:\s*$)""")
+        val pattern = Regex("""(?:door|lock)\s+(?:of the|of|in the|in)?\s*(.+?)[\s.,;!?]*$""")
         val match = pattern.find(text) ?: return null
         return match.groupValues[1].trim().ifBlank { null }
     }
