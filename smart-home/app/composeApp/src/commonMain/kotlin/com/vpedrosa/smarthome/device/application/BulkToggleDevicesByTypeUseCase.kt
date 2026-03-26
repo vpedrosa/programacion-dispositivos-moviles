@@ -10,7 +10,7 @@ class BulkToggleDevicesByTypeUseCase(
     private val deviceRepository: DeviceRepository,
     private val deviceControlPort: DeviceControlPort,
 ) {
-    suspend operator fun invoke(type: DeviceType, turnOn: Boolean) {
+    suspend operator fun invoke(type: DeviceType, turnOn: Boolean): Int {
         val devices = deviceRepository.observeDevicesByType(type).first()
 
         val updated = devices.mapNotNull { device ->
@@ -20,5 +20,6 @@ class BulkToggleDevicesByTypeUseCase(
         if (updated.isNotEmpty()) {
             deviceRepository.saveAll(updated)
         }
+        return updated.size
     }
 }

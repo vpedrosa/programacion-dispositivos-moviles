@@ -13,8 +13,8 @@ class BulkToggleDevicesByTypeInRoomUseCase(
     private val roomRepository: RoomRepository,
     private val deviceControlPort: DeviceControlPort,
 ) {
-    suspend operator fun invoke(roomId: RoomId, type: DeviceType, turnOn: Boolean) {
-        val room = roomRepository.observeRoom(roomId).first() ?: return
+    suspend operator fun invoke(roomId: RoomId, type: DeviceType, turnOn: Boolean): Int {
+        val room = roomRepository.observeRoom(roomId).first() ?: return 0
         val allDevices = deviceRepository.observeAllDevices().first()
         val deviceMap = allDevices.associateBy { it.id }
 
@@ -29,5 +29,6 @@ class BulkToggleDevicesByTypeInRoomUseCase(
         if (updated.isNotEmpty()) {
             deviceRepository.saveAll(updated)
         }
+        return updated.size
     }
 }

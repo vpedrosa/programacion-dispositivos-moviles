@@ -58,7 +58,7 @@ val deviceModule = module {
     factory { SimulatePresenceUseCase(get(), get(), get(), get()) }
     factory { ParseVoiceCommandUseCase() }
     factory { CommissionDeviceUseCase(get(), get(), get()) }
-    factory { ExecuteVoiceCommandUseCase(get(), get(), get()) }
+    factory { ExecuteVoiceCommandUseCase(get(), get(), get(), get(), get()) }
 
     // Sensor event simulator (singleton, lazy start)
     single<BackgroundSimulatorPort> {

@@ -16,6 +16,8 @@ import com.vpedrosa.smarthome.shared.domain.model.Switch
 import com.vpedrosa.smarthome.shared.domain.model.Thermostat
 import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
+import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
+import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeInRoomUseCase
 import com.vpedrosa.smarthome.voice.application.ExecuteVoiceCommandUseCase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -39,7 +41,12 @@ class ExecuteVoiceCommandUseCaseTest {
 
     private val deviceRepo = InMemoryDeviceRepository(initialDevices = emptyList())
     private val roomRepo = InMemoryRoomRepository(initialRooms = emptyList())
-    private val execute = ExecuteVoiceCommandUseCase(deviceRepo, roomRepo, FakeVoiceDeviceControlPort())
+    private val fakeControlPort = FakeVoiceDeviceControlPort()
+    private val execute = ExecuteVoiceCommandUseCase(
+        deviceRepo, roomRepo, fakeControlPort,
+        BulkToggleDevicesByTypeUseCase(deviceRepo, fakeControlPort),
+        BulkToggleDevicesByTypeInRoomUseCase(deviceRepo, roomRepo, fakeControlPort),
+    )
 
     // -- Toggle lights --
 

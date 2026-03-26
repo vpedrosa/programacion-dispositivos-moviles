@@ -4,10 +4,12 @@ import com.vpedrosa.smarthome.shared.domain.model.Blind
 import com.vpedrosa.smarthome.shared.domain.model.Device
 import com.vpedrosa.smarthome.shared.domain.model.DeviceType
 import com.vpedrosa.smarthome.shared.domain.model.Lock
+import com.vpedrosa.smarthome.shared.domain.model.RoomId
 import com.vpedrosa.smarthome.voice.domain.model.ParsedVoiceCommand
 import com.vpedrosa.smarthome.shared.domain.model.Thermostat
 import com.vpedrosa.smarthome.voice.domain.model.VoiceCommandResult
-import com.vpedrosa.smarthome.shared.domain.toggleDevice
+import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
+import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeInRoomUseCase
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
@@ -21,6 +23,8 @@ class ExecuteVoiceCommandUseCase(
     private val deviceRepository: DeviceRepository,
     private val roomRepository: RoomRepository,
     private val deviceControlPort: DeviceControlPort,
+    private val bulkToggle: BulkToggleDevicesByTypeUseCase,
+    private val bulkToggleInRoom: BulkToggleDevicesByTypeInRoomUseCase,
 ) {
     suspend operator fun invoke(command: ParsedVoiceCommand): VoiceCommandResult {
         return when (command) {
@@ -37,32 +41,22 @@ class ExecuteVoiceCommandUseCase(
     }
 
     private suspend fun executeToggle(cmd: ParsedVoiceCommand.ToggleDevices): VoiceCommandResult {
-        val devices = getDevicesByTypeAndRoom(cmd.deviceType, cmd.roomName)
-        if (devices.isEmpty()) {
-            return VoiceCommandResult(
+        val affected = if (cmd.roomName != null) {
+            val roomId = findRoomIdByName(cmd.roomName) ?: return VoiceCommandResult(
                 success = false,
-                message = "No ${cmd.deviceType.name.lowercase()} devices found${roomSuffix(cmd.roomName)}",
+                message = "No ${cmd.deviceType.name.lowercase()} devices found in ${cmd.roomName}",
                 devicesAffected = 0,
             )
-        }
-
-        val toggled = devices.mapNotNull { device ->
-            try {
-                toggleDevice(device, cmd.turnOn, deviceControlPort)
-            } catch (_: Exception) {
-                null
-            }
-        }
-
-        if (toggled.isNotEmpty()) {
-            deviceRepository.saveAll(toggled)
+            bulkToggleInRoom(roomId, cmd.deviceType, cmd.turnOn)
+        } else {
+            bulkToggle(cmd.deviceType, cmd.turnOn)
         }
 
         val action = if (cmd.turnOn) "turned on" else "turned off"
         return VoiceCommandResult(
-            success = toggled.isNotEmpty(),
-            message = "${cmd.deviceType.name.lowercase().replaceFirstChar { it.uppercase() }} $action${roomSuffix(cmd.roomName)} (${toggled.size})",
-            devicesAffected = toggled.size,
+            success = affected > 0,
+            message = "${cmd.deviceType.name.lowercase().replaceFirstChar { it.uppercase() }} $action${roomSuffix(cmd.roomName)} ($affected)",
+            devicesAffected = affected,
         )
     }
 
@@ -196,6 +190,12 @@ class ExecuteVoiceCommandUseCase(
 
         val roomDeviceIds = matchingRoom.deviceIds.map { it.value }.toSet()
         return allOfType.filter { it.id.value in roomDeviceIds }
+    }
+
+    private suspend fun findRoomIdByName(roomName: String): RoomId? {
+        val normalized = roomName.normalizeForComparison()
+        val rooms = roomRepository.observeAllRooms().first()
+        return rooms.find { it.name.lowercase().normalizeForComparison().contains(normalized) }?.id
     }
 
     private fun roomSuffix(roomName: String?): String =
