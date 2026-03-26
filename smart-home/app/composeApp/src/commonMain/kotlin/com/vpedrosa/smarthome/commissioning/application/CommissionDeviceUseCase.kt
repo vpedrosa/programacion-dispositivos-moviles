@@ -2,6 +2,7 @@ package com.vpedrosa.smarthome.commissioning.application
 
 import com.vpedrosa.smarthome.shared.domain.model.Device
 import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
+import com.vpedrosa.smarthome.shared.domain.model.withName
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 import com.vpedrosa.smarthome.commissioning.domain.CommissioningPort
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
