@@ -76,6 +76,7 @@ actual fun QrScannerScreen(
     ) == PackageManager.PERMISSION_GRANTED
     var scanned by remember { mutableStateOf(false) }
     var useCamera by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
     var cameraPermissionGranted by remember { mutableStateOf(hasCamera) }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
@@ -89,25 +90,39 @@ actual fun QrScannerScreen(
         contract = ActivityResultContracts.GetContent(),
     ) { uri: Uri? ->
         if (uri != null && !scanned) {
+            errorMessage = null
             try {
                 val inputImage = InputImage.fromFilePath(context, uri)
                 val scanner = BarcodeScanning.getClient()
                 scanner.process(inputImage)
                     .addOnSuccessListener { barcodes ->
+                        Log.d("QrScanner", "Barcodes found: ${barcodes.size}")
+                        var found = false
                         for (barcode in barcodes) {
-                            val raw = barcode.rawValue ?: continue
-                            if (raw.startsWith("MT:") && !scanned) {
+                            val raw = barcode.rawValue
+                            Log.d("QrScanner", "Barcode: format=${barcode.format} valueType=${barcode.valueType} raw=$raw")
+                            if (raw != null && raw.startsWith("MT:") && !scanned) {
                                 scanned = true
+                                found = true
                                 onQrScanned(raw)
-                                return@addOnSuccessListener
+                                break
+                            }
+                        }
+                        if (!found && !scanned) {
+                            errorMessage = if (barcodes.isEmpty()) {
+                                "No QR code found in image"
+                            } else {
+                                "QR found but not a Matter code (MT:...)"
                             }
                         }
                     }
                     .addOnFailureListener { e ->
                         Log.e("QrScanner", "Failed to scan image", e)
+                        errorMessage = "Error scanning image: ${e.message}"
                     }
             } catch (e: Exception) {
                 Log.e("QrScanner", "Failed to read image", e)
+                errorMessage = "Error reading image: ${e.message}"
             }
         }
     }
@@ -231,6 +246,17 @@ actual fun QrScannerScreen(
                         text = stringResource(Res.string.commissioning_qr_use_camera),
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.padding(vertical = 8.dp),
+                    )
+                }
+
+                errorMessage?.let { msg ->
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Text(
+                        text = msg,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFFD32F2F),
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
