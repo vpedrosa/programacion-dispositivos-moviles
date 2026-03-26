@@ -55,7 +55,7 @@ val deviceModule = module {
     factory { BulkToggleDevicesByTypeUseCase(get(), get()) }
     factory { BulkToggleDevicesByTypeInRoomUseCase(get(), get(), get()) }
     factory { AddDeviceEventUseCase(get(), get(), get()) }
-    factory { SimulatePresenceUseCase(get(), get(), get()) }
+    factory { SimulatePresenceUseCase(get(), get(), get(), get()) }
     factory { ParseVoiceCommandUseCase() }
     factory { CommissionDeviceUseCase(get(), get(), get()) }
     factory { ExecuteVoiceCommandUseCase(get(), get(), get()) }

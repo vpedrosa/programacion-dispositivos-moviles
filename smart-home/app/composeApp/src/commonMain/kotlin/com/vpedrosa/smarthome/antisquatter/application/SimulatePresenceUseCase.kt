@@ -3,6 +3,7 @@ package com.vpedrosa.smarthome.antisquatter.application
 import com.vpedrosa.smarthome.shared.domain.model.Blind
 import com.vpedrosa.smarthome.shared.domain.model.Light
 import com.vpedrosa.smarthome.antisquatter.domain.AntiSquatterRepository
+import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
 import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
@@ -23,6 +24,7 @@ import kotlin.time.Clock
 class SimulatePresenceUseCase(
     private val antiSquatterRepository: AntiSquatterRepository,
     private val deviceRepository: DeviceRepository,
+    private val deviceControlPort: DeviceControlPort,
     private val addDeviceEvent: AddDeviceEventUseCase,
 ) {
     /**
@@ -48,14 +50,20 @@ class SimulatePresenceUseCase(
 
         // Toggle all lights
         for (light in lights) {
-            val toggled = light.copy(isOn = !light.isOn)
+            val newOn = !light.isOn
+            try {
+                deviceControlPort.toggleOnOff(light.id, newOn)
+            } catch (_: Exception) {
+                continue
+            }
+            val toggled = light.copy(isOn = newOn)
             deviceRepository.save(toggled)
-            val action = if (toggled.isOn) "encendida" else "apagada"
+            val action = if (newOn) "encendida" else "apagada"
             addDeviceEvent(
                 DeviceEvent(
                     id = "asq-${Clock.System.now().toEpochMilliseconds()}-${Random.nextInt(100_000)}",
                     deviceId = light.id,
-                    type = if (toggled.isOn) DeviceEventType.DEVICE_TURNED_ON else DeviceEventType.DEVICE_TURNED_OFF,
+                    type = if (newOn) DeviceEventType.DEVICE_TURNED_ON else DeviceEventType.DEVICE_TURNED_OFF,
                     message = "Antiokupas: ${light.name} $action",
                     timestamp = Clock.System.now(),
                 ),
@@ -65,6 +73,11 @@ class SimulatePresenceUseCase(
         // Toggle all blinds
         for (blind in blinds) {
             val newLevel = if (blind.openingLevel > 0) 0 else 100
+            try {
+                deviceControlPort.setWindowCoveringPosition(blind.id, newLevel)
+            } catch (_: Exception) {
+                continue
+            }
             val toggled = blind.copy(openingLevel = newLevel)
             deviceRepository.save(toggled)
             val action = if (newLevel > 0) "abierta" else "cerrada"

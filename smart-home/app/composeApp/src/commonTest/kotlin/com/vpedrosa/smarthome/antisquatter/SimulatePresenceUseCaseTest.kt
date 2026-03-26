@@ -14,6 +14,8 @@ import com.vpedrosa.smarthome.antisquatter.application.SimulatePresenceUseCase
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
 import com.vpedrosa.smarthome.event.domain.NotificationPort
 import com.vpedrosa.smarthome.settings.infrastructure.persistence.InMemoryAppSettingsRepository
+import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
+import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -51,6 +53,18 @@ class SimulatePresenceUseCaseTest {
         override fun showSensorAlert(event: DeviceEvent) {}
     }
 
+    private val fakeDeviceControlPort = object : DeviceControlPort {
+        override fun registerDevice(deviceId: DeviceId, connectionInfo: DeviceConnectionInfo) {}
+        override fun deregisterDevice(deviceId: DeviceId) {}
+        override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {}
+        override suspend fun setLevel(deviceId: DeviceId, level: Int) {}
+        override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {}
+        override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {}
+        override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {}
+        override suspend fun setWindowCoveringPosition(deviceId: DeviceId, openPercent: Int) {}
+        override suspend fun launchContent(deviceId: DeviceId, url: String) {}
+    }
+
     private fun createUseCase(
         config: AntiSquatterConfig,
         devices: List<com.vpedrosa.smarthome.shared.domain.model.Device>,
@@ -60,7 +74,7 @@ class SimulatePresenceUseCaseTest {
         val addEvent = AddDeviceEventUseCase(eventRepo, fakeNotificationPort, InMemoryAppSettingsRepository())
         val antiSquatterRepo = InMemoryAntiSquatterRepository()
         kotlinx.coroutines.runBlocking { antiSquatterRepo.saveConfig(config) }
-        return Triple(SimulatePresenceUseCase(antiSquatterRepo, deviceRepo, addEvent), deviceRepo, antiSquatterRepo)
+        return Triple(SimulatePresenceUseCase(antiSquatterRepo, deviceRepo, fakeDeviceControlPort, addEvent), deviceRepo, antiSquatterRepo)
     }
 
     @Test
