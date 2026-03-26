@@ -1,6 +1,7 @@
 package com.vpedrosa.smarthome.ui.antisquatter
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,11 +29,17 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import smarthome.composeapp.generated.resources.Res
+import smarthome.composeapp.generated.resources.action_cancel
 import smarthome.composeapp.generated.resources.anti_squatter_active_subtitle
 import smarthome.composeapp.generated.resources.anti_squatter_inactive_subtitle
 import smarthome.composeapp.generated.resources.anti_squatter_presence_simulation
@@ -53,6 +62,7 @@ import smarthome.composeapp.generated.resources.anti_squatter_summary_actions
 import smarthome.composeapp.generated.resources.anti_squatter_validation_error
 import smarthome.composeapp.generated.resources.anti_squatter_description
 import smarthome.composeapp.generated.resources.a11y_navigate_back
+import smarthome.composeapp.generated.resources.action_save
 import smarthome.composeapp.generated.resources.title_anti_squatter
 import com.vpedrosa.smarthome.ui.theme.ActiveGreen
 
@@ -63,6 +73,32 @@ fun AntiSquatterScreen(
     viewModel: AntiSquatterViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsState()
+    var showStartTimePicker by remember { mutableStateOf(false) }
+    var showEndTimePicker by remember { mutableStateOf(false) }
+
+    if (showStartTimePicker) {
+        TimePickerDialog(
+            initialHour = state.startHour,
+            initialMinute = state.startMinute,
+            onConfirm = { hour, minute ->
+                viewModel.updateStartTime(hour, minute)
+                showStartTimePicker = false
+            },
+            onDismiss = { showStartTimePicker = false },
+        )
+    }
+
+    if (showEndTimePicker) {
+        TimePickerDialog(
+            initialHour = state.endHour,
+            initialMinute = state.endMinute,
+            onConfirm = { hour, minute ->
+                viewModel.updateEndTime(hour, minute)
+                showEndTimePicker = false
+            },
+            onDismiss = { showEndTimePicker = false },
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -167,21 +203,21 @@ fun AntiSquatterScreen(
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     // Start time
-                    TimeInputRow(
+                    TimeDisplayRow(
                         label = stringResource(Res.string.anti_squatter_start_time),
                         hour = state.startHour,
                         minute = state.startMinute,
-                        onTimeChange = viewModel::updateStartTime,
+                        onClick = { showStartTimePicker = true },
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // End time
-                    TimeInputRow(
+                    TimeDisplayRow(
                         label = stringResource(Res.string.anti_squatter_end_time),
                         hour = state.endHour,
                         minute = state.endMinute,
-                        onTimeChange = viewModel::updateEndTime,
+                        onClick = { showEndTimePicker = true },
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -259,11 +295,11 @@ fun AntiSquatterScreen(
 }
 
 @Composable
-private fun TimeInputRow(
+private fun TimeDisplayRow(
     label: String,
     hour: Int,
     minute: Int,
-    onTimeChange: (Int, Int) -> Unit,
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -275,38 +311,52 @@ private fun TimeInputRow(
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onBackground,
         )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            OutlinedTextField(
-                value = hour.toString().padStart(2, '0'),
-                onValueChange = { text ->
-                    text.toIntOrNull()?.coerceIn(0, 23)?.let { onTimeChange(it, minute) }
-                },
-                modifier = Modifier.width(64.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    cursorColor = MaterialTheme.colorScheme.primary,
-                ),
-            )
+        Card(
+            modifier = Modifier.clickable(onClick = onClick),
+            shape = RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+            ),
+        ) {
             Text(
-                text = ":",
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(horizontal = 4.dp),
-            )
-            OutlinedTextField(
-                value = minute.toString().padStart(2, '0'),
-                onValueChange = { text ->
-                    text.toIntOrNull()?.coerceIn(0, 59)?.let { onTimeChange(hour, it) }
-                },
-                modifier = Modifier.width(64.dp),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    cursorColor = MaterialTheme.colorScheme.primary,
-                ),
+                text = "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TimePickerDialog(
+    initialHour: Int,
+    initialMinute: Int,
+    onConfirm: (Int, Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val timePickerState = rememberTimePickerState(
+        initialHour = initialHour,
+        initialMinute = initialMinute,
+        is24Hour = true,
+    )
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = { onConfirm(timePickerState.hour, timePickerState.minute) }) {
+                Text(stringResource(Res.string.action_save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(Res.string.action_cancel))
+            }
+        },
+        text = {
+            TimePicker(state = timePickerState)
+        },
+    )
 }
