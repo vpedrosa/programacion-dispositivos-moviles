@@ -873,19 +873,24 @@ private fun ThermostatContent(
 
     // Current temperature
     SectionCard {
-        Text(
-            text = stringResource(Res.string.control_current_temperature),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onBackground,
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = "${device.currentTemperature}\u00B0C",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = navy,
-        )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = stringResource(Res.string.control_current_temperature).uppercase(),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                letterSpacing = 2.sp,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "${device.currentTemperature}\u00B0C",
+                style = MaterialTheme.typography.displayMedium,
+                fontWeight = FontWeight.Bold,
+                color = navy,
+            )
+        }
     }
 
     // Target temperature dial
@@ -902,56 +907,10 @@ private fun ThermostatContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Circular dial
-            Box(
-                modifier = Modifier.size(200.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Canvas(modifier = Modifier.fillMaxSize()) {
-                    val strokeWidth = 12f
-                    val radius = (size.minDimension - strokeWidth) / 2
-                    val center = Offset(size.width / 2, size.height / 2)
-
-                    // Background arc
-                    drawArc(
-                        color = Color(0xFFE0E0E0),
-                        startAngle = 135f,
-                        sweepAngle = 270f,
-                        useCenter = false,
-                        topLeft = Offset(center.x - radius, center.y - radius),
-                        size = Size(radius * 2, radius * 2),
-                        style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
-                    )
-
-                    // Filled arc based on target temp (range 15-30)
-                    val fraction = ((device.targetTemperature - 15.0) / 15.0)
-                        .coerceIn(0.0, 1.0).toFloat()
-                    drawArc(
-                        color = Color(0xFF123458),
-                        startAngle = 135f,
-                        sweepAngle = 270f * fraction,
-                        useCenter = false,
-                        topLeft = Offset(center.x - radius, center.y - radius),
-                        size = Size(radius * 2, radius * 2),
-                        style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
-                    )
-                }
-
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "${"%.1f".format(device.targetTemperature)}\u00B0",
-                        style = MaterialTheme.typography.displayMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = navy,
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // +/- buttons
+            // Dial with +/- buttons on each side
             Row(
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
@@ -971,12 +930,52 @@ private fun ThermostatContent(
                     )
                 }
 
-                Text(
-                    text = "${"%.1f".format(device.targetTemperature)}\u00B0C",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onBackground,
-                )
+                Spacer(modifier = Modifier.width(16.dp))
+
+                // Circular dial
+                Box(
+                    modifier = Modifier.size(200.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Canvas(modifier = Modifier.fillMaxSize()) {
+                        val strokeWidth = 12f
+                        val radius = (size.minDimension - strokeWidth) / 2
+                        val center = Offset(size.width / 2, size.height / 2)
+
+                        // Background arc
+                        drawArc(
+                            color = Color(0xFFE0E0E0),
+                            startAngle = 135f,
+                            sweepAngle = 270f,
+                            useCenter = false,
+                            topLeft = Offset(center.x - radius, center.y - radius),
+                            size = Size(radius * 2, radius * 2),
+                            style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                        )
+
+                        // Filled arc based on target temp (range 15-30)
+                        val fraction = ((device.targetTemperature - 15.0) / 15.0)
+                            .coerceIn(0.0, 1.0).toFloat()
+                        drawArc(
+                            color = Color(0xFF123458),
+                            startAngle = 135f,
+                            sweepAngle = 270f * fraction,
+                            useCenter = false,
+                            topLeft = Offset(center.x - radius, center.y - radius),
+                            size = Size(radius * 2, radius * 2),
+                            style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                        )
+                    }
+
+                    Text(
+                        text = "${"%.1f".format(device.targetTemperature)}\u00B0",
+                        style = MaterialTheme.typography.displayMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = navy,
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
 
                 IconButton(
                     onClick = {
