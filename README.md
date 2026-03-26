@@ -14,6 +14,8 @@
 
 ## Smart Home
 
+REGISTRAR DISPOSITIVO + PROCESO SIMULADO: escaneo de QR de la lista. Añadir nombre del dispositivo. Botón en encender pensando. Cerraduras -> Apagar todas -> Abrir todas. Iconos encendido apagado. En el termostato tengo más botones de la cuenta. Temperatura actual / objetivo -> La actual más grande. Notificación de temperatura sólo si sube o baja mucho. Historial de acciones. Generación aleatoria + duración de lo que tengas las bombillas. Dos inputs de hora de inicio y hora de fin. Luces + persianas.
+
 Aplicación multiplataforma desarrollada con **Kotlin Multiplatform** para la gestión de una casa inteligente. Utiliza el protocolo Matter con dispositivos simulados, permitiendo el control individual, por grupos lógicos (habitaciones) y por categorías de dispositivos. Incluye módulo para Wear OS (exclusivamente por voz), control por voz en la app principal y un sistema de notificaciones basado en eventos de sensores.
 
 Contará con internacionalización y estará localizada en inglés y español.
