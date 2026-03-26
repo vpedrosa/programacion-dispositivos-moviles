@@ -12,6 +12,7 @@ import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.shared.domain.RoomRepository
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeInRoomUseCase
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
+import com.vpedrosa.smarthome.device.application.DeregisterDeviceUseCase
 import com.vpedrosa.smarthome.device.application.GetAllDevicesWithRoomUseCase
 import com.vpedrosa.smarthome.device.application.LaunchContentUseCase
 import com.vpedrosa.smarthome.room.application.SaveRoomUseCase
@@ -43,6 +44,7 @@ val deviceModule = module {
     single<VoiceCommandRepository> { InMemoryVoiceCommandRepository() }
 
     // Use cases
+    factory { DeregisterDeviceUseCase(get(), get()) }
     factory { GetAllDevicesWithRoomUseCase(get(), get()) }
     factory { LaunchContentUseCase(get(), get()) }
     factory { SaveRoomUseCase(get()) }
