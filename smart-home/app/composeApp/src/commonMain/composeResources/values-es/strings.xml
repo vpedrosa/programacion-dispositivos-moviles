@@ -172,20 +172,15 @@
     <!-- Anti-Squatter -->
     <string name="anti_squatter_presence_simulation">Simulacion de presencia</string>
     <string name="anti_squatter_active_subtitle">Activo - Simulando presencia</string>
-    <string name="anti_squatter_summary_title">Patrón activo</string>
-    <string name="anti_squatter_summary_lights">Luces en %1$s de %2$s</string>
-    <string name="anti_squatter_summary_lights_no_rooms">Luces (sin habitaciones) de %1$s</string>
-    <string name="anti_squatter_summary_tv">Smart TV de %1$s: %2$s</string>
-    <string name="anti_squatter_summary_empty">Sin acciones configuradas. Añade franjas horarias de luces o activa la reproducción de Smart TV.</string>
     <string name="anti_squatter_inactive_subtitle">Inactivo</string>
-    <string name="anti_squatter_lights_section">PATRON HORARIO - LUCES</string>
-    <string name="anti_squatter_add_slot">Anadir franja</string>
-    <string name="anti_squatter_tv_section">REPRODUCCION SMART TV</string>
-    <string name="anti_squatter_play_video">Reproducir video</string>
-    <string name="anti_squatter_time_range">Horario</string>
-    <string name="anti_squatter_tv_uses_light_slots">Usa las mismas franjas horarias que las luces</string>
-    <string name="anti_squatter_video_url">URL del video</string>
-    <string name="anti_squatter_change_video">Cambiar video</string>
+    <string name="anti_squatter_description">Enciende y apaga luces y persianas de forma aleatoria dentro del horario configurado para simular presencia en casa.</string>
+    <string name="anti_squatter_schedule_section">HORARIO</string>
+    <string name="anti_squatter_start_time">Hora de inicio</string>
+    <string name="anti_squatter_end_time">Hora de fin</string>
+    <string name="anti_squatter_action_duration">Duración de acción</string>
+    <string name="anti_squatter_duration_minutes">min</string>
+    <string name="anti_squatter_summary_actions">Se ejecutarán entre 1 y %1$d acciones de %2$d min cada una de forma aleatoria.</string>
+    <string name="anti_squatter_validation_error">La duración no puede superar el intervalo de tiempo.</string>
 
     <!-- Voice Control -->
     <string name="voice_listening">Escuchando...</string>

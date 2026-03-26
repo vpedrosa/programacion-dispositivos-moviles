@@ -172,20 +172,15 @@
     <!-- Anti-Squatter -->
     <string name="anti_squatter_presence_simulation">Presence simulation</string>
     <string name="anti_squatter_active_subtitle">Active - Simulating presence</string>
-    <string name="anti_squatter_summary_title">Active pattern</string>
-    <string name="anti_squatter_summary_lights">Lights in %1$s from %2$s</string>
-    <string name="anti_squatter_summary_lights_no_rooms">Lights (no rooms assigned) from %1$s</string>
-    <string name="anti_squatter_summary_tv">Smart TV from %1$s: %2$s</string>
-    <string name="anti_squatter_summary_empty">No actions configured. Add light time slots or enable Smart TV playback.</string>
     <string name="anti_squatter_inactive_subtitle">Inactive</string>
-    <string name="anti_squatter_lights_section">LIGHT TIME SCHEDULE</string>
-    <string name="anti_squatter_add_slot">Add time slot</string>
-    <string name="anti_squatter_tv_section">SMART TV PLAYBACK</string>
-    <string name="anti_squatter_play_video">Play video</string>
-    <string name="anti_squatter_time_range">Time range</string>
-    <string name="anti_squatter_tv_uses_light_slots">Uses the same time slots as lights</string>
-    <string name="anti_squatter_video_url">Video URL</string>
-    <string name="anti_squatter_change_video">Change video</string>
+    <string name="anti_squatter_description">Randomly toggles lights and blinds within the configured time window to simulate presence at home.</string>
+    <string name="anti_squatter_schedule_section">SCHEDULE</string>
+    <string name="anti_squatter_start_time">Start time</string>
+    <string name="anti_squatter_end_time">End time</string>
+    <string name="anti_squatter_action_duration">Action duration</string>
+    <string name="anti_squatter_duration_minutes">min</string>
+    <string name="anti_squatter_summary_actions">Between 1 and %1$d actions of %2$d min each will be executed randomly.</string>
+    <string name="anti_squatter_validation_error">Duration cannot exceed the time interval.</string>
 
     <!-- Voice Control -->
     <string name="voice_listening">Listening...</string>
