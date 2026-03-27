@@ -187,8 +187,8 @@
     <string name="voice_listening">Escuchando...</string>
     <string name="voice_tap_to_speak">Toca el microfono para hablar</string>
     <string name="voice_hint">Prueba: "Enciende las luces del salon"</string>
-    <string name="voice_recent_commands">COMANDOS RECIENTES</string>
-    <string name="voice_no_recent">Sin comandos recientes</string>
+    <string name="voice_recent_commands">ÓRDENES RECIENTES</string>
+    <string name="voice_no_recent">Sin órdenes recientes</string>
     <string name="voice_devices_affected">%1$d dispositivos afectados</string>
     <string name="voice_stop_listening">Dejar de escuchar</string>
     <string name="voice_start_listening">Empezar a escuchar</string>

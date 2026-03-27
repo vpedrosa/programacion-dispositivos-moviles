@@ -134,7 +134,7 @@ class AndroidSpeechRecognizerAdapter(
             "Tiempo de espera de red agotado"
 
         SpeechRecognizer.ERROR_NO_MATCH ->
-            "No se reconocio ningún comando"
+            "No se reconoció ninguna orden"
 
         SpeechRecognizer.ERROR_RECOGNIZER_BUSY ->
             "El reconocedor esta ocupado"
