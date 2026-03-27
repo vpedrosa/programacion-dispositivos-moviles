@@ -31,6 +31,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
@@ -359,7 +360,18 @@ private fun TimePickerDialog(
             }
         },
         text = {
-            TimePicker(state = timePickerState)
+            val softGray = Color(0xFFE8E8E8)
+            TimePicker(
+                state = timePickerState,
+                colors = TimePickerDefaults.colors(
+                    clockDialColor = softGray,
+                    clockDialUnselectedContentColor = Color.Black,
+                    timeSelectorSelectedContainerColor = softGray,
+                    timeSelectorUnselectedContainerColor = softGray,
+                    timeSelectorSelectedContentColor = Color.Black,
+                    timeSelectorUnselectedContentColor = Color.Black,
+                ),
+            )
         },
     )
 }
