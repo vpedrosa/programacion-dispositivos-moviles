@@ -48,7 +48,7 @@ val deviceModule = module {
     factory { GetAllDevicesWithRoomUseCase(get(), get()) }
     factory { LaunchContentUseCase(get(), get()) }
     factory { SaveRoomUseCase(get()) }
-    factory { ToggleDeviceUseCase(get(), get()) }
+    factory { ToggleDeviceUseCase(get(), get(), get()) }
     factory { UpdateLightUseCase(get(), get()) }
     factory { UpdateBlindUseCase(get(), get()) }
     factory { UpdateThermostatUseCase(get(), get()) }

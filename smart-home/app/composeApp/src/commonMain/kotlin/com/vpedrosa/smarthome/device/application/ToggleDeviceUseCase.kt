@@ -12,12 +12,19 @@ import com.vpedrosa.smarthome.shared.domain.model.TemperatureSensor
 import com.vpedrosa.smarthome.shared.domain.model.Thermostat
 import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
 import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
+import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
 import com.vpedrosa.smarthome.shared.domain.DeviceRepository
+import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
+import kotlin.time.Clock
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 import kotlinx.coroutines.flow.first
 
 class ToggleDeviceUseCase(
     private val deviceRepository: DeviceRepository,
     private val deviceControlPort: DeviceControlPort,
+    private val deviceEventRepository: DeviceEventRepository,
 ) {
     suspend operator fun invoke(id: DeviceId) {
         val device = deviceRepository.observeDevice(id).first() ?: return
@@ -48,5 +55,19 @@ class ToggleDeviceUseCase(
             is Blind, is ContactSensor, is SmokeSensor, is WaterLeakSensor, is TemperatureSensor -> return
         }
         deviceRepository.save(toggled)
+
+        if (device is Lock) {
+            val locked = !device.isLocked
+            @OptIn(ExperimentalUuidApi::class)
+            deviceEventRepository.add(
+                DeviceEvent(
+                    id = Uuid.random().toString(),
+                    deviceId = id,
+                    type = if (locked) DeviceEventType.DOOR_CLOSED else DeviceEventType.DOOR_OPENED,
+                    message = if (locked) "${device.name} bloqueada" else "${device.name} desbloqueada",
+                    timestamp = Clock.System.now(),
+                ),
+            )
+        }
     }
 }

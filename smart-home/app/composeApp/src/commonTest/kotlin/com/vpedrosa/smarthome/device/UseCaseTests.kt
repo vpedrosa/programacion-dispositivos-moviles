@@ -1,5 +1,6 @@
 package com.vpedrosa.smarthome.device
 
+import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceEventRepository
 import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceRepository
 import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryRoomRepository
 import com.vpedrosa.smarthome.shared.domain.model.Blind
@@ -97,7 +98,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleLight_turnsOnWhenOff() = runTest {
         val repo = InMemoryDeviceRepository(listOf(light))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(light.id)
 
@@ -108,7 +109,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleLight_turnsOffWhenOn() = runTest {
         val repo = InMemoryDeviceRepository(listOf(light.copy(isOn = true)))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(light.id)
 
@@ -119,7 +120,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleLock_unlocksWhenLocked() = runTest {
         val repo = InMemoryDeviceRepository(listOf(lock))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(lock.id)
 
@@ -130,7 +131,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleLock_locksWhenUnlocked() = runTest {
         val repo = InMemoryDeviceRepository(listOf(lock.copy(isLocked = false)))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(lock.id)
 
@@ -141,7 +142,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleSwitch_turnsOnWhenOff() = runTest {
         val repo = InMemoryDeviceRepository(listOf(switch))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(switch.id)
 
@@ -152,7 +153,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleSmartTv_turnsOnWhenOff() = runTest {
         val repo = InMemoryDeviceRepository(listOf(smartTv))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(smartTv.id)
 
@@ -163,7 +164,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleThermostat_togglesHeating() = runTest {
         val repo = InMemoryDeviceRepository(listOf(thermostat))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(thermostat.id)
 
@@ -174,7 +175,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleBlind_doesNothing() = runTest {
         val repo = InMemoryDeviceRepository(listOf(blind))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(blind.id)
 
@@ -185,7 +186,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleSensor_doesNothing() = runTest {
         val repo = InMemoryDeviceRepository(listOf(smokeSensor))
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(smokeSensor.id)
 
@@ -196,7 +197,7 @@ class ToggleDeviceUseCaseTest {
     @Test
     fun toggleNonexistentDevice_doesNotCrash() = runTest {
         val repo = InMemoryDeviceRepository(emptyList())
-        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort())
+        val useCase = ToggleDeviceUseCase(repo, FakeDeviceControlPort(), InMemoryDeviceEventRepository())
 
         useCase(DeviceId("nonexistent"))
 
