@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[node name="root" type="Node2D" unique_id=527821981]
+
+[node name="DifficultyManager" type="Node" parent="." unique_id=951308296]
+
+[node name="MissileSpawner" type="Node" parent="." unique_id=615851286]
+
+[node name="PowerupManager" type="Node" parent="." unique_id=90324223]
