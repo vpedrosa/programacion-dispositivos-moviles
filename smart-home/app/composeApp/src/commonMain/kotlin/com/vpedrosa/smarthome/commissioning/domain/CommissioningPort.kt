@@ -1,6 +1,6 @@
 package com.vpedrosa.smarthome.commissioning.domain
 
-import com.vpedrosa.smarthome.shared.domain.model.Device
+import com.vpedrosa.smarthome.device.domain.model.Device
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 
 interface CommissioningPort {

@@ -2,9 +2,10 @@ package com.vpedrosa.smarthome.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vpedrosa.smarthome.commissioning.domain.SimulatorDiscoveryPort
+import com.vpedrosa.smarthome.commissioning.application.ClearSimulatorHostUseCase
+import com.vpedrosa.smarthome.commissioning.application.SearchSimulatorUseCase
 import com.vpedrosa.smarthome.commissioning.domain.SimulatorHostRepository
-import com.vpedrosa.smarthome.settings.domain.model.AppSettings
+import com.vpedrosa.smarthome.settings.application.ToggleNotificationsUseCase
 import com.vpedrosa.smarthome.settings.domain.AppSettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,8 +24,10 @@ data class SettingsUiState(
 
 class SettingsViewModel(
     private val appSettingsRepository: AppSettingsRepository,
-    private val simulatorDiscoveryPort: SimulatorDiscoveryPort,
     private val simulatorHostRepository: SimulatorHostRepository,
+    private val toggleNotificationsUseCase: ToggleNotificationsUseCase,
+    private val searchSimulatorUseCase: SearchSimulatorUseCase,
+    private val clearSimulatorHostUseCase: ClearSimulatorHostUseCase,
 ) : ViewModel() {
 
     private val searchState = MutableStateFlow(SearchState())
@@ -47,30 +50,22 @@ class SettingsViewModel(
     )
 
     fun toggleNotifications() {
-        val current = uiState.value
         viewModelScope.launch {
-            appSettingsRepository.saveSettings(
-                AppSettings(notificationsEnabled = !current.notificationsEnabled),
-            )
+            toggleNotificationsUseCase()
         }
     }
 
     fun searchSimulator() {
         viewModelScope.launch {
             searchState.update { it.copy(isSearching = true, searchError = false) }
-            val host = simulatorDiscoveryPort.discoverSimulatorHost()
-            if (host != null) {
-                simulatorHostRepository.saveHost(host)
-                searchState.update { it.copy(isSearching = false, searchError = false) }
-            } else {
-                searchState.update { it.copy(isSearching = false, searchError = true) }
-            }
+            val found = searchSimulatorUseCase()
+            searchState.update { it.copy(isSearching = false, searchError = !found) }
         }
     }
 
     fun clearSimulatorHost() {
         viewModelScope.launch {
-            simulatorHostRepository.clearHost()
+            clearSimulatorHostUseCase()
         }
     }
 

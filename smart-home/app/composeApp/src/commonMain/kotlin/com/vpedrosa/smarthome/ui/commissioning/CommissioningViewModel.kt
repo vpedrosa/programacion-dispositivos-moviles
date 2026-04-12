@@ -3,9 +3,10 @@ package com.vpedrosa.smarthome.ui.commissioning
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
-import com.vpedrosa.smarthome.commissioning.domain.DeviceDiscoveryPort
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
 import com.vpedrosa.smarthome.commissioning.application.CommissionDeviceUseCase
+import com.vpedrosa.smarthome.commissioning.application.FindDiscoveredDeviceByQrUseCase
+import com.vpedrosa.smarthome.commissioning.application.GetDiscoveredDevicesUseCase
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,9 +25,10 @@ data class CommissioningUiState(
 )
 
 class CommissioningViewModel(
-    discoveryPort: DeviceDiscoveryPort,
+    getDiscoveredDevices: GetDiscoveredDevicesUseCase,
     deviceRepository: DeviceRepository,
     private val commissionDevice: CommissionDeviceUseCase,
+    private val findDeviceByQr: FindDiscoveredDeviceByQrUseCase,
 ) : ViewModel() {
 
     private val inProgress = MutableStateFlow<Set<String>>(emptySet())
@@ -35,7 +37,7 @@ class CommissioningViewModel(
     private val qrMatch = MutableStateFlow<DiscoveredDevice?>(null)
 
     val uiState: StateFlow<CommissioningUiState> = combine(
-        discoveryPort.discoverDevices(),
+        getDiscoveredDevices(),
         deviceRepository.observeAllDevices(),
         inProgress,
         error,
@@ -75,10 +77,7 @@ class CommissioningViewModel(
     }
 
     fun onQrScanned(discriminator: Int, passcode: Long) {
-        val devices = uiState.value.allDevices
-        val matched = devices.find {
-            it.discriminator == discriminator && it.passcode == passcode
-        }
+        val matched = findDeviceByQr(uiState.value.allDevices, discriminator, passcode)
         if (matched != null) {
             qrMatch.value = matched
         } else {

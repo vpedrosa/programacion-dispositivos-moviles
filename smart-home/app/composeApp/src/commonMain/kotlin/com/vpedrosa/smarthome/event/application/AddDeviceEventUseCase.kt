@@ -1,7 +1,7 @@
 package com.vpedrosa.smarthome.event.application
 
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
-import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.DeviceEventRepository
 import com.vpedrosa.smarthome.event.domain.NotificationPort
 import com.vpedrosa.smarthome.settings.domain.AppSettingsRepository
 import kotlinx.coroutines.flow.first

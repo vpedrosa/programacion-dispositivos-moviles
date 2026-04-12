@@ -2,9 +2,9 @@ package com.vpedrosa.smarthome.ui.event
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
-import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.model.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.DeviceEventRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

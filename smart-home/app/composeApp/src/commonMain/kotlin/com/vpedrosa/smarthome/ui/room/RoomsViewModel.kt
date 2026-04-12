@@ -2,12 +2,13 @@ package com.vpedrosa.smarthome.ui.room
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vpedrosa.smarthome.shared.domain.model.Device
-import com.vpedrosa.smarthome.shared.domain.model.isActive
-import com.vpedrosa.smarthome.shared.domain.model.Room
-import com.vpedrosa.smarthome.shared.domain.model.RoomId
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
-import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.device.domain.model.Device
+import com.vpedrosa.smarthome.device.domain.model.isActive
+import com.vpedrosa.smarthome.room.domain.model.Room
+import com.vpedrosa.smarthome.device.domain.model.RoomId
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
+import com.vpedrosa.smarthome.room.domain.RoomRepository
+import com.vpedrosa.smarthome.room.application.DeleteRoomUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -27,6 +28,7 @@ data class RoomsUiState(
 class RoomsViewModel(
     private val roomRepository: RoomRepository,
     deviceRepository: DeviceRepository,
+    private val deleteRoom: DeleteRoomUseCase,
 ) : ViewModel() {
 
     val uiState: StateFlow<RoomsUiState> = combine(
@@ -53,7 +55,7 @@ class RoomsViewModel(
 
     fun onDeleteRoom(roomId: RoomId) {
         viewModelScope.launch {
-            roomRepository.delete(roomId)
+            deleteRoom(roomId)
         }
     }
 }

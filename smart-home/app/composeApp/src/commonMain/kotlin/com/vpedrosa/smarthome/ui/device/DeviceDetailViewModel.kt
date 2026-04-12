@@ -2,22 +2,22 @@ package com.vpedrosa.smarthome.ui.device
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.Color as DomainColor
-import com.vpedrosa.smarthome.shared.domain.model.ContactSensor
-import com.vpedrosa.smarthome.shared.domain.model.Device
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.model.Light
-import com.vpedrosa.smarthome.shared.domain.model.Lock
-import com.vpedrosa.smarthome.shared.domain.model.SmokeSensor
-import com.vpedrosa.smarthome.shared.domain.model.Switch
-import com.vpedrosa.smarthome.shared.domain.model.TemperatureSensor
-import com.vpedrosa.smarthome.shared.domain.model.Thermostat
-import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
-import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
-import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.Color as DomainColor
+import com.vpedrosa.smarthome.device.domain.model.ContactSensor
+import com.vpedrosa.smarthome.device.domain.model.Device
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
+import com.vpedrosa.smarthome.device.domain.model.Light
+import com.vpedrosa.smarthome.device.domain.model.Lock
+import com.vpedrosa.smarthome.device.domain.model.SmokeSensor
+import com.vpedrosa.smarthome.device.domain.model.Switch
+import com.vpedrosa.smarthome.device.domain.model.TemperatureSensor
+import com.vpedrosa.smarthome.device.domain.model.Thermostat
+import com.vpedrosa.smarthome.device.domain.model.WaterLeakSensor
+import com.vpedrosa.smarthome.device.domain.DeviceEventRepository
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
+import com.vpedrosa.smarthome.room.domain.RoomRepository
 import com.vpedrosa.smarthome.device.application.DeregisterDeviceUseCase
 import com.vpedrosa.smarthome.device.application.LaunchContentUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
@@ -26,6 +26,7 @@ import com.vpedrosa.smarthome.device.application.UpdateLightUseCase
 import com.vpedrosa.smarthome.device.application.UpdateThermostatUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -128,9 +129,11 @@ class DeviceDetailViewModel(
     }
 
     fun onToggleHeating() {
-        val device = _uiState.value.device
-        if (device is Thermostat) {
-            withActionLoading { updateThermostat(deviceId, isHeatingOn = !device.isHeatingOn) }
+        withActionLoading {
+            val device = deviceRepository.observeDevice(deviceId).first()
+            if (device is Thermostat) {
+                updateThermostat(deviceId, isHeatingOn = !device.isHeatingOn)
+            }
         }
     }
 

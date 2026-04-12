@@ -2,21 +2,21 @@ package com.vpedrosa.smarthome.commissioning.infrastructure.matter
 
 import android.util.Log
 import chip.devicecontroller.ChipDeviceController
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.ContactSensor
-import com.vpedrosa.smarthome.shared.domain.model.Device
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.ContactSensor
+import com.vpedrosa.smarthome.device.domain.model.Device
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
-import com.vpedrosa.smarthome.shared.domain.model.Light
-import com.vpedrosa.smarthome.shared.domain.model.Lock
-import com.vpedrosa.smarthome.shared.domain.model.SmartTv
-import com.vpedrosa.smarthome.shared.domain.model.SmokeSensor
-import com.vpedrosa.smarthome.shared.domain.model.Switch
-import com.vpedrosa.smarthome.shared.domain.model.TemperatureSensor
-import com.vpedrosa.smarthome.shared.domain.model.Thermostat
-import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
-import com.vpedrosa.smarthome.shared.domain.model.Color as DeviceColor
+import com.vpedrosa.smarthome.device.domain.model.Light
+import com.vpedrosa.smarthome.device.domain.model.Lock
+import com.vpedrosa.smarthome.device.domain.model.SmartTv
+import com.vpedrosa.smarthome.device.domain.model.SmokeSensor
+import com.vpedrosa.smarthome.device.domain.model.Switch
+import com.vpedrosa.smarthome.device.domain.model.TemperatureSensor
+import com.vpedrosa.smarthome.device.domain.model.Thermostat
+import com.vpedrosa.smarthome.device.domain.model.WaterLeakSensor
+import com.vpedrosa.smarthome.device.domain.model.Color as DeviceColor
 import com.vpedrosa.smarthome.commissioning.domain.CommissioningPort
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume

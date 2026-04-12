@@ -38,7 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.model.DeviceEventType
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.jetbrains.compose.resources.StringResource

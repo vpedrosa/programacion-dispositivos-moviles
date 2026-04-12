@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
-import com.vpedrosa.smarthome.shared.domain.model.allActive
-import com.vpedrosa.smarthome.shared.domain.model.isToggleable
-import com.vpedrosa.smarthome.shared.domain.model.supportsBulkToggle
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.allActive
+import com.vpedrosa.smarthome.device.domain.model.isToggleable
+import com.vpedrosa.smarthome.device.domain.model.supportsBulkToggle
 import com.vpedrosa.smarthome.ui.device.BulkToggleButton
 import com.vpedrosa.smarthome.ui.device.DeviceCategorySectionHeader
 import com.vpedrosa.smarthome.ui.device.DeviceRow

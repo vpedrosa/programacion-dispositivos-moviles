@@ -1,6 +1,6 @@
 package com.vpedrosa.smarthome.voice
 
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
 import com.vpedrosa.smarthome.voice.domain.model.ParsedVoiceCommand
 import com.vpedrosa.smarthome.voice.application.ParseVoiceCommandUseCase
 import kotlin.test.Test

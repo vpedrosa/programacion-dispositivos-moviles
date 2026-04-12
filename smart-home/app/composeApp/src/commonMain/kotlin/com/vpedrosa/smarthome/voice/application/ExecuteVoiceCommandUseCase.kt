@@ -1,30 +1,34 @@
 package com.vpedrosa.smarthome.voice.application
 
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.Device
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
-import com.vpedrosa.smarthome.shared.domain.model.Lock
-import com.vpedrosa.smarthome.shared.domain.model.RoomId
-import com.vpedrosa.smarthome.voice.domain.model.ParsedVoiceCommand
-import com.vpedrosa.smarthome.shared.domain.model.Thermostat
-import com.vpedrosa.smarthome.voice.domain.model.VoiceCommandResult
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.Device
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.Lock
+import com.vpedrosa.smarthome.device.domain.model.RoomId
+import com.vpedrosa.smarthome.device.domain.model.Thermostat
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeInRoomUseCase
-import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
-import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.device.application.LockDoorUseCase
+import com.vpedrosa.smarthome.device.application.UpdateBlindUseCase
+import com.vpedrosa.smarthome.device.application.UpdateThermostatUseCase
+import com.vpedrosa.smarthome.room.domain.RoomRepository
+import com.vpedrosa.smarthome.voice.domain.model.ParsedVoiceCommand
+import com.vpedrosa.smarthome.voice.domain.model.VoiceCommandResult
 import kotlinx.coroutines.flow.first
 
 /**
- * Executes a [ParsedVoiceCommand] by applying the corresponding actions
- * to the matching devices. Returns a [VoiceCommandResult] describing what happened.
+ * Executes a [ParsedVoiceCommand] by delegating to the appropriate use cases.
+ * Returns a [VoiceCommandResult] describing what happened.
  */
 class ExecuteVoiceCommandUseCase(
     private val deviceRepository: DeviceRepository,
     private val roomRepository: RoomRepository,
-    private val deviceControlPort: DeviceControlPort,
     private val bulkToggle: BulkToggleDevicesByTypeUseCase,
     private val bulkToggleInRoom: BulkToggleDevicesByTypeInRoomUseCase,
+    private val updateBlind: UpdateBlindUseCase,
+    private val updateThermostat: UpdateThermostatUseCase,
+    private val lockDoor: LockDoorUseCase,
 ) {
     suspend operator fun invoke(command: ParsedVoiceCommand, rawText: String = ""): VoiceCommandResult {
         return when (command) {
@@ -49,10 +53,9 @@ class ExecuteVoiceCommandUseCase(
         }
 
         val action = if (cmd.turnOn) "turned on" else "turned off"
-        val roomLabel = room?.second
         return VoiceCommandResult(
             success = affected > 0,
-            message = "${cmd.deviceType.name.lowercase().replaceFirstChar { it.uppercase() }} $action${roomSuffix(roomLabel)} ($affected)",
+            message = "${cmd.deviceType.name.lowercase().replaceFirstChar { it.uppercase() }} $action${roomSuffix(room?.second)} ($affected)",
             devicesAffected = affected,
         )
     }
@@ -69,26 +72,15 @@ class ExecuteVoiceCommandUseCase(
         }
 
         val targetLevel = if (cmd.open) 100 else 0
-        val updated = devices.filterIsInstance<Blind>()
+        val affected = devices.filterIsInstance<Blind>()
             .filter { it.openingLevel != targetLevel }
-            .mapNotNull { blind ->
-                try {
-                    deviceControlPort.setWindowCoveringPosition(blind.id, targetLevel)
-                    blind.changeOpeningLevel(targetLevel)
-                } catch (_: Exception) {
-                    null
-                }
-            }
-
-        if (updated.isNotEmpty()) {
-            deviceRepository.saveAll(updated)
-        }
+            .count { blind -> runCatching { updateBlind(blind.id, targetLevel) }.isSuccess }
 
         val action = if (cmd.open) "opened" else "closed"
         return VoiceCommandResult(
-            success = updated.isNotEmpty(),
-            message = "Blinds $action${roomSuffix(room?.second)} (${updated.size})",
-            devicesAffected = updated.size,
+            success = affected > 0,
+            message = "Blinds $action${roomSuffix(room?.second)} ($affected)",
+            devicesAffected = affected,
         )
     }
 
@@ -103,24 +95,15 @@ class ExecuteVoiceCommandUseCase(
             )
         }
 
-        val updated = devices.filterIsInstance<Thermostat>()
-            .mapNotNull { thermostat ->
-                try {
-                    deviceControlPort.setThermostatSetpoint(thermostat.id, cmd.targetTemperature)
-                    thermostat.adjustTarget(cmd.targetTemperature)
-                } catch (_: Exception) {
-                    null
-                }
+        val affected = devices.filterIsInstance<Thermostat>()
+            .count { thermostat ->
+                runCatching { updateThermostat(thermostat.id, targetTemperature = cmd.targetTemperature) }.isSuccess
             }
 
-        if (updated.isNotEmpty()) {
-            deviceRepository.saveAll(updated)
-        }
-
         return VoiceCommandResult(
-            success = updated.isNotEmpty(),
-            message = "Temperature set to ${cmd.targetTemperature.toInt()}\u00B0${roomSuffix(room?.second)} (${updated.size})",
-            devicesAffected = updated.size,
+            success = affected > 0,
+            message = "Temperature set to ${cmd.targetTemperature.toInt()}\u00B0${roomSuffix(room?.second)} ($affected)",
+            devicesAffected = affected,
         )
     }
 
@@ -128,11 +111,8 @@ class ExecuteVoiceCommandUseCase(
         val allLocks = deviceRepository.observeDevicesByType(DeviceType.LOCK).first()
             .filterIsInstance<Lock>()
 
-        // Filter by door name if specified
         val locks = if (cmd.doorName != null) {
-            allLocks.filter { lock ->
-                lock.name.lowercase().contains(cmd.doorName.lowercase())
-            }
+            allLocks.filter { it.name.lowercase().contains(cmd.doorName.lowercase()) }
         } else {
             allLocks
         }
@@ -146,36 +126,19 @@ class ExecuteVoiceCommandUseCase(
             )
         }
 
-        val updated = locks
+        val affected = locks
             .filter { it.isLocked != cmd.lock }
-            .mapNotNull { lock ->
-                try {
-                    deviceControlPort.lockDoor(lock.id, cmd.lock)
-                    lock.toggle()
-                } catch (_: Exception) {
-                    null
-                }
-            }
-
-        if (updated.isNotEmpty()) {
-            deviceRepository.saveAll(updated)
-        }
+            .count { lock -> runCatching { lockDoor(lock.id, cmd.lock) }.isSuccess }
 
         val action = if (cmd.lock) "locked" else "unlocked"
         return VoiceCommandResult(
-            success = updated.isNotEmpty(),
-            message = "Door $action (${updated.size})",
-            devicesAffected = updated.size,
+            success = affected > 0,
+            message = "Door $action ($affected)",
+            devicesAffected = affected,
         )
     }
 
-    /**
-     * Returns devices of [type], optionally filtered by room ID.
-     */
-    private suspend fun getDevicesByTypeAndRoom(
-        type: DeviceType,
-        roomId: RoomId?,
-    ): List<Device> {
+    private suspend fun getDevicesByTypeAndRoom(type: DeviceType, roomId: RoomId?): List<Device> {
         val allOfType = deviceRepository.observeDevicesByType(type).first()
         if (roomId == null) return allOfType
 
@@ -184,20 +147,13 @@ class ExecuteVoiceCommandUseCase(
         return allOfType.filter { it.id.value in roomDeviceIds }
     }
 
-    /**
-     * Searches for any known room name in the raw command text.
-     * Returns (RoomId, displayName) if found, null otherwise.
-     */
     private suspend fun findRoomInText(text: String): Pair<RoomId, String>? {
         if (text.isBlank()) return null
         val normalizedText = text.normalizeForComparison()
         val rooms = roomRepository.observeAllRooms().first()
         return rooms
             .sortedByDescending { it.name.length }
-            .firstOrNull { room ->
-                val normalizedName = room.name.normalizeForComparison()
-                normalizedText.contains(normalizedName)
-            }
+            .firstOrNull { room -> normalizedText.contains(room.name.normalizeForComparison()) }
             ?.let { it.id to it.name }
     }
 

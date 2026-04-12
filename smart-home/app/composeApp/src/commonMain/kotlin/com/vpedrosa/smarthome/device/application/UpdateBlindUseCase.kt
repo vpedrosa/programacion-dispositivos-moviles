@@ -1,9 +1,9 @@
 package com.vpedrosa.smarthome.device.application
 
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
+import com.vpedrosa.smarthome.device.domain.DeviceControlPort
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
 import kotlinx.coroutines.flow.first
 
 class UpdateBlindUseCase(

@@ -8,6 +8,7 @@ import com.vpedrosa.smarthome.voice.domain.model.VoiceCommandResult
 import com.vpedrosa.smarthome.voice.domain.SpeechRecognizerPort
 import com.vpedrosa.smarthome.voice.application.ExecuteVoiceCommandUseCase
 import com.vpedrosa.smarthome.voice.application.ParseVoiceCommandUseCase
+import com.vpedrosa.smarthome.voice.application.RecordVoiceCommandUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Clock
 
 data class VoiceControlUiState(
     val isListening: Boolean = false,
@@ -33,6 +33,7 @@ class VoiceControlViewModel(
     private val parseVoiceCommand: ParseVoiceCommandUseCase,
     private val executeVoiceCommand: ExecuteVoiceCommandUseCase,
     private val voiceCommandRepository: VoiceCommandRepository,
+    private val recordVoiceCommand: RecordVoiceCommandUseCase,
 ) : ViewModel() {
 
     private val _localState = MutableStateFlow(LocalState())
@@ -106,13 +107,7 @@ class VoiceControlViewModel(
                 )
             }
 
-            voiceCommandRepository.add(
-                VoiceCommand(
-                    text = text,
-                    result = result,
-                    timestamp = Clock.System.now(),
-                )
-            )
+            recordVoiceCommand(text, result)
 
             _localState.update { it.copy(lastResult = result, isListening = false, isProcessing = false) }
         }

@@ -1,22 +1,22 @@
 package com.vpedrosa.smarthome.antisquatter
 
-import com.vpedrosa.smarthome.antisquatter.infrastructure.persistence.InMemoryAntiSquatterRepository
-import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceRepository
-import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceEventRepository
+import com.vpedrosa.smarthome.antisquatter.infrastructure.InMemoryAntiSquatterRepository
+import com.vpedrosa.smarthome.device.infrastructure.persistence.InMemoryDeviceRepository
+import com.vpedrosa.smarthome.device.infrastructure.persistence.InMemoryDeviceEventRepository
 import com.vpedrosa.smarthome.antisquatter.domain.model.AntiSquatterConfig
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.Color
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.model.Light
-import com.vpedrosa.smarthome.shared.domain.model.RoomId
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.Color
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
+import com.vpedrosa.smarthome.device.domain.model.Light
+import com.vpedrosa.smarthome.device.domain.model.RoomId
 import com.vpedrosa.smarthome.antisquatter.application.SimulatePresenceUseCase
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
 import com.vpedrosa.smarthome.event.domain.NotificationPort
-import com.vpedrosa.smarthome.settings.infrastructure.persistence.InMemoryAppSettingsRepository
-import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
-import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
+import com.vpedrosa.smarthome.settings.infrastructure.InMemoryAppSettingsRepository
+import com.vpedrosa.smarthome.device.domain.DeviceControlPort
+import com.vpedrosa.smarthome.device.domain.model.DeviceConnectionInfo
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -68,7 +68,7 @@ class SimulatePresenceUseCaseTest {
 
     private fun createUseCase(
         config: AntiSquatterConfig,
-        devices: List<com.vpedrosa.smarthome.shared.domain.model.Device>,
+        devices: List<com.vpedrosa.smarthome.device.domain.model.Device>,
     ): Triple<SimulatePresenceUseCase, InMemoryDeviceRepository, InMemoryAntiSquatterRepository> {
         val deviceRepo = InMemoryDeviceRepository(devices)
         val eventRepo = InMemoryDeviceEventRepository()

@@ -46,7 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.model.DeviceEventType
 import com.vpedrosa.smarthome.ui.components.UriImage
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -97,27 +97,6 @@ fun DashboardScreen(
         GreetingHeader()
 
         Spacer(modifier = Modifier.height(12.dp))
-
-        // -- Quick commissioning button (emulator only) --
-        if (state.showCommissioningButton) {
-            Button(
-                onClick = onNavigateToCommissioning,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Navy,
-                ),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.AddCircleOutline,
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(Res.string.commissioning_devices_button))
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-        }
 
         // -- Voice control button --
         Button(

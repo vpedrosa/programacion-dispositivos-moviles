@@ -73,20 +73,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.ContactSensor
-import com.vpedrosa.smarthome.shared.domain.model.Device
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
-import com.vpedrosa.smarthome.shared.domain.model.Light
-import com.vpedrosa.smarthome.shared.domain.model.Lock
-import com.vpedrosa.smarthome.shared.domain.model.SmartTv
-import com.vpedrosa.smarthome.shared.domain.model.SmokeSensor
-import com.vpedrosa.smarthome.shared.domain.model.Switch
-import com.vpedrosa.smarthome.shared.domain.model.TemperatureSensor
-import com.vpedrosa.smarthome.shared.domain.model.Thermostat
-import com.vpedrosa.smarthome.shared.domain.model.WaterLeakSensor
-import com.vpedrosa.smarthome.shared.domain.model.Color as DomainColor
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.ContactSensor
+import com.vpedrosa.smarthome.device.domain.model.Device
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.model.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.model.Light
+import com.vpedrosa.smarthome.device.domain.model.Lock
+import com.vpedrosa.smarthome.device.domain.model.SmartTv
+import com.vpedrosa.smarthome.device.domain.model.SmokeSensor
+import com.vpedrosa.smarthome.device.domain.model.Switch
+import com.vpedrosa.smarthome.device.domain.model.TemperatureSensor
+import com.vpedrosa.smarthome.device.domain.model.Thermostat
+import com.vpedrosa.smarthome.device.domain.model.WaterLeakSensor
+import com.vpedrosa.smarthome.device.domain.model.Color as DomainColor
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource

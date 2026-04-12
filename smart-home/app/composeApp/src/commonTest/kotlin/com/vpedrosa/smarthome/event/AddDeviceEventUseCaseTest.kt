@@ -1,12 +1,12 @@
 package com.vpedrosa.smarthome.event
 
-import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceEventRepository
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
+import com.vpedrosa.smarthome.device.infrastructure.persistence.InMemoryDeviceEventRepository
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.model.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
 import com.vpedrosa.smarthome.event.domain.NotificationPort
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
-import com.vpedrosa.smarthome.settings.infrastructure.persistence.InMemoryAppSettingsRepository
+import com.vpedrosa.smarthome.settings.infrastructure.InMemoryAppSettingsRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.time.Instant

@@ -2,11 +2,13 @@ package com.vpedrosa.smarthome.ui.antisquatter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vpedrosa.smarthome.antisquatter.domain.model.AntiSquatterConfig
+import com.vpedrosa.smarthome.antisquatter.application.ToggleAntiSquatterUseCase
+import com.vpedrosa.smarthome.antisquatter.application.UpdateAntiSquatterActionDurationUseCase
+import com.vpedrosa.smarthome.antisquatter.application.UpdateAntiSquatterEndTimeUseCase
+import com.vpedrosa.smarthome.antisquatter.application.UpdateAntiSquatterStartTimeUseCase
 import com.vpedrosa.smarthome.antisquatter.domain.AntiSquatterRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -24,6 +26,10 @@ data class AntiSquatterUiState(
 
 class AntiSquatterViewModel(
     private val antiSquatterRepository: AntiSquatterRepository,
+    private val toggleAntiSquatter: ToggleAntiSquatterUseCase,
+    private val updateStartTime: UpdateAntiSquatterStartTimeUseCase,
+    private val updateEndTime: UpdateAntiSquatterEndTimeUseCase,
+    private val updateActionDuration: UpdateAntiSquatterActionDurationUseCase,
 ) : ViewModel() {
 
     val uiState: StateFlow<AntiSquatterUiState> = antiSquatterRepository.observeConfig()
@@ -45,27 +51,18 @@ class AntiSquatterViewModel(
         )
 
     fun toggleEnabled() {
-        updateConfig { it.copy(isEnabled = !it.isEnabled) }
+        viewModelScope.launch { toggleAntiSquatter() }
     }
 
     fun updateStartTime(hour: Int, minute: Int) {
-        updateConfig { it.copy(startHour = hour, startMinute = minute) }
+        viewModelScope.launch { updateStartTime(hour, minute) }
     }
 
     fun updateEndTime(hour: Int, minute: Int) {
-        updateConfig { it.copy(endHour = hour, endMinute = minute) }
+        viewModelScope.launch { updateEndTime(hour, minute) }
     }
 
     fun updateActionDuration(minutes: Int) {
-        if (minutes > 0) {
-            updateConfig { it.copy(actionDurationMinutes = minutes) }
-        }
-    }
-
-    private fun updateConfig(transform: (AntiSquatterConfig) -> AntiSquatterConfig) {
-        viewModelScope.launch {
-            val current = antiSquatterRepository.observeConfig().first()
-            antiSquatterRepository.saveConfig(transform(current))
-        }
+        viewModelScope.launch { updateActionDuration(minutes) }
     }
 }

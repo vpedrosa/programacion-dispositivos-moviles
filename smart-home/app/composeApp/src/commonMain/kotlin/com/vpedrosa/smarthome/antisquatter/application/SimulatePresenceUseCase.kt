@@ -1,14 +1,14 @@
 package com.vpedrosa.smarthome.antisquatter.application
 
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
-import com.vpedrosa.smarthome.shared.domain.model.Light
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.Light
 import com.vpedrosa.smarthome.antisquatter.domain.AntiSquatterRepository
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
 import com.vpedrosa.smarthome.event.application.AddDeviceEventUseCase
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.model.DeviceEventType
 import kotlinx.coroutines.flow.first
 import kotlin.random.Random
 import kotlin.time.Clock

@@ -8,18 +8,6 @@ This project follows **Hexagonal Architecture (Ports & Adapters)** organized by 
 
 ```
 com.vpedrosa.smarthome/
-├── shared/                    # Shared kernel (cross-cutting domain used by 3+ slices)
-│   ├── domain/
-│   │   ├── model/             # Entities, value objects (Device, Room, DeviceType, Color...)
-│   │   ├── dto/               # Data transfer objects (DeviceDto, RoomDto...)
-│   │   ├── DeviceRepository.kt
-│   │   ├── RoomRepository.kt
-│   │   ├── DeviceEventRepository.kt
-│   │   └── DeviceControlPort.kt
-│   └── infrastructure/
-│       ├── persistence/       # InMemory repository implementations
-│       └── matter/            # Matter protocol adapters (androidMain)
-│
 ├── <feature>/                 # One folder per vertical slice
 │   ├── domain/
 │   │   ├── model/             # Feature-specific entities and value objects
@@ -51,9 +39,8 @@ com.vpedrosa.smarthome/
 
 | Slice | Description |
 |-------|-------------|
-| `shared` | Core domain entities (Device types, Room, DeviceEvent) and ports used by 3+ slices |
-| `device` | Device control use cases (toggle, update light/blind/thermostat, bulk toggle) |
-| `room` | Room management (no domain/application - entities in shared) |
+| `device` | Core domain (Device, DeviceId, RoomId, Color, DeviceEvent…), ports, use cases, infrastructure |
+| `room` | Room management (Room, RoomId lives in device/domain/model) |
 | `commissioning` | Device discovery & pairing (Matter protocol) |
 | `voice` | Voice command parsing & execution |
 | `event` | Device events, notifications, sensor simulation |
@@ -68,7 +55,7 @@ com.vpedrosa.smarthome/
 4. **DTOs in `dto/`**: Data transfer objects go in `domain/dto/`
 5. **Repositories at domain root**: Repository interfaces go directly in `domain/` (or `repositories/` if many)
 6. **UI is separate**: Screens and ViewModels live in `ui/<feature>/`, NOT inside infrastructure
-7. **Shared kernel**: Entities used by 3+ slices go to `shared/domain/model/`
+7. **`device` is the canonical domain slice**: `Device`, `DeviceId`, `RoomId`, `Color`, ports and repositories live in `device/domain/`. Other slices import from there.
 8. **Each slice only creates layers it needs** (no empty folders)
 9. **Use cases**: One class per use case, named `<Verb><Noun>UseCase`, using `operator fun invoke()`
 10. **Android-specific adapters**: Follow the same slice structure under `androidMain/`
@@ -82,15 +69,14 @@ com.vpedrosa.smarthome/
 5. Add adapter implementations in `<feature>/infrastructure/<adapter-type>/`
 6. Add UI screens in `ui/<feature>/`
 7. Register DI bindings in `di/`
-8. If domain entities are needed by 3+ other slices, move them to `shared/domain/model/`
+8. If domain entities are needed by 3+ other slices, move them to `device/domain/model/`
 
 ### Testing
 
 Tests mirror the slice structure under `commonTest/`:
 ```
 commonTest/kotlin/com/vpedrosa/smarthome/
-├── shared/          # Tests for shared repos and domain logic
-├── device/          # Tests for device use cases
+├── device/          # Tests for device domain, repos and use cases
 ├── voice/           # Tests for voice command parsing/execution
 ├── event/           # Tests for event use cases
 └── antisquatter/    # Tests for presence simulation

@@ -1,23 +1,25 @@
 package com.vpedrosa.smarthome.device
 
-import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceEventRepository
-import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceRepository
-import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryRoomRepository
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.Color
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
-import com.vpedrosa.smarthome.shared.domain.model.Light
-import com.vpedrosa.smarthome.shared.domain.model.Lock
-import com.vpedrosa.smarthome.shared.domain.model.Room
-import com.vpedrosa.smarthome.shared.domain.model.RoomId
-import com.vpedrosa.smarthome.shared.domain.model.SmartTv
-import com.vpedrosa.smarthome.shared.domain.model.SmokeSensor
-import com.vpedrosa.smarthome.shared.domain.model.Switch
-import com.vpedrosa.smarthome.shared.domain.model.Thermostat
-import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
-import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
+import com.vpedrosa.smarthome.device.infrastructure.persistence.InMemoryDeviceEventRepository
+import com.vpedrosa.smarthome.device.infrastructure.persistence.InMemoryDeviceRepository
+import com.vpedrosa.smarthome.room.infrastructure.InMemoryRoomRepository
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.Color
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.Light
+import com.vpedrosa.smarthome.device.domain.model.Lock
+import com.vpedrosa.smarthome.room.domain.model.Room
+import com.vpedrosa.smarthome.device.domain.model.RoomId
+import com.vpedrosa.smarthome.device.domain.model.SmartTv
+import com.vpedrosa.smarthome.device.domain.model.SmokeSensor
+import com.vpedrosa.smarthome.device.domain.model.Switch
+import com.vpedrosa.smarthome.device.domain.model.Thermostat
+import com.vpedrosa.smarthome.device.domain.model.DeviceConnectionInfo
+import com.vpedrosa.smarthome.device.domain.DeviceControlPort
+import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeInRoomUseCase
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
+import com.vpedrosa.smarthome.device.application.LockDoorUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
 import com.vpedrosa.smarthome.device.application.UpdateBlindUseCase
 import com.vpedrosa.smarthome.device.application.UpdateLightUseCase
@@ -36,6 +38,7 @@ internal class FakeDeviceControlPort : DeviceControlPort {
     override fun deregisterDevice(deviceId: DeviceId) {}
     override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {}
     override suspend fun setLevel(deviceId: DeviceId, level: Int) {}
+    override suspend fun setColor(deviceId: DeviceId, color: Color) {}
     override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {}
     override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {}
     override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {}
@@ -541,6 +544,113 @@ class BulkToggleDevicesByTypeUseCaseTest {
 
         val result = repo.observeDevice(DeviceId("tv1")).first() as SmartTv
         assertTrue(result.isOn)
+    }
+}
+
+// endregion
+
+// region LockDoorUseCase
+
+class LockDoorUseCaseTest {
+
+    private val lock = Lock(DeviceId("lk1"), "Front Door", RoomId("room-1"), isLocked = false)
+
+    @Test
+    fun lockDoor_locksAnUnlockedDoor() = runTest {
+        val repo = InMemoryDeviceRepository(listOf(lock))
+        val useCase = LockDoorUseCase(repo, FakeDeviceControlPort())
+
+        useCase(lock.id, lock = true)
+
+        val result = repo.observeDevice(lock.id).first() as Lock
+        assertTrue(result.isLocked)
+    }
+
+    @Test
+    fun lockDoor_unlocksALockedDoor() = runTest {
+        val repo = InMemoryDeviceRepository(listOf(lock.copy(isLocked = true)))
+        val useCase = LockDoorUseCase(repo, FakeDeviceControlPort())
+
+        useCase(lock.id, lock = false)
+
+        val result = repo.observeDevice(lock.id).first() as Lock
+        assertFalse(result.isLocked)
+    }
+
+    @Test
+    fun lockDoor_nonLockDevice_doesNothing() = runTest {
+        val light = Light(DeviceId("l1"), "Lamp", RoomId("room-1"), isOn = true, Color.WHITE, 80)
+        val repo = InMemoryDeviceRepository(listOf(light))
+        val useCase = LockDoorUseCase(repo, FakeDeviceControlPort())
+
+        useCase(DeviceId("l1"), lock = true)
+
+        val result = repo.observeDevice(DeviceId("l1")).first() as Light
+        assertTrue(result.isOn, "Light should remain unchanged when invoking LockDoorUseCase on it")
+    }
+
+    @Test
+    fun lockDoor_nonexistentDevice_doesNotCrash() = runTest {
+        val repo = InMemoryDeviceRepository(emptyList())
+        val useCase = LockDoorUseCase(repo, FakeDeviceControlPort())
+
+        useCase(DeviceId("nonexistent"), lock = true)
+
+        assertTrue(repo.observeAllDevices().first().isEmpty())
+    }
+}
+
+// endregion
+
+// region BulkToggleDevicesByTypeInRoomUseCase
+
+class BulkToggleDevicesByTypeInRoomUseCaseTest {
+
+    @Test
+    fun turnOnLightsInRoom_onlyAffectsTargetRoom() = runTest {
+        val light1 = Light(DeviceId("l1"), "L1", RoomId("room-1"), isOn = false, Color.WHITE, 80)
+        val light2 = Light(DeviceId("l2"), "L2", RoomId("room-2"), isOn = false, Color.WHITE, 60)
+        val deviceRepo = InMemoryDeviceRepository(listOf(light1, light2))
+        val roomRepo = InMemoryRoomRepository(listOf(
+            Room(RoomId("room-1"), "Living Room", null, listOf(DeviceId("l1"))),
+        ))
+        val useCase = BulkToggleDevicesByTypeInRoomUseCase(deviceRepo, roomRepo, FakeDeviceControlPort())
+
+        useCase(RoomId("room-1"), DeviceType.LIGHT, turnOn = true)
+
+        val l1 = deviceRepo.observeDevice(DeviceId("l1")).first() as Light
+        val l2 = deviceRepo.observeDevice(DeviceId("l2")).first() as Light
+        assertTrue(l1.isOn)
+        assertFalse(l2.isOn)
+    }
+
+    @Test
+    fun turnOffLightsInRoom_setsOnlyRoomLightsOff() = runTest {
+        val light1 = Light(DeviceId("l1"), "L1", RoomId("room-1"), isOn = true, Color.WHITE, 80)
+        val light2 = Light(DeviceId("l2"), "L2", RoomId("room-1"), isOn = true, Color.WHITE, 60)
+        val deviceRepo = InMemoryDeviceRepository(listOf(light1, light2))
+        val roomRepo = InMemoryRoomRepository(listOf(
+            Room(RoomId("room-1"), "Living Room", null, listOf(DeviceId("l1"), DeviceId("l2"))),
+        ))
+        val useCase = BulkToggleDevicesByTypeInRoomUseCase(deviceRepo, roomRepo, FakeDeviceControlPort())
+
+        useCase(RoomId("room-1"), DeviceType.LIGHT, turnOn = false)
+
+        val lights = deviceRepo.observeDevicesByType(DeviceType.LIGHT).first()
+        assertTrue(lights.all { !(it as Light).isOn })
+    }
+
+    @Test
+    fun bulkToggleInRoom_unknownRoom_doesNotCrash() = runTest {
+        val light = Light(DeviceId("l1"), "L1", RoomId("room-1"), isOn = false, Color.WHITE, 80)
+        val deviceRepo = InMemoryDeviceRepository(listOf(light))
+        val roomRepo = InMemoryRoomRepository(emptyList())
+        val useCase = BulkToggleDevicesByTypeInRoomUseCase(deviceRepo, roomRepo, FakeDeviceControlPort())
+
+        useCase(RoomId("unknown"), DeviceType.LIGHT, turnOn = true)
+
+        val result = deviceRepo.observeDevice(DeviceId("l1")).first() as Light
+        assertFalse(result.isOn, "Light should remain off when room is not found")
     }
 }
 

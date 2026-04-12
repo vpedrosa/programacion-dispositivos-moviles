@@ -1,6 +1,6 @@
 package com.vpedrosa.smarthome.commissioning.domain.model
 
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
 
 data class DiscoveredDevice(
     val name: String,

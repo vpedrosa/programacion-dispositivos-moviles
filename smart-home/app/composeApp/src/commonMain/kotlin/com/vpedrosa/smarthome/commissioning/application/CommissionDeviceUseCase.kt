@@ -1,12 +1,12 @@
 package com.vpedrosa.smarthome.commissioning.application
 
-import com.vpedrosa.smarthome.shared.domain.model.Device
-import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
-import com.vpedrosa.smarthome.shared.domain.model.withName
+import com.vpedrosa.smarthome.device.domain.model.Device
+import com.vpedrosa.smarthome.device.domain.model.DeviceConnectionInfo
+import com.vpedrosa.smarthome.device.domain.model.withName
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 import com.vpedrosa.smarthome.commissioning.domain.CommissioningPort
-import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.DeviceControlPort
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
 
 class CommissionDeviceUseCase(
     private val commissioningPort: CommissioningPort,

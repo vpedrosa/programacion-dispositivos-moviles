@@ -2,12 +2,12 @@ package com.vpedrosa.smarthome.ui.device
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vpedrosa.smarthome.shared.domain.model.Device
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
-import com.vpedrosa.smarthome.shared.domain.model.RoomId
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
-import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.device.domain.model.Device
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.RoomId
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
+import com.vpedrosa.smarthome.room.domain.RoomRepository
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
 import com.vpedrosa.smarthome.device.application.ToggleDeviceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
 import com.vpedrosa.smarthome.commissioning.domain.model.DiscoveredDevice
 import com.vpedrosa.smarthome.commissioning.domain.DeviceDiscoveryPort
 import kotlinx.coroutines.channels.awaitClose

@@ -1,9 +1,9 @@
 package com.vpedrosa.smarthome.room.application
 
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.model.Room
-import com.vpedrosa.smarthome.shared.domain.model.RoomId
-import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
+import com.vpedrosa.smarthome.room.domain.model.Room
+import com.vpedrosa.smarthome.device.domain.model.RoomId
+import com.vpedrosa.smarthome.room.domain.RoomRepository
 import kotlin.random.Random
 
 class SaveRoomUseCase(

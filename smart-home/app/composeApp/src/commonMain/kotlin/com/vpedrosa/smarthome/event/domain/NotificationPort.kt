@@ -1,6 +1,6 @@
 package com.vpedrosa.smarthome.event.domain
 
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
 
 /**
  * Driven port for showing system-level notifications when critical sensor

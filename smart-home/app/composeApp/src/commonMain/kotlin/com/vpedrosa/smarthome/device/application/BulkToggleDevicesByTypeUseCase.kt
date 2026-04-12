@@ -1,9 +1,9 @@
 package com.vpedrosa.smarthome.device.application
 
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
-import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
-import com.vpedrosa.smarthome.shared.domain.toggleDevice
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.DeviceControlPort
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
+import com.vpedrosa.smarthome.device.domain.toggleDevice
 import kotlinx.coroutines.flow.first
 
 class BulkToggleDevicesByTypeUseCase(

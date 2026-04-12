@@ -1,23 +1,26 @@
 package com.vpedrosa.smarthome.voice
 
-import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryDeviceRepository
-import com.vpedrosa.smarthome.shared.infrastructure.persistence.InMemoryRoomRepository
-import com.vpedrosa.smarthome.shared.domain.model.Blind
-import com.vpedrosa.smarthome.shared.domain.model.Color
-import com.vpedrosa.smarthome.shared.domain.model.DeviceId
-import com.vpedrosa.smarthome.shared.domain.model.DeviceType
-import com.vpedrosa.smarthome.shared.domain.model.Light
-import com.vpedrosa.smarthome.shared.domain.model.Lock
+import com.vpedrosa.smarthome.device.infrastructure.persistence.InMemoryDeviceRepository
+import com.vpedrosa.smarthome.room.infrastructure.InMemoryRoomRepository
+import com.vpedrosa.smarthome.device.domain.model.Blind
+import com.vpedrosa.smarthome.device.domain.model.Color
+import com.vpedrosa.smarthome.device.domain.model.DeviceId
+import com.vpedrosa.smarthome.device.domain.model.DeviceType
+import com.vpedrosa.smarthome.device.domain.model.Light
+import com.vpedrosa.smarthome.device.domain.model.Lock
 import com.vpedrosa.smarthome.voice.domain.model.ParsedVoiceCommand
-import com.vpedrosa.smarthome.shared.domain.model.Room
-import com.vpedrosa.smarthome.shared.domain.model.RoomId
-import com.vpedrosa.smarthome.shared.domain.model.SmartTv
-import com.vpedrosa.smarthome.shared.domain.model.Switch
-import com.vpedrosa.smarthome.shared.domain.model.Thermostat
-import com.vpedrosa.smarthome.shared.domain.model.DeviceConnectionInfo
-import com.vpedrosa.smarthome.shared.domain.DeviceControlPort
-import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
+import com.vpedrosa.smarthome.room.domain.model.Room
+import com.vpedrosa.smarthome.device.domain.model.RoomId
+import com.vpedrosa.smarthome.device.domain.model.SmartTv
+import com.vpedrosa.smarthome.device.domain.model.Switch
+import com.vpedrosa.smarthome.device.domain.model.Thermostat
+import com.vpedrosa.smarthome.device.domain.model.DeviceConnectionInfo
+import com.vpedrosa.smarthome.device.domain.DeviceControlPort
 import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeInRoomUseCase
+import com.vpedrosa.smarthome.device.application.BulkToggleDevicesByTypeUseCase
+import com.vpedrosa.smarthome.device.application.LockDoorUseCase
+import com.vpedrosa.smarthome.device.application.UpdateBlindUseCase
+import com.vpedrosa.smarthome.device.application.UpdateThermostatUseCase
 import com.vpedrosa.smarthome.voice.application.ExecuteVoiceCommandUseCase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -30,6 +33,7 @@ internal class FakeVoiceDeviceControlPort : DeviceControlPort {
     override fun deregisterDevice(deviceId: DeviceId) {}
     override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {}
     override suspend fun setLevel(deviceId: DeviceId, level: Int) {}
+    override suspend fun setColor(deviceId: DeviceId, color: Color) {}
     override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {}
     override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {}
     override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {}
@@ -43,9 +47,13 @@ class ExecuteVoiceCommandUseCaseTest {
     private val roomRepo = InMemoryRoomRepository(initialRooms = emptyList())
     private val fakeControlPort = FakeVoiceDeviceControlPort()
     private val execute = ExecuteVoiceCommandUseCase(
-        deviceRepo, roomRepo, fakeControlPort,
+        deviceRepo,
+        roomRepo,
         BulkToggleDevicesByTypeUseCase(deviceRepo, fakeControlPort),
         BulkToggleDevicesByTypeInRoomUseCase(deviceRepo, roomRepo, fakeControlPort),
+        UpdateBlindUseCase(deviceRepo, fakeControlPort),
+        UpdateThermostatUseCase(deviceRepo, fakeControlPort),
+        LockDoorUseCase(deviceRepo, fakeControlPort),
     )
 
     // -- Toggle lights --

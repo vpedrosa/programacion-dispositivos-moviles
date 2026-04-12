@@ -5,8 +5,12 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.util.Log
 import com.vpedrosa.smarthome.commissioning.domain.SimulatorDiscoveryPort
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import java.net.InetSocketAddress
+import java.net.Socket
 import kotlin.coroutines.resume
 
 class MdnsSimulatorDiscoveryAdapter(
@@ -14,8 +18,33 @@ class MdnsSimulatorDiscoveryAdapter(
 ) : SimulatorDiscoveryPort {
 
     override suspend fun discoverSimulatorHost(): String? {
-        return withTimeoutOrNull(DISCOVERY_TIMEOUT_MS) {
+        val mdnsResult = withTimeoutOrNull(DISCOVERY_TIMEOUT_MS) {
             discoverMatter()
+        }
+        if (mdnsResult != null) return mdnsResult
+
+        Log.d(TAG, "mDNS discovery timed out, trying localhost fallback")
+        return probeLocalhostFallback()
+    }
+
+    /**
+     * Fallback para emulador Android: el localhost de la máquina host
+     * es accesible en 10.0.2.2, y en 127.0.0.1 si se ejecuta en dispositivo físico
+     * con port-forward. Prueba cada candidato con una conexión TCP al puerto del hub.
+     */
+    private suspend fun probeLocalhostFallback(): String? =
+        EMULATOR_FALLBACK_HOSTS.firstOrNull { host -> probeHost(host) }
+
+    private suspend fun probeHost(host: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            Socket().use { socket ->
+                socket.connect(InetSocketAddress(host, HUB_PORT), PROBE_TIMEOUT_MS.toInt())
+                Log.d(TAG, "Hub reachable at $host:$HUB_PORT")
+            }
+            true
+        } catch (e: Exception) {
+            Log.d(TAG, "Hub not reachable at $host:$HUB_PORT (${e.message})")
+            false
         }
     }
 
@@ -90,5 +119,11 @@ class MdnsSimulatorDiscoveryAdapter(
         const val TAG = "MdnsSimDiscovery"
         const val SERVICE_TYPE = "_smarthome-hub._tcp"
         const val DISCOVERY_TIMEOUT_MS = 10_000L
+        const val HUB_PORT = 8085    // WebSocket del simulador (ws-server.mjs) — el único puerto TCP
+        const val PROBE_TIMEOUT_MS = 2_000L
+        val EMULATOR_FALLBACK_HOSTS = listOf(
+            "10.0.2.2",   // host machine desde el emulador Android
+            "127.0.0.1",  // loopback (útil con adb port-forward en dispositivo físico)
+        )
     }
 }

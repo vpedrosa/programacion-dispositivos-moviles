@@ -2,18 +2,17 @@ package com.vpedrosa.smarthome.ui.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEvent
-import com.vpedrosa.smarthome.shared.domain.model.DeviceEventType
-import com.vpedrosa.smarthome.shared.domain.model.Light
-import com.vpedrosa.smarthome.shared.domain.model.isActive
-import com.vpedrosa.smarthome.shared.domain.model.Lock
-import com.vpedrosa.smarthome.shared.domain.model.Room
-import com.vpedrosa.smarthome.shared.domain.model.SmartTv
-import com.vpedrosa.smarthome.shared.domain.model.TemperatureSensor
-import com.vpedrosa.smarthome.shared.domain.DeviceEventRepository
-import com.vpedrosa.smarthome.shared.domain.DeviceRepository
-import com.vpedrosa.smarthome.shared.domain.EnvironmentPort
-import com.vpedrosa.smarthome.shared.domain.RoomRepository
+import com.vpedrosa.smarthome.device.domain.model.DeviceEvent
+import com.vpedrosa.smarthome.device.domain.model.DeviceEventType
+import com.vpedrosa.smarthome.device.domain.model.Light
+import com.vpedrosa.smarthome.device.domain.model.isActive
+import com.vpedrosa.smarthome.device.domain.model.Lock
+import com.vpedrosa.smarthome.room.domain.model.Room
+import com.vpedrosa.smarthome.device.domain.model.SmartTv
+import com.vpedrosa.smarthome.device.domain.model.TemperatureSensor
+import com.vpedrosa.smarthome.device.domain.DeviceEventRepository
+import com.vpedrosa.smarthome.device.domain.DeviceRepository
+import com.vpedrosa.smarthome.room.domain.RoomRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -27,7 +26,6 @@ data class DashboardUiState(
     val isSmartTvOn: Boolean = false,
     val recentAlerts: List<AlertItem> = emptyList(),
     val rooms: List<RoomSummary> = emptyList(),
-    val showCommissioningButton: Boolean = false,
 )
 
 data class AlertItem(
@@ -47,10 +45,7 @@ class DashboardViewModel(
     deviceRepository: DeviceRepository,
     roomRepository: RoomRepository,
     deviceEventRepository: DeviceEventRepository,
-    environmentPort: EnvironmentPort,
 ) : ViewModel() {
-
-    val showCommissioningButton: Boolean = environmentPort.isEmulator
 
     val uiState: StateFlow<DashboardUiState> = combine(
         deviceRepository.observeAllDevices(),
@@ -92,7 +87,6 @@ class DashboardViewModel(
             isSmartTvOn = tvOn,
             recentAlerts = recentAlerts,
             rooms = roomSummaries,
-            showCommissioningButton = showCommissioningButton,
         )
     }.stateIn(
         scope = viewModelScope,
