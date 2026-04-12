@@ -1,5 +1,8 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
 
-[node name="root" type="Area2D" unique_id=1685564571]
+[ext_resource type="Script" uid="uid://dpwm4e2ow5f8f" path="res://scenes/entities/explosion/explosion.gd" id="1_explosion"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=640615329]
+[node name="Explosion" type="Area2D"]
+script = ExtResource("1_explosion")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
