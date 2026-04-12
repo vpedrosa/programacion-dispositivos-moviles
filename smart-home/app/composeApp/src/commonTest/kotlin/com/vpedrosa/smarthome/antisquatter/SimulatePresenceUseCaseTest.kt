@@ -59,6 +59,7 @@ class SimulatePresenceUseCaseTest {
         override fun deregisterDevice(deviceId: DeviceId) {}
         override suspend fun toggleOnOff(deviceId: DeviceId, on: Boolean) {}
         override suspend fun setLevel(deviceId: DeviceId, level: Int) {}
+        override suspend fun setColor(deviceId: DeviceId, color: Color) {}
         override suspend fun lockDoor(deviceId: DeviceId, lock: Boolean) {}
         override suspend fun setThermostatSetpoint(deviceId: DeviceId, temperatureCelsius: Double) {}
         override suspend fun setThermostatMode(deviceId: DeviceId, heating: Boolean) {}
