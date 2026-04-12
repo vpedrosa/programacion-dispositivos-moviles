@@ -1,17 +1,18 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" uid="uid://bbu4xn86b8iks" path="res://scenes/screens/game/game.gd" id="1_game"]
 [ext_resource type="Script" uid="uid://0va8y6fdqq8s" path="res://scenes/screens/game/systems/difficulty_manager.gd" id="2_difficulty"]
 [ext_resource type="Script" uid="uid://c1dduuy7orwxj" path="res://scenes/screens/game/systems/missile_spawner.gd" id="3_spawner"]
 [ext_resource type="Script" uid="uid://c3f8wpxvmvrvu" path="res://scenes/screens/game/systems/powerup_manager.gd" id="4_powerup"]
-[ext_resource type="Script" uid="uid://djieb1l0gd8m7" path="res://scenes/entities/defense_base/defense_base.gd" id="5_base"]
+[ext_resource type="PackedScene" path="res://scenes/entities/defense_base/defense_base.tscn" id="5_base_scene"]
+[ext_resource type="PackedScene" path="res://scenes/entities/city/city.tscn" id="6_city_scene"]
+[ext_resource type="PackedScene" path="res://scenes/entities/missiles/enemy_missile.tscn" id="7_enemy_missile"]
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_game")
 
 [node name="Background" type="ColorRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
+size = Vector2(1280, 720)
 color = Color(0.02, 0.06, 0.02, 1)
 
 [node name="DifficultyManager" type="Node" parent="."]
@@ -19,10 +20,28 @@ script = ExtResource("2_difficulty")
 
 [node name="MissileSpawner" type="Node" parent="."]
 script = ExtResource("3_spawner")
+normal_missile_scene = ExtResource("7_enemy_missile")
+fast_missile_scene = ExtResource("7_enemy_missile")
+heavy_missile_scene = ExtResource("7_enemy_missile")
 
 [node name="PowerupManager" type="Node" parent="."]
 script = ExtResource("4_powerup")
 
-[node name="DefenseBase" type="Node2D" parent="."]
+[node name="DefenseBase" parent="." instance=ExtResource("5_base_scene")]
 position = Vector2(640, 660)
-script = ExtResource("5_base")
+
+[node name="City1" parent="." instance=ExtResource("6_city_scene")]
+position = Vector2(180, 680)
+city_index = 0
+
+[node name="City2" parent="." instance=ExtResource("6_city_scene")]
+position = Vector2(440, 680)
+city_index = 1
+
+[node name="City3" parent="." instance=ExtResource("6_city_scene")]
+position = Vector2(840, 680)
+city_index = 2
+
+[node name="City4" parent="." instance=ExtResource("6_city_scene")]
+position = Vector2(1100, 680)
+city_index = 3

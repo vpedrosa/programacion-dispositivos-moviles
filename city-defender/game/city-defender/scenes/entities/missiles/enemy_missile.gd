@@ -13,6 +13,15 @@ var _direction: Vector2
 var _target_city: Node2D
 
 
+func _ready() -> void:
+	collision_layer = 4   # enemy_missiles layer
+	collision_mask = 1    # detect cities layer
+	var shape := CircleShape2D.new()
+	shape.radius = 6.0
+	$CollisionShape2D.shape = shape
+	area_entered.connect(_on_area_entered)
+
+
 func init(from: Vector2, target_city: Node2D) -> void:
 	global_position = from
 	_target_city = target_city

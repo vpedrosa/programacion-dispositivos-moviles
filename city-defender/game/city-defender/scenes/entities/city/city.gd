@@ -15,6 +15,12 @@ var has_shield: bool = false
 
 func _ready() -> void:
 	add_to_group("cities")
+	collision_layer = 1   # cities layer
+	collision_mask = 0
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(60, 30)
+	$CollisionShape2D.shape = shape
+	$CollisionShape2D.position = Vector2(0, -15)
 
 
 func take_damage(amount: int = 25) -> void:
