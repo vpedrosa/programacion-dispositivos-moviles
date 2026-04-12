@@ -46,9 +46,10 @@ func _scene_for_type(type: String) -> PackedScene:
 
 
 func _get_random_alive_city() -> Node2D:
-	var alive := get_tree().get_nodes_in_group("cities").filter(
-		func(c: City) -> bool: return c.is_alive
-	)
+	var alive: Array = []
+	for c in get_tree().get_nodes_in_group("cities"):
+		if (c as City).is_alive:
+			alive.append(c)
 	if alive.is_empty():
 		return null
-	return alive[randi() % alive.size()]
+	return alive[randi() % alive.size()] as Node2D

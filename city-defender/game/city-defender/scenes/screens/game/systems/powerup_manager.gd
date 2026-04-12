@@ -29,13 +29,19 @@ func apply_powerup(powerup_id: String, cities: Array) -> void:
 
 
 func _repair_city(cities: Array) -> void:
-	var damaged := cities.filter(func(c: City) -> bool: return c.is_alive and c.health < City.MAX_HEALTH)
+	var damaged: Array = []
+	for c in cities:
+		if (c as City).is_alive and (c as City).health < City.MAX_HEALTH:
+			damaged.append(c)
 	if not damaged.is_empty():
 		(damaged[0] as City).heal(50)
 
 
 func _rebuild_city(cities: Array) -> void:
-	var destroyed := cities.filter(func(c: City) -> bool: return not c.is_alive)
+	var destroyed: Array = []
+	for c in cities:
+		if not (c as City).is_alive:
+			destroyed.append(c)
 	if not destroyed.is_empty():
 		(destroyed[0] as City).rebuild()
 
