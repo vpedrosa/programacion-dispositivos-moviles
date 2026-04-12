@@ -1,5 +1,10 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
 
-[node name="root" type="Node2D" unique_id=1287144992]
+[ext_resource type="Script" uid="uid://djieb1l0gd8m7" path="res://scenes/entities/defense_base/defense_base.gd" id="1_base"]
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=710004162]
+[node name="DefenseBase" type="Node2D"]
+script = ExtResource("1_base")
+
+[node name="Visual" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-20, 0, 20, 0, 0, -30)
+color = Color(0.2, 0.8, 1, 1)

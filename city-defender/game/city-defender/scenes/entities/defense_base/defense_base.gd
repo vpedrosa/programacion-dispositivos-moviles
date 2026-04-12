@@ -1,8 +1,8 @@
 class_name DefenseBase
 extends Node2D
 
-@export var missile_scene: PackedScene
-@export var explosion_scene: PackedScene
+@export var missile_scene: PackedScene = preload("res://scenes/entities/missiles/interceptor_missile.tscn")
+@export var explosion_scene: PackedScene = preload("res://scenes/entities/explosion/explosion.tscn")
 @export var base_cooldown: float = 0.5
 @export var base_explosion_radius: float = 80.0
 
