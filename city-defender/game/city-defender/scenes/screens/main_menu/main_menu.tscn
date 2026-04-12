@@ -3,3 +3,34 @@
 [node name="root" type="Control" unique_id=1833124874]
 layout_mode = 3
 anchors_preset = 0
+
+[node name="Background" type="ColorRect" parent="." unique_id=136873786]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1858835478]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=1329249221]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CenterContainer/VBox" unique_id=495882335]
+layout_mode = 2
+text = "CITY DEFENDER"
+horizontal_alignment = 1
+
+[node name="PlayButton" type="Button" parent="CenterContainer/VBox" unique_id=1019956725]
+layout_mode = 2
+text = "Jugar"
+
+[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox" unique_id=718736422]
+layout_mode = 2
+text = "Highscores"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBox" unique_id=582925897]
+layout_mode = 2
+text = "Salir"

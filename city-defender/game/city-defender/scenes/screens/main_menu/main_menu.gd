@@ -1,5 +1,15 @@
 extends Control
 
+@onready var _play_btn: Button = $CenterContainer/VBox/PlayButton
+@onready var _scores_btn: Button = $CenterContainer/VBox/HighscoresButton
+@onready var _quit_btn: Button = $CenterContainer/VBox/QuitButton
+
+
+func _ready() -> void:
+	_play_btn.pressed.connect(_on_play_pressed)
+	_scores_btn.pressed.connect(_on_highscores_pressed)
+	_quit_btn.pressed.connect(_on_quit_pressed)
+
 
 func _on_play_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/screens/game/game.tscn")
