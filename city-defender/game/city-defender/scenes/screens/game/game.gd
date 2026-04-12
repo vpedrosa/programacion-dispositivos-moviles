@@ -13,6 +13,7 @@ var _cities: Array = []
 func _ready() -> void:
 	GameState.reset()
 	GameState.game_over.connect(_on_game_over)
+	_add_scanline_overlay()
 	_cities = get_tree().get_nodes_in_group("cities")
 	if hud:
 		hud.shop_requested.connect(_on_shop_requested)
@@ -58,3 +59,17 @@ func _on_powerup_purchased(powerup_id: String) -> void:
 
 func _on_emp_activated() -> void:
 	powerup_manager.apply_powerup("emp", _cities)
+
+
+func _add_scanline_overlay() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 10
+	add_child(layer)
+	var rect := ColorRect.new()
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.color = Color(0, 0, 0, 0)
+	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://assets/shaders/scanlines.gdshader")
+	rect.material = mat
+	layer.add_child(rect)

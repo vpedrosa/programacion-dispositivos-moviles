@@ -9,4 +9,4 @@ script = ExtResource("1_city")
 
 [node name="Visual" type="Polygon2D" parent="."]
 polygon = PackedVector2Array(-30, 0, 30, 0, 30, -20, 20, -30, -20, -30, -30, -20)
-color = Color(0.2, 0.6, 1, 1)
+color = Color(0.05, 0.7, 0.15, 1)

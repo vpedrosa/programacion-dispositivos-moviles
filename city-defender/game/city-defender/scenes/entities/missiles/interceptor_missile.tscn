@@ -7,4 +7,4 @@ script = ExtResource("1_interceptor")
 
 [node name="Dot" type="Polygon2D" parent="."]
 polygon = PackedVector2Array(-3, -3, 3, -3, 3, 3, -3, 3)
-color = Color(0.2, 1, 0.4, 1)
+color = Color(0.0, 1.0, 0.25, 1)
