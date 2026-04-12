@@ -10,18 +10,19 @@ smart-home/
 │   ├── composeApp/         # Código compartido (commonMain)
 │   ├── androidApp/         # Entry point Android
 │   └── wearApp/            # App Wear OS (acciones rápidas)
-├── simulation/             # Simulación Matter (connectedhomeip)
-│   ├── scripts/            # Scripts de setup, build y control
-│   ├── web/                # Backend (FastAPI) + Frontend
-│   ├── start.sh / stop.sh  # Orquestador
-│   └── third_party/        # SDK connectedhomeip (submódulo)
+├── simulation/             # Simulación Matter (matter.js / Node.js)
+│   ├── src/                # Simulador Matter (main.mjs, ws-server.mjs, config.mjs)
+│   ├── dashboard/          # Dashboard web (Next.js)
+│   ├── start.sh / stop.sh  # Orquestador interno
+│   └── patches/            # Parches al SDK matter.js
+├── launch.sh               # Script principal de arranque (simulación + dashboard)
 └── prototipo/              # Prototipo visual (.pen)
 ```
 
 ## Requisitos
 
 - **App:** JDK 11+, Android SDK API 36, Android Studio Meerkat+
-- **Simulación:** Linux x64, Python 3.10+, GCC, Ninja
+- **Simulación:** Node.js 20+, npm
 
 ## App Android
 
@@ -47,7 +48,7 @@ Ver [WEAR-OS.md](WEAR-OS.md) para documentación detallada.
 
 ```bash
 cd smart-home/app
-./gradlew :composeApp:testDebugUnitTest  # 93+ tests unitarios
+./gradlew :composeApp:testDebugUnitTest  # 140+ tests unitarios
 ./gradlew :wearApp:testDebugUnitTest     # tests Wear OS
 ```
 
@@ -55,32 +56,19 @@ cd smart-home/app
 
 Ver [MATTER.md](MATTER.md) para documentación detallada sobre la integración Matter, limitaciones del SDK y decisiones de diseño.
 
+El simulador levanta 27 dispositivos Matter (bombillas, cerraduras, persianas, sensores…) mediante matter.js. No requiere compilar el SDK nativo.
 
 ```bash
-# Setup inicial (una sola vez)
-git submodule update --init smart-home/simulation/third_party/connectedhomeip
-cd smart-home/simulation
-./scripts/setup.sh          # instala dependencias del sistema
-./scripts/build.sh          # compila dispositivos y chip-tool
+# Setup inicial (una sola vez, instala node_modules automáticamente)
+cd smart-home
 
-# Arrancar simulación completa (dispositivos + backend + UI web)
-./start.sh
-# Solo algunos: ./start.sh --devices lighting,lock,thermostat
+# Arrancar simulación + dashboard web
+./launch.sh
 
-# UI web en http://localhost:8080
-# API docs en http://localhost:8080/docs
+# Dashboard en http://localhost:3000
+# Simulador Matter en puertos UDP 5540-5566, WebSocket en 8085
 
-# Parar
-./stop.sh
-```
-
-### Control manual
-
-```bash
-./scripts/control.sh lighting on 1          # encender bombilla
-./scripts/control.sh lock lock 2            # cerrar cerradura
-./scripts/control.sh thermostat set 5 2200  # termostato a 22°C
-./scripts/control.sh trigger smoke-alarm 3  # disparar alarma de humo
+# Ctrl+C para parar ambos
 ```
 
 ## Control por voz
@@ -130,6 +118,6 @@ La app soporta comandos de voz en **espanol** e **ingles** mediante reconocimien
 
 ## Stack
 
-Kotlin 2.3, Compose Multiplatform 1.10, Material 3, Koin 4.1, kotlinx.serialization, Jetpack Navigation, Wear Compose Material 3, Google Wearable Data Layer API, connectedhomeip (Matter), FastAPI.
+Kotlin 2.3, Compose Multiplatform 1.10, Material 3, Koin 4.1, kotlinx.serialization, Jetpack Navigation, Wear Compose Material 3, Google Wearable Data Layer API, matter.js (simulador Matter), Next.js (dashboard).
 
 Arquitectura hexagonal con vertical slicing. i18n en ingles y espanol (23 strings de accesibilidad).

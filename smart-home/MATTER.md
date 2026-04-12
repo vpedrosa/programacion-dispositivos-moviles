@@ -111,6 +111,17 @@ Para recibir eventos reales del simulador Matter se necesitarian **suscripciones
 | Lectura de temperatura | No | Valor aleatorio, no lectura real |
 | Estado de puerta | No | Toggle automatico local, no lectura real |
 
+## Descubrimiento de dispositivos
+
+La app descubre los dispositivos del simulador mediante una estrategia con fallback automático:
+
+1. **`MdnsDeviceDiscoveryAdapter`** — busca el servicio `_smarthome-hub._tcp` via mDNS (NsdManager). Funciona en dispositivo físico en la misma red.
+2. Si tras 10 segundos mDNS no encontró ningún dispositivo, **`LocalhostDeviceDiscoveryAdapter`** prueba una conexión TCP a `10.0.2.2:8085` y luego a `127.0.0.1:8085`. Funciona en el emulador Android (10.0.2.2 es el loopback de la máquina host).
+3. **`FallbackDeviceDiscoveryAdapter`** orquesta ambos: lanza mDNS en background, espera el timeout y activa el fallback si es necesario.
+4. Si el fallback localiza el hub, emite la lista estática de 27 dispositivos definida en `SimulatorDeviceList` (espejo de `simulation/src/config.mjs`).
+
+La detección del hub simulador al inicio de la app sigue la misma lógica: `MdnsSimulatorDiscoveryAdapter` hace mDNS y, si falla, prueba `10.0.2.2:8085` / `127.0.0.1:8085` via TCP.
+
 ## Archivos clave
 
 | Archivo | Responsabilidad |
@@ -119,4 +130,8 @@ Para recibir eventos reales del simulador Matter se necesitarian **suscripciones
 | `MatterCommissioningAdapter.kt` | Establece PASE durante comisionamiento |
 | `MatterDeviceControlAdapter.kt` | Envia comandos a dispositivos via PASE |
 | `SensorEventSimulator.kt` | Genera eventos de sensores localmente |
-| `StaticDeviceDiscoveryAdapter.kt` | Lista dispositivos disponibles para comisionar |
+| `MdnsDeviceDiscoveryAdapter.kt` | Descubrimiento via mDNS (dispositivo físico) |
+| `LocalhostDeviceDiscoveryAdapter.kt` | Descubrimiento via TCP probe (emulador Android) |
+| `FallbackDeviceDiscoveryAdapter.kt` | Orquesta mDNS + fallback con timeout de 10s |
+| `SimulatorDeviceList.kt` | Lista estática de 27 dispositivos del simulador |
+| `MdnsSimulatorDiscoveryAdapter.kt` | Localiza el hub del simulador (mDNS + fallback TCP) |
