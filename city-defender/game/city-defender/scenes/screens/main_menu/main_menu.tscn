@@ -1,36 +1,53 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
 
-[node name="root" type="Control" unique_id=1833124874]
+[ext_resource type="Script" uid="uid://me1ed443sj8m" path="res://scenes/screens/main_menu/main_menu.gd" id="1_main_menu"]
+
+[node name="root" type="Control"]
 layout_mode = 3
-anchors_preset = 0
-
-[node name="Background" type="ColorRect" parent="." unique_id=136873786]
-layout_mode = 0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color(0, 0, 0, 1)
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main_menu")
 
-[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1858835478]
-layout_mode = 0
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.02, 0.1, 1)
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=1329249221]
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="Title" type="Label" parent="CenterContainer/VBox" unique_id=495882335]
+[node name="Title" type="Label" parent="CenterContainer/VBox"]
 layout_mode = 2
 text = "CITY DEFENDER"
 horizontal_alignment = 1
 
-[node name="PlayButton" type="Button" parent="CenterContainer/VBox" unique_id=1019956725]
+[node name="PlayButton" type="Button" parent="CenterContainer/VBox"]
 layout_mode = 2
+custom_minimum_size = Vector2(200, 60)
 text = "Jugar"
 
-[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox" unique_id=718736422]
+[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox"]
 layout_mode = 2
+custom_minimum_size = Vector2(200, 60)
 text = "Highscores"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBox" unique_id=582925897]
+[node name="QuitButton" type="Button" parent="CenterContainer/VBox"]
 layout_mode = 2
+custom_minimum_size = Vector2(200, 60)
 text = "Salir"
