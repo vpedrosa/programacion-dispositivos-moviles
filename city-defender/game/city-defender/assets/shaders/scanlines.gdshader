@@ -6,17 +6,18 @@ uniform float vignette_intensity : hint_range(0.0, 1.0) = 0.35;
 uniform float flicker_speed : hint_range(0.0, 10.0) = 2.5;
 
 void fragment() {
-	// Scanlines
+	// Odd scanlines get a dark band
 	float line = mod(floor(UV.y * scanline_count), 2.0);
-	float scanline = 1.0 - line * scanline_intensity;
+	float scanline_alpha = line * scanline_intensity;
 
-	// Vignette
+	// Vignette: darken toward edges
 	vec2 c = UV * 2.0 - 1.0;
-	float vignette = 1.0 - dot(c, c) * vignette_intensity;
+	float vignette_alpha = dot(c, c) * vignette_intensity;
 
 	// Subtle flicker
-	float flicker = 1.0 - sin(TIME * flicker_speed) * 0.008;
+	float flicker = sin(TIME * flicker_speed) * 0.008;
 
-	COLOR.rgb *= scanline * vignette * flicker;
-	COLOR.a = 1.0;
+	// Render as a semi-transparent dark overlay on top of the scene
+	float alpha = clamp(scanline_alpha + vignette_alpha + flicker, 0.0, 0.95);
+	COLOR = vec4(0.0, 0.0, 0.0, alpha);
 }
