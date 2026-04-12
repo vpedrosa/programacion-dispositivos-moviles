@@ -28,7 +28,7 @@ func _spawn_missile(dm: DifficultyManager) -> void:
 		return
 	var missile: EnemyMissile = scene.instantiate()
 	get_parent().add_child(missile)
-	var spawn_x := randf_range(50.0, get_viewport_rect().size.x - 50.0)
+	var spawn_x := randf_range(50.0, get_viewport().get_visible_rect().size.x - 50.0)
 	missile.speed = dm.missile_speed
 	missile.init(Vector2(spawn_x, -20.0), target)
 
