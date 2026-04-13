@@ -30,7 +30,6 @@ func spend_money(amount: int) -> bool:
 func notify_city_destroyed() -> void:
 	cities_alive -= 1
 	if cities_alive <= 0:
-		AudioManager.play_sfx("game-over")
 		game_over.emit()
 
 

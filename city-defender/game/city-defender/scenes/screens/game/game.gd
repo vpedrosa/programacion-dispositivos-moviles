@@ -51,7 +51,12 @@ func _connect_city_health_to_hud() -> void:
 
 
 func _on_game_over() -> void:
-	get_tree().call_deferred("change_scene_to_file", "res://scenes/screens/game_over/game_over.tscn")
+	get_tree().paused = true
+	AudioManager.stop_music()
+	AudioManager.play_sfx("game-over")
+	await get_tree().create_timer(2.5, true).timeout
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/screens/game_over/game_over.tscn")
 
 
 func _on_shop_requested() -> void:
