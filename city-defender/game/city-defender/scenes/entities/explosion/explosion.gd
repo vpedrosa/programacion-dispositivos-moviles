@@ -23,6 +23,7 @@ func init(pos: Vector2, explosion_radius: float) -> void:
 	area_entered.connect(_on_area_entered)
 	# Escala el sprite para que cubra el radio de explosión (sprite mide 24px de radio)
 	_visual.scale = Vector2.ONE * (radius / 24.0)
+	AudioManager.play_sfx("explosion")
 
 
 func _process(delta: float) -> void:

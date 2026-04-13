@@ -56,6 +56,7 @@ func _launch_missile(target: Vector2) -> void:
 	var missile: InterceptorMissile = missile_scene.instantiate()
 	get_parent().add_child(missile)
 	missile.launch(global_position, target, explosion_scene, base_explosion_radius + _explosion_radius_bonus)
+	AudioManager.play_sfx("launch")
 
 
 func _current_cooldown() -> float:

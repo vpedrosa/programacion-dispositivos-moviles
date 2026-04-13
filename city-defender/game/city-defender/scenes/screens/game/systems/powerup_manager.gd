@@ -62,6 +62,7 @@ func _activate_double_shot() -> void:
 
 
 func _activate_emp() -> void:
+	AudioManager.play_sfx("emp")
 	for missile in get_tree().get_nodes_in_group("enemy_missiles"):
 		(missile as EnemyMissile).hit()
 		(missile as EnemyMissile).hit()

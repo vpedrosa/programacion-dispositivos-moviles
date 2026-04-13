@@ -12,6 +12,7 @@ func _ready() -> void:
 	_quit_btn.pressed.connect(_on_quit_pressed)
 	FalloutStyle.apply(self)
 	_title.add_theme_font_size_override("font_size", 56)
+	AudioManager.play_music("music_menu")
 
 
 func _on_play_pressed() -> void:
