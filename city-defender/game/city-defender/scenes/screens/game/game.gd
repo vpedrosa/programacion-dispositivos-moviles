@@ -1,32 +1,43 @@
 extends Node2D
 
+enum GamePhase { PLAYING, PAUSED, GAME_OVER }
+
 @onready var difficulty_manager: DifficultyManager = $DifficultyManager
 @onready var missile_spawner: MissileSpawner = $MissileSpawner
 @onready var powerup_manager: PowerupManager = $PowerupManager
 @onready var defense_base: DefenseBase = $DefenseBase
 @onready var hud: CanvasLayer = $HUD if has_node("HUD") else null
 @onready var shop: CanvasLayer = $Shop if has_node("Shop") else null
-@onready var level_up_banner = $LevelUpBanner if has_node("LevelUpBanner") else null
-@onready var in_game_settings = $InGameSettings if has_node("InGameSettings") else null
+@onready var level_up_banner: CanvasLayer = $LevelUpBanner if has_node("LevelUpBanner") else null
+@onready var in_game_settings: CanvasLayer = $InGameSettings if has_node("InGameSettings") else null
 
-var _cities: Array = []
+var _cities: Array[City] = []
+var _phase: GamePhase = GamePhase.PLAYING
+var _overlay_count: int = 0
 
 
 func _ready() -> void:
-	GameState.reset()
+	_cities = []
+	for node in get_tree().get_nodes_in_group("cities"):
+		if node is City:
+			_cities.append(node as City)
+	GameState.reset(_cities.size())
 	GameState.game_over.connect(_on_game_over)
 	AudioManager.play_music("main-theme")
 	CursorManager.set_game_cursor()
-	_add_scanline_overlay()
-	_cities = get_tree().get_nodes_in_group("cities")
+	FalloutStyle.add_scanline_overlay(self)
 	if hud:
 		hud.shop_requested.connect(_on_shop_requested)
 		hud.emp_activated.connect(_on_emp_activated)
 		hud.settings_requested.connect(_on_settings_requested)
 		_connect_city_health_to_hud()
 	if shop:
-		shop.closed.connect(_on_shop_closed)
+		shop.opened.connect(_on_overlay_opened)
+		shop.closed.connect(_on_overlay_closed)
 		shop.powerup_purchased.connect(_on_powerup_purchased)
+	if in_game_settings:
+		in_game_settings.opened.connect(_on_overlay_opened)
+		in_game_settings.closed.connect(_on_overlay_closed)
 	difficulty_manager.wave_started.connect(_on_wave_started)
 
 
@@ -36,6 +47,8 @@ func _process(_delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if _phase != GamePhase.PLAYING:
+		return
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			defense_base.shoot_at(event.position)
@@ -48,25 +61,40 @@ func _input(event: InputEvent) -> void:
 			defense_base.release()
 
 
-func get_cities() -> Array:
+func get_cities() -> Array[City]:
 	return _cities
 
 
 func _connect_city_health_to_hud() -> void:
-	for city in _cities:
-		var c := city as City
-		c.health_changed.connect(
-			func(h: int, m: int) -> void: hud.update_city_health(c.city_index, h, m)
+	for city: City in _cities:
+		city.health_changed.connect(
+			func(h: int, m: int) -> void: hud.update_city_health(city.city_index, h, m)
 		)
 
 
+func _set_phase(new_phase: GamePhase) -> void:
+	_phase = new_phase
+	get_tree().paused = new_phase != GamePhase.PLAYING
+
+
+func _on_overlay_opened() -> void:
+	_overlay_count += 1
+	if _overlay_count == 1:
+		_set_phase(GamePhase.PAUSED)
+
+
+func _on_overlay_closed() -> void:
+	_overlay_count = max(0, _overlay_count - 1)
+	if _overlay_count == 0 and _phase == GamePhase.PAUSED:
+		_set_phase(GamePhase.PLAYING)
+
+
 func _on_game_over() -> void:
-	get_tree().paused = true
+	_set_phase(GamePhase.GAME_OVER)
 	AudioManager.stop_music()
 	AudioManager.play_voice("game-over")
 	await get_tree().create_timer(1.8, true).timeout
 
-	# Fade a negro antes de cambiar de escena
 	var fade_layer := CanvasLayer.new()
 	fade_layer.layer = 100
 	add_child(fade_layer)
@@ -93,10 +121,6 @@ func _on_shop_requested() -> void:
 		shop.open(_cities)
 
 
-func _on_shop_closed() -> void:
-	pass
-
-
 func _on_settings_requested() -> void:
 	if in_game_settings:
 		in_game_settings.open()
@@ -112,17 +136,3 @@ func _on_powerup_purchased(powerup_id: String) -> void:
 
 func _on_emp_activated() -> void:
 	powerup_manager.apply_powerup("emp", _cities)
-
-
-func _add_scanline_overlay() -> void:
-	var layer := CanvasLayer.new()
-	layer.layer = 10
-	add_child(layer)
-	var rect := ColorRect.new()
-	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rect.color = Color(0, 0, 0, 0)
-	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var mat := ShaderMaterial.new()
-	mat.shader = load("res://assets/shaders/scanlines.gdshader")
-	rect.material = mat
-	layer.add_child(rect)
