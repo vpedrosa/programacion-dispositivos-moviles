@@ -48,6 +48,7 @@ func _build_powerups() -> void:
 		# ── Icono enmarcado ──────────────────────────────────────────────────
 		var icon_frame := Panel.new()
 		icon_frame.custom_minimum_size = Vector2(64, 64)
+		icon_frame.clip_contents = true
 		var style := StyleBoxFlat.new()
 		style.bg_color = Color(0.0, 0.0, 0.0, 0.6)
 		style.border_color = Color(0.0, 0.9, 0.25, 1.0)
@@ -56,9 +57,14 @@ func _build_powerups() -> void:
 		icon_frame.add_theme_stylebox_override("panel", style)
 
 		var icon_rect := TextureRect.new()
-		icon_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)
+		icon_rect.anchor_right = 1.0
+		icon_rect.anchor_bottom = 1.0
+		icon_rect.offset_left = 6
+		icon_rect.offset_top = 6
+		icon_rect.offset_right = -6
+		icon_rect.offset_bottom = -6
 		icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon_rect.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+		icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		if POWERUP_ICONS.has(powerup_id):
 			icon_rect.texture = load(POWERUP_ICONS[powerup_id])
 		icon_frame.add_child(icon_rect)
@@ -69,6 +75,7 @@ func _build_powerups() -> void:
 
 		var name_label := Label.new()
 		name_label.text = tr(data["name"])
+		name_label.add_theme_font_size_override("font_size", 22)
 
 		var desc_label := Label.new()
 		desc_label.text = tr(data["desc"])

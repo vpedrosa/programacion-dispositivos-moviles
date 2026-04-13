@@ -46,7 +46,9 @@ text = "HUD_EMP"
 [node name="ShopButton" type="Button" parent="MarginContainer/HBox"]
 layout_mode = 2
 icon = ExtResource("2_shop_icon")
+icon_max_width = 28
 text = "HUD_SHOP"
+theme_override_colors/icon_normal_color = Color(0, 0.9, 0.25, 1)
 
 [node name="CityBarsContainer" type="HBoxContainer" parent="."]
 layout_mode = 3
