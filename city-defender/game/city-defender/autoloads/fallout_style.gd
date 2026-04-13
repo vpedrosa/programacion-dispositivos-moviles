@@ -16,13 +16,47 @@ func _ready() -> void:
 ## Aplica el tema Fallout a toda la jerarquía de un Control y añade el overlay CRT.
 func apply(root: Control) -> void:
 	style_subtree(root)
-	_add_scanline_overlay(root)
+	add_scanline_overlay(root)
 
 
 ## Estiliza un nodo y sus descendientes sin añadir el overlay de scanlines.
 ## Útil para nodos creados dinámicamente después de llamar a apply().
 func style_subtree(node: Node) -> void:
 	_style_node(node)
+
+
+## Aplica el estilo pixel-art al slider de volumen.
+func style_slider(slider: HSlider) -> void:
+	var track := StyleBoxFlat.new()
+	track.bg_color = Color(0.0, 0.08, 0.02, 1.0)
+	track.border_color = Color(0.0, 0.9, 0.25, 1.0)
+	track.set_border_width_all(1)
+	track.content_margin_top = 4.0
+	track.content_margin_bottom = 4.0
+	slider.add_theme_stylebox_override("slider", track)
+
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color(0.0, 0.9, 0.25, 1.0)
+	fill.content_margin_top = 4.0
+	fill.content_margin_bottom = 4.0
+	slider.add_theme_stylebox_override("grabber_area", fill)
+
+	var img: Image = Image.create(10, 28, false, Image.FORMAT_RGBA8)
+	for y in 28:
+		for x in 10:
+			if y == 0 or y == 27 or x == 0 or x == 9:
+				img.set_pixel(x, y, Color(0.0, 0.4, 0.1, 1.0))
+			else:
+				img.set_pixel(x, y, Color(0.0, 1.0, 0.3, 1.0))
+	var grabber: ImageTexture = ImageTexture.create_from_image(img)
+	slider.add_theme_icon_override("grabber", grabber)
+	slider.add_theme_icon_override("grabber_highlight", grabber)
+	slider.add_theme_icon_override("grabber_disabled", grabber)
+
+
+## Añade el overlay CRT de scanlines como hijo de cualquier nodo.
+func add_scanline_overlay(parent: Node) -> void:
+	_add_scanline_overlay_to(parent)
 
 
 func _style_node(node: Node) -> void:
@@ -111,7 +145,7 @@ func _style_progress_bar(bar: ProgressBar) -> void:
 	bar.add_theme_color_override("font_color", PHOSPHOR)
 
 
-func _add_scanline_overlay(parent: Control) -> void:
+func _add_scanline_overlay_to(parent: Node) -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 10
 	parent.add_child(layer)
