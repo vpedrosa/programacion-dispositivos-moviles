@@ -6,6 +6,7 @@ extends Node2D
 @onready var defense_base: DefenseBase = $DefenseBase
 @onready var hud: CanvasLayer = $HUD if has_node("HUD") else null
 @onready var shop: CanvasLayer = $Shop if has_node("Shop") else null
+@onready var level_up_banner = $LevelUpBanner if has_node("LevelUpBanner") else null
 
 var _cities: Array = []
 
@@ -23,6 +24,7 @@ func _ready() -> void:
 	if shop:
 		shop.closed.connect(_on_shop_closed)
 		shop.powerup_purchased.connect(_on_powerup_purchased)
+	difficulty_manager.wave_started.connect(_on_wave_started)
 
 
 func _process(_delta: float) -> void:
@@ -57,6 +59,11 @@ func _on_game_over() -> void:
 	await get_tree().create_timer(2.5, true).timeout
 	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/screens/game_over/game_over.tscn")
+
+
+func _on_wave_started(_wave_number: int) -> void:
+	if level_up_banner:
+		level_up_banner.show_level_up()
 
 
 func _on_shop_requested() -> void:

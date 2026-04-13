@@ -1,6 +1,8 @@
 class_name DifficultyManager
 extends Node
 
+signal wave_started(wave_number: int)
+
 @export var initial_spawn_interval: float = 2.0
 @export var min_spawn_interval: float = 0.4
 @export var initial_speed: float = 150.0
@@ -13,6 +15,8 @@ var elapsed_time: float = 0.0
 var spawn_interval: float
 var missile_speed: float
 
+var _last_wave: int = 0
+
 
 func _ready() -> void:
 	spawn_interval = initial_spawn_interval
@@ -22,6 +26,10 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	elapsed_time += delta
 	_update_difficulty()
+	var current_wave := int(elapsed_time / wave_interval)
+	if current_wave > _last_wave and elapsed_time >= wave_interval:
+		_last_wave = current_wave
+		wave_started.emit(current_wave)
 
 
 func _update_difficulty() -> void:
