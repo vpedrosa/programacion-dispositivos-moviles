@@ -10,9 +10,9 @@ var _difficulty_manager: DifficultyManager
 
 
 func _ready() -> void:
-	_difficulty_manager = get_parent().get("difficulty_manager") as DifficultyManager
+	_difficulty_manager = get_parent().get_node_or_null("DifficultyManager") as DifficultyManager
 	if _difficulty_manager == null:
-		push_error("MissileSpawner: difficulty_manager no encontrado en el padre")
+		push_error("MissileSpawner: DifficultyManager no encontrado en el padre")
 
 
 func _process(delta: float) -> void:

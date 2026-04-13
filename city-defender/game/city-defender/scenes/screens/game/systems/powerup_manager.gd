@@ -11,12 +11,12 @@ var _hud: CanvasLayer
 
 func _ready() -> void:
 	var parent := get_parent()
-	_defense_base = parent.get("defense_base") as DefenseBase
-	_hud          = parent.get("hud") as CanvasLayer
+	_defense_base = parent.get_node_or_null("DefenseBase") as DefenseBase
+	_hud          = parent.get_node_or_null("HUD") as CanvasLayer
 	if _defense_base == null:
-		push_error("PowerupManager: defense_base no encontrado en el padre")
+		push_error("PowerupManager: DefenseBase no encontrado en el padre")
 	if _hud == null:
-		push_error("PowerupManager: hud no encontrado en el padre")
+		push_error("PowerupManager: HUD no encontrado en el padre")
 
 
 func apply_powerup(powerup_id: String, cities: Array[City]) -> void:
