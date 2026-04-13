@@ -56,8 +56,22 @@ func _on_game_over() -> void:
 	get_tree().paused = true
 	AudioManager.stop_music()
 	AudioManager.play_voice("game-over")
-	await get_tree().create_timer(2.5, true).timeout
+	await get_tree().create_timer(1.8, true).timeout
+
+	# Fade a negro antes de cambiar de escena
+	var fade_layer := CanvasLayer.new()
+	fade_layer.layer = 100
+	add_child(fade_layer)
+	var fade_rect := ColorRect.new()
+	fade_rect.color = Color(0.0, 0.0, 0.0, 0.0)
+	fade_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fade_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	fade_layer.add_child(fade_rect)
+
 	get_tree().paused = false
+	var tween := create_tween()
+	tween.tween_property(fade_rect, "color:a", 1.0, 0.7)
+	await tween.finished
 	get_tree().change_scene_to_file("res://scenes/screens/game_over/game_over.tscn")
 
 
@@ -76,7 +90,11 @@ func _on_shop_closed() -> void:
 
 
 func _on_powerup_purchased(powerup_id: String) -> void:
-	powerup_manager.apply_powerup(powerup_id, _cities)
+	if powerup_id == "emp":
+		if hud:
+			hud.set_emp_available(true)
+	else:
+		powerup_manager.apply_powerup(powerup_id, _cities)
 
 
 func _on_emp_activated() -> void:

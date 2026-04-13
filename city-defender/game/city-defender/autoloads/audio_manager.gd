@@ -15,6 +15,7 @@ const EXTENSIONS: Array[String] = ["ogg", "wav", "mp3"]
 var _sfx_player: AudioStreamPlayer
 var _music_player: AudioStreamPlayer
 var _voice_player: AudioStreamPlayer
+var _zap_player: AudioStreamPlayer
 var _sfx_cache: Dictionary = {}
 
 
@@ -32,6 +33,10 @@ func _ready() -> void:
 	_voice_player.bus = "SFX"
 	add_child(_voice_player)
 
+	_zap_player = AudioStreamPlayer.new()
+	_zap_player.bus = "SFX"
+	add_child(_zap_player)
+
 
 func play_sfx(sound_name: String) -> void:
 	var stream := _load_sound(sound_name)
@@ -39,6 +44,14 @@ func play_sfx(sound_name: String) -> void:
 		return
 	_sfx_player.stream = stream
 	_sfx_player.play()
+
+
+func play_zap(sound_name: String) -> void:
+	var stream := _load_sound(sound_name)
+	if stream == null:
+		return
+	_zap_player.stream = stream
+	_zap_player.play()
 
 
 func play_voice(sound_name: String) -> void:

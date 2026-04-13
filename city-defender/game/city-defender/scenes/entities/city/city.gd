@@ -35,6 +35,7 @@ func take_damage(amount: int = 25) -> void:
 	if has_shield:
 		has_shield = false
 		_update_shield_visual(false)
+		AudioManager.play_zap("zap")
 		return
 	health = max(0, health - amount)
 	health_changed.emit(health, MAX_HEALTH)
@@ -57,6 +58,8 @@ func rebuild() -> void:
 
 
 func activate_shield() -> void:
+	if has_shield:
+		return
 	has_shield = true
 	_update_shield_visual(true)
 
@@ -91,6 +94,5 @@ func _update_alive_visual(alive: bool) -> void:
 			fire.visible = true
 
 
-func _update_shield_visual(_active: bool) -> void:
-	# TODO: show/hide shield overlay node
-	pass
+func _update_shield_visual(active: bool) -> void:
+	$ShieldEffect.visible = active

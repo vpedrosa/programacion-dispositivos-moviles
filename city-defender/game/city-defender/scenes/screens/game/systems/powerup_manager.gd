@@ -50,7 +50,7 @@ func _rebuild_city(cities: Array) -> void:
 
 func _activate_shield(cities: Array) -> void:
 	for city in cities:
-		if (city as City).is_alive:
+		if (city as City).is_alive and not (city as City).has_shield:
 			city.activate_shield()
 
 
