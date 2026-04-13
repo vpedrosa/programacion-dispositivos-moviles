@@ -5,18 +5,8 @@ const RADIUS_BONUS: float = 30.0
 const COOLDOWN_REDUCTION: float = 0.1
 const ROTATION_SPEED_BONUS: float = 1.5
 
-var _defense_base: DefenseBase
-var _hud: CanvasLayer
-
-
-func _ready() -> void:
-	var parent := get_parent()
-	_defense_base = parent.get_node_or_null("DefenseBase") as DefenseBase
-	_hud          = parent.get_node_or_null("HUD") as CanvasLayer
-	if _defense_base == null:
-		push_error("PowerupManager: DefenseBase no encontrado en el padre")
-	if _hud == null:
-		push_error("PowerupManager: HUD no encontrado en el padre")
+@export var defense_base: DefenseBase
+@export var hud: CanvasLayer  ## HUD instance
 
 
 func apply_powerup(powerup_id: String, cities: Array[City]) -> void:
@@ -56,13 +46,13 @@ func _activate_shield(cities: Array[City]) -> void:
 
 
 func _increase_radius() -> void:
-	if _defense_base:
-		_defense_base.add_explosion_radius(RADIUS_BONUS)
+	if defense_base:
+		defense_base.add_explosion_radius(RADIUS_BONUS)
 
 
 func _enable_gatling() -> void:
-	if _defense_base:
-		_defense_base.enable_gatling()
+	if defense_base:
+		defense_base.enable_gatling()
 
 
 func _activate_emp() -> void:
@@ -70,15 +60,15 @@ func _activate_emp() -> void:
 	for missile: EnemyMissile in get_tree().get_nodes_in_group("enemy_missiles"):
 		missile.hit()
 		missile.hit()
-	if _hud:
-		_hud.set_emp_available(false)
+	if hud:
+		hud.set_emp_available(false)
 
 
 func _reduce_cooldown() -> void:
-	if _defense_base:
-		_defense_base.reduce_cooldown(COOLDOWN_REDUCTION)
+	if defense_base:
+		defense_base.reduce_cooldown(COOLDOWN_REDUCTION)
 
 
 func _upgrade_rotation_speed() -> void:
-	if _defense_base:
-		_defense_base.upgrade_rotation_speed(ROTATION_SPEED_BONUS)
+	if defense_base:
+		defense_base.upgrade_rotation_speed(ROTATION_SPEED_BONUS)
