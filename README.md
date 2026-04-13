@@ -202,20 +202,21 @@ Cada misil destruido otorga dinero (más dinero cuanto más difícil sea el misi
 | --- | --- |
 | **Reparar ciudad** | Restaura vida a una ciudad dañada |
 | **Reconstruir ciudad** | Revive una ciudad destruida con vida mínima |
-| **Escudo temporal** | Escudo sobre las ciudades que absorbe un impacto cada una durante un tiempo limitado |
+| **Escudo temporal** | Escudo sobre todas las ciudades vivas que absorbe un impacto por ciudad |
 | **Radio de explosión+** | Aumenta permanentemente el radio de explosión de los misiles interceptores (acumulable) |
 | **Modo Gatling** | Mejora permanente: mantén pulsado para disparar en ráfaga continua sin soltar |
 | **Bomba EMP** | Destruye todos los misiles enemigos en pantalla (uso único) |
 | **Cadencia+** | Reduce permanentemente el cooldown entre disparos (acumulable) |
+| **Velocidad de giro** | Aumenta permanentemente la velocidad de rotación de la torreta |
 
 #### Highscores con Firebase Firestore
 
-Al terminar la partida, si la puntuación del jugador entra en el **top 10 global**, se le pide un nombre y se registra en Firebase Firestore. El ranking de los 10 mejores scores es accesible desde el menú principal.
+Al terminar la partida, la puntuación se envía automáticamente y de forma anónima a Firebase Firestore. El ranking de los 10 mejores scores (puntuación y fecha) es accesible desde el menú principal.
 
 ### Pantallas de la Aplicación
 
-- **Menú Principal:** Botones de jugar, ver highscores y salir.
-- **Pantalla de Juego:** Gameplay con HUD mostrando score, dinero, vida de las ciudades y botón de acceso a la tienda.
+- **Menú Principal:** Botones de jugar, ver highscores, ajustes y salir.
+- **Pantalla de Juego:** Gameplay con HUD mostrando score, dinero, vida de las ciudades, botón de acceso a la tienda y botón de ajustes.
 - **Tienda:** Overlay con los power-ups disponibles y sus costes. Pausa el juego mientras está abierta.
-- **Game Over:** Puntuación final, input de nombre si el score entra en el top 10, botón de reintentar.
-- **Highscores:** Tabla con el top 10 global obtenido de Firestore.
+- **Game Over:** Puntuación final con envío automático al ranking global y botones para ver highscores, reintentar o volver al menú.
+- **Highscores:** Tabla con el top 10 global anónimo (puntuación y fecha) obtenido de Firestore.
