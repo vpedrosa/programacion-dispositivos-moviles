@@ -7,6 +7,7 @@ extends Node2D
 @onready var hud: CanvasLayer = $HUD if has_node("HUD") else null
 @onready var shop: CanvasLayer = $Shop if has_node("Shop") else null
 @onready var level_up_banner = $LevelUpBanner if has_node("LevelUpBanner") else null
+@onready var in_game_settings = $InGameSettings if has_node("InGameSettings") else null
 
 var _cities: Array = []
 
@@ -21,6 +22,7 @@ func _ready() -> void:
 	if hud:
 		hud.shop_requested.connect(_on_shop_requested)
 		hud.emp_activated.connect(_on_emp_activated)
+		hud.settings_requested.connect(_on_settings_requested)
 		_connect_city_health_to_hud()
 	if shop:
 		shop.closed.connect(_on_shop_closed)
@@ -34,11 +36,16 @@ func _process(_delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventScreenTouch and event.pressed:
-		defense_base.shoot_at(event.position)
-	elif event is InputEventMouseButton and event.pressed:
-		# Editor/desktop fallback
-		defense_base.shoot_at(event.position)
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			defense_base.shoot_at(event.position)
+		else:
+			defense_base.release()
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			defense_base.shoot_at(event.position)
+		else:
+			defense_base.release()
 
 
 func get_cities() -> Array:
@@ -88,6 +95,11 @@ func _on_shop_requested() -> void:
 
 func _on_shop_closed() -> void:
 	pass
+
+
+func _on_settings_requested() -> void:
+	if in_game_settings:
+		in_game_settings.open()
 
 
 func _on_powerup_purchased(powerup_id: String) -> void:

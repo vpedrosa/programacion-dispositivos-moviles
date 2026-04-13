@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/hud/hud.gd" id="1_hud"]
 [ext_resource type="Texture2D" path="res://assets/sprites/shop/shop.png" id="2_shop_icon"]
+[ext_resource type="Texture2D" path="res://assets/sprites/shop/settings.png" id="3_settings_icon"]
 
 [node name="HUD" type="CanvasLayer"]
 layer = 5
@@ -53,6 +54,15 @@ theme_override_colors/icon_hover_color = Color(0, 0.9, 0.25, 1)
 theme_override_colors/icon_pressed_color = Color(0, 0.9, 0.25, 1)
 theme_override_colors/icon_focus_color = Color(0, 0.9, 0.25, 1)
 
+[node name="SettingsButton" type="Button" parent="MarginContainer/HBox"]
+layout_mode = 2
+icon = ExtResource("3_settings_icon")
+icon_max_width = 28
+theme_override_colors/icon_normal_color = Color(0, 0.9, 0.25, 1)
+theme_override_colors/icon_hover_color = Color(0, 0.9, 0.25, 1)
+theme_override_colors/icon_pressed_color = Color(0, 0.9, 0.25, 1)
+theme_override_colors/icon_focus_color = Color(0, 0.9, 0.25, 1)
+
 [node name="CityBarsContainer" type="HBoxContainer" parent="."]
 layout_mode = 3
 anchor_top = 1.0
@@ -95,3 +105,4 @@ show_percentage = false
 
 [connection signal="pressed" from="MarginContainer/HBox/ShopButton" to="." method="_on_shop_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBox/EMPButton" to="." method="_on_emp_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBox/SettingsButton" to="." method="_on_settings_button_pressed"]

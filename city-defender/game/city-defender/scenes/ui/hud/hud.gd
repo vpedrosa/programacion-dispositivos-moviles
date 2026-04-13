@@ -2,6 +2,7 @@ extends CanvasLayer
 
 signal shop_requested
 signal emp_activated
+signal settings_requested
 
 @onready var score_label: Label = $MarginContainer/HBox/ScoreLabel
 @onready var money_label: Label = $MarginContainer/HBox/MoneyLabel
@@ -53,3 +54,7 @@ func _on_shop_button_pressed() -> void:
 
 func _on_emp_button_pressed() -> void:
 	emp_activated.emit()
+
+
+func _on_settings_button_pressed() -> void:
+	settings_requested.emit()
