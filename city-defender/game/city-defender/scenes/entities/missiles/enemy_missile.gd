@@ -124,8 +124,8 @@ func _setup_smoke() -> void:
 	_smoke.initial_velocity_min = 5.0
 	_smoke.initial_velocity_max = 18.0
 	_smoke.gravity = Vector2.ZERO
-	_smoke.scale_amount_min = 3.0
-	_smoke.scale_amount_max = 7.0
+	_smoke.scale_amount_min = 12.0
+	_smoke.scale_amount_max = 22.0
 	_smoke.color = Color(1.0, 1.0, 1.0, 1.0)  # el ramp controla color y alpha
 
 	# Curva exponencial: partículas grandes al nacer (cerca del cohete)
