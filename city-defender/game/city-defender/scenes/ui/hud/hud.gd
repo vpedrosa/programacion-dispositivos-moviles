@@ -22,7 +22,7 @@ func _ready() -> void:
 
 
 func _on_score_changed(new_score: int) -> void:
-	score_label.text = "PUNTOS: " + str(new_score)
+	score_label.text = tr("HUD_SCORE") + str(new_score)
 
 
 func _on_money_changed(new_money: int) -> void:

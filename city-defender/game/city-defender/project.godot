@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+SettingsManager="*res://autoloads/settings_manager.gd"
 GameState="*res://autoloads/game_state.gd"
 FirebaseManager="*res://autoloads/firebase_manager.gd"
 FalloutStyle="*res://autoloads/fallout_style.gd"

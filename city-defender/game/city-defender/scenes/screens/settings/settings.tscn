@@ -1,0 +1,101 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/screens/settings/settings.gd" id="1_settings"]
+
+[node name="Settings" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_settings")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.06, 0.02, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(480, 0)
+theme_override_constants/separation = 28
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+text = "SETTINGS_TITLE"
+horizontal_alignment = 1
+
+[node name="HSep1" type="HSeparator" parent="CenterContainer/VBox"]
+layout_mode = 2
+
+[node name="LanguageLabel" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+text = "SETTINGS_LANGUAGE"
+horizontal_alignment = 1
+
+[node name="LangHBox" type="HBoxContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ESButton" type="Button" parent="CenterContainer/VBox/LangHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 64)
+text = "ESPAÑOL"
+
+[node name="ENButton" type="Button" parent="CenterContainer/VBox/LangHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 64)
+text = "ENGLISH"
+
+[node name="HSep2" type="HSeparator" parent="CenterContainer/VBox"]
+layout_mode = 2
+
+[node name="SoundLabel" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+text = "SETTINGS_SOUND"
+horizontal_alignment = 1
+
+[node name="SoundHBox" type="HBoxContainer" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="SoundOnButton" type="Button" parent="CenterContainer/VBox/SoundHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 64)
+text = "SETTINGS_SOUND_ON"
+
+[node name="SoundOffButton" type="Button" parent="CenterContainer/VBox/SoundHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 64)
+text = "SETTINGS_SOUND_OFF"
+
+[node name="HSep3" type="HSeparator" parent="CenterContainer/VBox"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="CenterContainer/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 64)
+text = "SETTINGS_BACK"
+
+[connection signal="pressed" from="CenterContainer/VBox/LangHBox/ESButton" to="." method="_on_es_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/LangHBox/ENButton" to="." method="_on_en_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/SoundHBox/SoundOnButton" to="." method="_on_sound_on_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/SoundHBox/SoundOffButton" to="." method="_on_sound_off_pressed"]
+[connection signal="pressed" from="CenterContainer/VBox/BackButton" to="." method="_on_back_pressed"]

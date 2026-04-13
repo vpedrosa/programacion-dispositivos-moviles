@@ -34,21 +34,21 @@ theme_override_constants/margin_bottom = 40
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 24
 
 [node name="TitleLabel" type="Label" parent="MarginContainer/VBox"]
 layout_mode = 2
-text = "HIGHSCORES"
+text = "HS_TITLE"
 horizontal_alignment = 1
 
 [node name="LoadingLabel" type="Label" parent="MarginContainer/VBox"]
 layout_mode = 2
-text = "CARGANDO..."
+text = "HS_LOADING"
 horizontal_alignment = 1
 
 [node name="ErrorLabel" type="Label" parent="MarginContainer/VBox"]
 layout_mode = 2
-text = "SIN PUNTUACIONES REGISTRADAS"
+text = "HS_EMPTY"
 horizontal_alignment = 1
 visible = false
 
@@ -63,7 +63,7 @@ theme_override_constants/separation = 8
 
 [node name="BackButton" type="Button" parent="MarginContainer/VBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 50)
-text = "VOLVER"
+custom_minimum_size = Vector2(0, 64)
+text = "HS_BACK"
 
 [connection signal="pressed" from="MarginContainer/VBox/BackButton" to="." method="_on_back_pressed"]

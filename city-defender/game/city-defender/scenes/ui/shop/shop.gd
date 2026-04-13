@@ -4,13 +4,13 @@ signal closed
 signal powerup_purchased(powerup_id: String)
 
 const POWERUPS: Dictionary = {
-	"repair_city":   {"name": "Reparar ciudad",      "cost": 200, "desc": "Restaura vida a una ciudad danada"},
-	"rebuild_city":  {"name": "Reconstruir ciudad",  "cost": 500, "desc": "Revive una ciudad destruida con HP minimo"},
-	"shield":        {"name": "Escudo temporal",     "cost": 300, "desc": "Escudo en todas las ciudades (absorbe 1 impacto)"},
-	"radius_plus":   {"name": "Radio explosion+",   "cost": 250, "desc": "Aumenta permanentemente el radio de explosion"},
-	"double_shot":   {"name": "Disparo doble",       "cost": 350, "desc": "2 misiles por toque durante 15s"},
-	"emp":           {"name": "Bomba EMP",           "cost": 600, "desc": "Destruye todos los misiles en pantalla"},
-	"cooldown_plus": {"name": "Cadencia+",           "cost": 250, "desc": "Reduce permanentemente el cooldown de disparo"},
+	"repair_city":   {"name": "PU_REPAIR_NAME",   "cost": 200, "desc": "PU_REPAIR_DESC"},
+	"rebuild_city":  {"name": "PU_REBUILD_NAME",  "cost": 500, "desc": "PU_REBUILD_DESC"},
+	"shield":        {"name": "PU_SHIELD_NAME",   "cost": 300, "desc": "PU_SHIELD_DESC"},
+	"radius_plus":   {"name": "PU_RADIUS_NAME",   "cost": 250, "desc": "PU_RADIUS_DESC"},
+	"double_shot":   {"name": "PU_DOUBLE_NAME",   "cost": 350, "desc": "PU_DOUBLE_DESC"},
+	"emp":           {"name": "PU_EMP_NAME",       "cost": 600, "desc": "PU_EMP_DESC"},
+	"cooldown_plus": {"name": "PU_COOLDOWN_NAME", "cost": 250, "desc": "PU_COOLDOWN_DESC"},
 }
 
 @onready var money_label: Label = $Panel/VBox/MoneyLabel
@@ -37,10 +37,10 @@ func _build_powerups() -> void:
 		info_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 		var name_label := Label.new()
-		name_label.text = data["name"]
+		name_label.text = tr(data["name"])
 
 		var desc_label := Label.new()
-		desc_label.text = data["desc"]
+		desc_label.text = tr(data["desc"])
 
 		var right_box := VBoxContainer.new()
 		right_box.custom_minimum_size = Vector2(120, 0)
@@ -50,7 +50,7 @@ func _build_powerups() -> void:
 		price_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 		var buy_btn := Button.new()
-		buy_btn.text = "COMPRAR"
+		buy_btn.text = tr("SHOP_BUY")
 		buy_btn.pressed.connect(_on_buy_pressed.bind(powerup_id))
 		_buy_buttons[powerup_id] = buy_btn
 

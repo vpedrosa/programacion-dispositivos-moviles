@@ -28,7 +28,7 @@ theme_override_constants/separation = 16
 
 [node name="TitleLabel" type="Label" parent="Panel/VBox"]
 layout_mode = 2
-text = "TIENDA"
+text = "SHOP_TITLE"
 horizontal_alignment = 1
 
 [node name="MoneyLabel" type="Label" parent="Panel/VBox"]
@@ -43,7 +43,7 @@ theme_override_constants/separation = 10
 
 [node name="CloseButton" type="Button" parent="Panel/VBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 48)
-text = "CERRAR"
+custom_minimum_size = Vector2(0, 60)
+text = "SHOP_CLOSE"
 
 [connection signal="pressed" from="Panel/VBox/CloseButton" to="." method="_on_close_button_pressed"]

@@ -40,7 +40,7 @@ func _style_node(node: Node) -> void:
 
 func _style_label(label: Label) -> void:
 	label.add_theme_color_override("font_color", PHOSPHOR)
-	label.add_theme_font_size_override("font_size", 24)
+	label.add_theme_font_size_override("font_size", 32)
 	label.uppercase = true
 	if _font:
 		label.add_theme_font_override("font", _font)
@@ -50,7 +50,7 @@ func _style_button(btn: Button) -> void:
 	btn.add_theme_color_override("font_color", PHOSPHOR)
 	btn.add_theme_color_override("font_hover_color", PHOSPHOR_BRIGHT)
 	btn.add_theme_color_override("font_pressed_color", PHOSPHOR_DIM)
-	btn.add_theme_font_size_override("font_size", 22)
+	btn.add_theme_font_size_override("font_size", 30)
 	if _font:
 		btn.add_theme_font_override("font", _font)
 
