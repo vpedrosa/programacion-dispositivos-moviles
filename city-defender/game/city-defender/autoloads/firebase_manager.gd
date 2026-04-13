@@ -1,6 +1,6 @@
 extends Node
 
-## Firebase Firestore manager for global highscores.
+## Firebase Firestore manager for global anonymous highscores.
 ## Uses the Firestore REST API over HTTPS.
 ## Credentials are loaded at runtime from res://.env (never committed to git).
 
@@ -23,43 +23,41 @@ func _ready() -> void:
 	add_child(_http)
 
 
-## Returns an Array of Dictionaries [{name, score, date}, ...] sorted by score desc.
+## Returns an Array[Dictionary] [{score, date}, ...] sorted by score desc (top 10).
+## Uses the runQuery endpoint for reliable ordering without requiring a composite index.
 func get_top_scores() -> Array[Dictionary]:
 	if not _initialized:
 		push_warning("FirebaseManager: get_top_scores() llamado sin credenciales")
 		return []
-	var url := _build_query_url()
-	_http.request(url)
+	var url := (
+		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents:runQuery?key=%s"
+		% [_project_id, _api_key]
+	)
+	var body := JSON.stringify({
+		"structuredQuery": {
+			"from": [{"collectionId": _COLLECTION}],
+			"orderBy": [{"field": {"fieldPath": "score"}, "direction": "DESCENDING"}],
+			"limit": _TOP_COUNT
+		}
+	})
+	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
 	var result = await _http.request_completed
-	return _parse_scores(result[3])
+	return _parse_query_scores(result[3])
 
 
-## Returns true if score would enter the current top 10.
-func is_top_10(score: int) -> bool:
-	if not _initialized:
-		return false
-	var scores := await get_top_scores()
-	if scores.size() < _TOP_COUNT:
-		return true
-	return score > scores[-1].score
-
-
-## Inserts a new entry and removes the lowest if the list exceeds 10.
-func submit_score(player_name: String, score: int) -> void:
+## Submits a score anonymously (no player name). Always submits if score > 0.
+func submit_score(score: int) -> void:
 	if not _initialized:
 		push_warning("FirebaseManager: submit_score() llamado sin credenciales")
 		return
-	var scores := await get_top_scores()
-
-	# Only submit if it qualifies
-	if scores.size() >= _TOP_COUNT and score <= scores[-1].score:
+	if score <= 0:
 		return
-
-	# Write new document
-	var url := _build_document_url()
+	var url := (
+		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents/%s?key=%s"
+		% [_project_id, _COLLECTION, _api_key]
+	)
 	var body := JSON.stringify({
 		"fields": {
-			"name":      {"stringValue": player_name},
 			"score":     {"integerValue": str(score)},
 			"timestamp": {"integerValue": str(int(Time.get_unix_time_from_system()))}
 		}
@@ -67,59 +65,30 @@ func submit_score(player_name: String, score: int) -> void:
 	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
 	await _http.request_completed
 
-	# Delete the 11th entry if needed
-	if scores.size() >= _TOP_COUNT:
-		_delete_document(scores[-1].get("_doc_name", ""))
 
-
-func _delete_document(doc_name: String) -> void:
-	if doc_name.is_empty():
-		return
-	var url := (
-		"https://firestore.googleapis.com/v1/%s?key=%s" % [doc_name, _api_key]
-	)
-	_http.request(url, [], HTTPClient.METHOD_DELETE, "")
-	await _http.request_completed
-
-
-func _build_query_url() -> String:
-	return (
-		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents/%s"
-		% [_project_id, _COLLECTION]
-		+ "?orderBy=score%%20desc&pageSize=%d&key=%s" % [_TOP_COUNT, _api_key]
-	)
-
-
-func _build_document_url() -> String:
-	return (
-		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents/%s?key=%s"
-		% [_project_id, _COLLECTION, _api_key]
-	)
-
-
-func _parse_scores(body: PackedByteArray) -> Array[Dictionary]:
+func _parse_query_scores(body: PackedByteArray) -> Array[Dictionary]:
 	var text := body.get_string_from_utf8()
 	var json = JSON.parse_string(text)
-	if not json is Dictionary:
-		return []
-	var json_dict := json as Dictionary
-	if not json_dict.has("documents"):
+	if not json is Array:
 		return []
 	var result: Array[Dictionary] = []
-	for doc in json_dict["documents"]:
+	for entry in (json as Array):
+		if not entry is Dictionary:
+			continue
+		var doc = (entry as Dictionary).get("document", null)
 		if not doc is Dictionary:
 			continue
 		var fields: Dictionary = (doc as Dictionary).get("fields", {})
+		if not fields.has("score"):
+			continue
 		var ts: int = int(fields.get("timestamp", {}).get("integerValue", 0))
 		var date_str: String = ""
 		if ts > 0:
 			var dt := Time.get_datetime_dict_from_unix_time(ts)
 			date_str = "%02d/%02d/%04d" % [dt.day, dt.month, dt.year]
 		result.append({
-			"name":      fields.get("name",  {}).get("stringValue",  ""),
-			"score":     int(fields.get("score", {}).get("integerValue", 0)),
-			"date":      date_str,
-			"_doc_name": (doc as Dictionary).get("name", ""),
+			"score": int(fields.get("score", {}).get("integerValue", 0)),
+			"date":  date_str,
 		})
 	return result
 

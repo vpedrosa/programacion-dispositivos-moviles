@@ -107,8 +107,7 @@ func _register_translations() -> void:
 		"HUD_EMP":          "EMP",
 		# Game Over
 		"GO_TITLE":         "GAME OVER",
-		"GO_TOPTEN":        "TOP 10 - ESCRIBE TU NOMBRE",
-		"GO_SUBMIT":        "ENVIAR",
+		"GO_SCORE_SENT":    "¡PUNTUACIÓN ENVIADA!",
 		"GO_RETRY":         "REINTENTAR",
 		"GO_MENU":          "MENU",
 		# Highscores
@@ -160,8 +159,7 @@ func _register_translations() -> void:
 		"HUD_EMP":          "EMP",
 		# Game Over
 		"GO_TITLE":         "GAME OVER",
-		"GO_TOPTEN":        "TOP 10 - ENTER YOUR NAME",
-		"GO_SUBMIT":        "SUBMIT",
+		"GO_SCORE_SENT":    "SCORE SUBMITTED!",
 		"GO_RETRY":         "RETRY",
 		"GO_MENU":          "MENU",
 		# Highscores
