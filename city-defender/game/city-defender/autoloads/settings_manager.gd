@@ -110,13 +110,13 @@ func _register_translations() -> void:
 		"SETTINGS_BACK":       "VOLVER",
 		# Power-ups
 		"PU_REPAIR_NAME":    "Reparar ciudad",
-		"PU_REPAIR_DESC":    "Restaura vida a una ciudad danada",
+		"PU_REPAIR_DESC":    "Restaura vida a una ciudad dañada",
 		"PU_REBUILD_NAME":   "Reconstruir ciudad",
-		"PU_REBUILD_DESC":   "Revive ciudad destruida con HP minimo",
+		"PU_REBUILD_DESC":   "Revive ciudad destruida con HP mínimo",
 		"PU_SHIELD_NAME":    "Escudo temporal",
 		"PU_SHIELD_DESC":    "Escudo en todas las ciudades (1 impacto)",
-		"PU_RADIUS_NAME":    "Radio explosion+",
-		"PU_RADIUS_DESC":    "Aumenta el radio de explosion permanentemente",
+		"PU_RADIUS_NAME":    "Radio explosión+",
+		"PU_RADIUS_DESC":    "Aumenta el radio de explosión permanentemente",
 		"PU_DOUBLE_NAME":    "Disparo doble",
 		"PU_DOUBLE_DESC":    "2 misiles por toque durante 15s",
 		"PU_EMP_NAME":       "Bomba EMP",
@@ -124,7 +124,7 @@ func _register_translations() -> void:
 		"PU_COOLDOWN_NAME":       "Cadencia+",
 		"PU_COOLDOWN_DESC":       "Reduce el cooldown de disparo permanentemente",
 		"PU_TURRET_SPEED_NAME":   "Velocidad de giro",
-		"PU_TURRET_SPEED_DESC":   "Aumenta la velocidad de rotacion de la torreta",
+		"PU_TURRET_SPEED_DESC":   "Aumenta la velocidad de rotación de la torreta",
 	}))
 
 	TranslationServer.add_translation(_make_translation("en", {

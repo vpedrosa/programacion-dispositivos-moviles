@@ -7,7 +7,7 @@ signal missile_destroyed(missile: EnemyMissile)
 
 @export var speed: float = 150.0
 @export var score_value: int = 100
-@export var money_value: int = 10
+@export var money_value: int = 15
 @export var max_hits: int = 1
 
 var _hits: int = 0
