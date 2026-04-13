@@ -10,9 +10,12 @@ signal missile_destroyed(missile: EnemyMissile)
 @export var money_value: int = 15
 @export var max_hits: int = 1
 
+@onready var _visual: Sprite2D = $Visual
+
 var _hits: int = 0
 var _direction: Vector2
 var _target_city: Node2D
+var _smoke: CPUParticles2D
 
 
 func _ready() -> void:
@@ -22,6 +25,8 @@ func _ready() -> void:
 	shape.radius = 6.0
 	$CollisionShape2D.shape = shape
 	area_entered.connect(_on_area_entered)
+	_setup_glow()
+	_setup_smoke()
 
 
 func init(from: Vector2, target_city: Node2D) -> void:
@@ -47,7 +52,6 @@ func hit() -> void:
 
 
 func _on_hit_survived() -> void:
-	# Override in subclasses for visual feedback
 	modulate = Color(1.0, 0.6, 0.4)
 
 
@@ -77,3 +81,38 @@ func _on_area_entered(area: Area2D) -> void:
 		area.take_damage()
 		AudioManager.play_sfx("missile-collision")
 		call_deferred("queue_free")
+
+
+# ── Efectos visuales ──────────────────────────────────────────────────────────
+
+func _setup_glow() -> void:
+	var glow := Sprite2D.new()
+	glow.texture = _visual.texture
+	glow.scale = _visual.scale * 2.5
+	glow.modulate = Color(_visual.modulate.r, _visual.modulate.g, _visual.modulate.b, 0.35)
+	var mat := CanvasItemMaterial.new()
+	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	glow.material = mat
+	add_child(glow)
+	move_child(glow, _visual.get_index())  # justo antes de Visual → detrás
+
+
+func _setup_smoke() -> void:
+	_smoke = CPUParticles2D.new()
+	_smoke.emitting = true
+	_smoke.amount = 10
+	_smoke.lifetime = 0.5
+	_smoke.explosiveness = 0.0
+	_smoke.randomness = 0.6
+	# Local (0, +Y) = detrás del misil gracias a la rotación del nodo padre
+	_smoke.position = Vector2(0.0, 8.0)
+	_smoke.direction = Vector2(0.0, 1.0)
+	_smoke.spread = 35.0
+	_smoke.initial_velocity_min = 5.0
+	_smoke.initial_velocity_max = 18.0
+	_smoke.gravity = Vector2.ZERO
+	_smoke.scale_amount_min = 2.0
+	_smoke.scale_amount_max = 5.0
+	_smoke.color = Color(0.7, 0.7, 0.7, 0.4)
+	add_child(_smoke)
+	move_child(_smoke, _visual.get_index())  # justo antes de Visual → detrás
