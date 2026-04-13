@@ -92,9 +92,15 @@ func _parse_scores(body: PackedByteArray) -> Array:
 	var result: Array = []
 	for doc in json["documents"]:
 		var fields = doc.get("fields", {})
+		var ts: int = int(fields.get("timestamp", {}).get("integerValue", 0))
+		var date_str: String = ""
+		if ts > 0:
+			var dt := Time.get_datetime_dict_from_unix_time(ts)
+			date_str = "%02d/%02d/%04d" % [dt.day, dt.month, dt.year]
 		result.append({
 			"name":      fields.get("name",  {}).get("stringValue",  ""),
 			"score":     int(fields.get("score", {}).get("integerValue", 0)),
+			"date":      date_str,
 			"_doc_name": doc.get("name", ""),  # full resource path, needed for delete
 		})
 	return result
