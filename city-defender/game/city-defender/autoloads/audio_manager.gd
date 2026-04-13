@@ -31,6 +31,7 @@ func _ready() -> void:
 
 	_voice_player = AudioStreamPlayer.new()
 	_voice_player.bus = "SFX"
+	_voice_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(_voice_player)
 
 	_zap_player = AudioStreamPlayer.new()
