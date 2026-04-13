@@ -89,14 +89,14 @@ func _setup_glow() -> void:
 	# Punto radial generado por código: gradiente blanco→transparente
 	var size := 32
 	var center := size / 2.0
-	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
+	var img: Image = Image.create(size, size, false, Image.FORMAT_RGBA8)
 	for x in size:
 		for y in size:
-			var d := Vector2(x, y).distance_to(Vector2(center, center)) / center
-			var a := clamp(1.0 - d, 0.0, 1.0)
+			var d: float = Vector2(x, y).distance_to(Vector2(center, center)) / center
+			var a: float = clamp(1.0 - d, 0.0, 1.0)
 			a = pow(a, 1.5)
 			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, a))
-	var tex := ImageTexture.create_from_image(img)
+	var tex: ImageTexture = ImageTexture.create_from_image(img)
 
 	var glow := Sprite2D.new()
 	glow.texture = tex
