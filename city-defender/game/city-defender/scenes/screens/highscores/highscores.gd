@@ -44,9 +44,10 @@ func _create_row(pos: int, player_name: String, score: int, date: String) -> HBo
 	score_label.text = str(score)
 	score_label.custom_minimum_size.x = 100
 	score_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	date_label.text = date
+	date_label.text = "— " + date if not date.is_empty() else ""
 	date_label.custom_minimum_size.x = 110
 	date_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	date_label.add_theme_font_size_override("font_size", 16)
 	row.add_child(pos_label)
 	row.add_child(name_label)
 	row.add_child(score_label)
