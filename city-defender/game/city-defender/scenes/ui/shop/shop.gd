@@ -1,5 +1,6 @@
 extends CanvasLayer
 
+signal opened
 signal closed
 signal powerup_purchased(powerup_id: String)
 
@@ -31,7 +32,7 @@ const POWERUP_ICONS: Dictionary = {
 
 const ONE_TIME_POWERUPS: Array[String] = ["gatling"]
 
-var _cities: Array = []
+var _cities: Array[City] = []
 var _buy_buttons: Dictionary = {}
 var _purchased_once: Array[String] = []
 
@@ -113,16 +114,15 @@ func _build_powerups() -> void:
 		desc_label.add_theme_font_size_override("font_size", 14)
 
 
-func open(cities: Array) -> void:
+func open(cities: Array[City]) -> void:
 	_cities = cities
 	visible = true
-	get_tree().paused = true
+	opened.emit()
 	_refresh_buttons()
 
 
 func close() -> void:
 	visible = false
-	get_tree().paused = false
 	closed.emit()
 
 
