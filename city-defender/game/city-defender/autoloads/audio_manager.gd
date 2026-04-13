@@ -69,6 +69,10 @@ func play_music(sound_name: String) -> void:
 		return
 	if stream is AudioStreamMP3:
 		(stream as AudioStreamMP3).loop = true
+	elif stream is AudioStreamOggVorbis:
+		(stream as AudioStreamOggVorbis).loop = true
+	elif stream is AudioStreamWAV:
+		(stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
 	if _music_player.stream == stream and _music_player.playing:
 		return
 	_music_player.stream = stream
