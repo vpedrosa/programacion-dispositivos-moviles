@@ -10,7 +10,7 @@
 extends Node
 
 const SFX_DIR := "res://assets/sounds/"
-const EXTENSIONS := ["ogg", "wav", "mp3"]
+const EXTENSIONS: Array[String] = ["ogg", "wav", "mp3"]
 
 var _sfx_player: AudioStreamPlayer
 var _music_player: AudioStreamPlayer

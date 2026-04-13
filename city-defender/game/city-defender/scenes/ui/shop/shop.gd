@@ -31,7 +31,7 @@ func _build_powerups() -> void:
 		var data: Dictionary = POWERUPS[powerup_id]
 
 		var row := HBoxContainer.new()
-		row.theme_override_constants/separation = 12
+		row.add_theme_constant_override("separation", 12)
 
 		var info_box := VBoxContainer.new()
 		info_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
