@@ -49,16 +49,17 @@ func _process(_delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if _phase != GamePhase.PLAYING:
 		return
-	if event is InputEventScreenTouch:
-		if event.pressed:
-			defense_base.shoot_at(event.position)
+	if event.is_action_pressed("shoot"):
+		var pos: Vector2
+		if event is InputEventMouseButton:
+			pos = (event as InputEventMouseButton).position
+		elif event is InputEventScreenTouch:
+			pos = (event as InputEventScreenTouch).position
 		else:
-			defense_base.release()
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			defense_base.shoot_at(event.position)
-		else:
-			defense_base.release()
+			return
+		defense_base.shoot_at(pos)
+	elif event.is_action_released("shoot"):
+		defense_base.release()
 
 
 func get_cities() -> Array[City]:
