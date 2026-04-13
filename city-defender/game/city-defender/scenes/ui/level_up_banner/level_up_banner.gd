@@ -19,7 +19,7 @@ func show_level_up() -> void:
 	_sprite.modulate = Color(0.0, 0.9, 0.25, 0.0)
 	_sprite.position = Vector2(640.0, 620.0)
 	visible = true
-	AudioManager.play_sfx("wow" + str(randi_range(1, 4)))
+	AudioManager.play_voice("wow" + str(randi_range(1, 4)))
 
 	_tween = create_tween()
 	_tween.tween_property(_sprite, "position:y", 400.0, 1.7)
