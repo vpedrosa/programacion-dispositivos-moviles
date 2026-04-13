@@ -11,6 +11,7 @@ func _ready() -> void:
 	_final_score = GameState.score
 	score_label.text = str(_final_score)
 	name_container.visible = false
+	FalloutStyle.apply(self)
 	_check_top_10()
 
 

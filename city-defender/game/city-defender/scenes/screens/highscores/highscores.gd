@@ -7,6 +7,7 @@ extends Control
 
 func _ready() -> void:
 	error_label.visible = false
+	FalloutStyle.apply(self)
 	_load_scores()
 
 
@@ -27,6 +28,7 @@ func _populate_table(scores: Array) -> void:
 		var entry = scores[i]
 		var row := _create_row(i + 1, entry.get("name", "???"), entry.get("score", 0))
 		scores_container.add_child(row)
+		FalloutStyle.style_subtree(row)
 
 
 func _create_row(pos: int, player_name: String, score: int) -> HBoxContainer:

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/entities/explosion/impact_explosion.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/explosion/impact_explosion_sheet.png" id="2_sheet"]
+
+[node name="ImpactExplosion" type="Node2D"]
+script = ExtResource("1_script")
+
+[node name="Visual" type="Sprite2D" parent="."]
+modulate = Color(0, 1, 0.25, 1)
+texture = ExtResource("2_sheet")
+hframes = 10
+frame = 0

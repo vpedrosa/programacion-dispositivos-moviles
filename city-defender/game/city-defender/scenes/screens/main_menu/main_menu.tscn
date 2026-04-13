@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://b36cde08u7vf2"]
 
 [ext_resource type="Script" uid="uid://me1ed443sj8m" path="res://scenes/screens/main_menu/main_menu.gd" id="1_main_menu"]
 
-[node name="root" type="Control"]
+[node name="root" type="Control" unique_id=1933571886]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,8 +11,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main_menu")
 
-[node name="Background" type="ColorRect" parent="."]
-layout_mode = 3
+[node name="Background" type="ColorRect" parent="." unique_id=2002975814]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,34 +20,34 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.02, 0.06, 0.02, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
-layout_mode = 3
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=700629408]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=236449819]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Title" type="Label" parent="CenterContainer/VBox"]
+[node name="Title" type="Label" parent="CenterContainer/VBox" unique_id=77990527]
 layout_mode = 2
 text = "CITY DEFENDER"
 horizontal_alignment = 1
 
-[node name="PlayButton" type="Button" parent="CenterContainer/VBox"]
-layout_mode = 2
+[node name="PlayButton" type="Button" parent="CenterContainer/VBox" unique_id=1109315501]
 custom_minimum_size = Vector2(200, 60)
-text = "Jugar"
+layout_mode = 2
+text = "JUGAR"
 
-[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox"]
-layout_mode = 2
+[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox" unique_id=1740833389]
 custom_minimum_size = Vector2(200, 60)
-text = "Highscores"
+layout_mode = 2
+text = "HIGHSCORES"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBox"]
-layout_mode = 2
+[node name="QuitButton" type="Button" parent="CenterContainer/VBox" unique_id=983950954]
 custom_minimum_size = Vector2(200, 60)
-text = "Salir"
+layout_mode = 2
+text = "SALIR"
