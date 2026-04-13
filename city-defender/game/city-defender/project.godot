@@ -22,6 +22,7 @@ GameState="*res://autoloads/game_state.gd"
 FirebaseManager="*res://autoloads/firebase_manager.gd"
 FalloutStyle="*res://autoloads/fallout_style.gd"
 AudioManager="*res://autoloads/audio_manager.gd"
+CursorManager="*res://autoloads/cursor_manager.gd"
 
 [display]
 

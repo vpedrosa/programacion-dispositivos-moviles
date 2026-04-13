@@ -8,6 +8,7 @@ extends Control
 
 func _ready() -> void:
 	FalloutStyle.apply(self)
+	CursorManager.set_menu_cursor()
 	_refresh_state()
 
 

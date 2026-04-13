@@ -15,6 +15,7 @@ func _ready() -> void:
 	FalloutStyle.apply(self)
 	_title.add_theme_font_size_override("font_size", 80)
 	AudioManager.play_music("main-theme")
+	CursorManager.set_menu_cursor()
 
 
 func _on_play_pressed() -> void:

@@ -13,6 +13,7 @@ func _ready() -> void:
 	name_container.visible = false
 	AudioManager.stop_music()
 	FalloutStyle.apply(self)
+	CursorManager.set_menu_cursor()
 	_check_top_10()
 
 

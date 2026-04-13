@@ -8,6 +8,7 @@ extends Control
 func _ready() -> void:
 	error_label.visible = false
 	FalloutStyle.apply(self)
+	CursorManager.set_menu_cursor()
 	_load_scores()
 
 
