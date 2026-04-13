@@ -1,8 +1,8 @@
 extends Control
 
-@onready var scores_container: VBoxContainer = $ScrollContainer/ScoresContainer
-@onready var loading_label: Label = $LoadingLabel
-@onready var error_label: Label = $ErrorLabel
+@onready var scores_container: VBoxContainer = $MarginContainer/VBox/ScrollContainer/ScoresContainer
+@onready var loading_label: Label = $MarginContainer/VBox/LoadingLabel
+@onready var error_label: Label = $MarginContainer/VBox/ErrorLabel
 
 
 func _ready() -> void:
