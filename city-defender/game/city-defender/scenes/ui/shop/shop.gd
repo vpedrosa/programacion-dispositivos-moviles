@@ -14,7 +14,7 @@ const POWERUPS: Dictionary = {
 }
 
 @onready var money_label: Label = $Panel/VBox/MoneyLabel
-@onready var powerups_container: VBoxContainer = $Panel/VBox/PowerupsContainer
+@onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 
 var _cities: Array = []
 var _buy_buttons: Dictionary = {}

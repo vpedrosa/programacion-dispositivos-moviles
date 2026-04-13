@@ -36,14 +36,18 @@ layout_mode = 2
 text = "$0"
 horizontal_alignment = 1
 
-[node name="PowerupsContainer" type="VBoxContainer" parent="Panel/VBox"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
 [node name="CloseButton" type="Button" parent="Panel/VBox"]
 layout_mode = 2
 custom_minimum_size = Vector2(0, 60)
 text = "SHOP_CLOSE"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PowerupsContainer" type="VBoxContainer" parent="Panel/VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
 
 [connection signal="pressed" from="Panel/VBox/CloseButton" to="." method="_on_close_button_pressed"]
