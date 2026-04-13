@@ -114,15 +114,15 @@ func _setup_smoke() -> void:
 	_smoke = CPUParticles2D.new()
 	_smoke.emitting = true
 	_smoke.amount = 10
-	_smoke.lifetime = 0.22
+	_smoke.lifetime = 0.45
 	_smoke.explosiveness = 0.0
 	_smoke.randomness = 0.6
-	# Local (0, +Y) = detrás del misil gracias a la rotación del nodo padre
-	_smoke.position = Vector2(0.0, 8.0)
+	# Posición desplazada para dejar espacio visual entre el cohete y el humo
+	_smoke.position = Vector2(0.0, 22.0)
 	_smoke.direction = Vector2(0.0, 1.0)
 	_smoke.spread = 35.0
-	_smoke.initial_velocity_min = 5.0
-	_smoke.initial_velocity_max = 18.0
+	_smoke.initial_velocity_min = 8.0
+	_smoke.initial_velocity_max = 22.0
 	_smoke.gravity = Vector2.ZERO
 	_smoke.scale_amount_min = 12.0
 	_smoke.scale_amount_max = 22.0
