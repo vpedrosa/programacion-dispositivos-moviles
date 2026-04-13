@@ -1,6 +1,7 @@
 ## InGameSettings — overlay de ajustes en partida.
 ## Extiende CanvasLayer, por lo que no puede heredar SettingsPanelBase (Control).
 ## La lógica de refresco se mantiene aquí; _style_slider está centralizado en FalloutStyle.
+class_name InGameSettings
 extends CanvasLayer
 
 signal opened

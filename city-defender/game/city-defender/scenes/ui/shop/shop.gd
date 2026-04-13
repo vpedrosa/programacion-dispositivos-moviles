@@ -1,3 +1,4 @@
+class_name Shop
 extends CanvasLayer
 
 signal opened
