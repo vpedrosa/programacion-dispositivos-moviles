@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="City Defender"
+run/main_scene="res://scenes/screens/main_menu/main_menu.tscn"
 config/features=PackedStringArray("4.6", "Mobile")
 config/icon="res://icon.svg"
-run/main_scene="res://scenes/screens/main_menu/main_menu.tscn"
 
 [autoload]
 
@@ -24,9 +24,7 @@ FirebaseManager="*res://autoloads/firebase_manager.gd"
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/handheld/orientation=0
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
 
 [layer_names]
 
@@ -44,3 +42,4 @@ window/stretch/aspect="keep"
 
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
