@@ -8,7 +8,7 @@ const POWERUPS: Dictionary = {
 	"rebuild_city":  {"name": "PU_REBUILD_NAME",  "cost": 500, "desc": "PU_REBUILD_DESC"},
 	"shield":        {"name": "PU_SHIELD_NAME",   "cost": 200, "desc": "PU_SHIELD_DESC"},
 	"radius_plus":   {"name": "PU_RADIUS_NAME",   "cost": 150, "desc": "PU_RADIUS_DESC"},
-	"double_shot":   {"name": "PU_DOUBLE_NAME",   "cost": 150, "desc": "PU_DOUBLE_DESC"},
+	"gatling":       {"name": "PU_GATLING_NAME",   "cost": 150, "desc": "PU_GATLING_DESC"},
 	"emp":           {"name": "PU_EMP_NAME",       "cost": 300, "desc": "PU_EMP_DESC"},
 	"cooldown_plus": {"name": "PU_COOLDOWN_NAME", "cost": 50, "desc": "PU_COOLDOWN_DESC"},
 	"turret_speed":  {"name": "PU_TURRET_SPEED_NAME", "cost": 60, "desc": "PU_TURRET_SPEED_DESC"},
@@ -19,7 +19,7 @@ const POWERUP_ICONS: Dictionary = {
 	"rebuild_city": "res://assets/sprites/shop/rebuild.png",
 	"shield":       "res://assets/sprites/shop/shield.png",
 	"radius_plus":  "res://assets/sprites/shop/radius.png",
-	"double_shot":  "res://assets/sprites/shop/double.png",
+	"gatling":      "res://assets/sprites/shop/double.png",
 	"emp":          "res://assets/sprites/shop/emp.png",
 	"cooldown_plus":"res://assets/sprites/shop/cooldown.png",
 	"turret_speed": "res://assets/sprites/shop/speed.png",
@@ -29,8 +29,11 @@ const POWERUP_ICONS: Dictionary = {
 @onready var money_label: Label = $Panel/VBox/MoneyLabel
 @onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 
+const ONE_TIME_POWERUPS: Array[String] = ["gatling"]
+
 var _cities: Array = []
 var _buy_buttons: Dictionary = {}
+var _purchased_once: Array[String] = []
 
 
 func _ready() -> void:
@@ -105,6 +108,9 @@ func _build_powerups() -> void:
 		row.add_child(right_box)
 		powerups_container.add_child(row)
 		FalloutStyle.style_subtree(row)
+		# Restaurar tamaños tras el estilizado global
+		name_label.add_theme_font_size_override("font_size", 22)
+		desc_label.add_theme_font_size_override("font_size", 14)
 
 
 func open(cities: Array) -> void:
@@ -126,7 +132,10 @@ func _refresh_buttons() -> void:
 	money_label.visible = false
 	for powerup_id in _buy_buttons.keys():
 		var btn: Button = _buy_buttons[powerup_id]
-		btn.disabled = GameState.money < POWERUPS[powerup_id]["cost"]
+		if powerup_id in _purchased_once:
+			btn.disabled = true
+		else:
+			btn.disabled = GameState.money < POWERUPS[powerup_id]["cost"]
 
 
 func _on_money_changed(_new_money: int) -> void:
@@ -137,6 +146,8 @@ func _on_money_changed(_new_money: int) -> void:
 func _on_buy_pressed(powerup_id: String) -> void:
 	var cost: int = POWERUPS[powerup_id]["cost"]
 	if GameState.spend_money(cost):
+		if powerup_id in ONE_TIME_POWERUPS:
+			_purchased_once.append(powerup_id)
 		powerup_purchased.emit(powerup_id)
 		_refresh_buttons()
 
