@@ -86,10 +86,22 @@ func _on_area_entered(area: Area2D) -> void:
 # ── Efectos visuales ──────────────────────────────────────────────────────────
 
 func _setup_glow() -> void:
+	# Punto radial generado por código: gradiente blanco→transparente
+	var size := 32
+	var center := size / 2.0
+	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
+	for x in size:
+		for y in size:
+			var d := Vector2(x, y).distance_to(Vector2(center, center)) / center
+			var a := clamp(1.0 - d, 0.0, 1.0)
+			a = pow(a, 1.5)
+			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, a))
+	var tex := ImageTexture.create_from_image(img)
+
 	var glow := Sprite2D.new()
-	glow.texture = _visual.texture
-	glow.scale = _visual.scale * 2.5
-	glow.modulate = Color(_visual.modulate.r, _visual.modulate.g, _visual.modulate.b, 0.35)
+	glow.texture = tex
+	glow.scale = Vector2(1.2, 1.2)
+	glow.modulate = Color(_visual.modulate.r, _visual.modulate.g, _visual.modulate.b, 0.9)
 	var mat := CanvasItemMaterial.new()
 	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	glow.material = mat
