@@ -41,7 +41,7 @@ func get_cities() -> Array:
 
 
 func _on_game_over() -> void:
-	get_tree().change_scene_to_file("res://scenes/screens/game_over/game_over.tscn")
+	get_tree().call_deferred("change_scene_to_file", "res://scenes/screens/game_over/game_over.tscn")
 
 
 func _on_shop_requested() -> void:

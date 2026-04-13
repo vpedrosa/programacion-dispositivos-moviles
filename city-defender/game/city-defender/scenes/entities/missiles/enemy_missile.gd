@@ -1,6 +1,8 @@
 class_name EnemyMissile
 extends Area2D
 
+const IMPACT_SCENE = preload("res://scenes/entities/explosion/impact_explosion.tscn")
+
 signal missile_destroyed(missile: EnemyMissile)
 
 @export var speed: float = 150.0
@@ -69,5 +71,8 @@ func _check_out_of_bounds() -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area is City and area.is_alive:
+		var impact: Node2D = IMPACT_SCENE.instantiate()
+		get_parent().call_deferred("add_child", impact)
+		impact.global_position = global_position
 		area.take_damage()
-		queue_free()
+		call_deferred("queue_free")
