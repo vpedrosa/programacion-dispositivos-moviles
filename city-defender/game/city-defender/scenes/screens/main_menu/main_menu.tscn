@@ -36,8 +36,9 @@ theme_override_constants/separation = 24
 
 [node name="Title" type="TextureRect" parent="CenterContainer/VBox" unique_id=554607995]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 90)
+custom_minimum_size = Vector2(440, 80)
 size_flags_horizontal = 3
+expand_mode = 3
 texture = ExtResource("2_logo_font")
 stretch_mode = 6
 
