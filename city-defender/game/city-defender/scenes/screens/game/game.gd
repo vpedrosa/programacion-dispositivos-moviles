@@ -13,7 +13,7 @@ var _cities: Array = []
 func _ready() -> void:
 	GameState.reset()
 	GameState.game_over.connect(_on_game_over)
-	AudioManager.play_music("music_game")
+	AudioManager.play_music("main-theme")
 	_add_scanline_overlay()
 	_cities = get_tree().get_nodes_in_group("cities")
 	if hud:

@@ -40,6 +40,8 @@ func play_music(name: String) -> void:
 	var stream := _load_sound(name)
 	if stream == null:
 		return
+	if stream is AudioStreamMP3:
+		(stream as AudioStreamMP3).loop = true
 	if _music_player.stream == stream and _music_player.playing:
 		return
 	_music_player.stream = stream

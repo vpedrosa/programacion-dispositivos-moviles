@@ -54,6 +54,10 @@ func _style_button(btn: Button) -> void:
 	if _font:
 		btn.add_theme_font_override("font", _font)
 
+	if not btn.has_meta("_sfx_connected"):
+		btn.set_meta("_sfx_connected", true)
+		btn.pressed.connect(AudioManager.play_sfx.bind("button"))
+
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color(0.0, 0.08, 0.02, 1)
 	normal.border_color = PHOSPHOR

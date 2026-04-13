@@ -65,6 +65,7 @@ func _on_destroyed() -> void:
 	is_alive = false
 	_update_alive_visual(false)
 	destroyed.emit()
+	AudioManager.play_sfx("city-destroyed")
 	GameState.notify_city_destroyed()
 
 

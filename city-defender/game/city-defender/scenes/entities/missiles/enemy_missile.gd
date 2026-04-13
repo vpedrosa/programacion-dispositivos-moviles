@@ -75,5 +75,5 @@ func _on_area_entered(area: Area2D) -> void:
 		get_parent().call_deferred("add_child", impact)
 		impact.global_position = global_position
 		area.take_damage()
-		AudioManager.play_sfx("impact")
+		AudioManager.play_sfx("missile-collision")
 		call_deferred("queue_free")
