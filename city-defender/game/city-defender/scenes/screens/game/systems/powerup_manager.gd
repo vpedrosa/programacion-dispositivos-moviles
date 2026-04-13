@@ -4,18 +4,7 @@ extends Node
 const RADIUS_BONUS: float = 30.0
 const COOLDOWN_REDUCTION: float = 0.1
 const SHIELD_DURATION: float = 15.0
-const DOUBLE_SHOT_DURATION: float = 15.0
 const ROTATION_SPEED_BONUS: float = 1.5
-
-var _double_shot_timer: float = 0.0
-
-
-func _process(delta: float) -> void:
-	if _double_shot_timer > 0.0:
-		_double_shot_timer -= delta
-		get_parent().hud.show_powerup_active("Disparo doble", _double_shot_timer, DOUBLE_SHOT_DURATION)
-		if _double_shot_timer <= 0.0:
-			get_parent().defense_base.set_double_shot(false)
 
 
 func apply_powerup(powerup_id: String, cities: Array) -> void:
@@ -24,7 +13,7 @@ func apply_powerup(powerup_id: String, cities: Array) -> void:
 		"rebuild_city":  _rebuild_city(cities)
 		"shield":        _activate_shield(cities)
 		"radius_plus":   _increase_radius()
-		"double_shot":   _activate_double_shot()
+		"gatling":       _enable_gatling()
 		"emp":           _activate_emp()
 		"cooldown_plus": _reduce_cooldown()
 		"turret_speed":  _upgrade_rotation_speed()
@@ -58,9 +47,8 @@ func _increase_radius() -> void:
 	get_parent().defense_base.add_explosion_radius(RADIUS_BONUS)
 
 
-func _activate_double_shot() -> void:
-	_double_shot_timer = DOUBLE_SHOT_DURATION
-	get_parent().defense_base.set_double_shot(true)
+func _enable_gatling() -> void:
+	get_parent().defense_base.enable_gatling()
 
 
 func _activate_emp() -> void:

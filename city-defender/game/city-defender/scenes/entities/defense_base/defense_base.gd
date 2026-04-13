@@ -11,7 +11,6 @@ extends Node2D
 
 var _cooldown_timer: float = 0.0
 var _can_shoot: bool = true
-var _double_shot_active: bool = false
 var _explosion_radius_bonus: float = 0.0
 var _cooldown_upgrades: int = 0
 
@@ -19,6 +18,9 @@ var _rotation_speed: float = 3.0  # rad/s
 var _is_aiming: bool = false
 var _pending_target: Vector2 = Vector2.ZERO
 var _aim_angle: float = 0.0
+
+var _gatling_active: bool = false
+var _is_holding: bool = false
 
 
 func _process(delta: float) -> void:
@@ -46,10 +48,15 @@ func shoot_at(world_position: Vector2) -> void:
 	if not _can_shoot or _is_aiming:
 		return
 	_pending_target = world_position
+	_is_holding = true
 	var dir := world_position - global_position
 	# Sprite faces UP at rotation=0; formula to aim: atan2(dx, -dy)
 	_aim_angle = atan2(dir.x, -dir.y)
 	_is_aiming = true
+
+
+func release() -> void:
+	_is_holding = false
 
 
 func get_cooldown_progress() -> float:
@@ -73,16 +80,21 @@ func upgrade_rotation_speed(amount: float) -> void:
 	_rotation_speed += amount
 
 
-func set_double_shot(active: bool) -> void:
-	_double_shot_active = active
+func enable_gatling() -> void:
+	_gatling_active = true
 
 
 func _fire_at_pending() -> void:
 	_launch_missile(_pending_target)
-	if _double_shot_active:
-		_launch_missile(_pending_target + Vector2(randf_range(-15, 15), randf_range(-15, 15)))
 	_can_shoot = false
 	_cooldown_timer = 0.0
+	# En modo Gatling, si el jugador sigue pulsando, volver a apuntar al mismo objetivo
+	if _gatling_active and _is_holding:
+		_aim_angle = atan2(
+			(_pending_target - global_position).x,
+			-(_pending_target - global_position).y
+		)
+		_is_aiming = true
 
 
 func _launch_missile(target: Vector2) -> void:
