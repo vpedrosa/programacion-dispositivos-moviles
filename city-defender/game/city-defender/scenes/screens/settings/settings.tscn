@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scenes/screens/settings/settings.gd" id="1_settings"]
+
+[sub_resource type="StyleBoxFlat" id="SepStyle"]
+bg_color = Color(0.0, 0.9, 0.25, 1.0)
+content_margin_top = 1.0
+content_margin_bottom = 1.0
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -40,6 +45,7 @@ horizontal_alignment = 1
 
 [node name="HSep1" type="HSeparator" parent="CenterContainer/VBox"]
 layout_mode = 2
+theme_override_styles/separator = SubResource("SepStyle")
 
 [node name="LanguageLabel" type="Label" parent="CenterContainer/VBox"]
 layout_mode = 2
@@ -64,6 +70,7 @@ text = "ENGLISH"
 
 [node name="HSep2" type="HSeparator" parent="CenterContainer/VBox"]
 layout_mode = 2
+theme_override_styles/separator = SubResource("SepStyle")
 
 [node name="SoundLabel" type="Label" parent="CenterContainer/VBox"]
 layout_mode = 2
@@ -88,6 +95,23 @@ text = "SETTINGS_SOUND_OFF"
 
 [node name="HSep3" type="HSeparator" parent="CenterContainer/VBox"]
 layout_mode = 2
+theme_override_styles/separator = SubResource("SepStyle")
+
+[node name="VolumeLabel" type="Label" parent="CenterContainer/VBox"]
+layout_mode = 2
+text = "SETTINGS_VOLUME"
+horizontal_alignment = 1
+
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="HSep4" type="HSeparator" parent="CenterContainer/VBox"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("SepStyle")
 
 [node name="BackButton" type="Button" parent="CenterContainer/VBox"]
 layout_mode = 2
@@ -98,4 +122,5 @@ text = "SETTINGS_BACK"
 [connection signal="pressed" from="CenterContainer/VBox/LangHBox/ENButton" to="." method="_on_en_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/SoundHBox/SoundOnButton" to="." method="_on_sound_on_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/SoundHBox/SoundOffButton" to="." method="_on_sound_off_pressed"]
+[connection signal="value_changed" from="CenterContainer/VBox/VolumeSlider" to="." method="_on_volume_changed"]
 [connection signal="pressed" from="CenterContainer/VBox/BackButton" to="." method="_on_back_pressed"]
