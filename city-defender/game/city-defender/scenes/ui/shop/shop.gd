@@ -11,6 +11,7 @@ const POWERUPS: Dictionary = {
 	"double_shot":   {"name": "PU_DOUBLE_NAME",   "cost": 350, "desc": "PU_DOUBLE_DESC"},
 	"emp":           {"name": "PU_EMP_NAME",       "cost": 600, "desc": "PU_EMP_DESC"},
 	"cooldown_plus": {"name": "PU_COOLDOWN_NAME", "cost": 250, "desc": "PU_COOLDOWN_DESC"},
+	"turret_speed":  {"name": "PU_TURRET_SPEED_NAME", "cost": 300, "desc": "PU_TURRET_SPEED_DESC"},
 }
 
 @onready var money_label: Label = $Panel/VBox/MoneyLabel

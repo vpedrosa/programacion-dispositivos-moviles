@@ -5,6 +5,7 @@ const RADIUS_BONUS: float = 30.0
 const COOLDOWN_REDUCTION: float = 0.1
 const SHIELD_DURATION: float = 15.0
 const DOUBLE_SHOT_DURATION: float = 15.0
+const ROTATION_SPEED_BONUS: float = 1.5
 
 var _double_shot_timer: float = 0.0
 
@@ -26,6 +27,7 @@ func apply_powerup(powerup_id: String, cities: Array) -> void:
 		"double_shot":   _activate_double_shot()
 		"emp":           _activate_emp()
 		"cooldown_plus": _reduce_cooldown()
+		"turret_speed":  _upgrade_rotation_speed()
 
 
 func _repair_city(cities: Array) -> void:
@@ -71,3 +73,7 @@ func _activate_emp() -> void:
 
 func _reduce_cooldown() -> void:
 	get_parent().defense_base.reduce_cooldown(COOLDOWN_REDUCTION)
+
+
+func _upgrade_rotation_speed() -> void:
+	get_parent().defense_base.upgrade_rotation_speed(ROTATION_SPEED_BONUS)

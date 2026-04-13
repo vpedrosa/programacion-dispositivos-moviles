@@ -121,8 +121,10 @@ func _register_translations() -> void:
 		"PU_DOUBLE_DESC":    "2 misiles por toque durante 15s",
 		"PU_EMP_NAME":       "Bomba EMP",
 		"PU_EMP_DESC":       "Destruye todos los misiles en pantalla",
-		"PU_COOLDOWN_NAME":  "Cadencia+",
-		"PU_COOLDOWN_DESC":  "Reduce el cooldown de disparo permanentemente",
+		"PU_COOLDOWN_NAME":       "Cadencia+",
+		"PU_COOLDOWN_DESC":       "Reduce el cooldown de disparo permanentemente",
+		"PU_TURRET_SPEED_NAME":   "Velocidad de giro",
+		"PU_TURRET_SPEED_DESC":   "Aumenta la velocidad de rotacion de la torreta",
 	}))
 
 	TranslationServer.add_translation(_make_translation("en", {
@@ -170,8 +172,10 @@ func _register_translations() -> void:
 		"PU_DOUBLE_DESC":    "2 missiles per tap for 15s",
 		"PU_EMP_NAME":       "EMP bomb",
 		"PU_EMP_DESC":       "Destroys all missiles on screen",
-		"PU_COOLDOWN_NAME":  "Rate of fire+",
-		"PU_COOLDOWN_DESC":  "Permanently reduces firing cooldown",
+		"PU_COOLDOWN_NAME":       "Rate of fire+",
+		"PU_COOLDOWN_DESC":       "Permanently reduces firing cooldown",
+		"PU_TURRET_SPEED_NAME":   "Rotation speed",
+		"PU_TURRET_SPEED_DESC":   "Increases turret rotation speed permanently",
 	}))
 
 
