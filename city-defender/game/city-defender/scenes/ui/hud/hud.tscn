@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/hud/hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" path="res://assets/sprites/shop/shop.png" id="2_shop_icon"]
 
 [node name="HUD" type="CanvasLayer"]
 layer = 5
@@ -44,6 +45,7 @@ text = "HUD_EMP"
 
 [node name="ShopButton" type="Button" parent="MarginContainer/HBox"]
 layout_mode = 2
+icon = ExtResource("2_shop_icon")
 text = "HUD_SHOP"
 
 [node name="CityBarsContainer" type="HBoxContainer" parent="."]

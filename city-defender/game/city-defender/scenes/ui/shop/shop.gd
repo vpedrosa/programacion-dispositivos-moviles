@@ -14,6 +14,17 @@ const POWERUPS: Dictionary = {
 	"turret_speed":  {"name": "PU_TURRET_SPEED_NAME", "cost": 60, "desc": "PU_TURRET_SPEED_DESC"},
 }
 
+const POWERUP_ICONS: Dictionary = {
+	"repair_city":  "res://assets/sprites/shop/repair.png",
+	"rebuild_city": "res://assets/sprites/shop/rebuild.png",
+	"shield":       "res://assets/sprites/shop/shield.png",
+	"radius_plus":  "res://assets/sprites/shop/radius.png",
+	"double_shot":  "res://assets/sprites/shop/double.png",
+	"emp":          "res://assets/sprites/shop/emp.png",
+	"cooldown_plus":"res://assets/sprites/shop/cooldown.png",
+	"turret_speed": "res://assets/sprites/shop/speed.png",
+}
+
 @onready var money_label: Label = $Panel/VBox/MoneyLabel
 @onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 
@@ -34,6 +45,25 @@ func _build_powerups() -> void:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 12)
 
+		# ── Icono enmarcado ──────────────────────────────────────────────────
+		var icon_frame := Panel.new()
+		icon_frame.custom_minimum_size = Vector2(64, 64)
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0.0, 0.0, 0.0, 0.6)
+		style.border_color = Color(0.0, 0.9, 0.25, 1.0)
+		style.set_border_width_all(2)
+		style.set_corner_radius_all(4)
+		icon_frame.add_theme_stylebox_override("panel", style)
+
+		var icon_rect := TextureRect.new()
+		icon_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 6)
+		icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon_rect.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+		if POWERUP_ICONS.has(powerup_id):
+			icon_rect.texture = load(POWERUP_ICONS[powerup_id])
+		icon_frame.add_child(icon_rect)
+
+		# ── Info ─────────────────────────────────────────────────────────────
 		var info_box := VBoxContainer.new()
 		info_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
@@ -42,8 +72,9 @@ func _build_powerups() -> void:
 
 		var desc_label := Label.new()
 		desc_label.text = tr(data["desc"])
-		desc_label.add_theme_font_size_override("font_size", 18)
+		desc_label.add_theme_font_size_override("font_size", 14)
 
+		# ── Precio y botón ───────────────────────────────────────────────────
 		var right_box := VBoxContainer.new()
 		right_box.custom_minimum_size = Vector2(120, 0)
 
@@ -60,6 +91,7 @@ func _build_powerups() -> void:
 		info_box.add_child(desc_label)
 		right_box.add_child(price_label)
 		right_box.add_child(buy_btn)
+		row.add_child(icon_frame)
 		row.add_child(info_box)
 		row.add_child(right_box)
 		powerups_container.add_child(row)
