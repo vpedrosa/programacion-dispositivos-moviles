@@ -5,6 +5,8 @@ const IMPACT_SCENE = preload("res://scenes/entities/explosion/impact_explosion.t
 
 signal missile_destroyed(missile: EnemyMissile)
 
+static var _GLOW_TEX: ImageTexture = null
+
 @export var speed: float = 150.0
 @export var score_value: int = 100
 @export var money_value: int = 15
@@ -85,8 +87,7 @@ func _on_area_entered(area: Area2D) -> void:
 
 # ── Efectos visuales ──────────────────────────────────────────────────────────
 
-func _setup_glow() -> void:
-	# Punto radial generado por código: gradiente blanco→transparente
+static func _create_glow_texture() -> ImageTexture:
 	var size := 32
 	var center := size / 2.0
 	var img: Image = Image.create(size, size, false, Image.FORMAT_RGBA8)
@@ -96,7 +97,13 @@ func _setup_glow() -> void:
 			var a: float = clamp(1.0 - d, 0.0, 1.0)
 			a = pow(a, 1.5)
 			img.set_pixel(x, y, Color(1.0, 1.0, 1.0, a))
-	var tex: ImageTexture = ImageTexture.create_from_image(img)
+	return ImageTexture.create_from_image(img)
+
+
+func _setup_glow() -> void:
+	if _GLOW_TEX == null:
+		_GLOW_TEX = _create_glow_texture()
+	var tex: ImageTexture = _GLOW_TEX
 
 	var glow := Sprite2D.new()
 	glow.texture = tex
