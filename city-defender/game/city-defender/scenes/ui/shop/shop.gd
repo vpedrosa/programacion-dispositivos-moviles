@@ -42,6 +42,7 @@ func _build_powerups() -> void:
 
 		var desc_label := Label.new()
 		desc_label.text = tr(data["desc"])
+		desc_label.add_theme_font_size_override("font_size", 18)
 
 		var right_box := VBoxContainer.new()
 		right_box.custom_minimum_size = Vector2(120, 0)
