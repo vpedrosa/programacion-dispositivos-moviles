@@ -100,7 +100,8 @@ func _setup_glow() -> void:
 
 	var glow := Sprite2D.new()
 	glow.texture = tex
-	glow.scale = Vector2(1.2, 1.2)
+	glow.position = Vector2(0.0, 6.0)  # local +Y = escape/cola del cohete
+	glow.scale = Vector2(0.55, 0.55)
 	glow.modulate = Color(_visual.modulate.r, _visual.modulate.g, _visual.modulate.b, 0.9)
 	var mat := CanvasItemMaterial.new()
 	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
@@ -125,7 +126,7 @@ func _setup_smoke() -> void:
 	_smoke.gravity = Vector2.ZERO
 	_smoke.scale_amount_min = 3.0
 	_smoke.scale_amount_max = 7.0
-	_smoke.color = Color(0.75, 0.75, 0.75, 0.85)
+	_smoke.color = Color(1.0, 1.0, 1.0, 1.0)  # el ramp controla color y alpha
 
 	# Curva exponencial: partículas grandes al nacer (cerca del cohete)
 	# y decaen rápidamente al alejarse
@@ -133,6 +134,12 @@ func _setup_smoke() -> void:
 	scale_curve.add_point(Vector2(0.0, 1.0), 0.0, -4.0)
 	scale_curve.add_point(Vector2(1.0, 0.0), -0.3, 0.0)
 	_smoke.scale_amount_curve = scale_curve
+
+	# Fade de alpha: opaco al nacer → transparente al morir
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(0.75, 0.75, 0.75, 0.85))
+	ramp.set_color(1, Color(0.75, 0.75, 0.75, 0.0))
+	_smoke.color_ramp = ramp
 
 	add_child(_smoke)
 	move_child(_smoke, _visual.get_index())  # justo antes de Visual → detrás
