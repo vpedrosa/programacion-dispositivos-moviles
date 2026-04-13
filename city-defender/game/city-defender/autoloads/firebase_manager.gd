@@ -10,16 +10,24 @@ const _TOP_COUNT: int = 10
 var _project_id: String = ""
 var _api_key: String = ""
 var _http: HTTPRequest
+var _initialized: bool = false
 
 
 func _ready() -> void:
 	_load_env()
+	if _project_id.is_empty() or _api_key.is_empty():
+		push_warning("FirebaseManager: credenciales incompletas — las puntuaciones online no funcionarán")
+	else:
+		_initialized = true
 	_http = HTTPRequest.new()
 	add_child(_http)
 
 
-## Returns an Array of Dictionaries [{name, score}, ...] sorted by score desc.
-func get_top_scores() -> Array:
+## Returns an Array of Dictionaries [{name, score, date}, ...] sorted by score desc.
+func get_top_scores() -> Array[Dictionary]:
+	if not _initialized:
+		push_warning("FirebaseManager: get_top_scores() llamado sin credenciales")
+		return []
 	var url := _build_query_url()
 	_http.request(url)
 	var result = await _http.request_completed
@@ -28,6 +36,8 @@ func get_top_scores() -> Array:
 
 ## Returns true if score would enter the current top 10.
 func is_top_10(score: int) -> bool:
+	if not _initialized:
+		return false
 	var scores := await get_top_scores()
 	if scores.size() < _TOP_COUNT:
 		return true
@@ -36,6 +46,9 @@ func is_top_10(score: int) -> bool:
 
 ## Inserts a new entry and removes the lowest if the list exceeds 10.
 func submit_score(player_name: String, score: int) -> void:
+	if not _initialized:
+		push_warning("FirebaseManager: submit_score() llamado sin credenciales")
+		return
 	var scores := await get_top_scores()
 
 	# Only submit if it qualifies
@@ -84,14 +97,19 @@ func _build_document_url() -> String:
 	)
 
 
-func _parse_scores(body: PackedByteArray) -> Array:
+func _parse_scores(body: PackedByteArray) -> Array[Dictionary]:
 	var text := body.get_string_from_utf8()
 	var json = JSON.parse_string(text)
-	if json == null or not json.has("documents"):
+	if not json is Dictionary:
 		return []
-	var result: Array = []
-	for doc in json["documents"]:
-		var fields = doc.get("fields", {})
+	var json_dict := json as Dictionary
+	if not json_dict.has("documents"):
+		return []
+	var result: Array[Dictionary] = []
+	for doc in json_dict["documents"]:
+		if not doc is Dictionary:
+			continue
+		var fields: Dictionary = (doc as Dictionary).get("fields", {})
 		var ts: int = int(fields.get("timestamp", {}).get("integerValue", 0))
 		var date_str: String = ""
 		if ts > 0:
@@ -101,7 +119,7 @@ func _parse_scores(body: PackedByteArray) -> Array:
 			"name":      fields.get("name",  {}).get("stringValue",  ""),
 			"score":     int(fields.get("score", {}).get("integerValue", 0)),
 			"date":      date_str,
-			"_doc_name": doc.get("name", ""),  # full resource path, needed for delete
+			"_doc_name": (doc as Dictionary).get("name", ""),
 		})
 	return result
 
