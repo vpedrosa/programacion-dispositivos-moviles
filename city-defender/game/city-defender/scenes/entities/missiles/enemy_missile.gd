@@ -113,7 +113,7 @@ func _setup_smoke() -> void:
 	_smoke = CPUParticles2D.new()
 	_smoke.emitting = true
 	_smoke.amount = 10
-	_smoke.lifetime = 0.5
+	_smoke.lifetime = 0.22
 	_smoke.explosiveness = 0.0
 	_smoke.randomness = 0.6
 	# Local (0, +Y) = detrás del misil gracias a la rotación del nodo padre
@@ -123,8 +123,16 @@ func _setup_smoke() -> void:
 	_smoke.initial_velocity_min = 5.0
 	_smoke.initial_velocity_max = 18.0
 	_smoke.gravity = Vector2.ZERO
-	_smoke.scale_amount_min = 2.0
-	_smoke.scale_amount_max = 5.0
-	_smoke.color = Color(0.7, 0.7, 0.7, 0.4)
+	_smoke.scale_amount_min = 3.0
+	_smoke.scale_amount_max = 7.0
+	_smoke.color = Color(0.75, 0.75, 0.75, 0.85)
+
+	# Curva exponencial: partículas grandes al nacer (cerca del cohete)
+	# y decaen rápidamente al alejarse
+	var scale_curve := Curve.new()
+	scale_curve.add_point(Vector2(0.0, 1.0), 0.0, -4.0)
+	scale_curve.add_point(Vector2(1.0, 0.0), -0.3, 0.0)
+	_smoke.scale_amount_curve = scale_curve
+
 	add_child(_smoke)
 	move_child(_smoke, _visual.get_index())  # justo antes de Visual → detrás
