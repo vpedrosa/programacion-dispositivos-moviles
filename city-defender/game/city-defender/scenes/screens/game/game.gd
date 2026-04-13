@@ -18,6 +18,7 @@ func _ready() -> void:
 	if hud:
 		hud.shop_requested.connect(_on_shop_requested)
 		hud.emp_activated.connect(_on_emp_activated)
+		_connect_city_health_to_hud()
 	if shop:
 		shop.closed.connect(_on_shop_closed)
 		shop.powerup_purchased.connect(_on_powerup_purchased)
@@ -38,6 +39,14 @@ func _input(event: InputEvent) -> void:
 
 func get_cities() -> Array:
 	return _cities
+
+
+func _connect_city_health_to_hud() -> void:
+	for city in _cities:
+		var c := city as City
+		c.health_changed.connect(
+			func(h: int, m: int) -> void: hud.update_city_health(c.city_index, h, m)
+		)
 
 
 func _on_game_over() -> void:

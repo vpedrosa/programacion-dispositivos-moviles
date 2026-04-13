@@ -32,6 +32,8 @@ func _style_node(node: Node) -> void:
 		_style_label(node)
 	elif node is LineEdit:
 		_style_line_edit(node)
+	elif node is ProgressBar:
+		_style_progress_bar(node)
 	for child in node.get_children():
 		_style_node(child)
 
@@ -91,6 +93,18 @@ func _style_line_edit(le: LineEdit) -> void:
 	normal.set_corner_radius_all(0)
 	normal.set_content_margin_all(8)
 	le.add_theme_stylebox_override("normal", normal)
+
+
+func _style_progress_bar(bar: ProgressBar) -> void:
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = PHOSPHOR
+	bar.add_theme_stylebox_override("fill", fill)
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = Color(0.0, 0.15, 0.04, 1)
+	bg.border_color = PHOSPHOR_DIM
+	bg.set_border_width_all(1)
+	bar.add_theme_stylebox_override("background", bg)
+	bar.add_theme_color_override("font_color", PHOSPHOR)
 
 
 func _add_scanline_overlay(parent: Control) -> void:

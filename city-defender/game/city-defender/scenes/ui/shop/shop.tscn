@@ -1,3 +1,49 @@
-[gd_scene format=3]
+[gd_scene load_steps=2 format=3]
 
-[node name="root" type="CanvasLayer" unique_id=1577111003]
+[ext_resource type="Script" path="res://scenes/ui/shop/shop.gd" id="1_shop"]
+
+[node name="Shop" type="CanvasLayer"]
+layer = 10
+process_mode = 3
+script = ExtResource("1_shop")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+modulate = Color(0, 0.9, 0.25, 1)
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60
+offset_top = 30
+offset_right = -60
+offset_bottom = -30
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = "TIENDA"
+horizontal_alignment = 1
+
+[node name="MoneyLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = "$0"
+horizontal_alignment = 1
+
+[node name="PowerupsContainer" type="VBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="CloseButton" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 48)
+text = "CERRAR"
+
+[connection signal="pressed" from="Panel/VBox/CloseButton" to="." method="_on_close_button_pressed"]

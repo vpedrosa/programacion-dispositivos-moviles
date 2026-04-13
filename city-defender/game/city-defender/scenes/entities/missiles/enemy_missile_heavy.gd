@@ -3,6 +3,7 @@ extends EnemyMissile
 
 
 func _ready() -> void:
+	super._ready()
 	speed = 100.0
 	score_value = 400
 	money_value = 40

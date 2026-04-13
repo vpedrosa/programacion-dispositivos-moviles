@@ -14,6 +14,11 @@ func _ready() -> void:
 	GameState.score_changed.connect(_on_score_changed)
 	GameState.money_changed.connect(_on_money_changed)
 	emp_button.visible = false
+	city_bars = []
+	for bar in $CityBarsContainer.get_children():
+		if bar is ProgressBar:
+			city_bars.append(bar)
+	FalloutStyle.style_subtree(self)
 
 
 func _on_score_changed(new_score: int) -> void:
