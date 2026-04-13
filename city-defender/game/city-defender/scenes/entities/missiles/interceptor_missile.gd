@@ -1,7 +1,6 @@
 class_name InterceptorMissile
 extends Node2D
 
-signal reached_target
 
 @export var speed: float = 600.0
 
@@ -43,5 +42,4 @@ func _explode() -> void:
 		var explosion: Explosion = _explosion_scene.instantiate()
 		get_parent().add_child(explosion)
 		explosion.init(global_position, _explosion_radius)
-	reached_target.emit()
 	queue_free()

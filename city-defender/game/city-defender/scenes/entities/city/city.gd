@@ -13,9 +13,15 @@ var is_alive: bool = true
 var has_shield: bool = false
 
 const FIRE_FPS: float = 8.0
+const _ALIVE_TEX: Texture2D = preload("res://assets/sprites/cities/city_alive.png")
+const _DEAD_TEX: Texture2D  = preload("res://assets/sprites/cities/city_destroyed.png")
+
 var _fire_timer: float = 0.0
 
-@onready var _fires: Array[Sprite2D]
+@onready var _visual: Sprite2D   = $Visual
+@onready var _fire_back: Sprite2D  = $FireBack
+@onready var _fire_front: Sprite2D = $FireFront
+@onready var _fires: Array[Sprite2D] = []
 
 
 func _ready() -> void:
@@ -26,7 +32,7 @@ func _ready() -> void:
 	shape.size = Vector2(60, 30)
 	$CollisionShape2D.shape = shape
 	$CollisionShape2D.position = Vector2(0, -15)
-	_fires = [$FireBack, $FireFront]
+	_fires = [_fire_back, _fire_front]
 
 
 func take_damage(amount: int = 25) -> void:
@@ -83,15 +89,9 @@ func _process(delta: float) -> void:
 
 
 func _update_alive_visual(alive: bool) -> void:
-	var sprite := $Visual as Sprite2D
-	if alive:
-		sprite.texture = load("res://assets/sprites/cities/city_alive.png")
-		for fire in _fires:
-			fire.visible = false
-	else:
-		sprite.texture = load("res://assets/sprites/cities/city_destroyed.png")
-		for fire in _fires:
-			fire.visible = true
+	_visual.texture = _ALIVE_TEX if alive else _DEAD_TEX
+	for fire: Sprite2D in _fires:
+		fire.visible = not alive
 
 
 func _update_shield_visual(active: bool) -> void:
