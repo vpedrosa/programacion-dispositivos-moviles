@@ -4,7 +4,6 @@ extends Control
 @onready var _scores_btn: Button = $CenterContainer/VBox/HighscoresButton
 @onready var _settings_btn: Button = $CenterContainer/VBox/SettingsButton
 @onready var _quit_btn: Button = $CenterContainer/VBox/QuitButton
-@onready var _title: Label = $CenterContainer/VBox/Title
 
 
 func _ready() -> void:
@@ -13,7 +12,6 @@ func _ready() -> void:
 	_settings_btn.pressed.connect(_on_settings_pressed)
 	_quit_btn.pressed.connect(_on_quit_pressed)
 	FalloutStyle.apply(self)
-	_title.add_theme_font_size_override("font_size", 80)
 	AudioManager.play_music("main-theme")
 	CursorManager.set_menu_cursor()
 

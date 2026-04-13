@@ -25,6 +25,7 @@ const POWERUP_ICONS: Dictionary = {
 	"turret_speed": "res://assets/sprites/shop/speed.png",
 }
 
+@onready var title_label: Label = $Panel/VBox/TitleLabel
 @onready var money_label: Label = $Panel/VBox/MoneyLabel
 @onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 
@@ -48,6 +49,7 @@ func _build_powerups() -> void:
 		# ── Icono enmarcado ──────────────────────────────────────────────────
 		var icon_frame := Panel.new()
 		icon_frame.custom_minimum_size = Vector2(64, 64)
+		icon_frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		icon_frame.clip_contents = true
 		var style := StyleBoxFlat.new()
 		style.bg_color = Color(0.0, 0.0, 0.0, 0.6)
@@ -59,10 +61,10 @@ func _build_powerups() -> void:
 		var icon_rect := TextureRect.new()
 		icon_rect.anchor_right = 1.0
 		icon_rect.anchor_bottom = 1.0
-		icon_rect.offset_left = 6
-		icon_rect.offset_top = 6
-		icon_rect.offset_right = -6
-		icon_rect.offset_bottom = -6
+		icon_rect.offset_left = 16
+		icon_rect.offset_top = 16
+		icon_rect.offset_right = -16
+		icon_rect.offset_bottom = -16
 		icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		if POWERUP_ICONS.has(powerup_id):
@@ -119,7 +121,9 @@ func close() -> void:
 
 
 func _refresh_buttons() -> void:
-	money_label.text = "$" + str(GameState.money)
+	var money_str := "$" + str(GameState.money)
+	title_label.text = tr("SHOP_TITLE") + " (" + money_str + ")"
+	money_label.visible = false
 	for powerup_id in _buy_buttons.keys():
 		var btn: Button = _buy_buttons[powerup_id]
 		btn.disabled = GameState.money < POWERUPS[powerup_id]["cost"]

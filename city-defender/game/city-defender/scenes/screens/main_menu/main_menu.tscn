@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://b36cde08u7vf2"]
 
 [ext_resource type="Script" uid="uid://me1ed443sj8m" path="res://scenes/screens/main_menu/main_menu.gd" id="1_main_menu"]
+[ext_resource type="Texture2D" path="res://assets/logo-font.png" id="2_logo_font"]
 
-[node name="root" type="Control"]
+[node name="root" type="Control" unique_id=873748263]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main_menu")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=202064689]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.02, 0.06, 0.02, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=81525470]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,32 +29,34 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
-layout_mode = 2
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=279981111]
 custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="Title" type="Label" parent="CenterContainer/VBox"]
+[node name="Title" type="TextureRect" parent="CenterContainer/VBox" unique_id=554607995]
 layout_mode = 2
-text = "CITY DEFENDER"
-horizontal_alignment = 1
+custom_minimum_size = Vector2(0, 90)
+size_flags_horizontal = 3
+texture = ExtResource("2_logo_font")
+stretch_mode = 6
 
-[node name="PlayButton" type="Button" parent="CenterContainer/VBox"]
+[node name="PlayButton" type="Button" parent="CenterContainer/VBox" unique_id=906972929]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 text = "MENU_PLAY"
 
-[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox"]
+[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox" unique_id=2040106711]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 text = "MENU_HIGHSCORES"
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/VBox"]
+[node name="SettingsButton" type="Button" parent="CenterContainer/VBox" unique_id=527605000]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 text = "MENU_SETTINGS"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/VBox"]
+[node name="QuitButton" type="Button" parent="CenterContainer/VBox" unique_id=140610712]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 text = "MENU_QUIT"
