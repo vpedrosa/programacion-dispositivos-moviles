@@ -33,24 +33,24 @@ func _ready() -> void:
 	add_child(_voice_player)
 
 
-func play_sfx(name: String) -> void:
-	var stream := _load_sound(name)
+func play_sfx(sound_name: String) -> void:
+	var stream := _load_sound(sound_name)
 	if stream == null:
 		return
 	_sfx_player.stream = stream
 	_sfx_player.play()
 
 
-func play_voice(name: String) -> void:
-	var stream := _load_sound(name)
+func play_voice(sound_name: String) -> void:
+	var stream := _load_sound(sound_name)
 	if stream == null:
 		return
 	_voice_player.stream = stream
 	_voice_player.play()
 
 
-func play_music(name: String) -> void:
-	var stream := _load_sound(name)
+func play_music(sound_name: String) -> void:
+	var stream := _load_sound(sound_name)
 	if stream == null:
 		return
 	if stream is AudioStreamMP3:
@@ -65,14 +65,14 @@ func stop_music() -> void:
 	_music_player.stop()
 
 
-func _load_sound(name: String) -> AudioStream:
-	if _sfx_cache.has(name):
-		return _sfx_cache[name]
+func _load_sound(sound_name: String) -> AudioStream:
+	if _sfx_cache.has(sound_name):
+		return _sfx_cache[sound_name]
 	for ext in EXTENSIONS:
-		var path := SFX_DIR + name + "." + ext
+		var path := SFX_DIR + sound_name + "." + ext
 		if ResourceLoader.exists(path):
 			var stream: AudioStream = load(path)
-			_sfx_cache[name] = stream
+			_sfx_cache[sound_name] = stream
 			return stream
-	_sfx_cache[name] = null  # cache miss so we don't re-check every frame
+	_sfx_cache[sound_name] = null  # cache miss so we don't re-check every frame
 	return null
