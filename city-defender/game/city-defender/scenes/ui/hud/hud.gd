@@ -8,17 +8,15 @@ signal settings_requested
 @onready var money_label: Label = $MarginContainer/HBox/MoneyLabel
 @onready var cooldown_bar: ProgressBar = $MarginContainer/HBox/CooldownBar
 @onready var emp_button: Button = $MarginContainer/HBox/EMPButton
-@onready var city_bars: Array = []
+var city_bars: Array[ProgressBar] = []
 
 
 func _ready() -> void:
 	GameState.score_changed.connect(_on_score_changed)
 	GameState.money_changed.connect(_on_money_changed)
 	emp_button.visible = false
-	city_bars = []
-	for bar in $CityBarsContainer.get_children():
-		if bar is ProgressBar:
-			city_bars.append(bar)
+	for bar: ProgressBar in $CityBarsContainer.get_children():
+		city_bars.append(bar)
 	FalloutStyle.style_subtree(self)
 
 
@@ -41,11 +39,6 @@ func update_city_health(city_index: int, health: int, max_health: int) -> void:
 
 func set_emp_available(available: bool) -> void:
 	emp_button.visible = available
-
-
-func show_powerup_active(label: String, remaining: float, total: float) -> void:
-	# TODO: show active powerup timer overlay
-	pass
 
 
 func _on_shop_button_pressed() -> void:
