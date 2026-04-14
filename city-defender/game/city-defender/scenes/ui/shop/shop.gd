@@ -62,7 +62,7 @@ func _build_powerups() -> void:
 		panel_style.border_color = Color(0.0, 0.9, 0.25, 1.0)
 		panel_style.set_border_width_all(1)
 		panel_style.content_margin_left   = 0.0
-		panel_style.content_margin_right  = 0.0
+		panel_style.content_margin_right  = 1.0
 		panel_style.content_margin_top    = 0.0
 		panel_style.content_margin_bottom = 0.0
 		row_panel.add_theme_stylebox_override("panel", panel_style)
@@ -71,10 +71,10 @@ func _build_powerups() -> void:
 		row.add_theme_constant_override("separation", 0)
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-		# ── Col 1: Icono con borde derecho ──────────────────────────────────────
+		# ── Col 1: Icono cuadrado con borde derecho ─────────────────────────────
 		var icon_frame := PanelContainer.new()
-		icon_frame.custom_minimum_size = Vector2(40, 0)
-		icon_frame.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		icon_frame.custom_minimum_size = Vector2(56, 56)
+		icon_frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		var icon_style := StyleBoxFlat.new()
 		icon_style.bg_color = Color(0.0, 0.0, 0.0, 0.0)
 		icon_style.border_width_left   = 0
@@ -83,7 +83,7 @@ func _build_powerups() -> void:
 		icon_style.border_width_bottom = 0
 		icon_style.border_color = Color(0.0, 0.9, 0.25, 1.0)
 		icon_style.content_margin_left   = 8.0
-		icon_style.content_margin_right  = 6.0
+		icon_style.content_margin_right  = 8.0
 		icon_style.content_margin_top    = 8.0
 		icon_style.content_margin_bottom = 8.0
 		icon_frame.add_theme_stylebox_override("panel", icon_style)
@@ -150,22 +150,11 @@ func _build_powerups() -> void:
 		price_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		price_panel.add_child(price_label)
 
-		# ── Col 4: Botón comprar (sin borde) ─────────────────────────────────────
+		# ── Col 4: Botón comprar ─────────────────────────────────────────────────
 		var buy_btn := Button.new()
 		buy_btn.custom_minimum_size = Vector2(120, 52)
 		buy_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		buy_btn.pressed.connect(_on_buy_pressed.bind(powerup_id))
-		var btn_normal := StyleBoxFlat.new()
-		btn_normal.bg_color = Color(0.0, 0.04, 0.01, 1.0)
-		btn_normal.border_width_left   = 0
-		btn_normal.border_width_top    = 0
-		btn_normal.border_width_right  = 0
-		btn_normal.border_width_bottom = 0
-		buy_btn.add_theme_stylebox_override("normal", btn_normal)
-		buy_btn.add_theme_stylebox_override("hover", btn_normal)
-		buy_btn.add_theme_stylebox_override("pressed", btn_normal)
-		buy_btn.add_theme_stylebox_override("disabled", btn_normal)
-		buy_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 
 		_buy_buttons[powerup_id] = buy_btn
 		_name_labels[powerup_id] = name_label
@@ -182,6 +171,21 @@ func _build_powerups() -> void:
 		name_label.add_theme_font_size_override("font_size", 24)
 		desc_label.add_theme_font_size_override("font_size", 17)
 		price_label.add_theme_font_size_override("font_size", 28)
+		# Estilos sin borde para el botón comprar (después de FalloutStyle para no ser sobreescritos)
+		var btn_n := StyleBoxFlat.new()
+		btn_n.bg_color = Color(0.0, 0.08, 0.02, 1.0)
+		btn_n.set_border_width_all(0)
+		var btn_h := StyleBoxFlat.new()
+		btn_h.bg_color = Color(0.0, 0.18, 0.05, 1.0)
+		btn_h.set_border_width_all(0)
+		var btn_p := StyleBoxFlat.new()
+		btn_p.bg_color = Color(0.0, 0.35, 0.10, 1.0)
+		btn_p.set_border_width_all(0)
+		buy_btn.add_theme_stylebox_override("normal", btn_n)
+		buy_btn.add_theme_stylebox_override("hover", btn_h)
+		buy_btn.add_theme_stylebox_override("pressed", btn_p)
+		buy_btn.add_theme_stylebox_override("disabled", btn_n)
+		buy_btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 
 
 func open(cities: Array[City]) -> void:
