@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" uid="uid://bbu4xn86b8iks" path="res://scenes/screens/game/game.gd" id="1_game"]
 [ext_resource type="Script" uid="uid://0va8y6fdqq8s" path="res://scenes/screens/game/systems/difficulty_manager.gd" id="2_difficulty"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/shop/shop.tscn" id="11_shop"]
 [ext_resource type="PackedScene" path="res://scenes/ui/level_up_banner/level_up_banner.tscn" id="12_level_up_banner"]
 [ext_resource type="PackedScene" path="res://scenes/ui/in_game_settings/in_game_settings.tscn" id="13_in_game_settings"]
+[ext_resource type="Texture2D" path="res://assets/sprites/background.png" id="14_bg_tex"]
 
 [node name="root" type="Node2D"]
 script = ExtResource("1_game")
@@ -20,6 +21,16 @@ script = ExtResource("1_game")
 [node name="Background" type="ColorRect" parent="."]
 size = Vector2(1280, 720)
 color = Color(0.02, 0.06, 0.02, 1)
+
+[node name="BackgroundSprite" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.2)
+texture = ExtResource("14_bg_tex")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 6
 
 [node name="DifficultyManager" type="Node" parent="."]
 script = ExtResource("2_difficulty")
