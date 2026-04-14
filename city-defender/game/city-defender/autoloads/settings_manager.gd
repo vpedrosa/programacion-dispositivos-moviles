@@ -114,6 +114,7 @@ func _register_translations() -> void:
 		"HS_TITLE":         "PUNTUACIONES",
 		"HS_LOADING":       "CARGANDO...",
 		"HS_EMPTY":         "SIN PUNTUACIONES REGISTRADAS",
+		"HS_ANONYMOUS":     "ANÓNIMO",
 		"HS_BACK":          "VOLVER",
 		# Tienda
 		"SHOP_TITLE":       "TIENDA",
@@ -139,7 +140,7 @@ func _register_translations() -> void:
 		"PU_RADIUS_NAME":    "Radio explosión+",
 		"PU_RADIUS_DESC":    "Aumenta el radio de explosión (uso único)",
 		"PU_GATLING_NAME":   "Modo Gatling",
-		"PU_GATLING_DESC":   "Mantén pulsado para disparar en ráfaga continua",
+		"PU_GATLING_DESC":   "Mantén pulsado para disparar en ráfaga continua (uso único)",
 		"PU_EMP_NAME":       "Bomba EMP",
 		"PU_EMP_DESC":       "Destruye todos los misiles en pantalla",
 		"PU_COOLDOWN_NAME":       "Cadencia+",
@@ -167,6 +168,7 @@ func _register_translations() -> void:
 		"HS_TITLE":         "HIGHSCORES",
 		"HS_LOADING":       "LOADING...",
 		"HS_EMPTY":         "NO SCORES REGISTERED",
+		"HS_ANONYMOUS":     "ANONYMOUS",
 		"HS_BACK":          "BACK",
 		# Shop
 		"SHOP_TITLE":       "SHOP",
@@ -192,7 +194,7 @@ func _register_translations() -> void:
 		"PU_RADIUS_NAME":    "Explosion radius+",
 		"PU_RADIUS_DESC":    "Increases explosion radius (one-time)",
 		"PU_GATLING_NAME":   "Gatling Mode",
-		"PU_GATLING_DESC":   "Hold to fire in continuous burst",
+		"PU_GATLING_DESC":   "Hold to fire in continuous burst (one-time)",
 		"PU_EMP_NAME":       "EMP bomb",
 		"PU_EMP_DESC":       "Destroys all missiles on screen",
 		"PU_COOLDOWN_NAME":       "Rate of fire+",

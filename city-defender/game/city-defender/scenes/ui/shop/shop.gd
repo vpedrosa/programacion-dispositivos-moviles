@@ -10,9 +10,9 @@ const POWERUPS: Dictionary = {
 	"rebuild_city":  {"name": "PU_REBUILD_NAME",  "cost": 500, "desc": "PU_REBUILD_DESC"},
 	"shield":        {"name": "PU_SHIELD_NAME",   "cost": 200, "desc": "PU_SHIELD_DESC"},
 	"radius_plus":   {"name": "PU_RADIUS_NAME",   "cost": 150, "desc": "PU_RADIUS_DESC"},
-	"gatling":       {"name": "PU_GATLING_NAME",   "cost": 150, "desc": "PU_GATLING_DESC"},
+	"gatling":       {"name": "PU_GATLING_NAME",  "cost": 150, "desc": "PU_GATLING_DESC"},
 	"emp":           {"name": "PU_EMP_NAME",       "cost": 300, "desc": "PU_EMP_DESC"},
-	"cooldown_plus": {"name": "PU_COOLDOWN_NAME", "cost": 50, "desc": "PU_COOLDOWN_DESC"},
+	"cooldown_plus": {"name": "PU_COOLDOWN_NAME", "cost": 50,  "desc": "PU_COOLDOWN_DESC"},
 	"turret_speed":  {"name": "PU_TURRET_SPEED_NAME", "cost": 60, "desc": "PU_TURRET_SPEED_DESC"},
 }
 
@@ -27,14 +27,16 @@ const POWERUP_ICONS: Dictionary = {
 	"turret_speed": "res://assets/sprites/shop/speed.png",
 }
 
+const ONE_TIME_POWERUPS: Array[String] = ["gatling", "radius_plus"]
+
 @onready var title_label: Label = $Panel/VBox/TitleLabel
 @onready var money_label: Label = $Panel/VBox/MoneyLabel
 @onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 
-const ONE_TIME_POWERUPS: Array[String] = ["gatling", "radius_plus"]
-
 var _cities: Array[City] = []
 var _buy_buttons: Dictionary = {}
+var _name_labels: Dictionary = {}
+var _desc_labels: Dictionary = {}
 var _purchased_once: Array[String] = []
 
 
@@ -48,83 +50,108 @@ func _build_powerups() -> void:
 	for powerup_id in POWERUPS.keys():
 		var data: Dictionary = POWERUPS[powerup_id]
 
+		# ── Fila con borde ───────────────────────────────────────────────────────
+		var row_panel := PanelContainer.new()
+		var panel_style := StyleBoxFlat.new()
+		panel_style.bg_color = Color(0.0, 0.04, 0.01, 1.0)
+		panel_style.border_color = Color(0.0, 0.9, 0.25, 1.0)
+		panel_style.set_border_width_all(1)
+		panel_style.set_content_margin_all(10)
+		row_panel.add_theme_stylebox_override("panel", panel_style)
+
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 12)
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
-		# ── Icono enmarcado ──────────────────────────────────────────────────
+		# ── Columna 1: Icono ─────────────────────────────────────────────────────
 		var icon_frame := Panel.new()
 		icon_frame.custom_minimum_size = Vector2(64, 64)
 		icon_frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		icon_frame.clip_contents = true
-		var style := StyleBoxFlat.new()
-		style.bg_color = Color(0.0, 0.0, 0.0, 0.6)
-		style.border_color = Color(0.0, 0.9, 0.25, 1.0)
-		style.set_border_width_all(2)
-		style.set_corner_radius_all(4)
-		icon_frame.add_theme_stylebox_override("panel", style)
+		var icon_style := StyleBoxFlat.new()
+		icon_style.bg_color = Color(0.0, 0.0, 0.0, 0.6)
+		icon_style.border_color = Color(0.0, 0.9, 0.25, 1.0)
+		icon_style.set_border_width_all(2)
+		icon_style.set_corner_radius_all(4)
+		icon_frame.add_theme_stylebox_override("panel", icon_style)
 
 		var icon_rect := TextureRect.new()
 		icon_rect.anchor_right = 1.0
 		icon_rect.anchor_bottom = 1.0
-		icon_rect.offset_left = 16
-		icon_rect.offset_top = 16
-		icon_rect.offset_right = -16
-		icon_rect.offset_bottom = -16
+		icon_rect.offset_left = 12
+		icon_rect.offset_top = 12
+		icon_rect.offset_right = -12
+		icon_rect.offset_bottom = -12
 		icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		if POWERUP_ICONS.has(powerup_id):
 			icon_rect.texture = load(POWERUP_ICONS[powerup_id])
 		icon_frame.add_child(icon_rect)
 
-		# ── Info ─────────────────────────────────────────────────────────────
+		# ── Columna 2: Nombre + Descripción ──────────────────────────────────────
 		var info_box := VBoxContainer.new()
 		info_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		info_box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 
 		var name_label := Label.new()
 		name_label.text = tr(data["name"])
-		name_label.add_theme_font_size_override("font_size", 22)
 
 		var desc_label := Label.new()
 		desc_label.text = tr(data["desc"])
-		desc_label.add_theme_font_size_override("font_size", 14)
-
-		# ── Precio y botón ───────────────────────────────────────────────────
-		var right_box := VBoxContainer.new()
-		right_box.custom_minimum_size = Vector2(120, 0)
-
-		var price_label := Label.new()
-		price_label.text = "$" + str(data["cost"])
-		price_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-
-		var buy_btn := Button.new()
-		buy_btn.text = tr("SHOP_BUY")
-		buy_btn.pressed.connect(_on_buy_pressed.bind(powerup_id))
-		_buy_buttons[powerup_id] = buy_btn
+		desc_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 		info_box.add_child(name_label)
 		info_box.add_child(desc_label)
-		right_box.add_child(price_label)
-		right_box.add_child(buy_btn)
+
+		# ── Columna 3: Precio ────────────────────────────────────────────────────
+		var price_label := Label.new()
+		price_label.text = "$" + str(data["cost"])
+		price_label.custom_minimum_size.x = 80
+		price_label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		price_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+		# ── Columna 4: Botón comprar ─────────────────────────────────────────────
+		var buy_btn := Button.new()
+		buy_btn.custom_minimum_size = Vector2(120, 48)
+		buy_btn.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		buy_btn.pressed.connect(_on_buy_pressed.bind(powerup_id))
+
+		_buy_buttons[powerup_id] = buy_btn
+		_name_labels[powerup_id] = name_label
+		_desc_labels[powerup_id] = desc_label
+
 		row.add_child(icon_frame)
 		row.add_child(info_box)
-		row.add_child(right_box)
-		powerups_container.add_child(row)
-		FalloutStyle.style_subtree(row)
-		# Restaurar tamaños tras el estilizado global
-		name_label.add_theme_font_size_override("font_size", 22)
-		desc_label.add_theme_font_size_override("font_size", 14)
+		row.add_child(price_label)
+		row.add_child(buy_btn)
+		row_panel.add_child(row)
+		powerups_container.add_child(row_panel)
+
+		FalloutStyle.style_subtree(row_panel)
+		name_label.add_theme_font_size_override("font_size", 24)
+		desc_label.add_theme_font_size_override("font_size", 17)
+		price_label.add_theme_font_size_override("font_size", 22)
 
 
 func open(cities: Array[City]) -> void:
 	_cities = cities
 	visible = true
 	opened.emit()
+	_refresh_translations()
 	_refresh_buttons()
 
 
 func close() -> void:
 	visible = false
 	closed.emit()
+
+
+func _refresh_translations() -> void:
+	for pid in _name_labels:
+		_name_labels[pid].text = tr(POWERUPS[pid]["name"])
+		_desc_labels[pid].text = tr(POWERUPS[pid]["desc"])
+	for pid in _buy_buttons:
+		(_buy_buttons[pid] as Button).text = tr("SHOP_BUY")
 
 
 func _refresh_buttons() -> void:
