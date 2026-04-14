@@ -30,26 +30,25 @@ var _is_holding: bool = false
 
 
 func _process(delta: float) -> void:
-	# Cuenta el cooldown en COOLDOWN y RELOADING; solo transiciona en COOLDOWN.
+	# Gestión del timer de cooldown y recarga.
 	if _state == TurretState.COOLDOWN or _state == TurretState.RELOADING:
 		_cooldown_timer += delta
 		if _cooldown_timer >= _current_cooldown():
 			_cooldown_timer = 0.0
 			if _state == TurretState.COOLDOWN:
 				_state = TurretState.IDLE
-			# RELOADING: el timer se reinicia para el HUD pero la rotación continúa.
+			elif _state == TurretState.RELOADING:
+				_fire_at_pending()  # gatling: dispara el siguiente misil al terminar la recarga
 
-	# Rota hacia el objetivo; cuando llega, dispara. Si no, vuelve a neutro.
-	var is_aiming := _state == TurretState.AIMING or _state == TurretState.RELOADING
-	var target_rot := _aim_angle if is_aiming else 0.0
-	var diff := angle_difference(_sprite.rotation, target_rot)
-	var step := _rotation_speed * delta
-	if abs(diff) <= step:
-		_sprite.rotation = target_rot
-		if is_aiming:
+	# Solo rota al apuntar; en el resto de estados mantiene el último ángulo.
+	if _state == TurretState.AIMING:
+		var diff := angle_difference(_sprite.rotation, _aim_angle)
+		var step := _rotation_speed * delta
+		if abs(diff) <= step:
+			_sprite.rotation = _aim_angle
 			_fire_at_pending()
-	else:
-		_sprite.rotation += sign(diff) * step
+		else:
+			_sprite.rotation += sign(diff) * step
 
 
 func shoot_at(world_position: Vector2) -> void:
