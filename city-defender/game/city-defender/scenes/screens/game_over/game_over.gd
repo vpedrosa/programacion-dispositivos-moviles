@@ -20,7 +20,11 @@ func _ready() -> void:
 
 
 func _on_name_changed(new_text: String) -> void:
-	submit_btn.disabled = new_text.strip_edges().is_empty()
+	var upper := new_text.to_upper()
+	if new_text != upper:
+		name_input.text = upper
+		name_input.caret_column = upper.length()
+	submit_btn.disabled = upper.strip_edges().is_empty()
 
 
 func _on_submit_pressed() -> void:

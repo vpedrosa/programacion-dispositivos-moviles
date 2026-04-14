@@ -119,6 +119,7 @@ func _style_button(btn: Button) -> void:
 
 func _style_line_edit(le: LineEdit) -> void:
 	le.add_theme_color_override("font_color", PHOSPHOR)
+	le.add_theme_color_override("font_placeholder_color", PHOSPHOR_DIM)
 	le.add_theme_color_override("caret_color", PHOSPHOR_BRIGHT)
 	le.add_theme_font_size_override("font_size", 22)
 	if _font:

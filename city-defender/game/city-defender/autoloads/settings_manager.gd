@@ -108,7 +108,7 @@ func _register_translations() -> void:
 		# Game Over
 		"GO_TITLE":            "GAME OVER",
 		"GO_SCORE_SENT":       "¡PUNTUACIÓN ENVIADA!",
-		"GO_NAME_PLACEHOLDER": "Tu nombre...",
+		"GO_NAME_PLACEHOLDER": "TU NOMBRE...",
 		"GO_SUBMIT":           "ENVIAR",
 		"GO_RETRY":            "REINTENTAR",
 		"GO_MENU":             "MENU",
@@ -164,7 +164,7 @@ func _register_translations() -> void:
 		# Game Over
 		"GO_TITLE":            "GAME OVER",
 		"GO_SCORE_SENT":       "SCORE SUBMITTED!",
-		"GO_NAME_PLACEHOLDER": "Your name...",
+		"GO_NAME_PLACEHOLDER": "YOUR NAME...",
 		"GO_SUBMIT":           "SUBMIT",
 		"GO_RETRY":            "RETRY",
 		"GO_MENU":             "MENU",
