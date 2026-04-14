@@ -3,7 +3,7 @@ name: 🎮 City Defender CI/CD
 on:
   push:
     branches: [master]
-    paths: ["city-defender/**"]
+    paths: ["city-defender/game/city-defender/**"]
   workflow_dispatch:
 
 env:
