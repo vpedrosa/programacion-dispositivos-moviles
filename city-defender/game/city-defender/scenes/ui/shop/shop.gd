@@ -31,7 +31,7 @@ const POWERUP_ICONS: Dictionary = {
 @onready var money_label: Label = $Panel/VBox/MoneyLabel
 @onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 
-const ONE_TIME_POWERUPS: Array[String] = ["gatling"]
+const ONE_TIME_POWERUPS: Array[String] = ["gatling", "radius_plus"]
 
 var _cities: Array[City] = []
 var _buy_buttons: Dictionary = {}

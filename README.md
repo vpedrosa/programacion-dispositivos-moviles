@@ -203,7 +203,7 @@ Cada misil destruido otorga dinero (más dinero cuanto más difícil sea el misi
 | **Reparar ciudad** | Restaura vida a una ciudad dañada |
 | **Reconstruir ciudad** | Revive una ciudad destruida con vida mínima |
 | **Escudo temporal** | Escudo sobre todas las ciudades vivas que absorbe un impacto por ciudad |
-| **Radio de explosión+** | Aumenta permanentemente el radio de explosión de los misiles interceptores (acumulable) |
+| **Radio de explosión+** | Aumenta el radio de explosión de los misiles interceptores (uso único) |
 | **Modo Gatling** | Mejora permanente: mantén pulsado para disparar en ráfaga continua sin soltar |
 | **Bomba EMP** | Destruye todos los misiles enemigos en pantalla (uso único) |
 | **Cadencia+** | Reduce permanentemente el cooldown entre disparos (acumulable) |
