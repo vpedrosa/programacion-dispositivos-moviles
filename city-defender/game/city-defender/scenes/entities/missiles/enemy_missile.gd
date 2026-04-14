@@ -18,6 +18,8 @@ var _hits: int = 0
 var _direction: Vector2
 var _target_city: Node2D
 var _smoke: CPUParticles2D
+var _glow: Sprite2D
+var _flicker_phase: float
 
 
 func _ready() -> void:
@@ -43,6 +45,11 @@ func init(from: Vector2, target_city: Node2D) -> void:
 func _process(delta: float) -> void:
 	global_position += _direction * speed * delta
 	_check_out_of_bounds()
+	if _glow:
+		var t := Time.get_ticks_msec() / 1000.0 + _flicker_phase
+		var f := sin(t * 11.3) * 0.18 + sin(t * 7.1) * 0.12 + sin(t * 19.7) * 0.08
+		_glow.modulate.a = clamp(0.75 + f, 0.4, 1.0)
+		_glow.scale = Vector2.ONE * clamp(0.55 + f * 0.5, 0.38, 0.72)
 
 
 func hit() -> void:
@@ -103,18 +110,18 @@ static func _create_glow_texture() -> ImageTexture:
 func _setup_glow() -> void:
 	if _GLOW_TEX == null:
 		_GLOW_TEX = _create_glow_texture()
-	var tex: ImageTexture = _GLOW_TEX
 
-	var glow := Sprite2D.new()
-	glow.texture = tex
-	glow.position = Vector2(0.0, 14.0)  # local +Y = escape/cola del cohete
-	glow.scale = Vector2(0.55, 0.55)
-	glow.modulate = Color(_visual.modulate.r, _visual.modulate.g, _visual.modulate.b, 0.9)
+	_flicker_phase = randf() * TAU
+	_glow = Sprite2D.new()
+	_glow.texture = _GLOW_TEX
+	_glow.position = Vector2(0.0, 14.0)  # local +Y = escape/cola del cohete
+	_glow.scale = Vector2(0.55, 0.55)
+	_glow.modulate = Color(_visual.modulate.r, _visual.modulate.g, _visual.modulate.b, 0.9)
 	var mat := CanvasItemMaterial.new()
 	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-	glow.material = mat
-	add_child(glow)
-	move_child(glow, _visual.get_index())  # justo antes de Visual → detrás
+	_glow.material = mat
+	add_child(_glow)
+	move_child(_glow, _visual.get_index())  # justo antes de Visual → detrás
 
 
 func _setup_smoke() -> void:
