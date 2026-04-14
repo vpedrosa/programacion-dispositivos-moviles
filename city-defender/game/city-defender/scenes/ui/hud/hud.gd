@@ -42,6 +42,10 @@ func set_emp_available(available: bool) -> void:
 	emp_button.visible = available
 
 
+func is_emp_available() -> bool:
+	return emp_button.visible
+
+
 func _on_shop_button_pressed() -> void:
 	shop_requested.emit()
 
