@@ -66,11 +66,27 @@ func _enable_gatling() -> void:
 
 func _activate_emp() -> void:
 	AudioManager.play_sfx("emp")
+	AudioManager.play_zap("zap")
+	_flash_screen()
 	for missile: EnemyMissile in get_tree().get_nodes_in_group("enemy_missiles"):
 		missile.hit()
 		missile.hit()
 	if hud:
 		hud.set_emp_available(false)
+
+
+func _flash_screen() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 50
+	get_parent().add_child(layer)
+	var flash := ColorRect.new()
+	flash.color = Color(0.6, 1.0, 0.7, 0.92)
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(flash)
+	var tween := layer.create_tween()
+	tween.tween_property(flash, "color:a", 0.0, 0.45)
+	tween.tween_callback(layer.queue_free)
 
 
 func _reduce_cooldown() -> void:
