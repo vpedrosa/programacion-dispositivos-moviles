@@ -112,10 +112,10 @@ func _on_game_over() -> void:
 	fade_rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	fade_layer.add_child(fade_rect)
 
-	get_tree().paused = false
-	var tween := create_tween()
+	var tween := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property(fade_rect, "color:a", 1.0, 0.7)
 	await tween.finished
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://scenes/screens/game_over/game_over.tscn")
 
 
