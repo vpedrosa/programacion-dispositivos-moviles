@@ -33,6 +33,10 @@ func notify_city_destroyed() -> void:
 		game_over.emit()
 
 
+func notify_city_rebuilt() -> void:
+	cities_alive += 1
+
+
 func reset(city_count: int = 4) -> void:
 	score = 0
 	money = 0

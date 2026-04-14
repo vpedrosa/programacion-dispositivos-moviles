@@ -27,7 +27,11 @@ const POWERUP_ICONS: Dictionary = {
 	"turret_speed": "res://assets/sprites/shop/speed.png",
 }
 
-const ONE_TIME_POWERUPS: Array[String] = ["gatling", "radius_plus"]
+const MAX_PURCHASES: Dictionary = {
+	"gatling":       1,
+	"radius_plus":   1,
+	"cooldown_plus": 3,
+}
 
 @onready var title_label: Label = $Panel/VBox/TitleLabel
 @onready var money_label: Label = $Panel/VBox/MoneyLabel
@@ -37,7 +41,7 @@ var _cities: Array[City] = []
 var _buy_buttons: Dictionary = {}
 var _name_labels: Dictionary = {}
 var _desc_labels: Dictionary = {}
-var _purchased_once: Array[String] = []
+var _purchased_count: Dictionary = {}
 
 
 func _ready() -> void:
@@ -68,10 +72,9 @@ func _build_powerups() -> void:
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 		# ── Col 1: Icono con borde derecho ──────────────────────────────────────
-		var icon_frame := Panel.new()
-		icon_frame.custom_minimum_size = Vector2(48, 48)
-		icon_frame.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		icon_frame.clip_contents = true
+		var icon_frame := PanelContainer.new()
+		icon_frame.custom_minimum_size = Vector2(40, 0)
+		icon_frame.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		var icon_style := StyleBoxFlat.new()
 		icon_style.bg_color = Color(0.0, 0.0, 0.0, 0.0)
 		icon_style.border_width_left   = 0
@@ -79,15 +82,15 @@ func _build_powerups() -> void:
 		icon_style.border_width_right  = 1
 		icon_style.border_width_bottom = 0
 		icon_style.border_color = Color(0.0, 0.9, 0.25, 1.0)
+		icon_style.content_margin_left   = 8.0
+		icon_style.content_margin_right  = 6.0
+		icon_style.content_margin_top    = 8.0
+		icon_style.content_margin_bottom = 8.0
 		icon_frame.add_theme_stylebox_override("panel", icon_style)
 
 		var icon_rect := TextureRect.new()
-		icon_rect.anchor_right = 1.0
-		icon_rect.anchor_bottom = 1.0
-		icon_rect.offset_left = 6
-		icon_rect.offset_top = 6
-		icon_rect.offset_right = -7
-		icon_rect.offset_bottom = -6
+		icon_rect.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		icon_rect.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		if POWERUP_ICONS.has(powerup_id):
@@ -208,7 +211,9 @@ func _refresh_buttons() -> void:
 	money_label.visible = false
 	for powerup_id in _buy_buttons.keys():
 		var btn: Button = _buy_buttons[powerup_id]
-		if powerup_id in _purchased_once:
+		var max_p: int = MAX_PURCHASES.get(powerup_id, -1)
+		var count: int = _purchased_count.get(powerup_id, 0)
+		if max_p > 0 and count >= max_p:
 			btn.disabled = true
 		else:
 			btn.disabled = GameState.money < POWERUPS[powerup_id]["cost"]
@@ -222,13 +227,10 @@ func _on_money_changed(_new_money: int) -> void:
 func _on_buy_pressed(powerup_id: String) -> void:
 	var cost: int = POWERUPS[powerup_id]["cost"]
 	if GameState.spend_money(cost):
-		if powerup_id in ONE_TIME_POWERUPS:
-			_purchased_once.append(powerup_id)
+		_purchased_count[powerup_id] = _purchased_count.get(powerup_id, 0) + 1
 		powerup_purchased.emit(powerup_id)
 		_refresh_buttons()
 
 
 func _on_close_button_pressed() -> void:
 	close()
-
-

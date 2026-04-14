@@ -106,10 +106,12 @@ func _register_translations() -> void:
 		"HUD_SHOP":         "TIENDA",
 		"HUD_EMP":          "EMP",
 		# Game Over
-		"GO_TITLE":         "GAME OVER",
-		"GO_SCORE_SENT":    "¡PUNTUACIÓN ENVIADA!",
-		"GO_RETRY":         "REINTENTAR",
-		"GO_MENU":          "MENU",
+		"GO_TITLE":            "GAME OVER",
+		"GO_SCORE_SENT":       "¡PUNTUACIÓN ENVIADA!",
+		"GO_NAME_PLACEHOLDER": "Tu nombre...",
+		"GO_SUBMIT":           "ENVIAR",
+		"GO_RETRY":            "REINTENTAR",
+		"GO_MENU":             "MENU",
 		# Highscores
 		"HS_TITLE":         "PUNTUACIONES",
 		"HS_LOADING":       "CARGANDO...",
@@ -144,7 +146,7 @@ func _register_translations() -> void:
 		"PU_EMP_NAME":       "Bomba EMP",
 		"PU_EMP_DESC":       "Destruye todos los misiles en pantalla",
 		"PU_COOLDOWN_NAME":       "Cadencia+",
-		"PU_COOLDOWN_DESC":       "Reduce el cooldown de disparo permanentemente",
+		"PU_COOLDOWN_DESC":       "Reduce el cooldown de disparo permanentemente (máx. 3)",
 		"PU_TURRET_SPEED_NAME":   "Velocidad de giro",
 		"PU_TURRET_SPEED_DESC":   "Aumenta la velocidad de rotación de la torreta",
 	}))
@@ -160,10 +162,12 @@ func _register_translations() -> void:
 		"HUD_SHOP":         "SHOP",
 		"HUD_EMP":          "EMP",
 		# Game Over
-		"GO_TITLE":         "GAME OVER",
-		"GO_SCORE_SENT":    "SCORE SUBMITTED!",
-		"GO_RETRY":         "RETRY",
-		"GO_MENU":          "MENU",
+		"GO_TITLE":            "GAME OVER",
+		"GO_SCORE_SENT":       "SCORE SUBMITTED!",
+		"GO_NAME_PLACEHOLDER": "Your name...",
+		"GO_SUBMIT":           "SUBMIT",
+		"GO_RETRY":            "RETRY",
+		"GO_MENU":             "MENU",
 		# Highscores
 		"HS_TITLE":         "HIGHSCORES",
 		"HS_LOADING":       "LOADING...",
@@ -198,7 +202,7 @@ func _register_translations() -> void:
 		"PU_EMP_NAME":       "EMP bomb",
 		"PU_EMP_DESC":       "Destroys all missiles on screen",
 		"PU_COOLDOWN_NAME":       "Rate of fire+",
-		"PU_COOLDOWN_DESC":       "Permanently reduces firing cooldown",
+		"PU_COOLDOWN_DESC":       "Permanently reduces firing cooldown (max. 3)",
 		"PU_TURRET_SPEED_NAME":   "Rotation speed",
 		"PU_TURRET_SPEED_DESC":   "Increases turret rotation speed permanently",
 	}))

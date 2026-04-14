@@ -45,12 +45,12 @@ func get_top_scores() -> Array[Dictionary]:
 	return _parse_query_scores(result[3])
 
 
-## Submits a score anonymously (no player name). Always submits if score > 0.
-func submit_score(score: int) -> void:
+## Submits a score with player name. Only submits if score > 0 and name is not empty.
+func submit_score(score: int, player_name: String) -> void:
 	if not _initialized:
 		push_warning("FirebaseManager: submit_score() llamado sin credenciales")
 		return
-	if score <= 0:
+	if score <= 0 or player_name.strip_edges().is_empty():
 		return
 	var url := (
 		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents/%s?key=%s"
@@ -59,6 +59,7 @@ func submit_score(score: int) -> void:
 	var body := JSON.stringify({
 		"fields": {
 			"score":     {"integerValue": str(score)},
+			"name":      {"stringValue": player_name.strip_edges()},
 			"timestamp": {"integerValue": str(int(Time.get_unix_time_from_system()))}
 		}
 	})
@@ -88,6 +89,7 @@ func _parse_query_scores(body: PackedByteArray) -> Array[Dictionary]:
 			date_str = "%02d/%02d/%04d" % [dt.day, dt.month, dt.year]
 		result.append({
 			"score": int(fields.get("score", {}).get("integerValue", 0)),
+			"name":  fields.get("name", {}).get("stringValue", ""),
 			"date":  date_str,
 		})
 	return result

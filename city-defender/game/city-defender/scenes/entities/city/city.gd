@@ -61,6 +61,7 @@ func rebuild() -> void:
 	is_alive = true
 	_update_alive_visual(true)
 	health_changed.emit(health, MAX_HEALTH)
+	GameState.notify_city_rebuilt()
 
 
 func activate_shield() -> void:

@@ -43,6 +43,17 @@ layout_mode = 2
 text = "0"
 horizontal_alignment = 1
 
+[node name="NameInput" type="LineEdit" parent="CenterContainer/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+placeholder_text = "GO_NAME_PLACEHOLDER"
+
+[node name="SubmitButton" type="Button" parent="CenterContainer/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 64)
+text = "GO_SUBMIT"
+disabled = true
+
 [node name="SentLabel" type="Label" parent="CenterContainer/VBox"]
 layout_mode = 2
 text = "GO_SCORE_SENT"
@@ -64,6 +75,8 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 64)
 text = "GO_MENU"
 
+[connection signal="text_changed" from="CenterContainer/VBox/NameInput" to="." method="_on_name_changed"]
+[connection signal="pressed" from="CenterContainer/VBox/SubmitButton" to="." method="_on_submit_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/HighscoresButton" to="." method="_on_highscores_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/RetryButton" to="." method="_on_retry_pressed"]
 [connection signal="pressed" from="CenterContainer/VBox/MenuButton" to="." method="_on_menu_pressed"]

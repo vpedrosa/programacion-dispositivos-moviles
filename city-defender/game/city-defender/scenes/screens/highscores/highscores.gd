@@ -27,12 +27,12 @@ func _populate_table(scores: Array) -> void:
 		child.queue_free()
 	for i in scores.size():
 		var entry = scores[i]
-		var row := _create_row(i + 1, entry.get("score", 0), entry.get("date", ""))
+		var row := _create_row(i + 1, entry.get("score", 0), entry.get("name", ""), entry.get("date", ""))
 		scores_container.add_child(row)
 		FalloutStyle.style_subtree(row)
 
 
-func _create_row(pos: int, score: int, date: String) -> HBoxContainer:
+func _create_row(pos: int, score: int, player_name: String, date: String) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 16)
 	var pos_label := Label.new()
@@ -41,7 +41,7 @@ func _create_row(pos: int, score: int, date: String) -> HBoxContainer:
 	var date_label := Label.new()
 	pos_label.text = str(pos) + "."
 	pos_label.custom_minimum_size.x = 40
-	name_label.text = tr("HS_ANONYMOUS")
+	name_label.text = player_name if not player_name.is_empty() else tr("HS_ANONYMOUS")
 	name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	score_label.text = str(score)
 	score_label.custom_minimum_size.x = 120
