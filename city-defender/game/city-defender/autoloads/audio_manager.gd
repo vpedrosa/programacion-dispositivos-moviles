@@ -13,7 +13,7 @@ const SFX_DIR := "res://assets/sounds/"
 const EXTENSIONS: Array[String] = ["ogg", "wav", "mp3"]
 
 const MUSIC_VOLUME_DB := -6.0
-const MUSIC_FADE_IN_DURATION := 5.0
+const MUSIC_FADE_IN_DURATION := 3.0
 
 var _sfx_player: AudioStreamPlayer
 var _music_player: AudioStreamPlayer
