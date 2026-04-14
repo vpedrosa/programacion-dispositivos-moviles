@@ -12,11 +12,15 @@ extends Node
 const SFX_DIR := "res://assets/sounds/"
 const EXTENSIONS: Array[String] = ["ogg", "wav", "mp3"]
 
+const MUSIC_VOLUME_DB := -6.0
+const MUSIC_FADE_IN_DURATION := 5.0
+
 var _sfx_player: AudioStreamPlayer
 var _music_player: AudioStreamPlayer
 var _voice_player: AudioStreamPlayer
 var _zap_player: AudioStreamPlayer
 var _sfx_cache: Dictionary = {}
+var _music_tween: Tween = null
 
 
 func _ready() -> void:
@@ -26,7 +30,7 @@ func _ready() -> void:
 
 	_music_player = AudioStreamPlayer.new()
 	_music_player.bus = "Music"
-	_music_player.volume_db = -6.0
+	_music_player.volume_db = MUSIC_VOLUME_DB
 	add_child(_music_player)
 
 	_voice_player = AudioStreamPlayer.new()
@@ -76,11 +80,20 @@ func play_music(sound_name: String) -> void:
 	if _music_player.stream == stream and _music_player.playing:
 		return
 	_music_player.stream = stream
+	_music_player.volume_db = -80.0
 	_music_player.play()
+	if _music_tween:
+		_music_tween.kill()
+	_music_tween = create_tween()
+	_music_tween.tween_property(_music_player, "volume_db", MUSIC_VOLUME_DB, MUSIC_FADE_IN_DURATION)
 
 
 func stop_music() -> void:
+	if _music_tween:
+		_music_tween.kill()
+		_music_tween = null
 	_music_player.stop()
+	_music_player.volume_db = MUSIC_VOLUME_DB
 
 
 func _load_sound(sound_name: String) -> AudioStream:
