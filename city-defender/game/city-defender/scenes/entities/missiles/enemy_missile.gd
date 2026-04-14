@@ -142,10 +142,11 @@ func _setup_smoke() -> void:
 	scale_curve.add_point(Vector2(1.0, 0.0), -0.3, 0.0)
 	_smoke.scale_amount_curve = scale_curve
 
-	# Fade de alpha: opaco al nacer → transparente al morir
+	# Fade de alpha: opaco al nacer → transparente al morir, usando el color del misil
+	var mc := _visual.modulate
 	var ramp := Gradient.new()
-	ramp.set_color(0, Color(0.75, 0.75, 0.75, 0.85))
-	ramp.set_color(1, Color(0.75, 0.75, 0.75, 0.0))
+	ramp.set_color(0, Color(mc.r, mc.g, mc.b, 0.85))
+	ramp.set_color(1, Color(mc.r, mc.g, mc.b, 0.0))
 	_smoke.color_ramp = ramp
 
 	add_child(_smoke)
