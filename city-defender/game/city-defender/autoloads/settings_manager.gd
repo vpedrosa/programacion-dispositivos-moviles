@@ -127,6 +127,7 @@ func _register_translations() -> void:
 		"SETTINGS_SOUND_OFF":  "DESACTIVADO",
 		"SETTINGS_VOLUME":     "VOLUMEN",
 		"SETTINGS_BACK":       "VOLVER",
+		"SETTINGS_RESUME":     "VOLVER AL JUEGO",
 		"SETTINGS_MAIN_MENU":  "MENÚ PRINCIPAL",
 		# Power-ups
 		"PU_REPAIR_NAME":    "Reparar ciudad",
@@ -179,6 +180,7 @@ func _register_translations() -> void:
 		"SETTINGS_SOUND_OFF":  "OFF",
 		"SETTINGS_VOLUME":     "VOLUME",
 		"SETTINGS_BACK":       "BACK",
+		"SETTINGS_RESUME":     "BACK TO GAME",
 		"SETTINGS_MAIN_MENU":  "MAIN MENU",
 		# Power-ups
 		"PU_REPAIR_NAME":    "Repair city",

@@ -1,11 +1,15 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scenes/ui/in_game_settings/in_game_settings.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/ui/settings_panel/settings_panel.tscn" id="2_panel"]
 
-[sub_resource type="StyleBoxFlat" id="SepStyle"]
-bg_color = Color(0.0, 0.9, 0.25, 1.0)
-content_margin_top = 1.0
-content_margin_bottom = 1.0
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+bg_color = Color(0.02, 0.06, 0.02, 1.0)
+border_color = Color(0.0, 0.9, 0.25, 1.0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 
 [node name="InGameSettings" type="CanvasLayer"]
 layer = 15
@@ -22,119 +26,20 @@ grow_vertical = 2
 mouse_filter = 0
 color = Color(0, 0, 0, 0.75)
 
-[node name="Panel" type="Panel" parent="Overlay"]
-layout_mode = 3
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -260
-offset_top = -300
-offset_right = 260
-offset_bottom = 300
+[node name="CenterContainer" type="CenterContainer" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="Overlay/Panel"]
-layout_mode = 3
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 24
-offset_top = 20
-offset_right = -24
-offset_bottom = -20
-theme_override_constants/separation = 20
-
-[node name="TitleLabel" type="Label" parent="Overlay/Panel/VBox"]
+[node name="Panel" type="PanelContainer" parent="Overlay/CenterContainer"]
 layout_mode = 2
-text = "SETTINGS_TITLE"
-horizontal_alignment = 1
+theme_override_styles/panel = SubResource("PanelStyle")
 
-[node name="HSep1" type="HSeparator" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("SepStyle")
+[node name="SettingsPanel" parent="Overlay/CenterContainer/Panel" instance=ExtResource("2_panel")]
+show_resume_button = true
 
-[node name="LanguageLabel" type="Label" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-text = "SETTINGS_LANGUAGE"
-horizontal_alignment = 1
-
-[node name="LangHBox" type="HBoxContainer" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="ESButton" type="Button" parent="Overlay/Panel/VBox/LangHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 56)
-text = "ESPAÑOL"
-
-[node name="ENButton" type="Button" parent="Overlay/Panel/VBox/LangHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 56)
-text = "ENGLISH"
-
-[node name="HSep2" type="HSeparator" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("SepStyle")
-
-[node name="SoundLabel" type="Label" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-text = "SETTINGS_SOUND"
-horizontal_alignment = 1
-
-[node name="SoundHBox" type="HBoxContainer" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="SoundOnButton" type="Button" parent="Overlay/Panel/VBox/SoundHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 56)
-text = "SETTINGS_SOUND_ON"
-
-[node name="SoundOffButton" type="Button" parent="Overlay/Panel/VBox/SoundHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 56)
-text = "SETTINGS_SOUND_OFF"
-
-[node name="HSep3" type="HSeparator" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("SepStyle")
-
-[node name="VolumeLabel" type="Label" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-text = "SETTINGS_VOLUME"
-horizontal_alignment = 1
-
-[node name="VolumeSlider" type="HSlider" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 44)
-max_value = 1.0
-step = 0.05
-value = 1.0
-
-[node name="HSep4" type="HSeparator" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("SepStyle")
-
-[node name="MainMenuButton" type="Button" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 56)
-text = "SETTINGS_MAIN_MENU"
-
-[node name="CloseButton" type="Button" parent="Overlay/Panel/VBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 56)
-text = "SETTINGS_BACK"
-
-[connection signal="pressed" from="Overlay/Panel/VBox/LangHBox/ESButton" to="." method="_on_es_pressed"]
-[connection signal="pressed" from="Overlay/Panel/VBox/LangHBox/ENButton" to="." method="_on_en_pressed"]
-[connection signal="pressed" from="Overlay/Panel/VBox/SoundHBox/SoundOnButton" to="." method="_on_sound_on_pressed"]
-[connection signal="pressed" from="Overlay/Panel/VBox/SoundHBox/SoundOffButton" to="." method="_on_sound_off_pressed"]
-[connection signal="value_changed" from="Overlay/Panel/VBox/VolumeSlider" to="." method="_on_volume_changed"]
-[connection signal="pressed" from="Overlay/Panel/VBox/MainMenuButton" to="." method="_on_main_menu_pressed"]
-[connection signal="pressed" from="Overlay/Panel/VBox/CloseButton" to="." method="_on_close_pressed"]
+[connection signal="resume_pressed" from="Overlay/CenterContainer/Panel/SettingsPanel" to="." method="_on_resume_pressed"]
+[connection signal="main_menu_pressed" from="Overlay/CenterContainer/Panel/SettingsPanel" to="." method="_on_main_menu_pressed"]
