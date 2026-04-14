@@ -22,15 +22,10 @@ script = ExtResource("1_game")
 size = Vector2(1280, 720)
 color = Color(0.02, 0.06, 0.02, 1)
 
-[node name="BackgroundSprite" type="TextureRect" parent="."]
+[node name="BackgroundSprite" type="Sprite2D" parent="."]
 modulate = Color(1, 1, 1, 0.2)
+position = Vector2(640, 360)
 texture = ExtResource("14_bg_tex")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch_mode = 6
 
 [node name="DifficultyManager" type="Node" parent="."]
 script = ExtResource("2_difficulty")
