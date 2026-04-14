@@ -4,9 +4,15 @@ extends Node
 @export var normal_missile_scene: PackedScene
 @export var fast_missile_scene: PackedScene
 @export var heavy_missile_scene: PackedScene
-@export var difficulty_manager: DifficultyManager
 
+var difficulty_manager: DifficultyManager
 var _spawn_timer: float = 0.0
+
+
+func _ready() -> void:
+	difficulty_manager = get_parent().get_node_or_null("DifficultyManager") as DifficultyManager
+	if difficulty_manager == null:
+		push_error("MissileSpawner: DifficultyManager no encontrado")
 
 
 func _process(delta: float) -> void:

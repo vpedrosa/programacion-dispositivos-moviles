@@ -5,8 +5,17 @@ const RADIUS_BONUS: float = 30.0
 const COOLDOWN_REDUCTION: float = 0.1
 const ROTATION_SPEED_BONUS: float = 1.5
 
-@export var defense_base: DefenseBase
-@export var hud: CanvasLayer  ## HUD instance
+var defense_base: DefenseBase
+var hud: CanvasLayer
+
+
+func _ready() -> void:
+	defense_base = get_parent().get_node_or_null("DefenseBase") as DefenseBase
+	hud = get_parent().get_node_or_null("HUD") as CanvasLayer
+	if defense_base == null:
+		push_error("PowerupManager: DefenseBase no encontrado")
+	if hud == null:
+		push_error("PowerupManager: HUD no encontrado")
 
 
 func apply_powerup(powerup_id: String, cities: Array[City]) -> void:
