@@ -7,7 +7,7 @@ signal finished
 
 var radius: float = 80.0
 var _timer: float = 0.0
-var _hits_delivered: Array = []
+var _hits_delivered: Array[EnemyMissile] = []
 
 @onready var _visual: Sprite2D = $Visual
 

@@ -14,7 +14,7 @@ func _ready() -> void:
 
 func _load_scores() -> void:
 	loading_label.visible = true
-	var scores: Array = await FirebaseManager.get_top_scores()
+	var scores: Array[Dictionary] = await FirebaseManager.get_top_scores()
 	loading_label.visible = false
 	if scores.is_empty():
 		error_label.visible = true
@@ -22,7 +22,7 @@ func _load_scores() -> void:
 	_populate_table(scores)
 
 
-func _populate_table(scores: Array) -> void:
+func _populate_table(scores: Array[Dictionary]) -> void:
 	for child in scores_container.get_children():
 		child.queue_free()
 	for i in scores.size():
