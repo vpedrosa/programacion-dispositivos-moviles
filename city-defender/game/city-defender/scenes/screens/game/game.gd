@@ -1,5 +1,8 @@
 extends Node2D
 
+const GAME_OVER_DELAY: float = 1.8
+const GAME_OVER_FADE: float = 0.7
+
 enum GamePhase { PLAYING, PAUSED, GAME_OVER }
 
 @onready var difficulty_manager: DifficultyManager = $DifficultyManager
@@ -105,7 +108,7 @@ func _on_game_over() -> void:
 	_set_phase(GamePhase.GAME_OVER)
 	AudioManager.stop_music()
 	AudioManager.play_voice("game-over")
-	await get_tree().create_timer(1.8, true).timeout
+	await get_tree().create_timer(GAME_OVER_DELAY, true).timeout
 
 	var fade_layer := CanvasLayer.new()
 	fade_layer.layer = 100
@@ -117,7 +120,7 @@ func _on_game_over() -> void:
 	fade_layer.add_child(fade_rect)
 
 	var tween := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(fade_rect, "color:a", 1.0, 0.7)
+	tween.tween_property(fade_rect, "color:a", 1.0, GAME_OVER_FADE)
 	await tween.finished
 	get_tree().paused = false
 	get_tree().change_scene_to_file(ScenePaths.GAME_OVER)

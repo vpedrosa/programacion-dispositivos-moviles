@@ -5,6 +5,8 @@ signal health_changed(new_health: int, max_health: int)
 signal destroyed
 
 const MAX_HEALTH: int = 100
+const COLLISION_SIZE := Vector2(60, 30)
+const COLLISION_OFFSET := Vector2(0, -15)
 
 @export var city_index: int = 0
 
@@ -29,9 +31,9 @@ func _ready() -> void:
 	collision_layer = 1
 	collision_mask = 0
 	var shape := RectangleShape2D.new()
-	shape.size = Vector2(60, 30)
+	shape.size = COLLISION_SIZE
 	$CollisionShape2D.shape = shape
-	$CollisionShape2D.position = Vector2(0, -15)
+	$CollisionShape2D.position = COLLISION_OFFSET
 	_fires = [_fire_back, _fire_front]
 
 

@@ -2,6 +2,10 @@ class_name EnemyMissile
 extends Area2D
 
 const IMPACT_SCENE = preload("res://scenes/entities/explosion/impact_explosion.tscn")
+const COLLISION_RADIUS: float = 6.0
+const OUT_OF_BOUNDS_MARGIN: float = 50.0
+const GLOW_OFFSET := Vector2(0.0, 14.0)
+const SMOKE_OFFSET := Vector2(0.0, 22.0)
 
 signal missile_destroyed(missile: EnemyMissile)
 
@@ -26,7 +30,7 @@ func _ready() -> void:
 	collision_layer = 4   # enemy_missiles layer
 	collision_mask = 1    # detect cities layer
 	var shape := CircleShape2D.new()
-	shape.radius = 6.0
+	shape.radius = COLLISION_RADIUS
 	$CollisionShape2D.shape = shape
 	area_entered.connect(_on_area_entered)
 	_setup_glow()
@@ -100,7 +104,7 @@ func _update_rotation() -> void:
 
 func _check_out_of_bounds() -> void:
 	var viewport_size := get_viewport_rect().size
-	if global_position.y > viewport_size.y + 50:
+	if global_position.y > viewport_size.y + OUT_OF_BOUNDS_MARGIN:
 		deactivate()
 
 
@@ -138,7 +142,7 @@ func _setup_glow() -> void:
 	_flicker_phase = randf() * TAU
 	_glow = Sprite2D.new()
 	_glow.texture = _GLOW_TEX
-	_glow.position = Vector2(0.0, 14.0)  # local +Y = escape/cola del cohete
+	_glow.position = GLOW_OFFSET
 	_glow.scale = Vector2(0.55, 0.55)
 	_glow.modulate = Color(_visual.modulate.r, _visual.modulate.g, _visual.modulate.b, 0.9)
 	var mat := CanvasItemMaterial.new()
@@ -156,7 +160,7 @@ func _setup_smoke() -> void:
 	_smoke.explosiveness = 0.0
 	_smoke.randomness = 0.6
 	# Posición desplazada para dejar espacio visual entre el cohete y el humo
-	_smoke.position = Vector2(0.0, 22.0)
+	_smoke.position = SMOKE_OFFSET
 	_smoke.direction = Vector2(0.0, 1.0)
 	_smoke.spread = 35.0
 	_smoke.initial_velocity_min = 8.0

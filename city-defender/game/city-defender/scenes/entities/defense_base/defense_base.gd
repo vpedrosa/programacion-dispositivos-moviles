@@ -11,6 +11,9 @@ enum TurretState { IDLE, AIMING, COOLDOWN, RELOADING }
 @export var missile_scene: PackedScene = preload("res://scenes/entities/missiles/interceptor_missile.tscn")
 @export var explosion_scene: PackedScene = preload("res://scenes/entities/explosion/explosion.tscn")
 @export var turret2_texture: Texture2D
+const MIN_COOLDOWN: float = 0.1
+const BASE_ROTATION_SPEED: float = 3.0
+
 @export var base_cooldown: float = 0.5
 @export var base_explosion_radius: float = 80.0
 
@@ -21,7 +24,7 @@ var _cooldown_timer: float = 0.0
 var _explosion_radius_bonus: float = 0.0
 var _cooldown_upgrades: int = 0
 
-var _rotation_speed: float = 3.0  # rad/s
+var _rotation_speed: float = BASE_ROTATION_SPEED
 var _pending_target: Vector2 = Vector2.ZERO
 var _aim_angle: float = 0.0
 
@@ -79,7 +82,7 @@ func add_explosion_radius(amount: float) -> void:
 
 
 func reduce_cooldown(amount: float) -> void:
-	base_cooldown = max(0.1, base_cooldown - amount)
+	base_cooldown = max(MIN_COOLDOWN, base_cooldown - amount)
 	_cooldown_upgrades += 1
 	if _cooldown_upgrades >= 3 and turret2_texture:
 		_sprite.texture = turret2_texture
