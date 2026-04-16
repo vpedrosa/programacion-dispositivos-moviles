@@ -120,7 +120,7 @@ func _on_game_over() -> void:
 	tween.tween_property(fade_rect, "color:a", 1.0, 0.7)
 	await tween.finished
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://scenes/screens/game_over/game_over.tscn")
+	get_tree().change_scene_to_file(ScenePaths.GAME_OVER)
 
 
 func _on_wave_started(_wave_number: int) -> void:

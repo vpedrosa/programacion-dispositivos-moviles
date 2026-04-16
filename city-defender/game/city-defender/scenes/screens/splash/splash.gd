@@ -14,5 +14,5 @@ func _animate() -> void:
 	tween.tween_property($Logo, "modulate:a", 0.0, 0.7)   # fade out
 	tween.tween_callback(
 		func() -> void:
-			get_tree().change_scene_to_file("res://scenes/screens/main_menu/main_menu.tscn")
+			get_tree().change_scene_to_file(ScenePaths.MAIN_MENU)
 	)

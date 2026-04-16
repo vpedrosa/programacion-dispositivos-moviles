@@ -38,12 +38,12 @@ func _on_submit_pressed() -> void:
 
 
 func _on_highscores_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/screens/highscores/highscores.tscn")
+	get_tree().change_scene_to_file(ScenePaths.HIGHSCORES)
 
 
 func _on_retry_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/screens/game/game.tscn")
+	get_tree().change_scene_to_file(ScenePaths.GAME)
 
 
 func _on_menu_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/screens/main_menu/main_menu.tscn")
+	get_tree().change_scene_to_file(ScenePaths.MAIN_MENU)

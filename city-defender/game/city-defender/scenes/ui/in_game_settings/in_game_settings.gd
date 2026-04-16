@@ -31,4 +31,4 @@ func _on_resume_pressed() -> void:
 func _on_main_menu_pressed() -> void:
 	closed.emit()
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://scenes/screens/main_menu/main_menu.tscn")
+	get_tree().change_scene_to_file(ScenePaths.MAIN_MENU)

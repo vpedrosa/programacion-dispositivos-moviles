@@ -17,15 +17,15 @@ func _ready() -> void:
 
 
 func _on_play_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/screens/game/game.tscn")
+	get_tree().change_scene_to_file(ScenePaths.GAME)
 
 
 func _on_highscores_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/screens/highscores/highscores.tscn")
+	get_tree().change_scene_to_file(ScenePaths.HIGHSCORES)
 
 
 func _on_settings_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/screens/settings/settings.tscn")
+	get_tree().change_scene_to_file(ScenePaths.SETTINGS)
 
 
 func _on_quit_pressed() -> void:
