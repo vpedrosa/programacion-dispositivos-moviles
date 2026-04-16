@@ -1,4 +1,3 @@
-class_name FalloutStyle
 extends Node
 
 const PHOSPHOR := Color(0.0, 1.0, 0.25, 1)
@@ -106,7 +105,7 @@ func _style_button(btn: Button) -> void:
 
 	if not btn.has_meta("_sfx_connected"):
 		btn.set_meta("_sfx_connected", true)
-		btn.pressed.connect(AudioManager.play_sfx.bind("button"))
+		btn.pressed.connect(func() -> void: AudioManager.play_sfx("button"))
 
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color(0.0, 0.08, 0.02, 1)

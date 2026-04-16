@@ -42,8 +42,8 @@ func init(from: Vector2, target_city: Node2D) -> void:
 	modulate = Color.WHITE
 	visible = true
 	set_process(true)
-	monitoring = true
-	monitorable = true
+	set_deferred("monitoring", true)
+	set_deferred("monitorable", true)
 	_flicker_phase = randf() * TAU
 	if _smoke:
 		_smoke.restart()
@@ -68,8 +68,8 @@ func _process(delta: float) -> void:
 func deactivate() -> void:
 	visible = false
 	set_process(false)
-	monitoring = false
-	monitorable = false
+	set_deferred("monitoring", false)
+	set_deferred("monitorable", false)
 	if is_in_group("enemy_missiles"):
 		remove_from_group("enemy_missiles")
 	if _smoke:

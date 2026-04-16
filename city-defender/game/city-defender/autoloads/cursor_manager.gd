@@ -1,6 +1,5 @@
 ## CursorManager — cursores personalizados solo en escritorio.
 ## Llama a set_menu_cursor() en menús y set_game_cursor() en la escena de juego.
-class_name CursorManager
 extends Node
 
 const _CLICKER:   Texture2D = preload("res://assets/sprites/mouse/clicker.png")

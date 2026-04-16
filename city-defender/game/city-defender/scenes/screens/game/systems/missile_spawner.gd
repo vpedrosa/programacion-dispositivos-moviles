@@ -14,6 +14,10 @@ var _pools: Dictionary = {}
 
 
 func _ready() -> void:
+	_init_pools.call_deferred()
+
+
+func _init_pools() -> void:
 	for scene: PackedScene in [normal_missile_scene, fast_missile_scene, heavy_missile_scene]:
 		if scene == null:
 			continue
