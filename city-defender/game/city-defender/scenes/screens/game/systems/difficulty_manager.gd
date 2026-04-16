@@ -69,6 +69,14 @@ func get_missile_type() -> String:
 	return "normal"
 
 
+func reset() -> void:
+	elapsed_time = 0.0
+	_last_wave = 0
+	_phase = DifficultyPhase.EARLY
+	spawn_interval = initial_spawn_interval
+	missile_speed = initial_speed
+
+
 func is_wave_time() -> bool:
 	if elapsed_time < wave_interval:
 		return false

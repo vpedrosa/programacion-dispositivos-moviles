@@ -22,6 +22,10 @@ func _ready() -> void:
 		if node is City:
 			_cities.append(node as City)
 	GameState.reset(_cities.size())
+	difficulty_manager.reset()
+	missile_spawner.difficulty_manager = difficulty_manager
+	powerup_manager.defense_base = defense_base
+	powerup_manager.hud = hud
 	GameState.game_over.connect(_on_game_over)
 	AudioManager.play_music("main-theme")
 	CursorManager.set_game_cursor()
