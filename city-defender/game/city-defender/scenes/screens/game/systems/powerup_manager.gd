@@ -6,7 +6,7 @@ const COOLDOWN_REDUCTION: float = 0.1
 const ROTATION_SPEED_BONUS: float = 1.5
 
 @export var defense_base: DefenseBase
-@export var hud: CanvasLayer
+@export var hud: HUD
 
 
 func apply_powerup(powerup_id: String, cities: Array[City]) -> void:

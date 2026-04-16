@@ -1,3 +1,4 @@
+class_name ImpactExplosion
 extends Node2D
 
 @export var duration: float = 0.5

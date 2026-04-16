@@ -1,3 +1,4 @@
+class_name LevelUpBanner
 extends CanvasLayer
 
 @onready var _sprite: Sprite2D = $Sprite2D

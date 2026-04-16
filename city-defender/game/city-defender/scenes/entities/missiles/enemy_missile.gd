@@ -84,7 +84,7 @@ func _check_out_of_bounds() -> void:
 
 func _on_area_entered(area: Area2D) -> void:
 	if area is City and area.is_alive:
-		var impact: Node2D = IMPACT_SCENE.instantiate()
+		var impact: ImpactExplosion = IMPACT_SCENE.instantiate()
 		get_parent().call_deferred("add_child", impact)
 		impact.global_position = global_position
 		area.take_damage()
