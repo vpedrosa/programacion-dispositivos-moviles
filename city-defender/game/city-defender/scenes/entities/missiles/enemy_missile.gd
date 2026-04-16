@@ -40,6 +40,11 @@ func _ready() -> void:
 func init(from: Vector2, target_city: Node2D) -> void:
 	_hits = 0
 	modulate = Color.WHITE
+	global_position = from
+	_target_city = target_city
+	if target_city:
+		_direction = (target_city.global_position - from).normalized()
+		_update_rotation()
 	visible = true
 	set_process(true)
 	set_deferred("monitoring", true)
@@ -47,11 +52,6 @@ func init(from: Vector2, target_city: Node2D) -> void:
 	_flicker_phase = randf() * TAU
 	if _smoke:
 		_smoke.restart()
-	global_position = from
-	_target_city = target_city
-	if target_city:
-		_direction = (target_city.global_position - from).normalized()
-		_update_rotation()
 	add_to_group("enemy_missiles")
 
 
