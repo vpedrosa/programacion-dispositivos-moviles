@@ -1,9 +1,9 @@
 class_name FirebaseManager
 extends Node
 
-## Firebase Firestore manager for global anonymous highscores.
-## Uses the Firestore REST API over HTTPS.
-## Credentials are loaded at runtime from res://.env (never committed to git).
+## Gestión de highscores globales anónimas con Firebase Firestore.
+## Usa la API REST de Firestore sobre HTTPS.
+## Las credenciales se cargan en runtime desde res://.env (no se commitean).
 
 const _COLLECTION: String = "highscores"
 const _TOP_COUNT: int = 10
@@ -24,8 +24,8 @@ func _ready() -> void:
 	add_child(_http)
 
 
-## Returns an Array[Dictionary] [{score, date}, ...] sorted by score desc (top 10).
-## Uses the runQuery endpoint for reliable ordering without requiring a composite index.
+## Devuelve Array[Dictionary] [{score, date}, ...] ordenado por puntuación desc (top 10).
+## Usa el endpoint runQuery para orden fiable sin necesitar un índice compuesto.
 func get_top_scores() -> Array[Dictionary]:
 	if not _initialized:
 		push_warning("FirebaseManager: get_top_scores() llamado sin credenciales")
@@ -46,7 +46,7 @@ func get_top_scores() -> Array[Dictionary]:
 	return _parse_query_scores(result[3])
 
 
-## Submits a score with player name. Only submits if score > 0 and name is not empty.
+## Envía una puntuación con nombre de jugador. Solo envía si score > 0 y name no está vacío.
 func submit_score(score: int, player_name: String) -> void:
 	if not _initialized:
 		push_warning("FirebaseManager: submit_score() llamado sin credenciales")
