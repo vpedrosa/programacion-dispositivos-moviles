@@ -59,6 +59,21 @@ func add_scanline_overlay(parent: Node) -> void:
 	_add_scanline_overlay_to(parent)
 
 
+## Flash de pantalla con color fósforo que se desvanece.
+func flash_screen(parent: Node, color := Color(0.6, 1.0, 0.7, 0.92), duration := 0.45) -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 50
+	parent.add_child(layer)
+	var flash := ColorRect.new()
+	flash.color = color
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.add_child(flash)
+	var tween := layer.create_tween()
+	tween.tween_property(flash, "color:a", 0.0, duration)
+	tween.tween_callback(layer.queue_free)
+
+
 func _style_node(node: Node) -> void:
 	if node is Button:
 		_style_button(node)
