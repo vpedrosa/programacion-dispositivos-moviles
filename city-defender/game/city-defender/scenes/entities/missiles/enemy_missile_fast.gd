@@ -17,6 +17,7 @@ func _ready() -> void:
 
 
 func init(from: Vector2, target_city: Node2D) -> void:
+	_elapsed = 0.0
 	super.init(from, target_city)
 	_spawn_pos = from
 

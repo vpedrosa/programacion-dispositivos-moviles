@@ -34,6 +34,15 @@ func _ready() -> void:
 
 
 func init(from: Vector2, target_city: Node2D) -> void:
+	_hits = 0
+	modulate = Color.WHITE
+	visible = true
+	set_process(true)
+	monitoring = true
+	monitorable = true
+	_flicker_phase = randf() * TAU
+	if _smoke:
+		_smoke.restart()
 	global_position = from
 	_target_city = target_city
 	if target_city:
@@ -52,7 +61,20 @@ func _process(delta: float) -> void:
 		_glow.scale = Vector2.ONE * clamp(0.55 + f * 0.5, 0.38, 0.72)
 
 
+func deactivate() -> void:
+	visible = false
+	set_process(false)
+	monitoring = false
+	monitorable = false
+	if is_in_group("enemy_missiles"):
+		remove_from_group("enemy_missiles")
+	if _smoke:
+		_smoke.emitting = false
+
+
 func hit() -> void:
+	if not visible:
+		return
 	_hits += 1
 	if _hits >= max_hits:
 		_on_destroyed()
@@ -68,7 +90,7 @@ func _on_destroyed() -> void:
 	GameState.add_score(score_value)
 	GameState.add_money(money_value)
 	missile_destroyed.emit(self)
-	queue_free()
+	deactivate()
 
 
 func _update_rotation() -> void:
@@ -79,17 +101,19 @@ func _update_rotation() -> void:
 func _check_out_of_bounds() -> void:
 	var viewport_size := get_viewport_rect().size
 	if global_position.y > viewport_size.y + 50:
-		queue_free()
+		deactivate()
 
 
 func _on_area_entered(area: Area2D) -> void:
+	if not visible:
+		return
 	if area is City and area.is_alive:
 		var impact: ImpactExplosion = IMPACT_SCENE.instantiate()
 		get_parent().call_deferred("add_child", impact)
 		impact.global_position = global_position
 		area.take_damage()
 		AudioManager.play_sfx("missile-collision")
-		call_deferred("queue_free")
+		call_deferred("deactivate")
 
 
 # ── Efectos visuales ──────────────────────────────────────────────────────────
