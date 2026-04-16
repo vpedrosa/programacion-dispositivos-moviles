@@ -1,3 +1,4 @@
+class_name MainMenuScreen
 extends Control
 
 @onready var _play_btn: Button = $CenterContainer/VBox/PlayButton

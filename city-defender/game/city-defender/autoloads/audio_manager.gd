@@ -1,3 +1,4 @@
+class_name AudioManager
 ## AudioManager — gestión centralizada de SFX y música.
 ## Pon los ficheros en res://assets/sounds/ con estos nombres:
 ##   explosion.ogg  → explosión en el aire

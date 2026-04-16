@@ -1,3 +1,4 @@
+class_name HighscoresScreen
 extends Control
 
 @onready var scores_container: VBoxContainer = $MarginContainer/VBox/ScrollContainer/ScoresContainer

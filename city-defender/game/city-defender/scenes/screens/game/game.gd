@@ -1,3 +1,4 @@
+class_name GameScreen
 extends Node2D
 
 const GAME_OVER_DELAY: float = 1.8

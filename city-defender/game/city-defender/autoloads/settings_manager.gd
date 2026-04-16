@@ -1,5 +1,6 @@
 ## SettingsManager — autoload que gestiona idioma y sonido.
 ## Se carga antes que cualquier escena para que las traducciones estén disponibles.
+class_name SettingsManager
 extends Node
 
 const CONFIG_PATH := "user://settings.cfg"

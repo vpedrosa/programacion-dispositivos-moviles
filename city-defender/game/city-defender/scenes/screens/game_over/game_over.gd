@@ -1,3 +1,4 @@
+class_name GameOverScreen
 extends Control
 
 @onready var score_label: Label   = $CenterContainer/VBox/ScoreLabel

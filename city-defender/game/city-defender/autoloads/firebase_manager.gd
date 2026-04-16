@@ -1,3 +1,4 @@
+class_name FirebaseManager
 extends Node
 
 ## Firebase Firestore manager for global anonymous highscores.
