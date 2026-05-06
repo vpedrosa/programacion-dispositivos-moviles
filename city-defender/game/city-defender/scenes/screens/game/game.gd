@@ -10,10 +10,10 @@ enum GamePhase { PLAYING, PAUSED, GAME_OVER }
 @onready var missile_spawner: MissileSpawner = $MissileSpawner
 @onready var powerup_manager: PowerupManager = $PowerupManager
 @onready var defense_base: DefenseBase = $DefenseBase
-@onready var hud: HUD = $HUD if has_node("HUD") else null
-@onready var shop: Shop = $Shop if has_node("Shop") else null
-@onready var level_up_banner: LevelUpBanner = $LevelUpBanner if has_node("LevelUpBanner") else null
-@onready var in_game_settings: InGameSettings = $InGameSettings if has_node("InGameSettings") else null
+@onready var hud: HUD = $HUD
+@onready var shop: Shop = $Shop
+@onready var level_up_banner: LevelUpBanner = $LevelUpBanner
+@onready var in_game_settings: InGameSettings = $InGameSettings
 
 var _cities: Array[City] = []
 var _phase: GamePhase = GamePhase.PLAYING

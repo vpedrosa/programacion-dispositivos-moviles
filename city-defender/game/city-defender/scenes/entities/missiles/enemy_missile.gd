@@ -7,8 +7,6 @@ const OUT_OF_BOUNDS_MARGIN: float = 50.0
 const GLOW_OFFSET := Vector2(0.0, 14.0)
 const SMOKE_OFFSET := Vector2(0.0, 22.0)
 
-signal missile_destroyed(missile: EnemyMissile)
-
 static var _GLOW_TEX: ImageTexture = null
 
 @export var speed: float = 150.0
@@ -104,7 +102,6 @@ func _on_destroyed() -> void:
 	_destroyed = true
 	GameState.add_score(score_value)
 	GameState.add_money(money_value)
-	missile_destroyed.emit(self)
 	deactivate()
 
 
