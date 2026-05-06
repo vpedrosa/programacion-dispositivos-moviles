@@ -13,7 +13,9 @@ var _music_player: AudioStreamPlayer
 var _voice_player: AudioStreamPlayer
 var _zap_player: AudioStreamPlayer
 var _sfx_cache: Dictionary = {}
+var _music_cache: Dictionary = {}
 var _music_tween: Tween = null
+var _current_music_name: String = ""
 
 
 func _ready() -> void:
@@ -75,17 +77,12 @@ func play_voice(sound_name: String) -> void:
 
 
 func play_music(sound_name: String) -> void:
-	var stream := _load_sound(sound_name)
+	if _current_music_name == sound_name and _music_player.playing:
+		return
+	var stream := _load_music_stream(sound_name)
 	if stream == null:
 		return
-	if stream is AudioStreamMP3:
-		(stream as AudioStreamMP3).loop = true
-	elif stream is AudioStreamOggVorbis:
-		(stream as AudioStreamOggVorbis).loop = true
-	elif stream is AudioStreamWAV:
-		(stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
-	if _music_player.stream == stream and _music_player.playing:
-		return
+	_current_music_name = sound_name
 	_music_player.stream = stream
 	_music_player.volume_db = -80.0
 	_music_player.play()
@@ -101,6 +98,25 @@ func stop_music() -> void:
 		_music_tween = null
 	_music_player.stop()
 	_music_player.volume_db = MUSIC_VOLUME_DB
+	_current_music_name = ""
+
+
+func _load_music_stream(sound_name: String) -> AudioStream:
+	if _music_cache.has(sound_name):
+		return _music_cache[sound_name]
+	var base := _load_sound(sound_name)
+	if base == null:
+		_music_cache[sound_name] = null
+		return null
+	var looped: AudioStream = base.duplicate()
+	if looped is AudioStreamMP3:
+		(looped as AudioStreamMP3).loop = true
+	elif looped is AudioStreamOggVorbis:
+		(looped as AudioStreamOggVorbis).loop = true
+	elif looped is AudioStreamWAV:
+		(looped as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
+	_music_cache[sound_name] = looped
+	return looped
 
 
 func _load_sound(sound_name: String) -> AudioStream:
