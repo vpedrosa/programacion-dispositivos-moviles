@@ -101,6 +101,7 @@ func _register_translations() -> void:
 		"MENU_HIGHSCORES":  "PUNTUACIONES",
 		"MENU_QUIT":        "SALIR",
 		"MENU_SETTINGS":    "AJUSTES",
+		"MENU_CLEAR_USER":  "BORRAR USUARIO",
 		# HUD
 		"HUD_SCORE":        "PUNTOS: ",
 		"HUD_SHOP":         "TIENDA",
@@ -160,6 +161,7 @@ func _register_translations() -> void:
 		"MENU_HIGHSCORES":  "HIGHSCORES",
 		"MENU_QUIT":        "QUIT",
 		"MENU_SETTINGS":    "SETTINGS",
+		"MENU_CLEAR_USER":  "CLEAR USER",
 		# HUD
 		"HUD_SCORE":        "SCORE: ",
 		"HUD_SHOP":         "SHOP",

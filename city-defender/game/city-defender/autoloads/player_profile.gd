@@ -31,6 +31,12 @@ func set_player_name(value: String) -> void:
 	_save()
 
 
+## Borra el nombre guardado. Próxima partida pedirá el nombre como la primera vez.
+func clear_name() -> void:
+	_player_name = ""
+	_save()
+
+
 # ── Persistencia ───────────────────────────────────────────────────────────────
 
 func _load() -> void:
