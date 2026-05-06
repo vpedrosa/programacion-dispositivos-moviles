@@ -1,11 +1,6 @@
 class_name DefenseBase
 extends Node2D
 
-## Estados explícitos del cañón.
-## IDLE:      listo para recibir un disparo.
-## AIMING:    rotando hacia el objetivo (primer disparo o disparo manual).
-## COOLDOWN:  misil lanzado, esperando recarga; rotación vuelve a neutro.
-## RELOADING: modo Gatling — recargando Y re-apuntando simultáneamente.
 enum TurretState { IDLE, AIMING, COOLDOWN, RELOADING }
 
 @export var missile_scene: PackedScene = preload("res://scenes/entities/missiles/interceptor_missile.tscn")
@@ -33,7 +28,6 @@ var _is_holding: bool = false
 
 
 func _process(delta: float) -> void:
-	# Gestión del timer de cooldown y recarga.
 	if _state == TurretState.COOLDOWN or _state == TurretState.RELOADING:
 		_cooldown_timer += delta
 		if _cooldown_timer >= _current_cooldown():
@@ -41,9 +35,8 @@ func _process(delta: float) -> void:
 			if _state == TurretState.COOLDOWN:
 				_state = TurretState.IDLE
 			elif _state == TurretState.RELOADING:
-				_fire_at_pending()  # gatling: dispara el siguiente misil al terminar la recarga
+				_fire_at_pending()
 
-	# Solo rota al apuntar; en el resto de estados mantiene el último ángulo.
 	if _state == TurretState.AIMING:
 		var diff := angle_difference(_sprite.rotation, _aim_angle)
 		var step := _rotation_speed * delta
@@ -60,7 +53,6 @@ func shoot_at(world_position: Vector2) -> void:
 	_pending_target = world_position
 	_is_holding = true
 	var dir := world_position - global_position
-	# Sprite apunta hacia arriba en rotation=0; fórmula: atan2(dx, -dy)
 	_aim_angle = atan2(dir.x, -dir.y)
 	_state = TurretState.AIMING
 
@@ -100,7 +92,6 @@ func _fire_at_pending() -> void:
 	_launch_missile(_pending_target)
 	_cooldown_timer = 0.0
 	if _gatling_active and _is_holding:
-		# En modo Gatling, re-apunta al mismo objetivo mientras el jugador mantiene pulsado.
 		_aim_angle = atan2(
 			(_pending_target - global_position).x,
 			-(_pending_target - global_position).y

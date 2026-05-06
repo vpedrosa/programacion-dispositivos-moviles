@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://duamo2cvv8g0d"]
 
-[ext_resource type="Script" path="res://scenes/screens/settings/settings.gd" id="1_settings"]
+[ext_resource type="Script" uid="uid://cko8320w06cem" path="res://scenes/screens/settings/settings.gd" id="1_settings"]
 [ext_resource type="PackedScene" path="res://scenes/ui/settings_panel/settings_panel.tscn" id="2_panel"]
 
-[node name="Settings" type="Control"]
+[node name="Settings" type="Control" unique_id=354605663]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,7 +12,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_settings")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1140704552]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.02, 0.06, 0.02, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=68517627]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -29,7 +29,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SettingsPanel" parent="CenterContainer" instance=ExtResource("2_panel")]
+[node name="SettingsPanel" parent="CenterContainer" unique_id=1192120745 instance=ExtResource("2_panel")]
+layout_mode = 2
 show_clear_user_button = true
 
 [connection signal="main_menu_pressed" from="CenterContainer/SettingsPanel" to="." method="_on_main_menu_pressed"]

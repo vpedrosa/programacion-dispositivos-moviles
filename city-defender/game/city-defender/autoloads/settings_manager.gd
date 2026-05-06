@@ -1,5 +1,3 @@
-## SettingsManager — autoload que gestiona idioma y sonido.
-## Se carga antes que cualquier escena para que las traducciones estén disponibles.
 extends Node
 
 const CONFIG_PATH := "user://settings.cfg"
@@ -11,14 +9,11 @@ var _volume: float = 1.0
 
 
 func _ready() -> void:
-	_register_translations()
 	_load()
 	_apply_language()
 	_apply_sound()
 	_apply_volume()
 
-
-# ── API pública ────────────────────────────────────────────────────────────────
 
 func set_language(locale: String) -> void:
 	if locale in SUPPORTED_LOCALES:
@@ -51,8 +46,6 @@ func get_volume() -> float:
 	return _volume
 
 
-# ── Aplicar ajustes ────────────────────────────────────────────────────────────
-
 func _apply_language() -> void:
 	TranslationServer.set_locale(_language)
 
@@ -66,8 +59,6 @@ func _apply_volume() -> void:
 	var idx := AudioServer.get_bus_index("Master")
 	AudioServer.set_bus_volume_db(idx, linear_to_db(max(_volume, 0.001)))
 
-
-# ── Persistencia ───────────────────────────────────────────────────────────────
 
 func _load() -> void:
 	var cfg := ConfigFile.new()
@@ -90,135 +81,3 @@ func _save() -> void:
 func _detect_language() -> String:
 	var locale := OS.get_locale_language()
 	return locale if locale in SUPPORTED_LOCALES else "en"
-
-
-# ── Traducciones ───────────────────────────────────────────────────────────────
-
-func _register_translations() -> void:
-	TranslationServer.add_translation(_make_translation("es", {
-		# Menú principal
-		"MENU_PLAY":        "JUGAR",
-		"MENU_HIGHSCORES":  "PUNTUACIONES",
-		"MENU_QUIT":        "SALIR",
-		"MENU_SETTINGS":    "AJUSTES",
-		# HUD
-		"HUD_SCORE":        "PUNTOS: ",
-		"HUD_SHOP":         "TIENDA",
-		"HUD_EMP":          "EMP",
-		# Game Over
-		"GO_TITLE":            "GAME OVER",
-		"GO_SCORE_SENT":       "¡PUNTUACIÓN ENVIADA!",
-		"GO_NAME_PLACEHOLDER": "TU NOMBRE...",
-		"GO_SUBMIT":           "ENVIAR",
-		"GO_RETRY":            "REINTENTAR",
-		"GO_MENU":             "MENU",
-		"GO_RANK_LOADING":     "CALCULANDO POSICIÓN...",
-		"GO_PERSONAL_RANK":    "TU MEJOR: #%d DE %d",
-		"GO_GLOBAL_RANK":      "RANKING GLOBAL: #%d",
-		# Highscores
-		"HS_TITLE":         "PUNTUACIONES",
-		"HS_LOADING":       "CARGANDO...",
-		"HS_EMPTY":         "SIN PUNTUACIONES REGISTRADAS",
-		"HS_ANONYMOUS":     "ANÓNIMO",
-		"HS_BACK":          "VOLVER",
-		# Tienda
-		"SHOP_TITLE":       "TIENDA",
-		"SHOP_CLOSE":       "CERRAR",
-		"SHOP_BUY":         "COMPRAR",
-		# Ajustes
-		"SETTINGS_TITLE":      "AJUSTES",
-		"SETTINGS_LANGUAGE":   "IDIOMA",
-		"SETTINGS_SOUND":      "SONIDO",
-		"SETTINGS_SOUND_ON":   "ACTIVADO",
-		"SETTINGS_SOUND_OFF":  "DESACTIVADO",
-		"SETTINGS_VOLUME":     "VOLUMEN",
-		"SETTINGS_BACK":       "VOLVER",
-		"SETTINGS_RESUME":     "VOLVER AL JUEGO",
-		"SETTINGS_MAIN_MENU":  "MENÚ PRINCIPAL",
-		"SETTINGS_CLEAR_USER": "BORRAR USUARIO",
-		# Power-ups
-		"PU_REPAIR_NAME":    "Reparar ciudad",
-		"PU_REPAIR_DESC":    "Restaura vida a una ciudad dañada",
-		"PU_REBUILD_NAME":   "Reconstruir ciudad",
-		"PU_REBUILD_DESC":   "Revive ciudad destruida con HP mínimo",
-		"PU_SHIELD_NAME":    "Escudo temporal",
-		"PU_SHIELD_DESC":    "Escudo en todas las ciudades (1 impacto)",
-		"PU_RADIUS_NAME":    "Radio explosión+",
-		"PU_RADIUS_DESC":    "Aumenta el radio de explosión (uso único)",
-		"PU_GATLING_NAME":   "Modo Gatling",
-		"PU_GATLING_DESC":   "Mantén pulsado para disparar en ráfaga continua (uso único)",
-		"PU_EMP_NAME":       "Bomba EMP",
-		"PU_EMP_DESC":       "Destruye todos los misiles en pantalla",
-		"PU_COOLDOWN_NAME":       "Cadencia+",
-		"PU_COOLDOWN_DESC":       "Reduce el cooldown de disparo permanentemente (máx. 3)",
-		"PU_TURRET_SPEED_NAME":   "Velocidad de giro",
-		"PU_TURRET_SPEED_DESC":   "Aumenta la velocidad de rotación de la torreta",
-	}))
-
-	TranslationServer.add_translation(_make_translation("en", {
-		# Main menu
-		"MENU_PLAY":        "PLAY",
-		"MENU_HIGHSCORES":  "HIGHSCORES",
-		"MENU_QUIT":        "QUIT",
-		"MENU_SETTINGS":    "SETTINGS",
-		# HUD
-		"HUD_SCORE":        "SCORE: ",
-		"HUD_SHOP":         "SHOP",
-		"HUD_EMP":          "EMP",
-		# Game Over
-		"GO_TITLE":            "GAME OVER",
-		"GO_SCORE_SENT":       "SCORE SUBMITTED!",
-		"GO_NAME_PLACEHOLDER": "YOUR NAME...",
-		"GO_SUBMIT":           "SUBMIT",
-		"GO_RETRY":            "RETRY",
-		"GO_MENU":             "MENU",
-		"GO_RANK_LOADING":     "CALCULATING RANK...",
-		"GO_PERSONAL_RANK":    "YOUR BEST: #%d OF %d",
-		"GO_GLOBAL_RANK":      "GLOBAL RANK: #%d",
-		# Highscores
-		"HS_TITLE":         "HIGHSCORES",
-		"HS_LOADING":       "LOADING...",
-		"HS_EMPTY":         "NO SCORES REGISTERED",
-		"HS_ANONYMOUS":     "ANONYMOUS",
-		"HS_BACK":          "BACK",
-		# Shop
-		"SHOP_TITLE":       "SHOP",
-		"SHOP_CLOSE":       "CLOSE",
-		"SHOP_BUY":         "BUY",
-		# Settings
-		"SETTINGS_TITLE":      "SETTINGS",
-		"SETTINGS_LANGUAGE":   "LANGUAGE",
-		"SETTINGS_SOUND":      "SOUND",
-		"SETTINGS_SOUND_ON":   "ON",
-		"SETTINGS_SOUND_OFF":  "OFF",
-		"SETTINGS_VOLUME":     "VOLUME",
-		"SETTINGS_BACK":       "BACK",
-		"SETTINGS_RESUME":     "BACK TO GAME",
-		"SETTINGS_MAIN_MENU":  "MAIN MENU",
-		"SETTINGS_CLEAR_USER": "CLEAR USER",
-		# Power-ups
-		"PU_REPAIR_NAME":    "Repair city",
-		"PU_REPAIR_DESC":    "Restores health to a damaged city",
-		"PU_REBUILD_NAME":   "Rebuild city",
-		"PU_REBUILD_DESC":   "Revives destroyed city with minimum HP",
-		"PU_SHIELD_NAME":    "Temporary shield",
-		"PU_SHIELD_DESC":    "Shield on all cities (absorbs 1 hit)",
-		"PU_RADIUS_NAME":    "Explosion radius+",
-		"PU_RADIUS_DESC":    "Increases explosion radius (one-time)",
-		"PU_GATLING_NAME":   "Gatling Mode",
-		"PU_GATLING_DESC":   "Hold to fire in continuous burst (one-time)",
-		"PU_EMP_NAME":       "EMP bomb",
-		"PU_EMP_DESC":       "Destroys all missiles on screen",
-		"PU_COOLDOWN_NAME":       "Rate of fire+",
-		"PU_COOLDOWN_DESC":       "Permanently reduces firing cooldown (max. 3)",
-		"PU_TURRET_SPEED_NAME":   "Rotation speed",
-		"PU_TURRET_SPEED_DESC":   "Increases turret rotation speed permanently",
-	}))
-
-
-func _make_translation(locale: String, messages: Dictionary) -> Translation:
-	var t := Translation.new()
-	t.locale = locale
-	for key: String in messages:
-		t.add_message(key, messages[key])
-	return t

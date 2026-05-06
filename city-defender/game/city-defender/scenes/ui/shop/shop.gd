@@ -52,8 +52,6 @@ func _ready() -> void:
 
 
 func _notification(what: int) -> void:
-	# La notificación se dispara también al entrar al árbol, antes de que
-	# _ready resuelva los @onready. is_node_ready() filtra ese caso.
 	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready() and visible:
 		_refresh_translations()
 		_refresh_buttons()

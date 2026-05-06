@@ -1,5 +1,3 @@
-## Overlay de ajustes en partida.
-## Envuelve SettingsPanel añadiendo el comportamiento de overlay (visible/oculto, señales).
 class_name InGameSettings
 extends CanvasLayer
 

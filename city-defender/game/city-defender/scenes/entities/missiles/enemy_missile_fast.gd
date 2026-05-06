@@ -1,8 +1,8 @@
 class_name EnemyMissileFast
 extends EnemyMissile
 
-const CURVE_AMPLITUDE: float = 60.0   # píxeles de desviación máxima
-const CURVE_FREQUENCY: float = 0.6    # oscilaciones por segundo
+const CURVE_AMPLITUDE: float = 60.0
+const CURVE_FREQUENCY: float = 0.6
 
 var _elapsed: float = 0.0
 var _spawn_pos: Vector2
@@ -29,12 +29,10 @@ func _process(delta: float) -> void:
 
 	var perp := Vector2(-_direction.y, _direction.x)
 
-	# Posición en la curva: línea recta + desplazamiento sinusoidal perpendicular
 	global_position = _spawn_pos \
 		+ _direction * speed * _elapsed \
 		+ perp * sin(_elapsed * CURVE_FREQUENCY * TAU) * CURVE_AMPLITUDE
 
-	# Rotación siguiendo la tangente de la curva para aspecto realista
 	var tangent := _direction * speed \
 		+ perp * cos(_elapsed * CURVE_FREQUENCY * TAU) * CURVE_AMPLITUDE * CURVE_FREQUENCY * TAU
 	if tangent != Vector2.ZERO:

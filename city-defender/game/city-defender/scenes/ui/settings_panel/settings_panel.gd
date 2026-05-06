@@ -1,6 +1,3 @@
-## Panel de ajustes reutilizable.
-## Se usa tanto en la pantalla de ajustes del menú principal como en el overlay en partida.
-## El botón "Volver al juego" se muestra u oculta según show_resume_button.
 class_name SettingsPanel
 extends Control
 
@@ -29,8 +26,6 @@ func _ready() -> void:
 	_refresh_state()
 
 
-## Sincroniza el slider y los botones con el estado actual de SettingsManager.
-## Llamar desde el padre al abrir el panel.
 func refresh() -> void:
 	_volume_slider.value = SettingsManager.get_volume()
 	_refresh_state()

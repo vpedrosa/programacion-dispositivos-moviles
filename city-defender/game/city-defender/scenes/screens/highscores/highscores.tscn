@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://c1t7dnharsydn"]
 
-[ext_resource type="Script" path="res://scenes/screens/highscores/highscores.gd" id="1_hs"]
+[ext_resource type="Script" uid="uid://b4wd3ktuwdi70" path="res://scenes/screens/highscores/highscores.gd" id="1_hs"]
 
-[node name="Highscores" type="Control"]
+[node name="Highscores" type="Control" unique_id=1748302220]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_hs")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=747669013]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.02, 0.06, 0.02, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=167480696]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -32,38 +32,38 @@ theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 60
 theme_override_constants/margin_bottom = 40
 
-[node name="VBox" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBox" type="VBoxContainer" parent="MarginContainer" unique_id=2108220069]
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="TitleLabel" type="Label" parent="MarginContainer/VBox"]
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBox" unique_id=1738527371]
 layout_mode = 2
 text = "HS_TITLE"
 horizontal_alignment = 1
 
-[node name="LoadingLabel" type="Label" parent="MarginContainer/VBox"]
+[node name="LoadingLabel" type="Label" parent="MarginContainer/VBox" unique_id=1960538653]
 layout_mode = 2
 text = "HS_LOADING"
 horizontal_alignment = 1
 
-[node name="ErrorLabel" type="Label" parent="MarginContainer/VBox"]
+[node name="ErrorLabel" type="Label" parent="MarginContainer/VBox" unique_id=99900791]
+visible = false
 layout_mode = 2
 text = "HS_EMPTY"
 horizontal_alignment = 1
-visible = false
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBox" unique_id=1563367423]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="ScoresContainer" type="VBoxContainer" parent="MarginContainer/VBox/ScrollContainer"]
+[node name="ScoresContainer" type="VBoxContainer" parent="MarginContainer/VBox/ScrollContainer" unique_id=302106962]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
-[node name="BackButton" type="Button" parent="MarginContainer/VBox"]
-layout_mode = 2
+[node name="BackButton" type="Button" parent="MarginContainer/VBox" unique_id=283288602]
 custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
 text = "HS_BACK"
 
 [connection signal="pressed" from="MarginContainer/VBox/BackButton" to="." method="_on_back_pressed"]

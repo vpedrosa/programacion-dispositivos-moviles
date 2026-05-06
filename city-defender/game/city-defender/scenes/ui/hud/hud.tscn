@@ -1,108 +1,101 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://cvmav8ykj8wbk"]
 
-[ext_resource type="Script" path="res://scenes/ui/hud/hud.gd" id="1_hud"]
-[ext_resource type="Texture2D" path="res://assets/sprites/shop/shop.png" id="2_shop_icon"]
-[ext_resource type="Texture2D" path="res://assets/sprites/shop/settings.png" id="3_settings_icon"]
+[ext_resource type="Script" uid="uid://3buecnns67yc" path="res://scenes/ui/hud/hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" uid="uid://dmxfb81nmavx6" path="res://assets/sprites/shop/shop.png" id="2_shop_icon"]
+[ext_resource type="Texture2D" uid="uid://bcj5gn0iehl5t" path="res://assets/sprites/shop/settings.png" id="3_settings_icon"]
 
-[node name="HUD" type="CanvasLayer"]
-layer = 5
+[node name="HUD" type="CanvasLayer" unique_id=2000926659]
 process_mode = 3
+layer = 5
 script = ExtResource("1_hud")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 3
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=32700138]
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 72
+offset_bottom = 72.0
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 8
 
-[node name="HBox" type="HBoxContainer" parent="MarginContainer"]
+[node name="HBox" type="HBoxContainer" parent="MarginContainer" unique_id=1933420885]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="ScoreLabel" type="Label" parent="MarginContainer/HBox"]
+[node name="ScoreLabel" type="Label" parent="MarginContainer/HBox" unique_id=1242738835]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "PUNTOS: 0"
 
-[node name="CooldownBar" type="ProgressBar" parent="MarginContainer/HBox"]
-layout_mode = 2
+[node name="CooldownBar" type="ProgressBar" parent="MarginContainer/HBox" unique_id=891212766]
 custom_minimum_size = Vector2(120, 24)
+layout_mode = 2
 size_flags_vertical = 4
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="MoneyLabel" type="Label" parent="MarginContainer/HBox"]
+[node name="MoneyLabel" type="Label" parent="MarginContainer/HBox" unique_id=914727234]
 layout_mode = 2
 text = "$0"
 
-[node name="EMPButton" type="Button" parent="MarginContainer/HBox"]
-layout_mode = 2
+[node name="EMPButton" type="Button" parent="MarginContainer/HBox" unique_id=309686614]
 visible = false
+layout_mode = 2
 text = "HUD_EMP"
 
-[node name="ShopButton" type="Button" parent="MarginContainer/HBox"]
+[node name="ShopButton" type="Button" parent="MarginContainer/HBox" unique_id=1008425492]
 layout_mode = 2
-icon = ExtResource("2_shop_icon")
-icon_max_width = 28
+theme_override_colors/icon_normal_color = Color(0, 0.9, 0.25, 1)
+theme_override_colors/icon_focus_color = Color(0, 0.9, 0.25, 1)
+theme_override_colors/icon_pressed_color = Color(0, 0.9, 0.25, 1)
+theme_override_colors/icon_hover_color = Color(0, 0.9, 0.25, 1)
 text = "HUD_SHOP"
-theme_override_colors/icon_normal_color = Color(0, 0.9, 0.25, 1)
-theme_override_colors/icon_hover_color = Color(0, 0.9, 0.25, 1)
-theme_override_colors/icon_pressed_color = Color(0, 0.9, 0.25, 1)
-theme_override_colors/icon_focus_color = Color(0, 0.9, 0.25, 1)
+icon = ExtResource("2_shop_icon")
 
-[node name="SettingsButton" type="Button" parent="MarginContainer/HBox"]
+[node name="SettingsButton" type="Button" parent="MarginContainer/HBox" unique_id=1765838438]
 layout_mode = 2
-icon = ExtResource("3_settings_icon")
-icon_max_width = 28
 theme_override_colors/icon_normal_color = Color(0, 0.9, 0.25, 1)
-theme_override_colors/icon_hover_color = Color(0, 0.9, 0.25, 1)
-theme_override_colors/icon_pressed_color = Color(0, 0.9, 0.25, 1)
 theme_override_colors/icon_focus_color = Color(0, 0.9, 0.25, 1)
+theme_override_colors/icon_pressed_color = Color(0, 0.9, 0.25, 1)
+theme_override_colors/icon_hover_color = Color(0, 0.9, 0.25, 1)
+icon = ExtResource("3_settings_icon")
 
-[node name="CityBarsContainer" type="HBoxContainer" parent="."]
-layout_mode = 3
+[node name="CityBarsContainer" type="HBoxContainer" parent="." unique_id=103192957]
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -40
+offset_top = -40.0
 theme_override_constants/separation = 4
 
-[node name="CityBar0" type="ProgressBar" parent="CityBarsContainer"]
+[node name="CityBar0" type="ProgressBar" parent="CityBarsContainer" unique_id=671340170]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 36)
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="CityBar1" type="ProgressBar" parent="CityBarsContainer"]
+[node name="CityBar1" type="ProgressBar" parent="CityBarsContainer" unique_id=1667380965]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 36)
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="CityBar2" type="ProgressBar" parent="CityBarsContainer"]
+[node name="CityBar2" type="ProgressBar" parent="CityBarsContainer" unique_id=402876964]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 36)
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[node name="CityBar3" type="ProgressBar" parent="CityBarsContainer"]
+[node name="CityBar3" type="ProgressBar" parent="CityBarsContainer" unique_id=887717053]
+custom_minimum_size = Vector2(0, 36)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 36)
-max_value = 100.0
 value = 100.0
 show_percentage = false
 
-[connection signal="pressed" from="MarginContainer/HBox/ShopButton" to="." method="_on_shop_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBox/EMPButton" to="." method="_on_emp_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBox/ShopButton" to="." method="_on_shop_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBox/SettingsButton" to="." method="_on_settings_button_pressed"]

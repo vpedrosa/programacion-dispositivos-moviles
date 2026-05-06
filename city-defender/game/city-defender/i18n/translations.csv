@@ -1,0 +1,51 @@
+keys,es,en
+MENU_PLAY,JUGAR,PLAY
+MENU_HIGHSCORES,PUNTUACIONES,HIGHSCORES
+MENU_QUIT,SALIR,QUIT
+MENU_SETTINGS,AJUSTES,SETTINGS
+HUD_SCORE,"PUNTOS: ","SCORE: "
+HUD_SHOP,TIENDA,SHOP
+HUD_EMP,EMP,EMP
+GO_TITLE,GAME OVER,GAME OVER
+GO_SCORE_SENT,¡PUNTUACIÓN ENVIADA!,SCORE SUBMITTED!
+GO_NAME_PLACEHOLDER,TU NOMBRE...,YOUR NAME...
+GO_SUBMIT,ENVIAR,SUBMIT
+GO_RETRY,REINTENTAR,RETRY
+GO_MENU,MENU,MENU
+GO_RANK_LOADING,CALCULANDO POSICIÓN...,CALCULATING RANK...
+GO_PERSONAL_RANK,TU MEJOR: #%d DE %d,YOUR BEST: #%d OF %d
+GO_GLOBAL_RANK,RANKING GLOBAL: #%d,GLOBAL RANK: #%d
+HS_TITLE,PUNTUACIONES,HIGHSCORES
+HS_LOADING,CARGANDO...,LOADING...
+HS_EMPTY,SIN PUNTUACIONES REGISTRADAS,NO SCORES REGISTERED
+HS_ANONYMOUS,ANÓNIMO,ANONYMOUS
+HS_BACK,VOLVER,BACK
+SHOP_TITLE,TIENDA,SHOP
+SHOP_CLOSE,CERRAR,CLOSE
+SHOP_BUY,COMPRAR,BUY
+SETTINGS_TITLE,AJUSTES,SETTINGS
+SETTINGS_LANGUAGE,IDIOMA,LANGUAGE
+SETTINGS_SOUND,SONIDO,SOUND
+SETTINGS_SOUND_ON,ACTIVADO,ON
+SETTINGS_SOUND_OFF,DESACTIVADO,OFF
+SETTINGS_VOLUME,VOLUMEN,VOLUME
+SETTINGS_BACK,VOLVER,BACK
+SETTINGS_RESUME,VOLVER AL JUEGO,BACK TO GAME
+SETTINGS_MAIN_MENU,MENÚ PRINCIPAL,MAIN MENU
+SETTINGS_CLEAR_USER,BORRAR USUARIO,CLEAR USER
+PU_REPAIR_NAME,Reparar ciudad,Repair city
+PU_REPAIR_DESC,Restaura vida a una ciudad dañada,Restores health to a damaged city
+PU_REBUILD_NAME,Reconstruir ciudad,Rebuild city
+PU_REBUILD_DESC,Revive ciudad destruida con HP mínimo,Revives destroyed city with minimum HP
+PU_SHIELD_NAME,Escudo temporal,Temporary shield
+PU_SHIELD_DESC,Escudo en todas las ciudades (1 impacto),Shield on all cities (absorbs 1 hit)
+PU_RADIUS_NAME,Radio explosión+,Explosion radius+
+PU_RADIUS_DESC,Aumenta el radio de explosión (uso único),Increases explosion radius (one-time)
+PU_GATLING_NAME,Modo Gatling,Gatling Mode
+PU_GATLING_DESC,Mantén pulsado para disparar en ráfaga continua (uso único),Hold to fire in continuous burst (one-time)
+PU_EMP_NAME,Bomba EMP,EMP bomb
+PU_EMP_DESC,Destruye todos los misiles en pantalla,Destroys all missiles on screen
+PU_COOLDOWN_NAME,Cadencia+,Rate of fire+
+PU_COOLDOWN_DESC,Reduce el cooldown de disparo permanentemente (máx. 3),Permanently reduces firing cooldown (max. 3)
+PU_TURRET_SPEED_NAME,Velocidad de giro,Rotation speed
+PU_TURRET_SPEED_DESC,Aumenta la velocidad de rotación de la torreta,Increases turret rotation speed permanently

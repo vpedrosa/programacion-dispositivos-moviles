@@ -13,19 +13,15 @@ func _ready() -> void:
 		_font = load(path)
 
 
-## Aplica el tema Fallout a toda la jerarquía de un Control y añade el overlay CRT.
 func apply(root: Control) -> void:
 	style_subtree(root)
 	add_scanline_overlay(root)
 
 
-## Estiliza un nodo y sus descendientes sin añadir el overlay de scanlines.
-## Útil para nodos creados dinámicamente después de llamar a apply().
 func style_subtree(node: Node) -> void:
 	_style_node(node)
 
 
-## Aplica el estilo pixel-art al slider de volumen.
 func style_slider(slider: HSlider) -> void:
 	var track := StyleBoxFlat.new()
 	track.bg_color = Color(0.0, 0.08, 0.02, 1.0)
@@ -54,12 +50,10 @@ func style_slider(slider: HSlider) -> void:
 	slider.add_theme_icon_override("grabber_disabled", grabber)
 
 
-## Añade el overlay CRT de scanlines como hijo de cualquier nodo.
 func add_scanline_overlay(parent: Node) -> void:
 	_add_scanline_overlay_to(parent)
 
 
-## Flash de pantalla con color fósforo que se desvanece.
 func flash_screen(parent: Node, color := Color(0.6, 1.0, 0.7, 0.92), duration := 0.45) -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 50

@@ -1,15 +1,14 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://c4yx60kjbq5sy"]
 
 [ext_resource type="Script" uid="uid://dpwm4e2ow5f8f" path="res://scenes/entities/explosion/explosion.gd" id="1_explosion"]
-[ext_resource type="Texture2D" path="res://assets/sprites/explosion/circle_explosion_sheet.png" id="2_sheet"]
+[ext_resource type="Texture2D" uid="uid://cqn56n60ekslr" path="res://assets/sprites/explosion/circle_explosion_sheet.png" id="2_sheet"]
 
-[node name="Explosion" type="Area2D"]
+[node name="Explosion" type="Area2D" unique_id=2101539687]
 script = ExtResource("1_explosion")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=611834588]
 
-[node name="Visual" type="Sprite2D" parent="."]
+[node name="Visual" type="Sprite2D" parent="." unique_id=881344064]
 modulate = Color(0, 1, 0.25, 1)
 texture = ExtResource("2_sheet")
 hframes = 10
-frame = 0

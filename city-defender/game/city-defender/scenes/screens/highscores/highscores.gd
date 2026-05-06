@@ -1,8 +1,6 @@
 class_name HighscoresScreen
 extends Control
 
-## Score y nombre a resaltar al entrar a la pantalla. Lo setea Game Over antes
-## del cambio de escena. Se consume y resetea en _populate_table.
 static var pending_highlight_score: int = -1
 static var pending_highlight_name: String = ""
 
@@ -80,9 +78,6 @@ func _create_row(pos: int, score: int, player_name: String, date: String) -> HBo
 	return row
 
 
-## Efecto Blink arcade: alterna la opacidad de la fila entre encendido y atenuado.
-## El tween se crea sobre la fila, así que se libera automáticamente con ella al
-## salir de la pantalla.
 func _apply_blink(row: Control) -> void:
 	var tween := row.create_tween()
 	tween.set_loops()

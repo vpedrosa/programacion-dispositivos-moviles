@@ -19,8 +19,6 @@ func _ready() -> void:
 	_init_pools.call_deferred()
 
 
-## Llamado por DifficultyManager.wave_started — encolada por GameScreen.
-## La oleada se dispara en el próximo tick del temporizador de spawn.
 func mark_wave_pending(_wave_number: int) -> void:
 	_wave_pending = true
 

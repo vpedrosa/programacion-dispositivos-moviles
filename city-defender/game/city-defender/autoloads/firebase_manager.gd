@@ -1,9 +1,5 @@
 extends Node
 
-## Gestión de highscores globales con Firebase Firestore.
-## Usa la API REST de Firestore sobre HTTPS.
-## Las credenciales se cargan en runtime desde res://.env (no se commitean).
-
 const _COLLECTION: String = "highscores"
 const TOP_COUNT: int = 10
 
@@ -15,7 +11,7 @@ var _initialized: bool = false
 func _ready() -> void:
 	_load_env()
 	if _project_id.is_empty() or _api_key.is_empty():
-		push_warning("FirebaseManager: credenciales incompletas — las puntuaciones online no funcionarán")
+		push_warning("FirebaseManager: credenciales incompletas, las puntuaciones online no funcionarán")
 	else:
 		_initialized = true
 
@@ -24,8 +20,6 @@ func is_available() -> bool:
 	return _initialized
 
 
-## Devuelve Array[Dictionary] [{score, date}, ...] ordenado por puntuación desc (top 10).
-## Usa el endpoint runQuery para orden fiable sin necesitar un índice compuesto.
 func get_top_scores() -> Array[Dictionary]:
 	if not _initialized:
 		push_warning("FirebaseManager: get_top_scores() llamado sin credenciales")
@@ -41,7 +35,6 @@ func get_top_scores() -> Array[Dictionary]:
 	return _parse_query_scores(response)
 
 
-## Envía una puntuación con nombre de jugador. Solo envía si score > 0 y name no está vacío.
 func submit_score(score: int, player_name: String) -> void:
 	if not _initialized:
 		push_warning("FirebaseManager: submit_score() llamado sin credenciales")
@@ -62,8 +55,6 @@ func submit_score(score: int, player_name: String) -> void:
 	await _post_json(url, body)
 
 
-## Devuelve las puntuaciones del jugador ordenadas descendentemente.
-## Se usa para calcular el ranking personal en cliente.
 func get_player_scores(player_name: String) -> Array[int]:
 	var result: Array[int] = []
 	if not _initialized or player_name.strip_edges().is_empty():
@@ -88,9 +79,6 @@ func get_player_scores(player_name: String) -> Array[int]:
 	return result
 
 
-## Devuelve la posición global de la puntuación (1-indexada).
-## Cuenta cuántas puntuaciones la superan estrictamente y suma 1.
-## Devuelve -1 si no hay credenciales o la query falla.
 func get_global_rank(score: int) -> int:
 	if not _initialized:
 		return -1
@@ -119,8 +107,6 @@ func get_global_rank(score: int) -> int:
 	return greater + 1
 
 
-# ── Internos ───────────────────────────────────────────────────────────────────
-
 func _run_query(body: String) -> PackedByteArray:
 	var url := (
 		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents:runQuery?key=%s"
@@ -129,9 +115,6 @@ func _run_query(body: String) -> PackedByteArray:
 	return await _post_json(url, body)
 
 
-## Lanza una petición POST con su propio HTTPRequest hijo y devuelve el cuerpo
-## de la respuesta. Crear un HTTPRequest por llamada evita que peticiones
-## concurrentes se pisen URL y resultado.
 func _post_json(url: String, body: String) -> PackedByteArray:
 	var http := HTTPRequest.new()
 	add_child(http)
@@ -190,7 +173,7 @@ func _parse_query_scores(body: PackedByteArray) -> Array[Dictionary]:
 func _load_env() -> void:
 	var f := FileAccess.open("res://.env", FileAccess.READ)
 	if f == null:
-		push_error("FirebaseManager: no se encontró res://.env — las puntuaciones online no funcionarán")
+		push_error("FirebaseManager: no se encontró res://.env, las puntuaciones online no funcionarán")
 		return
 	while not f.eof_reached():
 		var line := f.get_line().strip_edges()

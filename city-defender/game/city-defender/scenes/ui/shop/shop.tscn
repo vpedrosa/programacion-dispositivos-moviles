@@ -1,14 +1,13 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://bg8fheqj1sj0x"]
 
-[ext_resource type="Script" path="res://scenes/ui/shop/shop.gd" id="1_shop"]
+[ext_resource type="Script" uid="uid://c4ws316yc0585" path="res://scenes/ui/shop/shop.gd" id="1_shop"]
 
-[node name="Shop" type="CanvasLayer"]
-layer = 10
+[node name="Shop" type="CanvasLayer" unique_id=560140622]
 process_mode = 3
+layer = 10
 script = ExtResource("1_shop")
 
-[node name="Overlay" type="ColorRect" parent="."]
-layout_mode = 3
+[node name="Overlay" type="ColorRect" parent="." unique_id=1496042924]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -17,47 +16,47 @@ grow_vertical = 2
 mouse_filter = 1
 color = Color(0, 0, 0, 0.75)
 
-[node name="Panel" type="Panel" parent="."]
-layout_mode = 3
+[node name="Panel" type="Panel" parent="." unique_id=325736310]
+modulate = Color(0, 0.9, 0.25, 1)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-modulate = Color(0, 0.9, 0.25, 1)
 
-[node name="VBox" type="VBoxContainer" parent="Panel"]
-layout_mode = 3
+[node name="VBox" type="VBoxContainer" parent="Panel" unique_id=908216421]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 200
-offset_top = 30
-offset_right = -200
-offset_bottom = -30
+offset_left = 200.0
+offset_top = 30.0
+offset_right = -200.0
+offset_bottom = -30.0
 theme_override_constants/separation = 16
 
-[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+[node name="TitleLabel" type="Label" parent="Panel/VBox" unique_id=1472550775]
 layout_mode = 2
+theme_override_font_sizes/font_size = 42
 text = "SHOP_TITLE"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 42
 
-[node name="MoneyLabel" type="Label" parent="Panel/VBox"]
+[node name="MoneyLabel" type="Label" parent="Panel/VBox" unique_id=1743487911]
 layout_mode = 2
 text = "$0"
 horizontal_alignment = 1
 
-[node name="CloseButton" type="Button" parent="Panel/VBox"]
-layout_mode = 2
+[node name="CloseButton" type="Button" parent="Panel/VBox" unique_id=663705432]
 custom_minimum_size = Vector2(0, 60)
-text = "SHOP_CLOSE"
+layout_mode = 2
 theme_override_font_sizes/font_size = 32
+text = "SHOP_CLOSE"
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBox"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/VBox" unique_id=1893157156]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PowerupsContainer" type="VBoxContainer" parent="Panel/VBox/ScrollContainer"]
+[node name="PowerupsContainer" type="VBoxContainer" parent="Panel/VBox/ScrollContainer" unique_id=211009277]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 10

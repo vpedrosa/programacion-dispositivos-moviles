@@ -3,7 +3,6 @@ extends Node
 
 signal wave_started(wave_number: int)
 
-## Fases de dificultad según el tiempo transcurrido.
 enum DifficultyPhase { EARLY, MID, LATE }
 
 @export var initial_spawn_interval: float = 2.0

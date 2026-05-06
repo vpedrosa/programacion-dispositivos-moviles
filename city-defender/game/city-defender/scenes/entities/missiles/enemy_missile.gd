@@ -84,7 +84,6 @@ func hit() -> void:
 		_on_hit_survived()
 
 
-## Destruye el misil de un golpe ignorando max_hits. Usado por el EMP.
 func kill() -> void:
 	if not visible:
 		return
@@ -133,8 +132,6 @@ func _on_area_entered(area: Area2D) -> void:
 		call_deferred("deactivate")
 
 
-# ── Efectos visuales ──────────────────────────────────────────────────────────
-
 static func _create_glow_texture() -> ImageTexture:
 	var size := 32
 	var center := size / 2.0
@@ -162,7 +159,7 @@ func _setup_glow() -> void:
 	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 	_glow.material = mat
 	add_child(_glow)
-	move_child(_glow, _visual.get_index())  # justo antes de Visual → detrás
+	move_child(_glow, _visual.get_index())
 
 
 func _setup_smoke() -> void:
@@ -172,7 +169,6 @@ func _setup_smoke() -> void:
 	_smoke.lifetime = 0.65
 	_smoke.explosiveness = 0.0
 	_smoke.randomness = 0.6
-	# Posición desplazada para dejar espacio visual entre el cohete y el humo
 	_smoke.position = SMOKE_OFFSET
 	_smoke.direction = Vector2(0.0, 1.0)
 	_smoke.spread = 35.0
@@ -181,16 +177,13 @@ func _setup_smoke() -> void:
 	_smoke.gravity = Vector2.ZERO
 	_smoke.scale_amount_min = 12.0
 	_smoke.scale_amount_max = 16.0
-	_smoke.color = Color(1.0, 1.0, 1.0, 1.0)  # el ramp controla color y alpha
+	_smoke.color = Color(1.0, 1.0, 1.0, 1.0)
 
-	# Curva exponencial: partículas grandes al nacer (cerca del cohete)
-	# y decaen rápidamente al alejarse
 	var scale_curve := Curve.new()
 	scale_curve.add_point(Vector2(0.0, 1.0), 0.0, -4.0)
 	scale_curve.add_point(Vector2(1.0, 0.0), -0.3, 0.0)
 	_smoke.scale_amount_curve = scale_curve
 
-	# Fade de alpha: opaco al nacer → transparente al morir, usando el color del misil
 	var mc := _visual.modulate
 	var ramp := Gradient.new()
 	ramp.set_color(0, Color(mc.r, mc.g, mc.b, 0.85))
@@ -198,4 +191,4 @@ func _setup_smoke() -> void:
 	_smoke.color_ramp = ramp
 
 	add_child(_smoke)
-	move_child(_smoke, _visual.get_index())  # justo antes de Visual → detrás
+	move_child(_smoke, _visual.get_index())

@@ -41,6 +41,10 @@ shoot={
 ]
 }
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://i18n/translations.es.translation", "res://i18n/translations.en.translation")
+
 [layer_names]
 
 2d_physics/layer_1="cities"

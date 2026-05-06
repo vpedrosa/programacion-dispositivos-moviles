@@ -1,7 +1,3 @@
-## AudioManager — gestión centralizada de SFX y música.
-## Los ficheros van en res://assets/sounds/. Las funciones play_*
-## reciben el nombre sin extensión y _load_sound prueba en orden las
-## extensiones declaradas en EXTENSIONS.
 extends Node
 
 const SFX_DIR := "res://assets/sounds/"
@@ -100,5 +96,5 @@ func _load_sound(sound_name: String) -> AudioStream:
 			var stream: AudioStream = load(path)
 			_sfx_cache[sound_name] = stream
 			return stream
-	_sfx_cache[sound_name] = null  # cache miss so we don't re-check every frame
+	_sfx_cache[sound_name] = null
 	return null

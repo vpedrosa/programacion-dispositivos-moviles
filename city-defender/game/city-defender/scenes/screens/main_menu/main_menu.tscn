@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b36cde08u7vf2"]
 
 [ext_resource type="Script" uid="uid://me1ed443sj8m" path="res://scenes/screens/main_menu/main_menu.gd" id="1_main_menu"]
-[ext_resource type="Texture2D" path="res://assets/logo-font.png" id="2_logo_font"]
+[ext_resource type="Texture2D" uid="uid://ca52nx3tbxtaa" path="res://assets/logo-font.png" id="2_logo_font"]
 
 [node name="root" type="Control" unique_id=873748263]
 layout_mode = 3
@@ -35,11 +35,11 @@ layout_mode = 2
 theme_override_constants/separation = 24
 
 [node name="Title" type="TextureRect" parent="CenterContainer/VBox" unique_id=554607995]
-layout_mode = 2
 custom_minimum_size = Vector2(440, 80)
+layout_mode = 2
 size_flags_horizontal = 3
-expand_mode = 3
 texture = ExtResource("2_logo_font")
+expand_mode = 3
 stretch_mode = 6
 
 [node name="PlayButton" type="Button" parent="CenterContainer/VBox" unique_id=906972929]

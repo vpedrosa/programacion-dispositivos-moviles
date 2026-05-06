@@ -77,9 +77,6 @@ func _show_ranks(player_name: String) -> void:
 		_schedule_auto_highscores()
 
 
-## Programa la transición automática a Highscores. El Timer es hijo de la
-## pantalla, así que se libera (y la transición se cancela) si el jugador
-## pulsa Reintentar/Menu antes de que dispare.
 func _schedule_auto_highscores() -> void:
 	var timer := Timer.new()
 	timer.one_shot = true
@@ -96,8 +93,6 @@ func _go_to_highscores() -> void:
 	get_tree().change_scene_to_file(ScenePaths.HIGHSCORES)
 
 
-## Cuenta cuántas puntuaciones del jugador superan estrictamente a `score` y suma 1.
-## Empata el ranking en caso de scores iguales (ranking competitivo estándar).
 func _compute_personal_rank(scores_desc: Array[int], score: int) -> int:
 	var greater := 0
 	for s in scores_desc:

@@ -1,102 +1,102 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://54w43k22u4v3"]
 
-[ext_resource type="Script" path="res://scenes/ui/settings_panel/settings_panel.gd" id="1_sp"]
+[ext_resource type="Script" uid="uid://eskgtvmkduym" path="res://scenes/ui/settings_panel/settings_panel.gd" id="1_sp"]
 
 [sub_resource type="StyleBoxFlat" id="SepStyle"]
-bg_color = Color(0.0, 0.9, 0.25, 1.0)
 content_margin_top = 1.0
 content_margin_bottom = 1.0
+bg_color = Color(0, 0.9, 0.25, 1)
 
-[node name="SettingsPanel" type="MarginContainer"]
+[node name="SettingsPanel" type="MarginContainer" unique_id=1653597252]
 theme_override_constants/margin_left = 24
-theme_override_constants/margin_right = 24
 theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 20
 script = ExtResource("1_sp")
 
-[node name="VBox" type="VBoxContainer" parent="."]
-layout_mode = 2
+[node name="VBox" type="VBoxContainer" parent="." unique_id=434495244]
 custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="TitleLabel" type="Label" parent="VBox"]
+[node name="TitleLabel" type="Label" parent="VBox" unique_id=244073019]
 layout_mode = 2
 text = "SETTINGS_TITLE"
 horizontal_alignment = 1
 
-[node name="HSep1" type="HSeparator" parent="VBox"]
+[node name="HSep1" type="HSeparator" parent="VBox" unique_id=1003502505]
 layout_mode = 2
 theme_override_styles/separator = SubResource("SepStyle")
 
-[node name="LanguageLabel" type="Label" parent="VBox"]
+[node name="LanguageLabel" type="Label" parent="VBox" unique_id=417571874]
 layout_mode = 2
 text = "SETTINGS_LANGUAGE"
 horizontal_alignment = 1
 
-[node name="LangHBox" type="HBoxContainer" parent="VBox"]
+[node name="LangHBox" type="HBoxContainer" parent="VBox" unique_id=1683930381]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="ESButton" type="Button" parent="VBox/LangHBox"]
+[node name="ESButton" type="Button" parent="VBox/LangHBox" unique_id=910282179]
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 52)
 text = "ESPAÑOL"
 
-[node name="ENButton" type="Button" parent="VBox/LangHBox"]
+[node name="ENButton" type="Button" parent="VBox/LangHBox" unique_id=751905055]
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 52)
 text = "ENGLISH"
 
-[node name="SoundLabel" type="Label" parent="VBox"]
+[node name="SoundLabel" type="Label" parent="VBox" unique_id=2067071982]
 layout_mode = 2
 text = "SETTINGS_SOUND"
 horizontal_alignment = 1
 
-[node name="SoundHBox" type="HBoxContainer" parent="VBox"]
+[node name="SoundHBox" type="HBoxContainer" parent="VBox" unique_id=1855919367]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="SoundOnButton" type="Button" parent="VBox/SoundHBox"]
+[node name="SoundOnButton" type="Button" parent="VBox/SoundHBox" unique_id=889477991]
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 52)
 text = "SETTINGS_SOUND_ON"
 
-[node name="SoundOffButton" type="Button" parent="VBox/SoundHBox"]
+[node name="SoundOffButton" type="Button" parent="VBox/SoundHBox" unique_id=949901530]
+custom_minimum_size = Vector2(0, 52)
 layout_mode = 2
 size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 52)
 text = "SETTINGS_SOUND_OFF"
 
-[node name="VolumeLabel" type="Label" parent="VBox"]
+[node name="VolumeLabel" type="Label" parent="VBox" unique_id=1506892319]
 layout_mode = 2
 text = "SETTINGS_VOLUME"
 horizontal_alignment = 1
 
-[node name="VolumeSlider" type="HSlider" parent="VBox"]
-layout_mode = 2
+[node name="VolumeSlider" type="HSlider" parent="VBox" unique_id=1990977777]
 custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
 max_value = 1.0
 step = 0.05
 value = 1.0
 
-[node name="ClearUserButton" type="Button" parent="VBox"]
-layout_mode = 2
+[node name="ClearUserButton" type="Button" parent="VBox" unique_id=635592300]
+visible = false
 custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
 text = "SETTINGS_CLEAR_USER"
-visible = false
 
-[node name="ResumeButton" type="Button" parent="VBox"]
-layout_mode = 2
+[node name="ResumeButton" type="Button" parent="VBox" unique_id=17844217]
+visible = false
 custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
 text = "SETTINGS_RESUME"
-visible = false
 
-[node name="MainMenuButton" type="Button" parent="VBox"]
-layout_mode = 2
+[node name="MainMenuButton" type="Button" parent="VBox" unique_id=144311355]
 custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
 text = "SETTINGS_MAIN_MENU"
 
 [connection signal="pressed" from="VBox/LangHBox/ESButton" to="." method="_on_es_pressed"]

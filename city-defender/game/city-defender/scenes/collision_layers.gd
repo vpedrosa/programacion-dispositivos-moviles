@@ -1,5 +1,3 @@
-## Constantes de máscaras de colisión que reflejan los layer_names
-## definidos en project.godot. Mantener sincronizado.
 class_name CollisionLayers
 
 const CITIES: int         = 1 << 0

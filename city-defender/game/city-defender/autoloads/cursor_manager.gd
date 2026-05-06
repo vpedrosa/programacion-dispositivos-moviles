@@ -1,5 +1,3 @@
-## CursorManager — cursores personalizados solo en escritorio.
-## Llama a set_menu_cursor() en menús y set_game_cursor() en la escena de juego.
 extends Node
 
 const _CLICKER:   Texture2D = preload("res://assets/sprites/mouse/clicker.png")
@@ -21,5 +19,4 @@ func set_menu_cursor() -> void:
 func set_game_cursor() -> void:
 	if not _desktop:
 		return
-	# Hotspot en el centro del crosshair (16×16 en una textura 32×32)
 	Input.set_custom_mouse_cursor(_CROSSHAIR, Input.CURSOR_ARROW, Vector2(16, 16))

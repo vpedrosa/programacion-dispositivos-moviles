@@ -1,14 +1,14 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://dibojpx43hwye"]
 
-[ext_resource type="Script" path="res://scenes/entities/missiles/enemy_missile_fast.gd" id="1_fast"]
-[ext_resource type="Texture2D" path="res://assets/sprites/missiles/enemy_normal.png" id="2_sprite"]
+[ext_resource type="Script" uid="uid://basn3d87hsc1m" path="res://scenes/entities/missiles/enemy_missile_fast.gd" id="1_fast"]
+[ext_resource type="Texture2D" uid="uid://wo5byf1gg5hc" path="res://assets/sprites/missiles/enemy_normal.png" id="2_sprite"]
 
-[node name="EnemyMissileFast" type="Area2D"]
+[node name="EnemyMissileFast" type="Area2D" unique_id=1903835747]
 script = ExtResource("1_fast")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=238457281]
 
-[node name="Visual" type="Sprite2D" parent="."]
-modulate = Color(0.6, 1.0, 0.3, 1)
+[node name="Visual" type="Sprite2D" parent="." unique_id=1159705803]
+modulate = Color(0.6, 1, 0.3, 1)
 scale = Vector2(0.8, 0.8)
 texture = ExtResource("2_sprite")

@@ -1,10 +1,10 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://b1pl2aoink15a"]
 
 [ext_resource type="Script" uid="uid://bngest3ixtrp7" path="res://scenes/entities/missiles/interceptor_missile.gd" id="1_interceptor"]
 
-[node name="InterceptorMissile" type="Node2D"]
+[node name="InterceptorMissile" type="Node2D" unique_id=1233549725]
 script = ExtResource("1_interceptor")
 
-[node name="Dot" type="Polygon2D" parent="."]
+[node name="Dot" type="Polygon2D" parent="." unique_id=22303286]
+color = Color(0, 1, 0.25, 1)
 polygon = PackedVector2Array(-3, -3, 3, -3, 3, 3, -3, 3)
-color = Color(0.0, 1.0, 0.25, 1)

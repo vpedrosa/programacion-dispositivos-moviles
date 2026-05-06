@@ -1,32 +1,30 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://d8r64byxomp0"]
 
-[ext_resource type="Script" path="res://scenes/ui/in_game_settings/in_game_settings.gd" id="1_script"]
-[ext_resource type="PackedScene" path="res://scenes/ui/settings_panel/settings_panel.tscn" id="2_panel"]
+[ext_resource type="Script" uid="uid://disxvqnu1vgtg" path="res://scenes/ui/in_game_settings/in_game_settings.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://54w43k22u4v3" path="res://scenes/ui/settings_panel/settings_panel.tscn" id="2_panel"]
 
 [sub_resource type="StyleBoxFlat" id="PanelStyle"]
-bg_color = Color(0.02, 0.06, 0.02, 1.0)
-border_color = Color(0.0, 0.9, 0.25, 1.0)
+bg_color = Color(0.02, 0.06, 0.02, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
+border_color = Color(0, 0.9, 0.25, 1)
 
-[node name="InGameSettings" type="CanvasLayer"]
-layer = 15
+[node name="InGameSettings" type="CanvasLayer" unique_id=281162536]
 process_mode = 3
+layer = 15
 script = ExtResource("1_script")
 
-[node name="Overlay" type="ColorRect" parent="."]
-layout_mode = 3
+[node name="Overlay" type="ColorRect" parent="." unique_id=44014238]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 0
 color = Color(0, 0, 0, 0.75)
 
-[node name="CenterContainer" type="CenterContainer" parent="Overlay"]
+[node name="CenterContainer" type="CenterContainer" parent="Overlay" unique_id=113106273]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,12 +32,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Overlay/CenterContainer"]
+[node name="Panel" type="PanelContainer" parent="Overlay/CenterContainer" unique_id=2136559688]
 layout_mode = 2
 theme_override_styles/panel = SubResource("PanelStyle")
 
-[node name="SettingsPanel" parent="Overlay/CenterContainer/Panel" instance=ExtResource("2_panel")]
+[node name="SettingsPanel" parent="Overlay/CenterContainer/Panel" unique_id=153247115 instance=ExtResource("2_panel")]
+layout_mode = 2
 show_resume_button = true
 
-[connection signal="resume_pressed" from="Overlay/CenterContainer/Panel/SettingsPanel" to="." method="_on_resume_pressed"]
 [connection signal="main_menu_pressed" from="Overlay/CenterContainer/Panel/SettingsPanel" to="." method="_on_main_menu_pressed"]
+[connection signal="resume_pressed" from="Overlay/CenterContainer/Panel/SettingsPanel" to="." method="_on_resume_pressed"]

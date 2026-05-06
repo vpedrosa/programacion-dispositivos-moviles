@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://cadndouolrvq0"]
 
-[ext_resource type="Script" path="res://scenes/screens/game_over/game_over.gd" id="1_go"]
+[ext_resource type="Script" uid="uid://bxpaf3ifdp7uc" path="res://scenes/screens/game_over/game_over.gd" id="1_go"]
 
-[node name="GameOver" type="Control"]
+[node name="GameOver" type="Control" unique_id=1569487157]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_go")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=99988671]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.02, 0.06, 0.02, 1)
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=81045389]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,69 +28,67 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBox" type="VBoxContainer" parent="CenterContainer"]
-layout_mode = 2
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=1137467354]
 custom_minimum_size = Vector2(440, 0)
+layout_mode = 2
 theme_override_constants/separation = 28
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="TitleLabel" type="Label" parent="CenterContainer/VBox" unique_id=1880731332]
 layout_mode = 2
 text = "GO_TITLE"
 horizontal_alignment = 1
 
-[node name="ScoreLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="ScoreLabel" type="Label" parent="CenterContainer/VBox" unique_id=1669609226]
 layout_mode = 2
 text = "0"
 horizontal_alignment = 1
 
-[node name="NameInput" type="LineEdit" parent="CenterContainer/VBox"]
-layout_mode = 2
+[node name="NameInput" type="LineEdit" parent="CenterContainer/VBox" unique_id=962207263]
 custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
 placeholder_text = "GO_NAME_PLACEHOLDER"
 
-[node name="SubmitButton" type="Button" parent="CenterContainer/VBox"]
-layout_mode = 2
+[node name="SubmitButton" type="Button" parent="CenterContainer/VBox" unique_id=956105978]
 custom_minimum_size = Vector2(0, 64)
-text = "GO_SUBMIT"
+layout_mode = 2
 disabled = true
+text = "GO_SUBMIT"
 
-[node name="SentLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="SentLabel" type="Label" parent="CenterContainer/VBox" unique_id=424224200]
+visible = false
 layout_mode = 2
 text = "GO_SCORE_SENT"
 horizontal_alignment = 1
-visible = false
 
-[node name="RankLoadingLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="RankLoadingLabel" type="Label" parent="CenterContainer/VBox" unique_id=1646841041]
+visible = false
 layout_mode = 2
 text = "GO_RANK_LOADING"
 horizontal_alignment = 1
-visible = false
 
-[node name="PersonalRankLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="PersonalRankLabel" type="Label" parent="CenterContainer/VBox" unique_id=1661350858]
+visible = false
 layout_mode = 2
-text = ""
 horizontal_alignment = 1
-visible = false
 
-[node name="GlobalRankLabel" type="Label" parent="CenterContainer/VBox"]
+[node name="GlobalRankLabel" type="Label" parent="CenterContainer/VBox" unique_id=1405942592]
+visible = false
 layout_mode = 2
-text = ""
 horizontal_alignment = 1
-visible = false
 
-[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox"]
-layout_mode = 2
+[node name="HighscoresButton" type="Button" parent="CenterContainer/VBox" unique_id=1351672587]
 custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
 text = "MENU_HIGHSCORES"
 
-[node name="RetryButton" type="Button" parent="CenterContainer/VBox"]
-layout_mode = 2
+[node name="RetryButton" type="Button" parent="CenterContainer/VBox" unique_id=958948155]
 custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
 text = "GO_RETRY"
 
-[node name="MenuButton" type="Button" parent="CenterContainer/VBox"]
-layout_mode = 2
+[node name="MenuButton" type="Button" parent="CenterContainer/VBox" unique_id=2048682904]
 custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
 text = "GO_MENU"
 
 [connection signal="text_changed" from="CenterContainer/VBox/NameInput" to="." method="_on_name_changed"]
