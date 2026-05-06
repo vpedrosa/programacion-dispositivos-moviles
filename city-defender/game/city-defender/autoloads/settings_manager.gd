@@ -112,6 +112,9 @@ func _register_translations() -> void:
 		"GO_SUBMIT":           "ENVIAR",
 		"GO_RETRY":            "REINTENTAR",
 		"GO_MENU":             "MENU",
+		"GO_RANK_LOADING":     "CALCULANDO POSICIÓN...",
+		"GO_PERSONAL_RANK":    "TU MEJOR: #%d DE %d",
+		"GO_GLOBAL_RANK":      "RANKING GLOBAL: #%d",
 		# Highscores
 		"HS_TITLE":         "PUNTUACIONES",
 		"HS_LOADING":       "CARGANDO...",
@@ -168,6 +171,9 @@ func _register_translations() -> void:
 		"GO_SUBMIT":           "SUBMIT",
 		"GO_RETRY":            "RETRY",
 		"GO_MENU":             "MENU",
+		"GO_RANK_LOADING":     "CALCULATING RANK...",
+		"GO_PERSONAL_RANK":    "YOUR BEST: #%d OF %d",
+		"GO_GLOBAL_RANK":      "GLOBAL RANK: #%d",
 		# Highscores
 		"HS_TITLE":         "HIGHSCORES",
 		"HS_LOADING":       "LOADING...",

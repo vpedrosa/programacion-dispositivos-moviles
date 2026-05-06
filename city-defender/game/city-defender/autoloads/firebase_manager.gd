@@ -1,6 +1,6 @@
 extends Node
 
-## Gestión de highscores globales anónimas con Firebase Firestore.
+## Gestión de highscores globales con Firebase Firestore.
 ## Usa la API REST de Firestore sobre HTTPS.
 ## Las credenciales se cargan en runtime desde res://.env (no se commitean).
 
@@ -23,16 +23,16 @@ func _ready() -> void:
 	add_child(_http)
 
 
+func is_available() -> bool:
+	return _initialized
+
+
 ## Devuelve Array[Dictionary] [{score, date}, ...] ordenado por puntuación desc (top 10).
 ## Usa el endpoint runQuery para orden fiable sin necesitar un índice compuesto.
 func get_top_scores() -> Array[Dictionary]:
 	if not _initialized:
 		push_warning("FirebaseManager: get_top_scores() llamado sin credenciales")
 		return []
-	var url := (
-		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents:runQuery?key=%s"
-		% [_project_id, _api_key]
-	)
 	var body := JSON.stringify({
 		"structuredQuery": {
 			"from": [{"collectionId": _COLLECTION}],
@@ -40,9 +40,8 @@ func get_top_scores() -> Array[Dictionary]:
 			"limit": _TOP_COUNT
 		}
 	})
-	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
-	var result = await _http.request_completed
-	return _parse_query_scores(result[3])
+	var response := await _run_query(body)
+	return _parse_query_scores(response)
 
 
 ## Envía una puntuación con nombre de jugador. Solo envía si score > 0 y name no está vacío.
@@ -65,6 +64,95 @@ func submit_score(score: int, player_name: String) -> void:
 	})
 	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
 	await _http.request_completed
+
+
+## Devuelve las puntuaciones del jugador ordenadas descendentemente.
+## Se usa para calcular el ranking personal en cliente.
+func get_player_scores(player_name: String) -> Array[int]:
+	var result: Array[int] = []
+	if not _initialized or player_name.strip_edges().is_empty():
+		return result
+	var body := JSON.stringify({
+		"structuredQuery": {
+			"from": [{"collectionId": _COLLECTION}],
+			"where": {
+				"fieldFilter": {
+					"field": {"fieldPath": "name"},
+					"op": "EQUAL",
+					"value": {"stringValue": player_name.strip_edges()}
+				}
+			},
+			"orderBy": [{"field": {"fieldPath": "score"}, "direction": "DESCENDING"}]
+		}
+	})
+	var response := await _run_query(body)
+	var parsed := _parse_query_scores(response)
+	for entry in parsed:
+		result.append(int(entry.get("score", 0)))
+	return result
+
+
+## Devuelve la posición global de la puntuación (1-indexada).
+## Cuenta cuántas puntuaciones la superan estrictamente y suma 1.
+## Devuelve -1 si no hay credenciales o la query falla.
+func get_global_rank(score: int) -> int:
+	if not _initialized:
+		return -1
+	var url := (
+		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents:runAggregationQuery?key=%s"
+		% [_project_id, _api_key]
+	)
+	var body := JSON.stringify({
+		"structuredAggregationQuery": {
+			"structuredQuery": {
+				"from": [{"collectionId": _COLLECTION}],
+				"where": {
+					"fieldFilter": {
+						"field": {"fieldPath": "score"},
+						"op": "GREATER_THAN",
+						"value": {"integerValue": str(score)}
+					}
+				}
+			},
+			"aggregations": [{"alias": "n", "count": {}}]
+		}
+	})
+	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
+	var result = await _http.request_completed
+	var greater := _parse_count(result[3])
+	if greater < 0:
+		return -1
+	return greater + 1
+
+
+# ── Internos ───────────────────────────────────────────────────────────────────
+
+func _run_query(body: String) -> PackedByteArray:
+	var url := (
+		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents:runQuery?key=%s"
+		% [_project_id, _api_key]
+	)
+	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
+	var result = await _http.request_completed
+	return result[3]
+
+
+func _parse_count(body: PackedByteArray) -> int:
+	var text := body.get_string_from_utf8()
+	var json = JSON.parse_string(text)
+	if not json is Array:
+		return -1
+	for entry in (json as Array):
+		if not entry is Dictionary:
+			continue
+		var res = (entry as Dictionary).get("result", null)
+		if not res is Dictionary:
+			continue
+		var fields: Dictionary = (res as Dictionary).get("aggregateFields", {})
+		var n = fields.get("n", null)
+		if n is Dictionary:
+			return int((n as Dictionary).get("integerValue", "0"))
+	return -1
 
 
 func _parse_query_scores(body: PackedByteArray) -> Array[Dictionary]:
