@@ -36,9 +36,13 @@ script = ExtResource("3_spawner")
 normal_missile_scene = ExtResource("7_enemy_missile")
 fast_missile_scene = ExtResource("8_fast_missile")
 heavy_missile_scene = ExtResource("9_heavy_missile")
+difficulty_manager = NodePath("../DifficultyManager")
+missile_parent = NodePath("..")
 
 [node name="PowerupManager" type="Node" parent="." unique_id=1982924063]
 script = ExtResource("4_powerup")
+defense_base = NodePath("../DefenseBase")
+hud = NodePath("../HUD")
 
 [node name="DefenseBase" parent="." unique_id=148520218 instance=ExtResource("5_base_scene")]
 position = Vector2(640, 660)

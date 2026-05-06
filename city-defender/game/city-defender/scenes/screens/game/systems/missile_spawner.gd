@@ -9,6 +9,7 @@ const POOL_MAX_SIZE: int = 30
 @export var heavy_missile_scene: PackedScene
 
 @export var difficulty_manager: DifficultyManager
+@export var missile_parent: Node
 @export var wave_size: int = 5
 
 var _spawn_timer: float = 0.0
@@ -87,7 +88,8 @@ func _add_to_pool(scene: PackedScene) -> EnemyMissile:
 	var missile: EnemyMissile = scene.instantiate()
 	missile.visible = false
 	missile.set_process(false)
-	get_parent().add_child(missile)
+	var parent: Node = missile_parent if missile_parent != null else get_parent()
+	parent.add_child(missile)
 	missile.deactivate()
 	if not _pools.has(scene):
 		_pools[scene] = []
