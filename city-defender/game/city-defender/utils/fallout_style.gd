@@ -1,28 +1,26 @@
-extends Node
+class_name FalloutStyle
+extends RefCounted
 
 const PHOSPHOR := Color(0.0, 1.0, 0.25, 1)
 const PHOSPHOR_BRIGHT := Color(0.4, 1.0, 0.55, 1)
 const PHOSPHOR_DIM := Color(0.0, 0.7, 0.18, 1)
 
-var _font: FontFile = null
+const _FONT_PATH := "res://assets/fonts/Inconsolata-Regular.ttf"
+
+static var _font: FontFile = null
+static var _font_loaded: bool = false
 
 
-func _ready() -> void:
-	var path := "res://assets/fonts/Inconsolata-Regular.ttf"
-	if ResourceLoader.exists(path):
-		_font = load(path)
-
-
-func apply(root: Control) -> void:
+static func apply(root: Control) -> void:
 	style_subtree(root)
 	add_scanline_overlay(root)
 
 
-func style_subtree(node: Node) -> void:
+static func style_subtree(node: Node) -> void:
 	_style_node(node)
 
 
-func style_slider(slider: HSlider) -> void:
+static func style_slider(slider: HSlider) -> void:
 	var track := StyleBoxFlat.new()
 	track.bg_color = Color(0.0, 0.08, 0.02, 1.0)
 	track.border_color = Color(0.0, 0.9, 0.25, 1.0)
@@ -50,11 +48,21 @@ func style_slider(slider: HSlider) -> void:
 	slider.add_theme_icon_override("grabber_disabled", grabber)
 
 
-func add_scanline_overlay(parent: Node) -> void:
-	_add_scanline_overlay_to(parent)
+static func add_scanline_overlay(parent: Node) -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 10
+	parent.add_child(layer)
+	var rect := ColorRect.new()
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	rect.color = Color(0, 0, 0, 0)
+	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var mat := ShaderMaterial.new()
+	mat.shader = load("res://assets/shaders/scanlines.gdshader")
+	rect.material = mat
+	layer.add_child(rect)
 
 
-func flash_screen(parent: Node, color := Color(0.6, 1.0, 0.7, 0.92), duration := 0.45) -> void:
+static func flash_screen(parent: Node, color := Color(0.6, 1.0, 0.7, 0.92), duration := 0.45) -> void:
 	var layer := CanvasLayer.new()
 	layer.layer = 50
 	parent.add_child(layer)
@@ -68,7 +76,15 @@ func flash_screen(parent: Node, color := Color(0.6, 1.0, 0.7, 0.92), duration :=
 	tween.tween_callback(layer.queue_free)
 
 
-func _style_node(node: Node) -> void:
+static func _get_font() -> FontFile:
+	if not _font_loaded:
+		_font_loaded = true
+		if ResourceLoader.exists(_FONT_PATH):
+			_font = load(_FONT_PATH)
+	return _font
+
+
+static func _style_node(node: Node) -> void:
 	if node is Button:
 		_style_button(node)
 	elif node is Label:
@@ -81,21 +97,23 @@ func _style_node(node: Node) -> void:
 		_style_node(child)
 
 
-func _style_label(label: Label) -> void:
+static func _style_label(label: Label) -> void:
 	label.add_theme_color_override("font_color", PHOSPHOR)
 	label.add_theme_font_size_override("font_size", 32)
 	label.uppercase = true
-	if _font:
-		label.add_theme_font_override("font", _font)
+	var font := _get_font()
+	if font:
+		label.add_theme_font_override("font", font)
 
 
-func _style_button(btn: Button) -> void:
+static func _style_button(btn: Button) -> void:
 	btn.add_theme_color_override("font_color", PHOSPHOR)
 	btn.add_theme_color_override("font_hover_color", PHOSPHOR_BRIGHT)
 	btn.add_theme_color_override("font_pressed_color", PHOSPHOR_DIM)
 	btn.add_theme_font_size_override("font_size", 30)
-	if _font:
-		btn.add_theme_font_override("font", _font)
+	var font := _get_font()
+	if font:
+		btn.add_theme_font_override("font", font)
 
 	if not btn.has_meta("_sfx_connected"):
 		btn.set_meta("_sfx_connected", true)
@@ -126,13 +144,14 @@ func _style_button(btn: Button) -> void:
 	btn.add_theme_stylebox_override("pressed", pressed)
 
 
-func _style_line_edit(le: LineEdit) -> void:
+static func _style_line_edit(le: LineEdit) -> void:
 	le.add_theme_color_override("font_color", PHOSPHOR)
 	le.add_theme_color_override("font_placeholder_color", PHOSPHOR_DIM)
 	le.add_theme_color_override("caret_color", PHOSPHOR_BRIGHT)
 	le.add_theme_font_size_override("font_size", 22)
-	if _font:
-		le.add_theme_font_override("font", _font)
+	var font := _get_font()
+	if font:
+		le.add_theme_font_override("font", font)
 
 	var normal := StyleBoxFlat.new()
 	normal.bg_color = Color(0.0, 0.05, 0.01, 1)
@@ -143,7 +162,7 @@ func _style_line_edit(le: LineEdit) -> void:
 	le.add_theme_stylebox_override("normal", normal)
 
 
-func _style_progress_bar(bar: ProgressBar) -> void:
+static func _style_progress_bar(bar: ProgressBar) -> void:
 	var fill := StyleBoxFlat.new()
 	fill.bg_color = PHOSPHOR
 	bar.add_theme_stylebox_override("fill", fill)
@@ -153,17 +172,3 @@ func _style_progress_bar(bar: ProgressBar) -> void:
 	bg.set_border_width_all(1)
 	bar.add_theme_stylebox_override("background", bg)
 	bar.add_theme_color_override("font_color", PHOSPHOR)
-
-
-func _add_scanline_overlay_to(parent: Node) -> void:
-	var layer := CanvasLayer.new()
-	layer.layer = 10
-	parent.add_child(layer)
-	var rect := ColorRect.new()
-	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rect.color = Color(0, 0, 0, 0)
-	rect.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var mat := ShaderMaterial.new()
-	mat.shader = load("res://assets/shaders/scanlines.gdshader")
-	rect.material = mat
-	layer.add_child(rect)
