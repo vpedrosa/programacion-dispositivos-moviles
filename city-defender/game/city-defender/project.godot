@@ -23,6 +23,10 @@ PlayerProfile="*res://autoloads/player_profile.gd"
 FirebaseManager="*res://autoloads/firebase_manager.gd"
 AudioManager="*res://autoloads/audio_manager.gd"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
+
 [display]
 
 window/size/viewport_width=1280

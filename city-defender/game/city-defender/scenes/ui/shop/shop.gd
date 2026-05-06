@@ -82,10 +82,13 @@ func _refresh_buttons() -> void:
 	for data: PowerupData in _powerups:
 		var btn: Button = (_rows[data.id] as ShopItemRow).buy_btn
 		var count: int = _purchased_count.get(data.id, 0)
-		if data.max_purchases > 0 and count >= data.max_purchases:
-			btn.disabled = true
-		else:
-			btn.disabled = money < data.cost
+		btn.disabled = is_buy_disabled(data, count, money)
+
+
+static func is_buy_disabled(data: PowerupData, purchased_count: int, money: int) -> bool:
+	if data.max_purchases > 0 and purchased_count >= data.max_purchases:
+		return true
+	return money < data.cost
 
 
 func _on_money_changed(_new_money: int) -> void:

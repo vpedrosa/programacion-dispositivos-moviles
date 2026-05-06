@@ -104,7 +104,7 @@ func _go_to_highscores() -> void:
 	get_tree().change_scene_to_file(ScenePaths.HIGHSCORES)
 
 
-func _compute_personal_rank(scores_desc: Array[int], score: int) -> int:
+static func _compute_personal_rank(scores_desc: Array[int], score: int) -> int:
 	var greater := 0
 	for s in scores_desc:
 		if s > score:
