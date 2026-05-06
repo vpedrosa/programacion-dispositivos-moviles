@@ -13,6 +13,7 @@ enum DifficultyPhase { EARLY, MID, LATE }
 @export var fast_missile_unlock_time: float = 30.0
 @export var heavy_missile_unlock_time: float = 90.0
 @export var wave_interval: float = 20.0
+@export var ramp_time: float = 120.0
 
 var elapsed_time: float = 0.0
 var spawn_interval: float
@@ -38,7 +39,7 @@ func _process(delta: float) -> void:
 
 
 func _update_difficulty() -> void:
-	var t := clampf(elapsed_time / 120.0, 0.0, 1.0)
+	var t := clampf(elapsed_time / ramp_time, 0.0, 1.0)
 	spawn_interval = lerpf(initial_spawn_interval, min_spawn_interval, t)
 	missile_speed = lerpf(initial_speed, max_speed, t)
 

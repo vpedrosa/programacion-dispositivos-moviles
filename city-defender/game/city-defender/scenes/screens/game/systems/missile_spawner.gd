@@ -8,6 +8,7 @@ const POOL_INITIAL_SIZE: int = 15
 @export var heavy_missile_scene: PackedScene
 
 @export var difficulty_manager: DifficultyManager
+@export var wave_size: int = 5
 
 var _spawn_timer: float = 0.0
 var _pools: Dictionary = {}
@@ -60,7 +61,7 @@ func _spawn_missile() -> void:
 
 
 func _spawn_wave() -> void:
-	for _i in range(5):
+	for _i in range(wave_size):
 		_spawn_missile()
 
 
