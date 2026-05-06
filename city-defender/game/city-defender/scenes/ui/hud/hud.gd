@@ -5,8 +5,9 @@ signal shop_requested
 signal emp_activated
 signal settings_requested
 
-@export var game_screen: GameScreen
+@export var game_screen_path: NodePath
 
+@onready var game_screen: GameScreen = get_node_or_null(game_screen_path) as GameScreen
 @onready var score_label: Label = $MarginContainer/HBox/ScoreLabel
 @onready var money_label: Label = $MarginContainer/HBox/MoneyLabel
 @onready var cooldown_bar: ProgressBar = $MarginContainer/HBox/CooldownBar

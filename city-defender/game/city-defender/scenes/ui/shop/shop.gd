@@ -5,8 +5,9 @@ signal opened
 signal closed
 signal powerup_purchased(powerup_id: int)
 
-@export var game_screen: GameScreen
+@export var game_screen_path: NodePath
 
+@onready var game_screen: GameScreen = get_node_or_null(game_screen_path) as GameScreen
 @onready var title_label: Label = $Panel/VBox/TitleLabel
 @onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 

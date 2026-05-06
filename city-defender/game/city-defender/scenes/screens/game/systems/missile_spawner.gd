@@ -10,9 +10,12 @@ const POOL_MAX_SIZE: int = 30
 @export var fast_missile_scene: PackedScene
 @export var heavy_missile_scene: PackedScene
 
-@export var difficulty_manager: DifficultyManager
-@export var missile_parent: Node
+@export var difficulty_manager_path: NodePath
+@export var missile_parent_path: NodePath
 @export var wave_size: int = 5
+
+@onready var difficulty_manager: DifficultyManager = get_node_or_null(difficulty_manager_path) as DifficultyManager
+@onready var missile_parent: Node = get_node_or_null(missile_parent_path)
 
 var _spawn_timer: float = 0.0
 var _pools: Dictionary = {}

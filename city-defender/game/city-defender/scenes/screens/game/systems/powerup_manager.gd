@@ -5,8 +5,11 @@ const RADIUS_BONUS: float = 30.0
 const COOLDOWN_REDUCTION: float = 0.1
 const ROTATION_SPEED_BONUS: float = 1.5
 
-@export var defense_base: DefenseBase
-@export var hud: HUD
+@export var defense_base_path: NodePath
+@export var hud_path: NodePath
+
+@onready var defense_base: DefenseBase = get_node_or_null(defense_base_path) as DefenseBase
+@onready var hud: HUD = get_node_or_null(hud_path) as HUD
 
 
 func apply_powerup(powerup_id: int, cities: Array[City]) -> void:
