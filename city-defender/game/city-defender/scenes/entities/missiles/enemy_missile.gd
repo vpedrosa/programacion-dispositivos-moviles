@@ -86,6 +86,14 @@ func hit() -> void:
 		_on_hit_survived()
 
 
+## Destruye el misil de un golpe ignorando max_hits. Usado por el EMP.
+func kill() -> void:
+	if not visible:
+		return
+	_hits = max_hits
+	_on_destroyed()
+
+
 func _on_hit_survived() -> void:
 	modulate = Color(1.0, 0.6, 0.4)
 

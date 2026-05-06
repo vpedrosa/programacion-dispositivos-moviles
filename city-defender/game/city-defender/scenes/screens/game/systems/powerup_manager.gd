@@ -60,8 +60,7 @@ func _activate_emp() -> void:
 	AudioManager.play_zap("zap")
 	FalloutStyle.flash_screen(get_parent())
 	for missile: EnemyMissile in get_tree().get_nodes_in_group("enemy_missiles"):
-		missile.hit()
-		missile.hit()
+		missile.kill()
 	if hud:
 		hud.set_emp_available(false)
 
