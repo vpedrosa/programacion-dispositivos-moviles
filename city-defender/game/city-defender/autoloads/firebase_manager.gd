@@ -9,7 +9,6 @@ const TOP_COUNT: int = 10
 
 var _project_id: String = ""
 var _api_key: String = ""
-var _http: HTTPRequest
 var _initialized: bool = false
 
 
@@ -19,8 +18,6 @@ func _ready() -> void:
 		push_warning("FirebaseManager: credenciales incompletas — las puntuaciones online no funcionarán")
 	else:
 		_initialized = true
-	_http = HTTPRequest.new()
-	add_child(_http)
 
 
 func is_available() -> bool:
@@ -62,8 +59,7 @@ func submit_score(score: int, player_name: String) -> void:
 			"timestamp": {"integerValue": str(int(Time.get_unix_time_from_system()))}
 		}
 	})
-	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
-	await _http.request_completed
+	await _post_json(url, body)
 
 
 ## Devuelve las puntuaciones del jugador ordenadas descendentemente.
@@ -117,9 +113,7 @@ func get_global_rank(score: int) -> int:
 			"aggregations": [{"alias": "n", "count": {}}]
 		}
 	})
-	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
-	var result = await _http.request_completed
-	var greater := _parse_count(result[3])
+	var greater := _parse_count(await _post_json(url, body))
 	if greater < 0:
 		return -1
 	return greater + 1
@@ -132,8 +126,18 @@ func _run_query(body: String) -> PackedByteArray:
 		"https://firestore.googleapis.com/v1/projects/%s/databases/(default)/documents:runQuery?key=%s"
 		% [_project_id, _api_key]
 	)
-	_http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
-	var result = await _http.request_completed
+	return await _post_json(url, body)
+
+
+## Lanza una petición POST con su propio HTTPRequest hijo y devuelve el cuerpo
+## de la respuesta. Crear un HTTPRequest por llamada evita que peticiones
+## concurrentes se pisen URL y resultado.
+func _post_json(url: String, body: String) -> PackedByteArray:
+	var http := HTTPRequest.new()
+	add_child(http)
+	http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
+	var result = await http.request_completed
+	http.queue_free()
 	return result[3]
 
 
