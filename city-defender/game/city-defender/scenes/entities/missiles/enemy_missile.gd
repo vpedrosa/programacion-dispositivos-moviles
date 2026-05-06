@@ -104,7 +104,12 @@ func _update_rotation() -> void:
 
 func _check_out_of_bounds() -> void:
 	var viewport_size := get_viewport_rect().size
-	if global_position.y > viewport_size.y + OUT_OF_BOUNDS_MARGIN:
+	if (
+		global_position.y > viewport_size.y + OUT_OF_BOUNDS_MARGIN
+		or global_position.y < -OUT_OF_BOUNDS_MARGIN
+		or global_position.x < -OUT_OF_BOUNDS_MARGIN
+		or global_position.x > viewport_size.x + OUT_OF_BOUNDS_MARGIN
+	):
 		deactivate()
 
 
