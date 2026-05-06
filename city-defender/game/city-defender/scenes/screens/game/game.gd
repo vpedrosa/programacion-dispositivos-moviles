@@ -47,6 +47,7 @@ func _ready() -> void:
 		in_game_settings.opened.connect(_on_overlay_opened)
 		in_game_settings.closed.connect(_on_overlay_closed)
 	difficulty_manager.wave_started.connect(_on_wave_started)
+	difficulty_manager.wave_started.connect(missile_spawner.mark_wave_pending)
 
 
 func _process(_delta: float) -> void:

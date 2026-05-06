@@ -11,10 +11,17 @@ const POOL_INITIAL_SIZE: int = 15
 
 var _spawn_timer: float = 0.0
 var _pools: Dictionary = {}
+var _wave_pending: bool = false
 
 
 func _ready() -> void:
 	_init_pools.call_deferred()
+
+
+## Llamado por DifficultyManager.wave_started — encolada por GameScreen.
+## La oleada se dispara en el próximo tick del temporizador de spawn.
+func mark_wave_pending(_wave_number: int) -> void:
+	_wave_pending = true
 
 
 func _init_pools() -> void:
@@ -32,7 +39,8 @@ func _process(delta: float) -> void:
 	_spawn_timer += delta
 	if _spawn_timer >= difficulty_manager.spawn_interval:
 		_spawn_timer = 0.0
-		if difficulty_manager.is_wave_time():
+		if _wave_pending:
+			_wave_pending = false
 			_spawn_wave()
 		else:
 			_spawn_missile()

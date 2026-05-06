@@ -75,10 +75,3 @@ func reset() -> void:
 	_phase = DifficultyPhase.EARLY
 	spawn_interval = initial_spawn_interval
 	missile_speed = initial_speed
-
-
-func is_wave_time() -> bool:
-	if elapsed_time < wave_interval:
-		return false
-	var prev := elapsed_time - get_process_delta_time()
-	return int(prev / wave_interval) < int(elapsed_time / wave_interval)
