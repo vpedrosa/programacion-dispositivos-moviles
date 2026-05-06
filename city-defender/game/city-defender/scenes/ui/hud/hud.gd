@@ -10,6 +10,7 @@ signal settings_requested
 @onready var cooldown_bar: ProgressBar = $MarginContainer/HBox/CooldownBar
 @onready var emp_button: Button = $MarginContainer/HBox/EMPButton
 var city_bars: Array[ProgressBar] = []
+var _emp_available: bool = false
 
 
 func _ready() -> void:
@@ -39,11 +40,12 @@ func update_city_health(city_index: int, health: int, max_health: int) -> void:
 
 
 func set_emp_available(available: bool) -> void:
+	_emp_available = available
 	emp_button.visible = available
 
 
 func is_emp_available() -> bool:
-	return emp_button.visible
+	return _emp_available
 
 
 func _on_shop_button_pressed() -> void:
