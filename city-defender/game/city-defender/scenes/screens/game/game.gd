@@ -69,7 +69,7 @@ func _input(event: InputEvent) -> void:
 		defense_base.shoot_at(pos)
 	elif event.is_action_released("shoot"):
 		defense_base.release()
-	if OS.has_feature("pc") and event is InputEventKey and event.pressed and not event.echo:
+	if OS.has_feature("desktop") and event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_B:
 				_on_shop_requested()
