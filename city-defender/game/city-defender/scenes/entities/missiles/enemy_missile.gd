@@ -8,6 +8,7 @@ const GLOW_OFFSET := Vector2(0.0, 14.0)
 const SMOKE_OFFSET := Vector2(0.0, 22.0)
 
 static var _GLOW_TEX: ImageTexture = null
+static var _GLOW_MATERIAL: CanvasItemMaterial = null
 static var _SMOKE_SCALE_CURVE: Curve = null
 static var _SMOKE_GRADIENT: Gradient = null
 
@@ -151,6 +152,9 @@ static func _create_glow_texture() -> ImageTexture:
 func _setup_glow() -> void:
 	if _GLOW_TEX == null:
 		_GLOW_TEX = _create_glow_texture()
+	if _GLOW_MATERIAL == null:
+		_GLOW_MATERIAL = CanvasItemMaterial.new()
+		_GLOW_MATERIAL.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
 
 	_flicker_phase = randf() * TAU
 	_glow = Sprite2D.new()
@@ -158,9 +162,7 @@ func _setup_glow() -> void:
 	_glow.position = GLOW_OFFSET
 	_glow.scale = Vector2(0.55, 0.55)
 	_glow.modulate = Color(_visual.modulate.r, _visual.modulate.g, _visual.modulate.b, 0.9)
-	var mat := CanvasItemMaterial.new()
-	mat.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-	_glow.material = mat
+	_glow.material = _GLOW_MATERIAL
 	add_child(_glow)
 	move_child(_glow, _visual.get_index())
 
