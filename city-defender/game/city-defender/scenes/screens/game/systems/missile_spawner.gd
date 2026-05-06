@@ -14,6 +14,11 @@ const POOL_MAX_SIZE: int = 30
 var _spawn_timer: float = 0.0
 var _pools: Dictionary = {}
 var _wave_pending: bool = false
+var _cities: Array[City] = []
+
+
+func set_cities(cities: Array[City]) -> void:
+	_cities = cities
 
 
 func _ready() -> void:
@@ -99,7 +104,7 @@ func _scene_for_type(type: int) -> PackedScene:
 
 func _get_random_alive_city() -> City:
 	var alive: Array[City] = []
-	for c: City in get_tree().get_nodes_in_group("cities"):
+	for c: City in _cities:
 		if c.is_alive:
 			alive.append(c)
 	if alive.is_empty():
