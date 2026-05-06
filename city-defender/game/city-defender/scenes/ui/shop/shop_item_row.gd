@@ -3,7 +3,7 @@ extends PanelContainer
 
 signal buy_pressed
 
-const BORDER_COLOR := Color(0.0, 0.9, 0.25, 1.0)
+const BORDER_COLOR := FalloutStyle.PHOSPHOR
 const BG_COLOR := Color(0.0, 0.04, 0.01, 1.0)
 
 var name_label: Label

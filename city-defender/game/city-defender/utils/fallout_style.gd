@@ -23,14 +23,14 @@ static func style_subtree(node: Node) -> void:
 static func style_slider(slider: HSlider) -> void:
 	var track := StyleBoxFlat.new()
 	track.bg_color = Color(0.0, 0.08, 0.02, 1.0)
-	track.border_color = Color(0.0, 0.9, 0.25, 1.0)
+	track.border_color = PHOSPHOR
 	track.set_border_width_all(1)
 	track.content_margin_top = 4.0
 	track.content_margin_bottom = 4.0
 	slider.add_theme_stylebox_override("slider", track)
 
 	var fill := StyleBoxFlat.new()
-	fill.bg_color = Color(0.0, 0.9, 0.25, 1.0)
+	fill.bg_color = PHOSPHOR
 	fill.content_margin_top = 4.0
 	fill.content_margin_bottom = 4.0
 	slider.add_theme_stylebox_override("grabber_area", fill)
