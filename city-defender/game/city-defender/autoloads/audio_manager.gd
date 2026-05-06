@@ -5,8 +5,10 @@ const EXTENSIONS: Array[String] = ["ogg", "wav", "mp3"]
 
 const MUSIC_VOLUME_DB := -6.0
 const MUSIC_FADE_IN_DURATION := 3.0
+const SFX_POOL_SIZE := 6
 
-var _sfx_player: AudioStreamPlayer
+var _sfx_pool: Array[AudioStreamPlayer] = []
+var _sfx_pool_index: int = 0
 var _music_player: AudioStreamPlayer
 var _voice_player: AudioStreamPlayer
 var _zap_player: AudioStreamPlayer
@@ -15,9 +17,11 @@ var _music_tween: Tween = null
 
 
 func _ready() -> void:
-	_sfx_player = AudioStreamPlayer.new()
-	_sfx_player.bus = "SFX"
-	add_child(_sfx_player)
+	for i in SFX_POOL_SIZE:
+		var p := AudioStreamPlayer.new()
+		p.bus = "SFX"
+		add_child(p)
+		_sfx_pool.append(p)
 
 	_music_player = AudioStreamPlayer.new()
 	_music_player.bus = "Music"
@@ -38,8 +42,20 @@ func play_sfx(sound_name: String) -> void:
 	var stream := _load_sound(sound_name)
 	if stream == null:
 		return
-	_sfx_player.stream = stream
-	_sfx_player.play()
+	var player := _next_sfx_player()
+	player.stream = stream
+	player.play()
+
+
+func _next_sfx_player() -> AudioStreamPlayer:
+	for i in SFX_POOL_SIZE:
+		var idx := (_sfx_pool_index + i) % SFX_POOL_SIZE
+		if not _sfx_pool[idx].playing:
+			_sfx_pool_index = (idx + 1) % SFX_POOL_SIZE
+			return _sfx_pool[idx]
+	var oldest := _sfx_pool[_sfx_pool_index]
+	_sfx_pool_index = (_sfx_pool_index + 1) % SFX_POOL_SIZE
+	return oldest
 
 
 func play_zap(sound_name: String) -> void:
