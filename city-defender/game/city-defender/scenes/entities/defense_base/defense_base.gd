@@ -30,7 +30,7 @@ var _is_holding: bool = false
 func _process(delta: float) -> void:
 	if _state == TurretState.COOLDOWN or _state == TurretState.RELOADING:
 		_cooldown_timer += delta
-		if _cooldown_timer >= _current_cooldown():
+		if _cooldown_timer >= base_cooldown:
 			_cooldown_timer = 0.0
 			if _state == TurretState.COOLDOWN:
 				_state = TurretState.IDLE
@@ -64,7 +64,7 @@ func release() -> void:
 func get_cooldown_progress() -> float:
 	match _state:
 		TurretState.COOLDOWN, TurretState.RELOADING:
-			return _cooldown_timer / _current_cooldown()
+			return _cooldown_timer / base_cooldown
 		_:
 			return 1.0
 
@@ -108,7 +108,3 @@ func _launch_missile(target: Vector2) -> void:
 	get_parent().add_child(missile)
 	missile.launch(global_position, target, explosion_scene, base_explosion_radius + _explosion_radius_bonus)
 	AudioManager.play_sfx("launch")
-
-
-func _current_cooldown() -> float:
-	return base_cooldown
