@@ -83,11 +83,11 @@ func _add_to_pool(scene: PackedScene) -> EnemyMissile:
 	return missile
 
 
-func _scene_for_type(type: String) -> PackedScene:
+func _scene_for_type(type: int) -> PackedScene:
 	match type:
-		"fast":  return fast_missile_scene
-		"heavy": return heavy_missile_scene
-		_:       return normal_missile_scene
+		MissileType.FAST:  return fast_missile_scene
+		MissileType.HEAVY: return heavy_missile_scene
+		_:                 return normal_missile_scene
 
 
 func _get_random_alive_city() -> City:

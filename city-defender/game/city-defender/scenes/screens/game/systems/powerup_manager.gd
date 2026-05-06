@@ -9,16 +9,16 @@ const ROTATION_SPEED_BONUS: float = 1.5
 @export var hud: HUD
 
 
-func apply_powerup(powerup_id: String, cities: Array[City]) -> void:
+func apply_powerup(powerup_id: int, cities: Array[City]) -> void:
 	match powerup_id:
-		"repair_city":   _repair_city(cities)
-		"rebuild_city":  _rebuild_city(cities)
-		"shield":        _activate_shield(cities)
-		"radius_plus":   _increase_radius()
-		"gatling":       _enable_gatling()
-		"emp":           _activate_emp()
-		"cooldown_plus": _reduce_cooldown()
-		"turret_speed":  _upgrade_rotation_speed()
+		PowerupId.REPAIR_CITY:   _repair_city(cities)
+		PowerupId.REBUILD_CITY:  _rebuild_city(cities)
+		PowerupId.SHIELD:        _activate_shield(cities)
+		PowerupId.RADIUS_PLUS:   _increase_radius()
+		PowerupId.GATLING:       _enable_gatling()
+		PowerupId.EMP:           _activate_emp()
+		PowerupId.COOLDOWN_PLUS: _reduce_cooldown()
+		PowerupId.TURRET_SPEED:  _upgrade_rotation_speed()
 
 
 func _repair_city(cities: Array[City]) -> void:

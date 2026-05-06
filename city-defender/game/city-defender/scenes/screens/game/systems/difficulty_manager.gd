@@ -52,21 +52,21 @@ func _update_phase() -> void:
 		_phase = DifficultyPhase.LATE
 
 
-func get_missile_type() -> String:
+func get_missile_type() -> int:
 	match _phase:
 		DifficultyPhase.EARLY:
-			return "normal"
+			return MissileType.NORMAL
 		DifficultyPhase.MID:
-			return "normal" if randf() < 0.6 else "fast"
+			return MissileType.NORMAL if randf() < 0.6 else MissileType.FAST
 		DifficultyPhase.LATE:
 			var r := randf()
 			if r < 0.4:
-				return "normal"
+				return MissileType.NORMAL
 			elif r < 0.7:
-				return "fast"
+				return MissileType.FAST
 			else:
-				return "heavy"
-	return "normal"
+				return MissileType.HEAVY
+	return MissileType.NORMAL
 
 
 func reset() -> void:

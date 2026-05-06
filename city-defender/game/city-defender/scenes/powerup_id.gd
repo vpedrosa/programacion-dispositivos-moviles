@@ -1,0 +1,12 @@
+class_name PowerupId
+
+enum {
+	REPAIR_CITY,
+	REBUILD_CITY,
+	SHIELD,
+	RADIUS_PLUS,
+	GATLING,
+	EMP,
+	COOLDOWN_PLUS,
+	TURRET_SPEED,
+}

@@ -143,13 +143,12 @@ func _on_settings_requested() -> void:
 		in_game_settings.open()
 
 
-func _on_powerup_purchased(powerup_id: String) -> void:
-	if powerup_id == "emp":
-		if hud:
-			hud.set_emp_available(true)
+func _on_powerup_purchased(powerup_id: int) -> void:
+	if powerup_id == PowerupId.EMP:
+		hud.set_emp_available(true)
 	else:
 		powerup_manager.apply_powerup(powerup_id, _cities)
 
 
 func _on_emp_activated() -> void:
-	powerup_manager.apply_powerup("emp", _cities)
+	powerup_manager.apply_powerup(PowerupId.EMP, _cities)

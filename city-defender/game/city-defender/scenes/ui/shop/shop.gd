@@ -3,34 +3,34 @@ extends CanvasLayer
 
 signal opened
 signal closed
-signal powerup_purchased(powerup_id: String)
+signal powerup_purchased(powerup_id: int)
 
 const POWERUPS: Dictionary = {
-	"repair_city":   {"name": "PU_REPAIR_NAME",   "cost": 200, "desc": "PU_REPAIR_DESC"},
-	"rebuild_city":  {"name": "PU_REBUILD_NAME",  "cost": 500, "desc": "PU_REBUILD_DESC"},
-	"shield":        {"name": "PU_SHIELD_NAME",   "cost": 200, "desc": "PU_SHIELD_DESC"},
-	"radius_plus":   {"name": "PU_RADIUS_NAME",   "cost": 150, "desc": "PU_RADIUS_DESC"},
-	"gatling":       {"name": "PU_GATLING_NAME",  "cost": 150, "desc": "PU_GATLING_DESC"},
-	"emp":           {"name": "PU_EMP_NAME",       "cost": 300, "desc": "PU_EMP_DESC"},
-	"cooldown_plus": {"name": "PU_COOLDOWN_NAME", "cost": 50,  "desc": "PU_COOLDOWN_DESC"},
-	"turret_speed":  {"name": "PU_TURRET_SPEED_NAME", "cost": 60, "desc": "PU_TURRET_SPEED_DESC"},
+	PowerupId.REPAIR_CITY:   {"name": "PU_REPAIR_NAME",   "cost": 200, "desc": "PU_REPAIR_DESC"},
+	PowerupId.REBUILD_CITY:  {"name": "PU_REBUILD_NAME",  "cost": 500, "desc": "PU_REBUILD_DESC"},
+	PowerupId.SHIELD:        {"name": "PU_SHIELD_NAME",   "cost": 200, "desc": "PU_SHIELD_DESC"},
+	PowerupId.RADIUS_PLUS:   {"name": "PU_RADIUS_NAME",   "cost": 150, "desc": "PU_RADIUS_DESC"},
+	PowerupId.GATLING:       {"name": "PU_GATLING_NAME",  "cost": 150, "desc": "PU_GATLING_DESC"},
+	PowerupId.EMP:           {"name": "PU_EMP_NAME",       "cost": 300, "desc": "PU_EMP_DESC"},
+	PowerupId.COOLDOWN_PLUS: {"name": "PU_COOLDOWN_NAME", "cost": 50,  "desc": "PU_COOLDOWN_DESC"},
+	PowerupId.TURRET_SPEED:  {"name": "PU_TURRET_SPEED_NAME", "cost": 60, "desc": "PU_TURRET_SPEED_DESC"},
 }
 
 const POWERUP_ICONS: Dictionary = {
-	"repair_city":  "res://assets/sprites/shop/repair.png",
-	"rebuild_city": "res://assets/sprites/shop/rebuild.png",
-	"shield":       "res://assets/sprites/shop/shield.png",
-	"radius_plus":  "res://assets/sprites/shop/radius.png",
-	"gatling":      "res://assets/sprites/shop/double.png",
-	"emp":          "res://assets/sprites/shop/emp.png",
-	"cooldown_plus":"res://assets/sprites/shop/cooldown.png",
-	"turret_speed": "res://assets/sprites/shop/speed.png",
+	PowerupId.REPAIR_CITY:   "res://assets/sprites/shop/repair.png",
+	PowerupId.REBUILD_CITY:  "res://assets/sprites/shop/rebuild.png",
+	PowerupId.SHIELD:        "res://assets/sprites/shop/shield.png",
+	PowerupId.RADIUS_PLUS:   "res://assets/sprites/shop/radius.png",
+	PowerupId.GATLING:       "res://assets/sprites/shop/double.png",
+	PowerupId.EMP:           "res://assets/sprites/shop/emp.png",
+	PowerupId.COOLDOWN_PLUS: "res://assets/sprites/shop/cooldown.png",
+	PowerupId.TURRET_SPEED:  "res://assets/sprites/shop/speed.png",
 }
 
 const MAX_PURCHASES: Dictionary = {
-	"gatling":       1,
-	"radius_plus":   1,
-	"cooldown_plus": 3,
+	PowerupId.GATLING:       1,
+	PowerupId.RADIUS_PLUS:   1,
+	PowerupId.COOLDOWN_PLUS: 3,
 }
 
 @onready var title_label: Label = $Panel/VBox/TitleLabel
