@@ -28,6 +28,7 @@ var _flicker_phase: float
 
 
 func _ready() -> void:
+	add_to_group("enemy_missiles")
 	collision_layer = 4   # enemy_missiles layer
 	collision_mask = 1    # detect cities layer
 	var shape := CircleShape2D.new()
@@ -54,7 +55,6 @@ func init(from: Vector2, target_city: Node2D) -> void:
 	_flicker_phase = randf() * TAU
 	if _smoke:
 		_smoke.restart()
-	add_to_group("enemy_missiles")
 
 
 func _process(delta: float) -> void:
@@ -72,8 +72,6 @@ func deactivate() -> void:
 	set_process(false)
 	set_deferred("monitoring", false)
 	set_deferred("monitorable", false)
-	if is_in_group("enemy_missiles"):
-		remove_from_group("enemy_missiles")
 	if _smoke:
 		_smoke.emitting = false
 
