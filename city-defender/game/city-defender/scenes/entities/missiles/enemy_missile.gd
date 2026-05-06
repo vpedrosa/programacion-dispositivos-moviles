@@ -19,6 +19,7 @@ static var _GLOW_TEX: ImageTexture = null
 @onready var _visual: Sprite2D = $Visual
 
 var _hits: int = 0
+var _destroyed: bool = false
 var _direction: Vector2
 var _target_city: Node2D
 var _smoke: CPUParticles2D
@@ -39,6 +40,7 @@ func _ready() -> void:
 
 func init(from: Vector2, target_city: Node2D) -> void:
 	_hits = 0
+	_destroyed = false
 	modulate = Color.WHITE
 	global_position = from
 	_target_city = target_city
@@ -99,6 +101,9 @@ func _on_hit_survived() -> void:
 
 
 func _on_destroyed() -> void:
+	if _destroyed:
+		return
+	_destroyed = true
 	GameState.add_score(score_value)
 	GameState.add_money(money_value)
 	missile_destroyed.emit(self)
