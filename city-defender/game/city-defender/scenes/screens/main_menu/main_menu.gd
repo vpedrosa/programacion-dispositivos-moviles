@@ -4,7 +4,6 @@ extends Control
 @onready var _play_btn: Button = $CenterContainer/VBox/PlayButton
 @onready var _scores_btn: Button = $CenterContainer/VBox/HighscoresButton
 @onready var _settings_btn: Button = $CenterContainer/VBox/SettingsButton
-@onready var _clear_user_btn: Button = $CenterContainer/VBox/ClearUserButton
 @onready var _quit_btn: Button = $CenterContainer/VBox/QuitButton
 
 
@@ -12,9 +11,7 @@ func _ready() -> void:
 	_play_btn.pressed.connect(_on_play_pressed)
 	_scores_btn.pressed.connect(_on_highscores_pressed)
 	_settings_btn.pressed.connect(_on_settings_pressed)
-	_clear_user_btn.pressed.connect(_on_clear_user_pressed)
 	_quit_btn.pressed.connect(_on_quit_pressed)
-	_clear_user_btn.disabled = not PlayerProfile.has_name()
 	FalloutStyle.apply(self)
 	AudioManager.play_music("main-theme")
 	CursorManager.set_menu_cursor()
@@ -30,11 +27,6 @@ func _on_highscores_pressed() -> void:
 
 func _on_settings_pressed() -> void:
 	get_tree().change_scene_to_file(ScenePaths.SETTINGS)
-
-
-func _on_clear_user_pressed() -> void:
-	PlayerProfile.clear_name()
-	_clear_user_btn.disabled = true
 
 
 func _on_quit_pressed() -> void:

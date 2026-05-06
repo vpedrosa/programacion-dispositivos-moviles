@@ -30,5 +30,6 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="SettingsPanel" parent="CenterContainer" instance=ExtResource("2_panel")]
+show_clear_user_button = true
 
 [connection signal="main_menu_pressed" from="CenterContainer/SettingsPanel" to="." method="_on_main_menu_pressed"]

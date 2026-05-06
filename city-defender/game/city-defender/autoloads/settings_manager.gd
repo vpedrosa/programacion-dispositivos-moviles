@@ -101,7 +101,6 @@ func _register_translations() -> void:
 		"MENU_HIGHSCORES":  "PUNTUACIONES",
 		"MENU_QUIT":        "SALIR",
 		"MENU_SETTINGS":    "AJUSTES",
-		"MENU_CLEAR_USER":  "BORRAR USUARIO",
 		# HUD
 		"HUD_SCORE":        "PUNTOS: ",
 		"HUD_SHOP":         "TIENDA",
@@ -136,6 +135,7 @@ func _register_translations() -> void:
 		"SETTINGS_BACK":       "VOLVER",
 		"SETTINGS_RESUME":     "VOLVER AL JUEGO",
 		"SETTINGS_MAIN_MENU":  "MENÚ PRINCIPAL",
+		"SETTINGS_CLEAR_USER": "BORRAR USUARIO",
 		# Power-ups
 		"PU_REPAIR_NAME":    "Reparar ciudad",
 		"PU_REPAIR_DESC":    "Restaura vida a una ciudad dañada",
@@ -161,7 +161,6 @@ func _register_translations() -> void:
 		"MENU_HIGHSCORES":  "HIGHSCORES",
 		"MENU_QUIT":        "QUIT",
 		"MENU_SETTINGS":    "SETTINGS",
-		"MENU_CLEAR_USER":  "CLEAR USER",
 		# HUD
 		"HUD_SCORE":        "SCORE: ",
 		"HUD_SHOP":         "SHOP",
@@ -196,6 +195,7 @@ func _register_translations() -> void:
 		"SETTINGS_BACK":       "BACK",
 		"SETTINGS_RESUME":     "BACK TO GAME",
 		"SETTINGS_MAIN_MENU":  "MAIN MENU",
+		"SETTINGS_CLEAR_USER": "CLEAR USER",
 		# Power-ups
 		"PU_REPAIR_NAME":    "Repair city",
 		"PU_REPAIR_DESC":    "Restores health to a damaged city",

@@ -8,6 +8,7 @@ signal resume_pressed
 signal main_menu_pressed
 
 @export var show_resume_button: bool = false
+@export var show_clear_user_button: bool = false
 
 @onready var _es_btn: Button         = $VBox/LangHBox/ESButton
 @onready var _en_btn: Button         = $VBox/LangHBox/ENButton
@@ -15,10 +16,13 @@ signal main_menu_pressed
 @onready var _sound_off_btn: Button  = $VBox/SoundHBox/SoundOffButton
 @onready var _volume_slider: HSlider = $VBox/VolumeSlider
 @onready var _resume_btn: Button     = $VBox/ResumeButton
+@onready var _clear_user_btn: Button = $VBox/ClearUserButton
 
 
 func _ready() -> void:
 	_resume_btn.visible = show_resume_button
+	_clear_user_btn.visible = show_clear_user_button
+	_clear_user_btn.disabled = not PlayerProfile.has_name()
 	FalloutStyle.style_subtree(self)
 	FalloutStyle.style_slider(_volume_slider)
 	_volume_slider.value = SettingsManager.get_volume()
@@ -71,3 +75,8 @@ func _on_resume_pressed() -> void:
 
 func _on_main_menu_pressed() -> void:
 	main_menu_pressed.emit()
+
+
+func _on_clear_user_pressed() -> void:
+	PlayerProfile.clear_name()
+	_clear_user_btn.disabled = true
