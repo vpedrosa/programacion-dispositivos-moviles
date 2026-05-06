@@ -2,6 +2,7 @@ class_name MissileSpawner
 extends Node
 
 const POOL_INITIAL_SIZE: int = 15
+const POOL_MAX_SIZE: int = 30
 
 @export var normal_missile_scene: PackedScene
 @export var fast_missile_scene: PackedScene
@@ -64,10 +65,17 @@ func _spawn_wave() -> void:
 
 
 func _acquire(scene: PackedScene) -> EnemyMissile:
-	for missile: EnemyMissile in _pools.get(scene, []):
+	var pool: Array = _pools.get(scene, [])
+	for missile: EnemyMissile in pool:
 		if not missile.visible:
 			return missile
-	return _add_to_pool(scene)
+	if pool.size() < POOL_MAX_SIZE:
+		return _add_to_pool(scene)
+	var oldest: EnemyMissile = pool[0]
+	pool.remove_at(0)
+	pool.append(oldest)
+	oldest.deactivate()
+	return oldest
 
 
 func _add_to_pool(scene: PackedScene) -> EnemyMissile:
