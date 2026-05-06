@@ -69,13 +69,11 @@ func _input(event: InputEvent) -> void:
 		defense_base.shoot_at(pos)
 	elif event.is_action_released("shoot"):
 		defense_base.release()
-	if OS.has_feature("desktop") and event is InputEventKey and event.pressed and not event.echo:
-		match event.keycode:
-			KEY_B:
-				_on_shop_requested()
-			KEY_SPACE:
-				if hud and hud.is_emp_available():
-					_on_emp_activated()
+	elif event.is_action_pressed("open_shop"):
+		_on_shop_requested()
+	elif event.is_action_pressed("fire_emp"):
+		if hud and hud.is_emp_available():
+			_on_emp_activated()
 
 
 func get_cities() -> Array[City]:
