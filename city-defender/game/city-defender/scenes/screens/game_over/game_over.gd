@@ -19,6 +19,11 @@ func _ready() -> void:
 	FalloutStyle.apply(self)
 	CursorManager.set_menu_cursor()
 
+	if PlayerProfile.has_name():
+		name_input.visible = false
+		submit_btn.visible = false
+		await _submit_with_name(PlayerProfile.get_player_name())
+
 
 func _on_name_changed(new_text: String) -> void:
 	var upper := new_text.to_upper()
@@ -34,6 +39,11 @@ func _on_submit_pressed() -> void:
 		return
 	name_input.editable = false
 	submit_btn.disabled = true
+	PlayerProfile.set_player_name(player_name)
+	await _submit_with_name(PlayerProfile.get_player_name())
+
+
+func _submit_with_name(player_name: String) -> void:
 	await FirebaseManager.submit_score(_final_score, player_name)
 	sent_label.visible = true
 

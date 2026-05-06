@@ -20,6 +20,7 @@ boot_splash/show_image=false
 
 SettingsManager="*res://autoloads/settings_manager.gd"
 GameState="*res://autoloads/game_state.gd"
+PlayerProfile="*res://autoloads/player_profile.gd"
 FirebaseManager="*res://autoloads/firebase_manager.gd"
 FalloutStyle="*res://autoloads/fallout_style.gd"
 AudioManager="*res://autoloads/audio_manager.gd"
