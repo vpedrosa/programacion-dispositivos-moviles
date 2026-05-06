@@ -37,7 +37,7 @@ func _ready() -> void:
 	_fires = [_fire_back, _fire_front]
 
 
-func take_damage(amount: int = 25) -> void:
+func take_damage(amount: int) -> void:
 	if not is_alive:
 		return
 	if has_shield:

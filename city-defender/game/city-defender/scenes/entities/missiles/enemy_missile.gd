@@ -13,6 +13,7 @@ static var _GLOW_TEX: ImageTexture = null
 @export var score_value: int = 100
 @export var money_value: int = 15
 @export var max_hits: int = 1
+@export var damage: int = 25
 
 @onready var _visual: Sprite2D = $Visual
 
@@ -127,7 +128,7 @@ func _on_area_entered(area: Area2D) -> void:
 		var impact: ImpactExplosion = IMPACT_SCENE.instantiate()
 		get_parent().call_deferred("add_child", impact)
 		impact.global_position = global_position
-		area.take_damage()
+		area.take_damage(damage)
 		AudioManager.play_sfx("missile-collision")
 		call_deferred("deactivate")
 

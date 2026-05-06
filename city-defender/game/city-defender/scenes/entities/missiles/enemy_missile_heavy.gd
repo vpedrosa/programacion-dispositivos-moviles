@@ -8,6 +8,7 @@ func _ready() -> void:
 	score_value = 400
 	money_value = 60
 	max_hits = 2
+	damage = 50
 
 
 func _on_hit_survived() -> void:
