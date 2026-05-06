@@ -2,6 +2,7 @@ extends Node
 
 const _COLLECTION: String = "highscores"
 const TOP_COUNT: int = 10
+const _REQUEST_TIMEOUT: float = 10.0
 
 var _project_id: String = ""
 var _api_key: String = ""
@@ -117,6 +118,7 @@ func _run_query(body: String) -> PackedByteArray:
 
 func _post_json(url: String, body: String) -> PackedByteArray:
 	var http := HTTPRequest.new()
+	http.timeout = _REQUEST_TIMEOUT
 	add_child(http)
 	http.request(url, ["Content-Type: application/json"], HTTPClient.METHOD_POST, body)
 	var result = await http.request_completed

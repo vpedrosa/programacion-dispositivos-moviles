@@ -51,6 +51,8 @@ func _on_submit_pressed() -> void:
 
 func _submit_with_name(player_name: String) -> void:
 	await FirebaseManager.submit_score(_final_score, player_name)
+	if not is_inside_tree():
+		return
 	sent_label.visible = true
 	await _show_ranks(player_name)
 
@@ -61,12 +63,16 @@ func _show_ranks(player_name: String) -> void:
 	rank_loading_label.visible = true
 
 	var player_scores: Array[int] = await FirebaseManager.get_player_scores(player_name)
+	if not is_inside_tree():
+		return
 	if not player_scores.is_empty():
 		var personal_rank := _compute_personal_rank(player_scores, _final_score)
 		personal_rank_label.text = tr("GO_PERSONAL_RANK") % [personal_rank, player_scores.size()]
 		personal_rank_label.visible = true
 
 	var global_rank: int = await FirebaseManager.get_global_rank(_final_score)
+	if not is_inside_tree():
+		return
 	if global_rank > 0:
 		global_rank_label.text = tr("GO_GLOBAL_RANK") % global_rank
 		global_rank_label.visible = true

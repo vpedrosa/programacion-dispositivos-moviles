@@ -21,6 +21,8 @@ func _ready() -> void:
 func _load_scores() -> void:
 	loading_label.visible = true
 	var scores: Array[Dictionary] = await FirebaseManager.get_top_scores()
+	if not is_inside_tree():
+		return
 	loading_label.visible = false
 	if scores.is_empty():
 		error_label.visible = true
