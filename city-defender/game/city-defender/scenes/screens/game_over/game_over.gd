@@ -65,6 +65,8 @@ func _show_ranks(player_name: String) -> void:
 	var player_scores: Array[int] = await FirebaseManager.get_player_scores(player_name)
 	if not is_inside_tree():
 		return
+	if not player_scores.has(_final_score):
+		player_scores.append(_final_score)
 	if not player_scores.is_empty():
 		var personal_rank := _compute_personal_rank(player_scores, _final_score)
 		personal_rank_label.text = tr("GO_PERSONAL_RANK") % [personal_rank, player_scores.size()]
