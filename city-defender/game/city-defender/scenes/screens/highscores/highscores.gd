@@ -1,6 +1,13 @@
 class_name HighscoresScreen
 extends Control
 
+## Score y nombre a resaltar al entrar a la pantalla. Lo setea Game Over antes
+## del cambio de escena. Se consume y resetea en _populate_table.
+static var pending_highlight_score: int = -1
+static var pending_highlight_name: String = ""
+
+const _BLINK_HALF_PERIOD: float = 0.25
+
 @onready var scores_container: VBoxContainer = $MarginContainer/VBox/ScrollContainer/ScoresContainer
 @onready var loading_label: Label = $MarginContainer/VBox/LoadingLabel
 @onready var error_label: Label = $MarginContainer/VBox/ErrorLabel
@@ -24,13 +31,28 @@ func _load_scores() -> void:
 
 
 func _populate_table(scores: Array[Dictionary]) -> void:
+	var highlight_score := pending_highlight_score
+	var highlight_name := pending_highlight_name
+	pending_highlight_score = -1
+	pending_highlight_name = ""
+
 	for child in scores_container.get_children():
 		child.queue_free()
+
+	var highlight_done := false
 	for i in scores.size():
 		var entry = scores[i]
 		var row := _create_row(i + 1, entry.get("score", 0), entry.get("name", ""), entry.get("date", ""))
 		scores_container.add_child(row)
 		FalloutStyle.style_subtree(row)
+		if (
+			not highlight_done
+			and highlight_score >= 0
+			and int(entry.get("score", 0)) == highlight_score
+			and String(entry.get("name", "")) == highlight_name
+		):
+			_apply_blink(row)
+			highlight_done = true
 
 
 func _create_row(pos: int, score: int, player_name: String, date: String) -> HBoxContainer:
@@ -56,6 +78,16 @@ func _create_row(pos: int, score: int, player_name: String, date: String) -> HBo
 	row.add_child(score_label)
 	row.add_child(date_label)
 	return row
+
+
+## Efecto Blink arcade: alterna la opacidad de la fila entre encendido y atenuado.
+## El tween se crea sobre la fila, así que se libera automáticamente con ella al
+## salir de la pantalla.
+func _apply_blink(row: Control) -> void:
+	var tween := row.create_tween()
+	tween.set_loops()
+	tween.tween_property(row, "modulate:a", 0.15, _BLINK_HALF_PERIOD)
+	tween.tween_property(row, "modulate:a", 1.0, _BLINK_HALF_PERIOD)
 
 
 func _on_back_pressed() -> void:

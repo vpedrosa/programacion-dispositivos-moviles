@@ -82,6 +82,9 @@ func _compute_personal_rank(scores_desc: Array[int], score: int) -> int:
 
 
 func _on_highscores_pressed() -> void:
+	if PlayerProfile.has_name():
+		HighscoresScreen.pending_highlight_score = _final_score
+		HighscoresScreen.pending_highlight_name = PlayerProfile.get_player_name()
 	get_tree().change_scene_to_file(ScenePaths.HIGHSCORES)
 
 
