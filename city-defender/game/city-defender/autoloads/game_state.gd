@@ -6,7 +6,7 @@ signal game_over
 
 var score: int = 0
 var money: int = 0
-var cities_alive: int = 4
+var cities_alive: int = 0
 
 
 func add_score(amount: int) -> void:
