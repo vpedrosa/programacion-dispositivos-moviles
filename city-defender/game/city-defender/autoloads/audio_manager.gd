@@ -1,12 +1,7 @@
 ## AudioManager — gestión centralizada de SFX y música.
-## Pon los ficheros en res://assets/sounds/ con estos nombres:
-##   explosion.ogg  → explosión en el aire
-##   impact.ogg     → misil impacta ciudad
-##   launch.ogg     → disparo del defensor
-##   emp.ogg        → bomba EMP
-##   game_over.ogg  → fin de partida
-##   music_game.ogg → música en bucle durante la partida
-##   music_menu.ogg → música del menú principal
+## Los ficheros van en res://assets/sounds/. Las funciones play_*
+## reciben el nombre sin extensión y _load_sound prueba en orden las
+## extensiones declaradas en EXTENSIONS.
 extends Node
 
 const SFX_DIR := "res://assets/sounds/"
