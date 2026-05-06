@@ -34,7 +34,6 @@ const MAX_PURCHASES: Dictionary = {
 }
 
 @onready var title_label: Label = $Panel/VBox/TitleLabel
-@onready var money_label: Label = $Panel/VBox/MoneyLabel
 @onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 
 var _cities: Array[City] = []
@@ -93,7 +92,6 @@ func _refresh_translations() -> void:
 func _refresh_buttons() -> void:
 	var money_str := "$" + str(GameState.money)
 	title_label.text = tr("SHOP_TITLE") + " (" + money_str + ")"
-	money_label.visible = false
 	for powerup_id in _buy_buttons.keys():
 		var btn: Button = _buy_buttons[powerup_id]
 		var max_p: int = MAX_PURCHASES.get(powerup_id, -1)
