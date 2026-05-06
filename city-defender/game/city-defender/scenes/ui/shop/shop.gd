@@ -111,7 +111,7 @@ func _on_money_changed(_new_money: int) -> void:
 		_refresh_buttons()
 
 
-func _on_buy_pressed(powerup_id: String) -> void:
+func _on_buy_pressed(powerup_id: int) -> void:
 	var cost: int = POWERUPS[powerup_id]["cost"]
 	if GameState.spend_money(cost):
 		_purchased_count[powerup_id] = _purchased_count.get(powerup_id, 0) + 1
