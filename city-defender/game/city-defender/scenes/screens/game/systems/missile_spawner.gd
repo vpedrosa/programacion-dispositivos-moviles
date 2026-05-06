@@ -1,6 +1,8 @@
 class_name MissileSpawner
 extends Node
 
+signal missile_added(missile: EnemyMissile)
+
 const POOL_INITIAL_SIZE: int = 15
 const POOL_MAX_SIZE: int = 30
 
@@ -94,6 +96,7 @@ func _add_to_pool(scene: PackedScene) -> EnemyMissile:
 	if not _pools.has(scene):
 		_pools[scene] = []
 	_pools[scene].append(missile)
+	missile_added.emit(missile)
 	return missile
 
 

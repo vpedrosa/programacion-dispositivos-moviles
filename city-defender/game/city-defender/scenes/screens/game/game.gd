@@ -1,6 +1,9 @@
 class_name GameScreen
 extends Node2D
 
+signal score_changed(new_score: int)
+signal money_changed(new_money: int)
+
 const GAME_OVER_DELAY: float = 1.8
 const GAME_OVER_FADE: float = 0.7
 
@@ -19,16 +22,23 @@ var _cities: Array[City] = []
 var _phase: GamePhase = GamePhase.PLAYING
 var _overlay_count: int = 0
 
+var _score: int = 0
+var _money: int = 0
+var _cities_alive: int = 0
+
 
 func _ready() -> void:
 	_cities = []
 	for node in get_tree().get_nodes_in_group("cities"):
 		if node is City:
 			_cities.append(node as City)
-	GameState.reset(_cities.size())
+	_cities_alive = _cities.size()
 	difficulty_manager.reset()
 	missile_spawner.set_cities(_cities)
-	GameState.game_over.connect(_on_game_over)
+	missile_spawner.missile_added.connect(_on_missile_added)
+	for city: City in _cities:
+		city.destroyed.connect(_on_city_destroyed)
+		city.rebuilt.connect(_on_city_rebuilt)
 	AudioManager.play_music("main-theme")
 	CursorManager.set_game_cursor()
 	FalloutStyle.add_scanline_overlay(self)
@@ -78,6 +88,32 @@ func get_cities() -> Array[City]:
 	return _cities
 
 
+func get_score() -> int:
+	return _score
+
+
+func get_money() -> int:
+	return _money
+
+
+func add_score(amount: int) -> void:
+	_score += amount
+	score_changed.emit(_score)
+
+
+func add_money(amount: int) -> void:
+	_money += amount
+	money_changed.emit(_money)
+
+
+func spend_money(amount: int) -> bool:
+	if _money < amount:
+		return false
+	_money -= amount
+	money_changed.emit(_money)
+	return true
+
+
 func _connect_city_health_to_hud() -> void:
 	for city: City in _cities:
 		city.health_changed.connect(
@@ -102,6 +138,25 @@ func _on_overlay_closed() -> void:
 		_set_phase(GamePhase.PLAYING)
 
 
+func _on_missile_added(missile: EnemyMissile) -> void:
+	missile.destroyed.connect(_on_missile_destroyed)
+
+
+func _on_missile_destroyed(score: int, money: int) -> void:
+	add_score(score)
+	add_money(money)
+
+
+func _on_city_destroyed() -> void:
+	_cities_alive -= 1
+	if _cities_alive <= 0:
+		_on_game_over()
+
+
+func _on_city_rebuilt() -> void:
+	_cities_alive += 1
+
+
 func _on_game_over() -> void:
 	_set_phase(GamePhase.GAME_OVER)
 	AudioManager.stop_music()
@@ -121,6 +176,7 @@ func _on_game_over() -> void:
 	tween.tween_property(fade_rect, "color:a", 1.0, GAME_OVER_FADE)
 	await tween.finished
 	get_tree().paused = false
+	GameOverScreen.pending_score = _score
 	get_tree().change_scene_to_file(ScenePaths.GAME_OVER)
 
 

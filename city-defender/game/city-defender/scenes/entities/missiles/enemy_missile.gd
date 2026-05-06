@@ -1,6 +1,8 @@
 class_name EnemyMissile
 extends Area2D
 
+signal destroyed(score: int, money: int)
+
 const IMPACT_SCENE = preload("res://scenes/entities/explosion/impact_explosion.tscn")
 const COLLISION_RADIUS: float = 6.0
 const OUT_OF_BOUNDS_MARGIN: float = 50.0
@@ -103,8 +105,7 @@ func _on_destroyed() -> void:
 	if _destroyed:
 		return
 	_destroyed = true
-	GameState.add_score(score_value)
-	GameState.add_money(money_value)
+	destroyed.emit(score_value, money_value)
 	deactivate()
 
 

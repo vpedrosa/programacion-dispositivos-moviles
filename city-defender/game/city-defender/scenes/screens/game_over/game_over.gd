@@ -1,6 +1,8 @@
 class_name GameOverScreen
 extends Control
 
+static var pending_score: int = 0
+
 const _AUTO_HIGHSCORES_DELAY: float = 2.0
 
 @onready var score_label: Label   = $CenterContainer/VBox/ScoreLabel
@@ -15,7 +17,8 @@ var _final_score: int = 0
 
 
 func _ready() -> void:
-	_final_score = GameState.score
+	_final_score = pending_score
+	pending_score = 0
 	score_label.text = str(_final_score)
 	sent_label.visible = false
 	submit_btn.disabled = true

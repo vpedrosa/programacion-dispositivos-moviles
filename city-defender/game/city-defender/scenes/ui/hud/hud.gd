@@ -5,6 +5,8 @@ signal shop_requested
 signal emp_activated
 signal settings_requested
 
+@export var game_screen: GameScreen
+
 @onready var score_label: Label = $MarginContainer/HBox/ScoreLabel
 @onready var money_label: Label = $MarginContainer/HBox/MoneyLabel
 @onready var cooldown_bar: ProgressBar = $MarginContainer/HBox/CooldownBar
@@ -14,8 +16,9 @@ var _emp_available: bool = false
 
 
 func _ready() -> void:
-	GameState.score_changed.connect(_on_score_changed)
-	GameState.money_changed.connect(_on_money_changed)
+	if game_screen:
+		game_screen.score_changed.connect(_on_score_changed)
+		game_screen.money_changed.connect(_on_money_changed)
 	emp_button.visible = false
 	for bar: ProgressBar in $CityBarsContainer.get_children():
 		city_bars.append(bar)

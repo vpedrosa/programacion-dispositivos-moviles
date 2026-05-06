@@ -3,6 +3,7 @@ extends Area2D
 
 signal health_changed(new_health: int, max_health: int)
 signal destroyed
+signal rebuilt
 
 const MAX_HEALTH: int = 100
 const COLLISION_SIZE := Vector2(60, 30)
@@ -63,7 +64,7 @@ func rebuild() -> void:
 	is_alive = true
 	_update_alive_visual(true)
 	health_changed.emit(health, MAX_HEALTH)
-	GameState.notify_city_rebuilt()
+	rebuilt.emit()
 
 
 func activate_shield() -> void:
@@ -78,7 +79,6 @@ func _on_destroyed() -> void:
 	_update_alive_visual(false)
 	destroyed.emit()
 	AudioManager.play_sfx("city-destroyed")
-	GameState.notify_city_destroyed()
 
 
 func _process(delta: float) -> void:

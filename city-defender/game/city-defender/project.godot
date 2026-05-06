@@ -19,7 +19,6 @@ boot_splash/show_image=false
 [autoload]
 
 SettingsManager="*res://autoloads/settings_manager.gd"
-GameState="*res://autoloads/game_state.gd"
 PlayerProfile="*res://autoloads/player_profile.gd"
 FirebaseManager="*res://autoloads/firebase_manager.gd"
 AudioManager="*res://autoloads/audio_manager.gd"

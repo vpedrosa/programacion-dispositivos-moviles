@@ -5,6 +5,8 @@ signal opened
 signal closed
 signal powerup_purchased(powerup_id: int)
 
+@export var game_screen: GameScreen
+
 @onready var title_label: Label = $Panel/VBox/TitleLabel
 @onready var powerups_container: VBoxContainer = $Panel/VBox/ScrollContainer/PowerupsContainer
 
@@ -19,7 +21,8 @@ func _ready() -> void:
 	_powerups = _build_powerup_defs()
 	powerups_container.add_theme_constant_override("separation", 0)
 	_build_powerups()
-	GameState.money_changed.connect(_on_money_changed)
+	if game_screen:
+		game_screen.money_changed.connect(_on_money_changed)
 
 
 func _notification(what: int) -> void:
@@ -73,7 +76,8 @@ func _refresh_translations() -> void:
 
 
 func _refresh_buttons() -> void:
-	var money_str := "$" + str(GameState.money)
+	var money := game_screen.get_money() if game_screen else 0
+	var money_str := "$" + str(money)
 	title_label.text = tr("SHOP_TITLE") + " (" + money_str + ")"
 	for data: PowerupData in _powerups:
 		var btn: Button = (_rows[data.id] as ShopItemRow).buy_btn
@@ -81,7 +85,7 @@ func _refresh_buttons() -> void:
 		if data.max_purchases > 0 and count >= data.max_purchases:
 			btn.disabled = true
 		else:
-			btn.disabled = GameState.money < data.cost
+			btn.disabled = money < data.cost
 
 
 func _on_money_changed(_new_money: int) -> void:
@@ -91,9 +95,9 @@ func _on_money_changed(_new_money: int) -> void:
 
 func _on_buy_pressed(powerup_id: int) -> void:
 	var data := _find_powerup(powerup_id)
-	if data == null:
+	if data == null or game_screen == null:
 		return
-	if GameState.spend_money(data.cost):
+	if game_screen.spend_money(data.cost):
 		_purchased_count[powerup_id] = _purchased_count.get(powerup_id, 0) + 1
 		powerup_purchased.emit(powerup_id)
 		_refresh_buttons()
