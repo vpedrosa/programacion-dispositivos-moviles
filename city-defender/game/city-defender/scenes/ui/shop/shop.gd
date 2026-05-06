@@ -51,6 +51,12 @@ func _ready() -> void:
 	GameState.money_changed.connect(_on_money_changed)
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and visible:
+		_refresh_translations()
+		_refresh_buttons()
+
+
 func _build_powerups() -> void:
 	for powerup_id in POWERUPS.keys():
 		var data: Dictionary = POWERUPS[powerup_id]
