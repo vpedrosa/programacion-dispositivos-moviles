@@ -8,6 +8,8 @@ const GLOW_OFFSET := Vector2(0.0, 14.0)
 const SMOKE_OFFSET := Vector2(0.0, 22.0)
 
 static var _GLOW_TEX: ImageTexture = null
+static var _SMOKE_SCALE_CURVE: Curve = null
+static var _SMOKE_GRADIENT: Gradient = null
 
 @export var speed: float = 150.0
 @export var score_value: int = 100
@@ -164,6 +166,11 @@ func _setup_glow() -> void:
 
 
 func _setup_smoke() -> void:
+	if _SMOKE_SCALE_CURVE == null:
+		_SMOKE_SCALE_CURVE = _create_smoke_scale_curve()
+	if _SMOKE_GRADIENT == null:
+		_SMOKE_GRADIENT = _create_smoke_gradient()
+
 	_smoke = CPUParticles2D.new()
 	_smoke.emitting = true
 	_smoke.amount = 10
@@ -178,18 +185,23 @@ func _setup_smoke() -> void:
 	_smoke.gravity = Vector2.ZERO
 	_smoke.scale_amount_min = 12.0
 	_smoke.scale_amount_max = 16.0
-	_smoke.color = Color(1.0, 1.0, 1.0, 1.0)
-
-	var scale_curve := Curve.new()
-	scale_curve.add_point(Vector2(0.0, 1.0), 0.0, -4.0)
-	scale_curve.add_point(Vector2(1.0, 0.0), -0.3, 0.0)
-	_smoke.scale_amount_curve = scale_curve
-
-	var mc := _visual.modulate
-	var ramp := Gradient.new()
-	ramp.set_color(0, Color(mc.r, mc.g, mc.b, 0.85))
-	ramp.set_color(1, Color(mc.r, mc.g, mc.b, 0.0))
-	_smoke.color_ramp = ramp
+	_smoke.color = _visual.modulate
+	_smoke.scale_amount_curve = _SMOKE_SCALE_CURVE
+	_smoke.color_ramp = _SMOKE_GRADIENT
 
 	add_child(_smoke)
 	move_child(_smoke, _visual.get_index())
+
+
+static func _create_smoke_scale_curve() -> Curve:
+	var c := Curve.new()
+	c.add_point(Vector2(0.0, 1.0), 0.0, -4.0)
+	c.add_point(Vector2(1.0, 0.0), -0.3, 0.0)
+	return c
+
+
+static func _create_smoke_gradient() -> Gradient:
+	var g := Gradient.new()
+	g.set_color(0, Color(1.0, 1.0, 1.0, 0.85))
+	g.set_color(1, Color(1.0, 1.0, 1.0, 0.0))
+	return g
