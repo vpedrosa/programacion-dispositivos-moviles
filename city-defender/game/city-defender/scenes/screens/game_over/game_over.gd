@@ -1,6 +1,8 @@
 class_name GameOverScreen
 extends Control
 
+const _AUTO_HIGHSCORES_DELAY: float = 2.0
+
 @onready var score_label: Label   = $CenterContainer/VBox/ScoreLabel
 @onready var sent_label: Label    = $CenterContainer/VBox/SentLabel
 @onready var name_input: LineEdit = $CenterContainer/VBox/NameInput
@@ -70,6 +72,28 @@ func _show_ranks(player_name: String) -> void:
 
 	rank_loading_label.visible = false
 
+	if global_rank > 0 and global_rank <= FirebaseManager.TOP_COUNT:
+		_schedule_auto_highscores()
+
+
+## Programa la transición automática a Highscores. El Timer es hijo de la
+## pantalla, así que se libera (y la transición se cancela) si el jugador
+## pulsa Reintentar/Menu antes de que dispare.
+func _schedule_auto_highscores() -> void:
+	var timer := Timer.new()
+	timer.one_shot = true
+	timer.wait_time = _AUTO_HIGHSCORES_DELAY
+	timer.timeout.connect(_go_to_highscores)
+	add_child(timer)
+	timer.start()
+
+
+func _go_to_highscores() -> void:
+	if PlayerProfile.has_name():
+		HighscoresScreen.pending_highlight_score = _final_score
+		HighscoresScreen.pending_highlight_name = PlayerProfile.get_player_name()
+	get_tree().change_scene_to_file(ScenePaths.HIGHSCORES)
+
 
 ## Cuenta cuántas puntuaciones del jugador superan estrictamente a `score` y suma 1.
 ## Empata el ranking en caso de scores iguales (ranking competitivo estándar).
@@ -82,10 +106,7 @@ func _compute_personal_rank(scores_desc: Array[int], score: int) -> int:
 
 
 func _on_highscores_pressed() -> void:
-	if PlayerProfile.has_name():
-		HighscoresScreen.pending_highlight_score = _final_score
-		HighscoresScreen.pending_highlight_name = PlayerProfile.get_player_name()
-	get_tree().change_scene_to_file(ScenePaths.HIGHSCORES)
+	_go_to_highscores()
 
 
 func _on_retry_pressed() -> void:

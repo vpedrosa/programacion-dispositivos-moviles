@@ -5,7 +5,7 @@ extends Node
 ## Las credenciales se cargan en runtime desde res://.env (no se commitean).
 
 const _COLLECTION: String = "highscores"
-const _TOP_COUNT: int = 10
+const TOP_COUNT: int = 10
 
 var _project_id: String = ""
 var _api_key: String = ""
@@ -37,7 +37,7 @@ func get_top_scores() -> Array[Dictionary]:
 		"structuredQuery": {
 			"from": [{"collectionId": _COLLECTION}],
 			"orderBy": [{"field": {"fieldPath": "score"}, "direction": "DESCENDING"}],
-			"limit": _TOP_COUNT
+			"limit": TOP_COUNT
 		}
 	})
 	var response := await _run_query(body)
