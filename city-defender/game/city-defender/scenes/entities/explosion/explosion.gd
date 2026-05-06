@@ -16,7 +16,7 @@ func init(pos: Vector2, explosion_radius: float) -> void:
 	global_position = pos
 	radius = explosion_radius
 	collision_layer = 0
-	collision_mask = 4
+	collision_mask = CollisionLayers.ENEMY_MISSILES
 	var shape := CircleShape2D.new()
 	shape.radius = radius
 	$CollisionShape2D.shape = shape

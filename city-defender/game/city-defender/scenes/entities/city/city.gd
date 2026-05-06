@@ -28,7 +28,7 @@ var _fire_timer: float = 0.0
 
 func _ready() -> void:
 	add_to_group("cities")
-	collision_layer = 1
+	collision_layer = CollisionLayers.CITIES
 	collision_mask = 0
 	var shape := RectangleShape2D.new()
 	shape.size = COLLISION_SIZE

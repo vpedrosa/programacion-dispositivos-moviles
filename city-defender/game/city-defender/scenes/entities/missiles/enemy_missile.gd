@@ -29,8 +29,8 @@ var _flicker_phase: float
 
 func _ready() -> void:
 	add_to_group("enemy_missiles")
-	collision_layer = 4   # enemy_missiles layer
-	collision_mask = 1    # detect cities layer
+	collision_layer = CollisionLayers.ENEMY_MISSILES
+	collision_mask = CollisionLayers.CITIES
 	var shape := CircleShape2D.new()
 	shape.radius = COLLISION_RADIUS
 	$CollisionShape2D.shape = shape
