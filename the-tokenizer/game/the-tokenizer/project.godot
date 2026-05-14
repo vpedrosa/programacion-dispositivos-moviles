@@ -25,6 +25,7 @@ SaveService="*res://autoloads/save_service.gd"
 SceneManager="*res://autoloads/scene_manager.gd"
 AudioManager="*res://autoloads/audio_manager.gd"
 DebugFlags="*res://autoloads/debug_flags.gd"
+UpgradeService="*res://autoloads/upgrade_service.gd"
 
 [display]
 

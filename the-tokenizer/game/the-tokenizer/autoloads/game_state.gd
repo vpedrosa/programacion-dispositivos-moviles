@@ -12,6 +12,7 @@ signal qubits_changed(value: int)
 signal era_changed(era: int)
 signal boss_progress_changed(progress: float)
 signal upgrade_purchased(upgrade_id: StringName)
+signal upgrade_levelup(upgrade_id: StringName, new_level: int)
 signal state_loaded()
 
 var state: PlayerState = PlayerState.new_default()
@@ -85,11 +86,18 @@ func set_boss_progress(progress: float) -> void:
 	boss_progress_changed.emit(clamped)
 
 
-func mark_upgrade_purchased(upgrade_id: StringName) -> void:
-	if state.purchased_upgrades.has(upgrade_id):
-		return
-	state.purchased_upgrades.append(upgrade_id)
-	upgrade_purchased.emit(upgrade_id)
+func get_upgrade_level(upgrade_id: StringName) -> int:
+	return int(state.upgrade_levels.get(String(upgrade_id), 0))
+
+
+func increment_upgrade_level(upgrade_id: StringName) -> int:
+	var old_level := get_upgrade_level(upgrade_id)
+	var new_level := old_level + 1
+	state.upgrade_levels[String(upgrade_id)] = new_level
+	if old_level == 0:
+		upgrade_purchased.emit(upgrade_id)
+	upgrade_levelup.emit(upgrade_id, new_level)
+	return new_level
 
 
 func record_ethical_decision(event_id: StringName, choice_id: StringName) -> void:
