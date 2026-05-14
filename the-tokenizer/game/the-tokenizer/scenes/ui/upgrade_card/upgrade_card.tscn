@@ -6,31 +6,32 @@
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_icon"]
 texture = ExtResource("2_icon_frame")
-content_margin_left = 30.0
-content_margin_top = 30.0
-content_margin_right = 30.0
-content_margin_bottom = 30.0
+content_margin_left = 22.0
+content_margin_top = 22.0
+content_margin_right = 22.0
+content_margin_bottom = 22.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_text"]
 texture = ExtResource("3_text_frame")
-content_margin_left = 44.0
-content_margin_top = 24.0
-content_margin_right = 44.0
-content_margin_bottom = 24.0
+content_margin_left = 28.0
+content_margin_top = 18.0
+content_margin_right = 28.0
+content_margin_bottom = 18.0
 
 [node name="UpgradeCard" type="HBoxContainer"]
-custom_minimum_size = Vector2(0, 180)
-theme_override_constants/separation = 8
+custom_minimum_size = Vector2(0, 144)
+theme_override_constants/separation = 6
 script = ExtResource("1_card")
 
 [node name="IconCard" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(180, 180)
+custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxTexture_icon")
 
 [node name="Icon" type="TextureRect" parent="IconCard"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 120)
+custom_minimum_size = Vector2(84, 84)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -39,7 +40,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="TextCard" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(0, 180)
+custom_minimum_size = Vector2(0, 144)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxTexture_text")
@@ -102,7 +103,7 @@ text = "10"
 
 [node name="BuyButton" type="Button" parent="TextCard/VBox/Footer"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(120, 40)
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "COMPRAR"
