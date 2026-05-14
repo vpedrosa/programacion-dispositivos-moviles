@@ -9,9 +9,12 @@ extends Node
 ## descendientes para ahorrar boilerplate en cada pantalla.
 
 signal music_changed(stream: AudioStream)
+signal music_volume_changed(db: float)
+signal sfx_volume_changed(db: float)
 
 const BUTTON_SFX := preload("res://assets/sounds/button-pluck.mp3")
 const FADE_OUT_DB := -40.0
+const CONFIG_PATH := "user://audio_settings.cfg"
 
 const ERA_TRACKS := {
 	1: preload("res://assets/sounds/level-1.mp3"),
@@ -29,6 +32,7 @@ var _fade_tween: Tween
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_load_settings()
 	_music_player = AudioStreamPlayer.new()
 	_music_player.bus = "Master"
 	_music_player.volume_db = music_db
@@ -104,14 +108,33 @@ func set_music_db(db: float) -> void:
 	music_db = db
 	if not (_fade_tween and _fade_tween.is_running()):
 		_music_player.volume_db = db
+	_save_settings()
+	music_volume_changed.emit(db)
 
 
 func set_sfx_db(db: float) -> void:
 	sfx_db = db
 	_sfx_player.volume_db = db
+	_save_settings()
+	sfx_volume_changed.emit(db)
 
 
 func _finalise_stop() -> void:
 	_music_player.stop()
 	_current_music = null
 	music_changed.emit(null)
+
+
+func _load_settings() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(CONFIG_PATH) != OK:
+		return
+	music_db = float(cfg.get_value("audio", "music_db", music_db))
+	sfx_db = float(cfg.get_value("audio", "sfx_db", sfx_db))
+
+
+func _save_settings() -> void:
+	var cfg := ConfigFile.new()
+	cfg.set_value("audio", "music_db", music_db)
+	cfg.set_value("audio", "sfx_db", sfx_db)
+	cfg.save(CONFIG_PATH)
