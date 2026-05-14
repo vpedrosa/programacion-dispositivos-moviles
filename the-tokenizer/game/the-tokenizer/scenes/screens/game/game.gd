@@ -38,6 +38,7 @@ func _ready() -> void:
 	_settings_button.pressed.connect(_on_settings_pressed)
 	GameState.tokens_changed.connect(_on_tokens_changed)
 	GameState.tokens_per_second_changed.connect(_on_per_second_changed)
+	GameState.qubit_multiplier_changed.connect(_on_qubit_multiplier_changed)
 	GameState.qubits_changed.connect(_on_qubits_changed)
 	GameState.era_changed.connect(_on_era_changed)
 	GameState.boss_progress_changed.connect(_on_boss_progress_changed)
@@ -46,6 +47,15 @@ func _ready() -> void:
 	_refresh_play_area(GameState.state.current_era)
 	AudioManager.play_ambient(GameState.state.current_era)
 	AudioManager.wire_buttons_in(self)
+
+
+func _process(delta: float) -> void:
+	if GameState.passive_paused:
+		return
+	var base_rate := GameState.state.tokens_per_second * GameState.state.qubit_multiplier
+	if base_rate <= 0.0:
+		return
+	GameState.add_tokens(DebugFlags.apply_to_token_yield(base_rate) * delta)
 
 
 func show_notification(text: String) -> void:
@@ -63,7 +73,7 @@ func show_notification(text: String) -> void:
 
 func _refresh_all() -> void:
 	_on_tokens_changed(GameState.state.tokens)
-	_on_per_second_changed(GameState.state.tokens_per_second)
+	_refresh_per_second()
 	_on_qubits_changed(GameState.state.qubits)
 	_on_era_changed(GameState.state.current_era)
 	_on_boss_progress_changed(GameState.state.boss_progress)
@@ -74,9 +84,18 @@ func _on_tokens_changed(value: float) -> void:
 	_tokens_label.text = _format_amount(value)
 
 
-func _on_per_second_changed(value: float) -> void:
-	_per_second_label.text = "+%s / s" % _format_amount(value)
-	_per_second_label.visible = value > 0.0
+func _on_per_second_changed(_value: float) -> void:
+	_refresh_per_second()
+
+
+func _on_qubit_multiplier_changed(_value: float) -> void:
+	_refresh_per_second()
+
+
+func _refresh_per_second() -> void:
+	var effective := GameState.state.tokens_per_second * GameState.state.qubit_multiplier
+	_per_second_label.text = "+%s / s" % _format_amount(effective)
+	_per_second_label.visible = effective > 0.0
 
 
 func _on_qubits_changed(value: int) -> void:

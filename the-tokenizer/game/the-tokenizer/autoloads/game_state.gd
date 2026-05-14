@@ -9,6 +9,7 @@ signal tokens_changed(value: float)
 signal tokens_per_second_changed(value: float)
 signal tokens_per_tap_changed(value: float)
 signal qubits_changed(value: int)
+signal qubit_multiplier_changed(value: float)
 signal era_changed(era: int)
 signal boss_progress_changed(progress: float)
 signal upgrade_purchased(upgrade_id: StringName)
@@ -16,6 +17,11 @@ signal upgrade_levelup(upgrade_id: StringName, new_level: int)
 signal state_loaded()
 
 var state: PlayerState = PlayerState.new_default()
+
+## Cuando un minijuego o un evento modal de narrativa toman el control,
+## ponen este flag a true para que el ticker pasivo de game.gd se detenga
+## hasta que vuelvan a darlo a false al cerrarse.
+var passive_paused: bool = false
 
 
 func reset(keep_qubits: bool = false) -> void:
@@ -66,7 +72,11 @@ func add_qubits(amount: int) -> void:
 
 
 func set_qubit_multiplier(value: float) -> void:
-	state.qubit_multiplier = maxf(1.0, value)
+	var clamped := maxf(1.0, value)
+	if is_equal_approx(state.qubit_multiplier, clamped):
+		return
+	state.qubit_multiplier = clamped
+	qubit_multiplier_changed.emit(clamped)
 
 
 func set_era(era: int) -> void:
@@ -118,5 +128,6 @@ func _emit_all() -> void:
 	tokens_per_second_changed.emit(state.tokens_per_second)
 	tokens_per_tap_changed.emit(state.tokens_per_tap)
 	qubits_changed.emit(state.qubits)
+	qubit_multiplier_changed.emit(state.qubit_multiplier)
 	era_changed.emit(state.current_era)
 	boss_progress_changed.emit(state.boss_progress)
