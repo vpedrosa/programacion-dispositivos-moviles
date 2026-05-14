@@ -46,7 +46,9 @@ func _render() -> void:
 		var dict: Dictionary = choice
 		var button := Button.new()
 		button.text = String(dict.get("label", ""))
-		button.custom_minimum_size = Vector2(0, 64)
+		button.custom_minimum_size = Vector2(0, 72)
+		button.add_theme_font_size_override("font_size", 18)
+		button.autowrap_mode = TextServer.AUTOWRAP_WORD
 		button.pressed.connect(_on_choice_pressed.bind(dict))
 		_choices_box.add_child(button)
 	AudioManager.wire_buttons_in(_choices_box)

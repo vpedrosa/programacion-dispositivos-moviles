@@ -88,7 +88,7 @@ fit_content = true
 scroll_active = false
 text = ""
 theme_override_fonts/normal_font = ExtResource("3_font")
-theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/normal_font_size = 20
 
 [node name="Hint" type="Label" parent="Margin/VBox/Panel/PanelVBox"]
 unique_name_in_owner = true
