@@ -14,7 +14,8 @@ const BUTTON_SFX := preload("res://assets/sounds/button-pluck.mp3")
 const FADE_OUT_DB := -40.0
 
 const ERA_TRACKS := {
-	1: preload("res://assets/sounds/main-soundtrack.mp3"),
+	1: preload("res://assets/sounds/level-1.mp3"),
+	7: preload("res://assets/sounds/level-7.mp3"),
 }
 
 @export var music_db: float = -6.0

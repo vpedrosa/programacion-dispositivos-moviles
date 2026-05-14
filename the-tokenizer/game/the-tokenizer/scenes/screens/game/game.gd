@@ -11,6 +11,23 @@ const SHOP_SCENE := "res://scenes/screens/shop/shop.tscn"
 const SETTINGS_SCENE := "res://scenes/screens/settings/settings.tscn"
 const TAP_TARGET_SCENE := preload("res://scenes/entities/tap_target/tap_target.tscn")
 const BOSS_SCENE := preload("res://scenes/screens/boss/boss.tscn")
+const DIALOGUE_SCENE := preload("res://scenes/screens/dialogue/dialogue.tscn")
+
+const ERA_DIALOGS := {
+	PlayerState.ERA_BASEMENT: PackedStringArray([
+		"Servidor revivido. Nueve años fermentando bajo la nevera y todavía arranca.",
+		"El fichero del escritorio era una receta: contar pares de palabras. La estadística más pobre del mundo.",
+		"Si la pulso lo suficiente, empezará a predecir. Empezar a contar es empezar a entrenar.",
+		"Toca la consola. Cada pulsación es un token.",
+	]),
+	PlayerState.ERA_SINGULARITY: PackedStringArray([
+		"Pasan los años. El modelo del sótano no pide descanso.",
+		"Empezó contando pares. Ahora reescribe su propia arquitectura mientras yo duermo.",
+		"Algo ha cambiado en los logs. Ya no parecen escritos por mí.",
+		"La singularidad no llega con fanfarrias. Llega cuando el modelo deja de aprender de ti y empieza a aprender mejor que tú.",
+		"Mantén el ritmo. Ya no eres tú quien entrena.",
+	]),
+}
 
 const ERA_NAMES := {
 	PlayerState.ERA_BASEMENT: "ERA 1 · EL SÓTANO",
@@ -49,6 +66,7 @@ func _ready() -> void:
 	_refresh_play_area(GameState.state.current_era)
 	AudioManager.play_ambient(GameState.state.current_era)
 	AudioManager.wire_buttons_in(self)
+	_maybe_show_era_intro(GameState.state.current_era)
 
 
 func _process(delta: float) -> void:
@@ -109,6 +127,20 @@ func _on_era_changed(era: int) -> void:
 	_era_label.text = ERA_NAMES.get(era, "ERA %d" % era)
 	_refresh_play_area(era)
 	AudioManager.play_ambient(era)
+	_maybe_show_era_intro(era)
+
+
+func _maybe_show_era_intro(era: int) -> void:
+	var event_id := StringName("era_%d_intro_dialog" % era)
+	if GameState.has_event_triggered(event_id):
+		return
+	var lines: PackedStringArray = ERA_DIALOGS.get(era, PackedStringArray())
+	if lines.is_empty():
+		return
+	GameState.mark_event_triggered(event_id)
+	var dialog := SceneManager.push_overlay(DIALOGUE_SCENE)
+	if dialog != null:
+		dialog.set_lines(lines)
 
 
 func _refresh_play_area(era: int) -> void:
