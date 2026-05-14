@@ -1,6 +1,47 @@
-[gd_scene load_steps=2 format=3 uid="uid://b2c1xkmqp7tk8"]
+[gd_scene load_steps=8 format=3 uid="uid://b2c1xkmqp7tk8"]
 
-[ext_resource type="Script" path="res://scenes/screens/main_menu/main_menu.gd" id="1_main"]
+[ext_resource type="Script" uid="uid://bs0ra0i63qnuk" path="res://scenes/screens/main_menu/main_menu.gd" id="1_main"]
+[ext_resource type="Texture2D" uid="uid://bdn2h7ll22djj" path="res://assets/sprites/ui/background-level-1-00.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://tpp8arx727cj" path="res://assets/sprites/logotipo-transparente.png" id="3_logo"]
+[ext_resource type="Texture2D" uid="uid://5rjktphs0p8a" path="res://assets/sprites/ui/button.png" id="4_btn"]
+[ext_resource type="Texture2D" uid="uid://wosee55dt4e7" path="res://assets/sprites/ui/button-active.png" id="5_btn_active"]
+[ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="6_font"]
+[ext_resource type="FontFile" uid="uid://cgiiocwgm5utu" path="res://assets/fonts/Silkscreen-Bold.ttf" id="7_font_bold"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn"]
+texture = ExtResource("4_btn")
+texture_margin_left = 64.0
+texture_margin_top = 96.0
+texture_margin_right = 64.0
+texture_margin_bottom = 96.0
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_active"]
+texture = ExtResource("5_btn_active")
+texture_margin_left = 64.0
+texture_margin_top = 96.0
+texture_margin_right = 64.0
+texture_margin_bottom = 96.0
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+
+[sub_resource type="Theme" id="Theme_main_menu"]
+default_font = ExtResource("6_font")
+default_font_size = 24
+Button/colors/font_color = Color(0.92, 0.92, 0.84, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(0.74, 0.74, 0.6, 1)
+Button/colors/font_disabled_color = Color(0.5, 0.5, 0.45, 0.6)
+Button/styles/normal = SubResource("StyleBoxTexture_btn")
+Button/styles/hover = SubResource("StyleBoxTexture_btn_active")
+Button/styles/pressed = SubResource("StyleBoxTexture_btn_active")
+Button/styles/disabled = SubResource("StyleBoxTexture_btn")
+Button/styles/focus = SubResource("StyleBoxTexture_btn_active")
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -9,16 +50,20 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_main_menu")
 script = ExtResource("1_main")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.0235294, 0.0235294, 0.0588235, 1)
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -28,58 +73,66 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 48
-theme_override_constants/margin_top = 96
+theme_override_constants/margin_top = 64
 theme_override_constants/margin_right = 48
-theme_override_constants/margin_bottom = 96
+theme_override_constants/margin_bottom = 64
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-size_flags_vertical = 4
-theme_override_constants/separation = 24
+theme_override_constants/separation = 20
 alignment = 1
 
-[node name="Title" type="Label" parent="MarginContainer/VBox"]
+[node name="Logo" type="TextureRect" parent="MarginContainer/VBox"]
+custom_minimum_size = Vector2(0, 280)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 56
-text = "THE TOKENIZER"
-horizontal_alignment = 1
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Subtitle" type="Label" parent="MarginContainer/VBox"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("6_font")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.78, 0.7, 0.85)
 text = "un mensaje en el servidor abandonado"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="MarginContainer/VBox"]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
 [node name="NewGameButton" type="Button" parent="MarginContainer/VBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("7_font_bold")
+theme_override_font_sizes/font_size = 22
 text = "Nueva partida"
 
 [node name="ContinueButton" type="Button" parent="MarginContainer/VBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 text = "Continuar"
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/VBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 text = "Configuración"
 
 [node name="QuitButton" type="Button" parent="MarginContainer/VBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 text = "Salir"
 
 [node name="ConfirmNewGameDialog" type="ConfirmationDialog" parent="."]
 unique_name_in_owner = true
 title = "Nueva partida"
-size = Vector2i(420, 160)
+size = Vector2i(540, 200)
 ok_button_text = "Empezar de cero"
 dialog_text = "Hay una partida guardada. Si empiezas una nueva, perderás el progreso. ¿Continuar?"
 cancel_button_text = "Cancelar"
