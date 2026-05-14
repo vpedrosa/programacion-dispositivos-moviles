@@ -17,10 +17,10 @@ const QUANTUM_EVENT_SCENE := preload("res://scenes/screens/quantum_event/quantum
 
 const ERA_DIALOGS := {
 	PlayerState.ERA_BASEMENT: [
-		"Servidor revivido. Nueve años fermentando bajo la nevera y todavía arranca.",
-		"El fichero del escritorio era una receta: contar pares de palabras. La estadística más pobre del mundo.",
-		"Si la pulso lo suficiente, empezará a predecir. Empezar a contar es empezar a entrenar.",
-		"Toca la consola. Cada pulsación es un token.",
+		"Suelto el ratón. Releo. Dos veces.",
+		"Quien dejó este fichero sabía lo que iba a pasar años antes de que pasara — y dejó la receta.",
+		"Bigrams. Trigrams. Contar pares y ternas. La estadística más pobre del mundo, pero la única que cabe en este hardware.",
+		"Empezar a contar es empezar a entrenar. Toca la consola.",
 	],
 	PlayerState.ERA_SINGULARITY: [
 		"Pasan los años. El modelo del sótano no pide descanso.",
