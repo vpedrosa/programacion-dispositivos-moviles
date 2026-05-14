@@ -9,11 +9,14 @@ extends Control
 
 const SHOP_SCENE := "res://scenes/screens/shop/shop.tscn"
 const SETTINGS_SCENE := "res://scenes/screens/settings/settings.tscn"
+const TAP_TARGET_SCENE := preload("res://scenes/entities/tap_target/tap_target.tscn")
 
 const ERA_NAMES := {
 	PlayerState.ERA_BASEMENT: "ERA 1 · EL SÓTANO",
 	PlayerState.ERA_SINGULARITY: "ERA 7 · SINGULARIDAD",
 }
+
+var _play_area_content: Node = null
 
 @onready var _era_label: Label = %EraLabel
 @onready var _tokens_label: Label = %TokensLabel
@@ -40,6 +43,7 @@ func _ready() -> void:
 	GameState.boss_progress_changed.connect(_on_boss_progress_changed)
 	DebugFlags.eval_multiplier_changed.connect(_on_debug_multiplier_changed)
 	_refresh_all()
+	_refresh_play_area(GameState.state.current_era)
 	AudioManager.play_ambient(GameState.state.current_era)
 	AudioManager.wire_buttons_in(self)
 
@@ -82,6 +86,18 @@ func _on_qubits_changed(value: int) -> void:
 
 func _on_era_changed(era: int) -> void:
 	_era_label.text = ERA_NAMES.get(era, "ERA %d" % era)
+	_refresh_play_area(era)
+	AudioManager.play_ambient(era)
+
+
+func _refresh_play_area(era: int) -> void:
+	if _play_area_content != null:
+		_play_area_content.queue_free()
+		_play_area_content = null
+	match era:
+		PlayerState.ERA_BASEMENT:
+			_play_area_content = TAP_TARGET_SCENE.instantiate()
+			_play_area.add_child(_play_area_content)
 
 
 func _on_boss_progress_changed(progress: float) -> void:
