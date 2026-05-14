@@ -10,25 +10,17 @@
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn"]
 texture = ExtResource("4_btn")
-texture_margin_left = 64.0
-texture_margin_top = 96.0
-texture_margin_right = 64.0
-texture_margin_bottom = 96.0
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
+content_margin_left = 80.0
+content_margin_top = 24.0
+content_margin_right = 80.0
+content_margin_bottom = 24.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_active"]
 texture = ExtResource("5_btn_active")
-texture_margin_left = 64.0
-texture_margin_top = 96.0
-texture_margin_right = 64.0
-texture_margin_bottom = 96.0
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
+content_margin_left = 80.0
+content_margin_top = 24.0
+content_margin_right = 80.0
+content_margin_bottom = 24.0
 
 [sub_resource type="Theme" id="Theme_main_menu"]
 default_font = ExtResource("6_font")
@@ -105,7 +97,7 @@ layout_mode = 2
 
 [node name="NewGameButton" type="Button" parent="MarginContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(440, 130)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("7_font_bold")
 theme_override_font_sizes/font_size = 22
@@ -113,20 +105,23 @@ text = "Nueva partida"
 
 [node name="ContinueButton" type="Button" parent="MarginContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(440, 130)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Continuar"
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(440, 130)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Configuración"
 
 [node name="QuitButton" type="Button" parent="MarginContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(440, 130)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Salir"
 
 [node name="ConfirmNewGameDialog" type="ConfirmationDialog" parent="."]
