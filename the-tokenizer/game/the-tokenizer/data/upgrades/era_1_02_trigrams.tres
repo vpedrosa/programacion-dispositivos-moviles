@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=2 format=3 uid="uid://btr2um4rjqz5w"]
+
+[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"era_1_trigrams"
+display_name = "Trigrams"
+description = "El siguiente paso natural: probabilidades sobre tríos. Sigue siendo memoria pura, pero predice mejor el plural y la negación."
+era = 1
+base_cost = 50.0
+cost_growth = 1.55
+max_level = 5
+effect_type = 1
+effect_value = 2.0
+prerequisite_id = &"era_1_bigrams"

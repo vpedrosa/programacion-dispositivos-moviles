@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=2 format=3 uid="uid://cy2wqp8osd5q4"]
+
+[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"era_1_skipgram"
+display_name = "Skip-gram + negative sampling"
+description = "Acelera el entrenamiento de Word2Vec sampleando contraejemplos. El goteo pasivo se nota."
+era = 1
+base_cost = 2000.0
+cost_growth = 1.8
+max_level = 3
+effect_type = 3
+effect_value = 1.5
+prerequisite_id = &"era_1_word2vec"

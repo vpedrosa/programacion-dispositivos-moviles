@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=2 format=3 uid="uid://bxhfkwt5g6ifk"]
+
+[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"era_1_word2vec"
+display_name = "Word2Vec"
+description = "Mikolov, 2013. Las palabras dejan de ser strings y empiezan a tener geometría. Por primera vez tu modelo entrena en segundo plano."
+era = 1
+base_cost = 500.0
+cost_growth = 1.0
+max_level = 1
+effect_type = 3
+effect_value = 0.5
+prerequisite_id = &"era_1_stopwords"

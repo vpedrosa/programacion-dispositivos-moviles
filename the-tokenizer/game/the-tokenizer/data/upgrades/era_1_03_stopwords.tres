@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=2 format=3 uid="uid://crp5p1jllffkc"]
+
+[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"era_1_stopwords"
+display_name = "Filtro stop-words"
+description = "Eliminar \"el\", \"de\", \"que\" del corpus reduce el ruido. Tu mano gana eficiencia y cada tap rinde más."
+era = 1
+base_cost = 200.0
+cost_growth = 2.0
+max_level = 3
+effect_type = 2
+effect_value = 1.25
+prerequisite_id = &"era_1_trigrams"
