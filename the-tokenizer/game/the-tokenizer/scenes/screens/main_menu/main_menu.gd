@@ -10,6 +10,7 @@ extends Control
 const INTRO_SCENE := "res://scenes/screens/intro/intro.tscn"
 const GAME_SCENE := "res://scenes/screens/game/game.tscn"
 const SETTINGS_SCENE := "res://scenes/screens/settings/settings.tscn"
+const FONT_BOLD := preload("res://assets/fonts/Silkscreen-Bold.ttf")
 
 @onready var _new_game_button: Button = %NewGameButton
 @onready var _continue_button: Button = %ContinueButton
@@ -25,6 +26,21 @@ func _ready() -> void:
 	_quit_button.pressed.connect(_on_quit_pressed)
 	_confirm_dialog.confirmed.connect(_start_new_game)
 	_continue_button.disabled = not SaveService.has_save()
+	# Godot 4 Button sólo soporta una fuente, así que el "negrita en hover/press"
+	# se hace cambiando la fuente del propio botón con los signals de estado.
+	for button in [_new_game_button, _continue_button, _settings_button, _quit_button]:
+		button.mouse_entered.connect(_bold.bind(button))
+		button.mouse_exited.connect(_regular.bind(button))
+		button.button_down.connect(_bold.bind(button))
+		button.button_up.connect(_regular.bind(button))
+
+
+static func _bold(button: Button) -> void:
+	button.add_theme_font_override("font", FONT_BOLD)
+
+
+static func _regular(button: Button) -> void:
+	button.remove_theme_font_override("font")
 
 
 func _on_new_game_pressed() -> void:

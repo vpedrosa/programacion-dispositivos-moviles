@@ -112,8 +112,7 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(440, 130)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("7_font_bold")
-theme_override_font_sizes/font_size = 22
+size_flags_horizontal = 4
 text = "NUEVA"
 
 [node name="ContinueButton" type="Button" parent="MarginContainer/VBox" unique_id=14490269]
