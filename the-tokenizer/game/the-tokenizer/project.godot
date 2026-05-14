@@ -28,6 +28,7 @@ DebugFlags="*res://autoloads/debug_flags.gd"
 UpgradeService="*res://autoloads/upgrade_service.gd"
 BossService="*res://autoloads/boss_service.gd"
 EventService="*res://autoloads/event_service.gd"
+MinigameService="*res://autoloads/minigame_service.gd"
 
 [display]
 

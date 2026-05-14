@@ -65,6 +65,8 @@ func _ready() -> void:
 	DebugFlags.eval_multiplier_changed.connect(_on_debug_multiplier_changed)
 	BossService.boss_ready.connect(_on_boss_ready)
 	EventService.ethical_event_triggered.connect(_on_ethical_event_triggered)
+	MinigameService.minigame_offered.connect(_on_minigame_offered)
+	MinigameService.minigame_outcome_applied.connect(_on_minigame_outcome)
 	_refresh_all()
 	_refresh_play_area(GameState.state.current_era)
 	AudioManager.play_ambient(GameState.state.current_era)
@@ -180,6 +182,18 @@ func _on_ethical_event_triggered(event: EthicalEvent) -> void:
 	var screen := SceneManager.push_overlay(ETHICAL_EVENT_SCENE)
 	if screen != null:
 		screen.set_event(event)
+
+
+func _on_minigame_offered(scene_path: String) -> void:
+	show_notification("El cluster reclama atención.")
+	SceneManager.push_overlay(scene_path)
+
+
+func _on_minigame_outcome(success: bool, bonus: float) -> void:
+	if success and bonus > 0.0:
+		show_notification("Minijuego completado · +%s tokens" % _format_amount(bonus))
+	elif not success and bonus < 0.0:
+		show_notification("Minijuego fallado · -%s tokens" % _format_amount(absf(bonus)))
 
 
 func _on_settings_pressed() -> void:
