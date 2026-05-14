@@ -25,7 +25,7 @@ func _ready() -> void:
 	_settings_button.pressed.connect(_on_settings_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
 	_confirm_dialog.confirmed.connect(_start_new_game)
-	_continue_button.disabled = not SaveService.has_save()
+	_continue_button.disabled = not _any_slot_has_save()
 	# Godot 4 Button sólo soporta una fuente, así que el "negrita en hover/press"
 	# se hace cambiando la fuente del propio botón con los signals de estado.
 	for button in [_new_game_button, _continue_button, _settings_button, _quit_button]:
@@ -44,18 +44,22 @@ static func _regular(button: Button) -> void:
 
 
 func _on_new_game_pressed() -> void:
-	if SaveService.has_save():
+	if _any_slot_has_save():
 		_confirm_dialog.popup_centered()
 	else:
 		_start_new_game()
 
 
 func _on_continue_pressed() -> void:
-	var state := SaveService.load_save()
+	var slot := SaveService.get_active_slot()
+	if slot == 0:
+		slot = _first_occupied_slot()
+	var state := SaveService.load_save(slot)
 	if state == null:
-		push_warning("MainMenu: no se pudo cargar el guardado")
-		_continue_button.disabled = true
+		push_warning("MainMenu: no se pudo cargar el slot %d" % slot)
+		_continue_button.disabled = not _any_slot_has_save()
 		return
+	SaveService.set_active_slot(slot)
 	GameState.load_from(state)
 	SceneManager.change_scene(GAME_SCENE)
 
@@ -69,5 +73,33 @@ func _on_quit_pressed() -> void:
 
 
 func _start_new_game() -> void:
+	# Placeholder: hasta que aterrice el selector de slot en #324 se usa el
+	# primer slot vacío disponible (o el 1 si todos están ocupados).
+	var target := _first_empty_slot()
+	if target == 0:
+		target = 1
+	SaveService.clear_save(target)
+	SaveService.set_active_slot(target)
 	GameState.reset()
 	SceneManager.change_scene(INTRO_SCENE)
+
+
+func _any_slot_has_save() -> bool:
+	for slot in range(1, SaveService.MAX_SLOTS + 1):
+		if SaveService.has_save(slot):
+			return true
+	return false
+
+
+func _first_occupied_slot() -> int:
+	for slot in range(1, SaveService.MAX_SLOTS + 1):
+		if SaveService.has_save(slot):
+			return slot
+	return 0
+
+
+func _first_empty_slot() -> int:
+	for slot in range(1, SaveService.MAX_SLOTS + 1):
+		if not SaveService.has_save(slot):
+			return slot
+	return 0
