@@ -47,14 +47,14 @@ func _exit_tree() -> void:
 		_resumed_passive = true
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if not _is_tap_event(event):
 		return
-	get_viewport().set_input_as_handled()
 	if _typing:
 		_complete_typing()
 	else:
 		_advance()
+	get_viewport().set_input_as_handled()
 
 
 func set_lines(value: PackedStringArray) -> void:
