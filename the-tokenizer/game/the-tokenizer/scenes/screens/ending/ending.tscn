@@ -1,0 +1,131 @@
+[gd_scene load_steps=4 format=3 uid="uid://b7vkqpcrmmu8c"]
+
+[ext_resource type="Script" path="res://scenes/screens/ending/ending.gd" id="1_ending"]
+[ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="2_font"]
+
+[sub_resource type="Theme" id="Theme_ending"]
+default_font = ExtResource("2_font")
+default_font_size = 16
+
+[node name="Ending" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_ending")
+script = ExtResource("1_ending")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.02, 0.025, 0.04, 1)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 56
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="Prefix" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.6, 0.85, 0.65, 0.7)
+text = "FIN DE LA PARTIDA"
+horizontal_alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.9, 0.78, 0.55, 1)
+text = "FIN EQUILIBRADO"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="BodyLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.86, 0.9, 0.8, 0.95)
+theme_override_constants/line_spacing = 6
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="SummaryPanel" type="VBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+alignment = 0
+
+[node name="SummaryHeader" type="Label" parent="Margin/VBox/SummaryPanel"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.6, 0.85, 0.65, 0.85)
+text = "RESUMEN"
+horizontal_alignment = 1
+
+[node name="DecisionsLabel" type="Label" parent="Margin/VBox/SummaryPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.82, 0.88, 0.78, 0.92)
+text = "Decisiones tomadas · 0"
+horizontal_alignment = 1
+
+[node name="BossesLabel" type="Label" parent="Margin/VBox/SummaryPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.82, 0.88, 0.78, 0.92)
+text = "Hitos superados · 0 / 2"
+horizontal_alignment = 1
+
+[node name="QubitsLabel" type="Label" parent="Margin/VBox/SummaryPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.82, 0.88, 0.78, 0.92)
+text = "Qubits acumulados · 0"
+horizontal_alignment = 1
+
+[node name="LifetimeLabel" type="Label" parent="Margin/VBox/SummaryPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.82, 0.88, 0.78, 0.92)
+text = "Tokens totales · 0"
+horizontal_alignment = 1
+
+[node name="MenuButton" type="Button" parent="Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 16
+text = "VOLVER AL MENÚ"
