@@ -15,7 +15,7 @@ const TALKING_FRAMES := [
 	preload("res://assets/sprites/player/researcher-talking-animation-3.png"),
 	preload("res://assets/sprites/player/researcher-talking-idle.png"),
 ]
-const IDLE_FRAME := preload("res://assets/sprites/player/researcher-idle.png")
+const IDLE_FRAME := preload("res://assets/sprites/player/researcher-talking-idle.png")
 const CHAR_INTERVAL := 0.035
 const TALK_FRAME_INTERVAL := 0.13
 
