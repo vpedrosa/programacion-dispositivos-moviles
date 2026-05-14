@@ -1,0 +1,143 @@
+[gd_scene load_steps=6 format=3 uid="uid://b3pkqq8m65v5h"]
+
+[ext_resource type="Script" path="res://scenes/screens/shop/shop.gd" id="1_shop"]
+[ext_resource type="Texture2D" uid="uid://b8cqocxrm23tc" path="res://assets/sprites/ui/level1/bg3.png" id="2_bg"]
+[ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="3_font"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qubit"]
+bg_color = Color(0.04, 0.05, 0.1, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.3, 0.4, 0.85, 0.55)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 14.0
+content_margin_top = 12.0
+content_margin_right = 14.0
+content_margin_bottom = 12.0
+
+[sub_resource type="Theme" id="Theme_shop"]
+default_font = ExtResource("3_font")
+default_font_size = 16
+
+[node name="Shop" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_shop")
+script = ExtResource("1_shop")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+modulate = Color(0.4, 0.4, 0.4, 1)
+
+[node name="Veil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 36
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TopBar" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="Margin/VBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.65, 0.85, 0.7, 1)
+text = "TIENDA"
+
+[node name="TokensWrap" type="HBoxContainer" parent="Margin/VBox/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TokensPrefix" type="Label" parent="Margin/VBox/TopBar/TokensWrap"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.7, 0.82, 0.7, 0.9)
+text = "tokens"
+
+[node name="TokensLabel" type="Label" parent="Margin/VBox/TopBar/TokensWrap"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.95, 0.95, 0.85, 1)
+text = "0"
+
+[node name="CloseButton" type="Button" parent="Margin/VBox/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+flat = true
+theme_override_font_sizes/font_size = 20
+text = "✕"
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="UpgradeList" type="VBoxContainer" parent="Margin/VBox/Scroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="EmptyLabel" type="Label" parent="Margin/VBox/Scroll/UpgradeList"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.6, 0.6, 0.55, 0.7)
+text = "Sin mejoras disponibles en esta era."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="QubitSection" type="PanelContainer" parent="Margin/VBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qubit")
+
+[node name="QubitLabel" type="Label" parent="Margin/VBox/QubitSection"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.78, 0.84, 1, 0.9)
+text = "Multiplicadores de qubits — disponibles tras desbloquear la realidad cuántica."
+autowrap_mode = 2
