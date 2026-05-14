@@ -1,12 +1,11 @@
 [gd_scene load_steps=8 format=3 uid="uid://crmqg4n2u1tx7"]
 
 [ext_resource type="Script" path="res://scenes/screens/intro/intro.gd" id="1_intro"]
-[ext_resource type="Texture2D" uid="uid://bdn2h7ll22djj" path="res://assets/sprites/ui/background-level-1-00.png" id="2_bg0"]
+[ext_resource type="Texture2D" uid="uid://gfijnpill0p3" path="res://assets/sprites/ui/level1/bg0.png" id="2_bg0"]
 [ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="3_font"]
-
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/background-level-1-01.png" id="4_bg1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/background-level-1-02.png" id="5_bg2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/background-level-1-03.png" id="6_bg3"]
+[ext_resource type="Texture2D" uid="uid://tu8wqtkp7ouw" path="res://assets/sprites/ui/level1/bg1.png" id="4_bg1"]
+[ext_resource type="Texture2D" uid="uid://dv2urvnvig1bt" path="res://assets/sprites/ui/level1/bg2.png" id="5_bg2"]
+[ext_resource type="Texture2D" uid="uid://b8cqocxrm23tc" path="res://assets/sprites/ui/level1/bg3.png" id="6_bg3"]
 
 [sub_resource type="Theme" id="Theme_intro"]
 default_font = ExtResource("3_font")
