@@ -42,6 +42,7 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	AudioManager.stop_typing()
 	if not _resumed_passive:
 		GameState.passive_paused = false
 		_resumed_passive = true
@@ -82,6 +83,7 @@ func _show_line(idx: int) -> void:
 	_hint.modulate.a = 0.0
 	_typing = true
 	_talk_timer.start()
+	AudioManager.start_typing()
 	var char_count := _text.get_parsed_text().length()
 	_typewriter = create_tween()
 	_typewriter.tween_property(_text, "visible_characters", char_count, char_count * CHAR_INTERVAL)
@@ -100,6 +102,7 @@ func _complete_typing() -> void:
 func _on_typing_done() -> void:
 	_typing = false
 	_talk_timer.stop()
+	AudioManager.stop_typing()
 	_portrait.texture = IDLE_FRAME
 	var t := create_tween()
 	t.tween_property(_hint, "modulate:a", 1.0, 0.3)

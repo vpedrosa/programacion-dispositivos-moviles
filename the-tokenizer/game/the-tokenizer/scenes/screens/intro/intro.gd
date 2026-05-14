@@ -78,6 +78,7 @@ func _show_line(idx: int) -> void:
 	_message.modulate.a = 1.0
 	_hint.modulate.a = 0.0
 	_typing = true
+	AudioManager.start_typing()
 	var char_count := _message.get_total_character_count()
 	_typewriter = create_tween()
 	_typewriter.tween_property(_message, "visible_characters", char_count, char_count * CHAR_INTERVAL)
@@ -95,6 +96,7 @@ func _complete_typing() -> void:
 
 func _on_typing_done() -> void:
 	_typing = false
+	AudioManager.stop_typing()
 	var t := create_tween()
 	t.tween_property(_hint, "modulate:a", 1.0, 0.3)
 
@@ -124,6 +126,7 @@ func _finish() -> void:
 	if _finished:
 		return
 	_finished = true
+	AudioManager.stop_typing()
 	if _typewriter and _typewriter.is_running():
 		_typewriter.kill()
 	if _crossfade_tween and _crossfade_tween.is_running():

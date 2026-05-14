@@ -13,6 +13,7 @@ signal music_volume_changed(db: float)
 signal sfx_volume_changed(db: float)
 
 const BUTTON_SFX := preload("res://assets/sounds/button-pluck.mp3")
+const TYPING_LOOP := preload("res://assets/sounds/typing.mp3")
 const FADE_OUT_DB := -40.0
 const CONFIG_PATH := "user://audio_settings.cfg"
 
@@ -26,6 +27,7 @@ const ERA_TRACKS := {
 
 var _music_player: AudioStreamPlayer
 var _sfx_player: AudioStreamPlayer
+var _typing_player: AudioStreamPlayer
 var _current_music: AudioStream
 var _fade_tween: Tween
 
@@ -41,6 +43,11 @@ func _ready() -> void:
 	_sfx_player.bus = "Master"
 	_sfx_player.volume_db = sfx_db
 	add_child(_sfx_player)
+	_typing_player = AudioStreamPlayer.new()
+	_typing_player.bus = "Master"
+	_typing_player.stream = TYPING_LOOP
+	_typing_player.volume_db = sfx_db - 4.0
+	add_child(_typing_player)
 
 
 func play_ambient(era: int) -> void:
@@ -98,6 +105,17 @@ func play_button_sfx() -> void:
 	play_sfx(BUTTON_SFX)
 
 
+func start_typing() -> void:
+	if _typing_player.playing:
+		return
+	_typing_player.play()
+
+
+func stop_typing() -> void:
+	if _typing_player.playing:
+		_typing_player.stop()
+
+
 func wire_buttons_in(root: Node) -> void:
 	for button in root.find_children("", "Button", true, false):
 		if button is Button and not button.pressed.is_connected(play_button_sfx):
@@ -115,6 +133,7 @@ func set_music_db(db: float) -> void:
 func set_sfx_db(db: float) -> void:
 	sfx_db = db
 	_sfx_player.volume_db = db
+	_typing_player.volume_db = db - 4.0
 	_save_settings()
 	sfx_volume_changed.emit(db)
 
