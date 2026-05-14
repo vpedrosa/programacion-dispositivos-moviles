@@ -23,6 +23,8 @@ func _ready() -> void:
 	_settings_button.pressed.connect(_on_settings_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
 	_continue_button.disabled = not _any_slot_has_save()
+	AudioManager.play_ambient(PlayerState.ERA_BASEMENT)
+	AudioManager.wire_buttons_in(self)
 
 
 func _on_new_game_pressed() -> void:

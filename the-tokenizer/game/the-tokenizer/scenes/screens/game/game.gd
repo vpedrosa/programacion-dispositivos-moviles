@@ -40,6 +40,8 @@ func _ready() -> void:
 	GameState.boss_progress_changed.connect(_on_boss_progress_changed)
 	DebugFlags.eval_multiplier_changed.connect(_on_debug_multiplier_changed)
 	_refresh_all()
+	AudioManager.play_ambient(GameState.state.current_era)
+	AudioManager.wire_buttons_in(self)
 
 
 func show_notification(text: String) -> void:

@@ -30,6 +30,7 @@ func _ready() -> void:
 		_slot_buttons[i].pressed.connect(_on_slot_pressed.bind(slot))
 		_delete_buttons[i].pressed.connect(_on_delete_pressed.bind(slot))
 	_confirm_dialog.confirmed.connect(_run_pending_action)
+	AudioManager.wire_buttons_in(self)
 	refresh()
 
 

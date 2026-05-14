@@ -27,6 +27,8 @@ func _ready() -> void:
 	_message.modulate.a = 0.0
 	for i in range(_backgrounds.size()):
 		_backgrounds[i].modulate.a = 1.0 if i == 0 else 0.0
+	AudioManager.play_ambient(PlayerState.ERA_BASEMENT)
+	AudioManager.wire_buttons_in(self)
 	_start_animation()
 
 
