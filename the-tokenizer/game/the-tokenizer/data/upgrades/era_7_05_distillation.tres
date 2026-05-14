@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://chdc1q0rxk04m"]
+
+[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"era_7_distillation"
+display_name = "Auto-destilación"
+description = "El modelo comprime sus propios pesos en versiones más pequeñas y rápidas, y vuelve a entrenarse sobre sí mismo. Triplica el goteo por nivel."
+era = 7
+base_cost = 100000000.0
+cost_growth = 2.5
+max_level = 2
+effect_type = 4
+effect_value = 3.0
+prerequisite_id = &"era_7_nas"

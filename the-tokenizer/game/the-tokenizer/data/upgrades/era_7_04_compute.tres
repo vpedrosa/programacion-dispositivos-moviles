@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://b8r0nptwx7tn4"]
+
+[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"era_7_compute"
+display_name = "Síntesis de cómputo"
+description = "El modelo diseña el silicio sobre el que correrá la siguiente generación. Inyección masiva de tokens por segundo, una sola vez."
+era = 7
+base_cost = 50000000.0
+cost_growth = 1.0
+max_level = 1
+effect_type = 3
+effect_value = 500.0
+prerequisite_id = &"era_7_continual"

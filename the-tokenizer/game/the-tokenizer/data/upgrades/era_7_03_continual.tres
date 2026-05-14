@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://dh1mpknxgwf7g"]
+
+[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"era_7_continual"
+display_name = "Continual learning"
+description = "El modelo deja de tener una fase de entrenamiento y una fase de inferencia: ahora todo es entrenamiento. Producción multiplicada por nivel."
+era = 7
+base_cost = 10000000.0
+cost_growth = 1.6
+max_level = -1
+effect_type = 4
+effect_value = 1.5
+prerequisite_id = &"era_7_nas"

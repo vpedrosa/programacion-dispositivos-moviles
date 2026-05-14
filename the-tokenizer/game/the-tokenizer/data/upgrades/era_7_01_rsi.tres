@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://dx2knsj45h5cv"]
+
+[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"era_7_rsi"
+display_name = "Recursive self-improvement"
+description = "El modelo entrena copias de sí mismo y se queda con la mejor. Cada iteración duplica el ritmo del cluster."
+era = 7
+base_cost = 1000000.0
+cost_growth = 2.0
+max_level = 5
+effect_type = 4
+effect_value = 2.0
+prerequisite_id = &""
