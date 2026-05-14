@@ -135,11 +135,3 @@ custom_minimum_size = Vector2(440, 130)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Salir"
-
-[node name="ConfirmNewGameDialog" type="ConfirmationDialog" parent="." unique_id=726275875]
-unique_name_in_owner = true
-title = "Nueva partida"
-size = Vector2i(540, 200)
-ok_button_text = "Empezar de cero"
-dialog_text = "Hay una partida guardada. Si empiezas una nueva, perderás el progreso. ¿Continuar?"
-cancel_button_text = "Cancelar"

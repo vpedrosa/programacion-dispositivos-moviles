@@ -1,0 +1,236 @@
+[gd_scene load_steps=8 format=3 uid="uid://dl1g7kn83w8mn"]
+
+[ext_resource type="Script" path="res://scenes/screens/slot_picker/slot_picker.gd" id="1_picker"]
+[ext_resource type="Texture2D" uid="uid://bdn2h7ll22djj" path="res://assets/sprites/ui/background-level-1-00.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://5rjktphs0p8a" path="res://assets/sprites/ui/button.png" id="3_btn"]
+[ext_resource type="Texture2D" uid="uid://wosee55dt4e7" path="res://assets/sprites/ui/button-active.png" id="4_btn_active"]
+[ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="5_font"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot"]
+content_margin_left = 80.0
+content_margin_top = 18.0
+content_margin_right = 80.0
+content_margin_bottom = 18.0
+texture = ExtResource("3_btn")
+texture_margin_left = 0.0
+texture_margin_top = 0.0
+texture_margin_right = 0.0
+texture_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot_active"]
+content_margin_left = 80.0
+content_margin_top = 18.0
+content_margin_right = 80.0
+content_margin_bottom = 18.0
+texture = ExtResource("4_btn_active")
+texture_margin_left = 0.0
+texture_margin_top = 0.0
+texture_margin_right = 0.0
+texture_margin_bottom = 0.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_delete"]
+bg_color = Color(0.18, 0.06, 0.06, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.2, 0.2, 0.7)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_delete_hover"]
+bg_color = Color(0.4, 0.12, 0.12, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.3, 0.3, 0.9)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
+
+[sub_resource type="Theme" id="Theme_slot_picker"]
+default_font = ExtResource("5_font")
+default_font_size = 18
+Button/colors/font_color = Color(0.92, 0.92, 0.84, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(0.74, 0.74, 0.6, 1)
+Button/colors/font_disabled_color = Color(0.6, 0.6, 0.55, 0.5)
+Button/styles/normal = SubResource("StyleBoxTexture_slot")
+Button/styles/hover = SubResource("StyleBoxTexture_slot_active")
+Button/styles/pressed = SubResource("StyleBoxTexture_slot_active")
+Button/styles/focus = SubResource("StyleBoxTexture_slot_active")
+Button/styles/disabled = SubResource("StyleBoxTexture_slot")
+
+[node name="SlotPicker" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_slot_picker")
+script = ExtResource("1_picker")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Veil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 48
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="TopBar" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BackButton" type="Button" parent="Margin/VBox/TopBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 56)
+layout_mode = 2
+flat = true
+theme_override_font_sizes/font_size = 16
+text = "‹ ATRÁS"
+
+[node name="TitleLabel" type="Label" parent="Margin/VBox/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.65, 0.85, 0.7, 1)
+text = "ELIGE PARTIDA"
+horizontal_alignment = 1
+
+[node name="TopSpacer" type="Control" parent="Margin/VBox/TopBar"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+
+[node name="Slots" type="VBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="SlotRow1" type="HBoxContainer" parent="Margin/VBox/Slots"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SlotButton1" type="Button" parent="Margin/VBox/Slots/SlotRow1"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "SLOT 1 · vacío"
+
+[node name="DeleteButton1" type="Button" parent="Margin/VBox/Slots/SlotRow1"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(72, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.75, 0.75, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
+theme_override_styles/hover = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_delete_hover")
+text = "✕"
+
+[node name="SlotRow2" type="HBoxContainer" parent="Margin/VBox/Slots"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SlotButton2" type="Button" parent="Margin/VBox/Slots/SlotRow2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "SLOT 2 · vacío"
+
+[node name="DeleteButton2" type="Button" parent="Margin/VBox/Slots/SlotRow2"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(72, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.75, 0.75, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
+theme_override_styles/hover = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_delete_hover")
+text = "✕"
+
+[node name="SlotRow3" type="HBoxContainer" parent="Margin/VBox/Slots"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SlotButton3" type="Button" parent="Margin/VBox/Slots/SlotRow3"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "SLOT 3 · vacío"
+
+[node name="DeleteButton3" type="Button" parent="Margin/VBox/Slots/SlotRow3"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(72, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.75, 0.75, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
+theme_override_styles/hover = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_delete_hover")
+text = "✕"
+
+[node name="ConfirmDialog" type="ConfirmationDialog" parent="."]
+unique_name_in_owner = true
+title = "Confirmar"
+size = Vector2i(540, 200)
+ok_button_text = "Confirmar"
+cancel_button_text = "Cancelar"
+dialog_text = ""
