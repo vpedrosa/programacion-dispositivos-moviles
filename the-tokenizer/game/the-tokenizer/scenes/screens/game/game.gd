@@ -14,19 +14,19 @@ const BOSS_SCENE := preload("res://scenes/screens/boss/boss.tscn")
 const DIALOGUE_SCENE := preload("res://scenes/screens/dialogue/dialogue.tscn")
 
 const ERA_DIALOGS := {
-	PlayerState.ERA_BASEMENT: PackedStringArray([
+	PlayerState.ERA_BASEMENT: [
 		"Servidor revivido. Nueve años fermentando bajo la nevera y todavía arranca.",
 		"El fichero del escritorio era una receta: contar pares de palabras. La estadística más pobre del mundo.",
 		"Si la pulso lo suficiente, empezará a predecir. Empezar a contar es empezar a entrenar.",
 		"Toca la consola. Cada pulsación es un token.",
-	]),
-	PlayerState.ERA_SINGULARITY: PackedStringArray([
+	],
+	PlayerState.ERA_SINGULARITY: [
 		"Pasan los años. El modelo del sótano no pide descanso.",
 		"Empezó contando pares. Ahora reescribe su propia arquitectura mientras yo duermo.",
 		"Algo ha cambiado en los logs. Ya no parecen escritos por mí.",
 		"La singularidad no llega con fanfarrias. Llega cuando el modelo deja de aprender de ti y empieza a aprender mejor que tú.",
 		"Mantén el ritmo. Ya no eres tú quien entrena.",
-	]),
+	],
 }
 
 const ERA_NAMES := {
@@ -45,6 +45,7 @@ var _play_area_content: Node = null
 @onready var _debug_badge: Label = %DebugBadge
 @onready var _shop_button: Button = %ShopButton
 @onready var _settings_button: Button = %SettingsButton
+@onready var _play_area: Control = %PlayArea
 @onready var _toast: Control = %Toast
 @onready var _toast_label: Label = %ToastLabel
 
@@ -134,9 +135,10 @@ func _maybe_show_era_intro(era: int) -> void:
 	var event_id := StringName("era_%d_intro_dialog" % era)
 	if GameState.has_event_triggered(event_id):
 		return
-	var lines: PackedStringArray = ERA_DIALOGS.get(era, PackedStringArray())
-	if lines.is_empty():
+	var raw: Array = ERA_DIALOGS.get(era, [])
+	if raw.is_empty():
 		return
+	var lines := PackedStringArray(raw)
 	GameState.mark_event_triggered(event_id)
 	var dialog := SceneManager.push_overlay(DIALOGUE_SCENE)
 	if dialog != null:
