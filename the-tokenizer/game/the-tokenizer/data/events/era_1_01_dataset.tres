@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EthicalEvent" format=3 uid="uid://c7d2qjlrk9hbm"]
+
+[ext_resource type="Script" path="res://scripts/model/ethical_event.gd" id="1_event"]
+
+[resource]
+script = ExtResource("1_event")
+id = &"era_1_dataset"
+prompt = "El corpus que has volcado al disco mezcla Wikipedia, foros y un raspado entero de un BBS de 2002. Hay de todo: chistes, papers, listas de odio.\n\n¿Qué haces?"
+trigger_era = 1
+trigger_threshold = 500.0
+choices = [
+{"id": "filter_hard", "label": "Filtrar todo lo sensible", "weight": 1, "feedback": "El modelo aprende a no responder lo dudoso. Costará más pulir el resto, pero dormirás."},
+{"id": "leave_raw", "label": "Entrenar con lo crudo", "weight": -1, "feedback": "Velocidad pura. Lo que salga, saldrá."},
+{"id": "flag_review", "label": "Marcar fragmentos para revisión humana", "weight": 0, "feedback": "Una capa más entre tú y el corpus. Te ralentiza."},
+]

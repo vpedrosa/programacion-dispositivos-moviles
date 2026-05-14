@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EthicalEvent" format=3 uid="uid://dswkn4y5l8j2t"]
+
+[ext_resource type="Script" path="res://scripts/model/ethical_event.gd" id="1_event"]
+
+[resource]
+script = ExtResource("1_event")
+id = &"era_1_attribution"
+prompt = "El embedding final captura el estilo de un autor concreto. Sus libros estaban en el corpus. Su nombre aparece literal en los outputs.\n\n¿Cómo lo expones?"
+trigger_era = 1
+trigger_threshold = 2500.0
+choices = [
+{"id": "credit_clearly", "label": "Citar las fuentes claramente", "weight": 1, "feedback": "Es lo correcto. También lo lento."},
+{"id": "strip_credits", "label": "Borrar la atribución del prompt", "weight": -1, "feedback": "Que parezca obra propia. Nadie comprobará el corpus."},
+]

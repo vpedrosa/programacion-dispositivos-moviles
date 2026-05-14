@@ -27,6 +27,7 @@ AudioManager="*res://autoloads/audio_manager.gd"
 DebugFlags="*res://autoloads/debug_flags.gd"
 UpgradeService="*res://autoloads/upgrade_service.gd"
 BossService="*res://autoloads/boss_service.gd"
+EventService="*res://autoloads/event_service.gd"
 
 [display]
 

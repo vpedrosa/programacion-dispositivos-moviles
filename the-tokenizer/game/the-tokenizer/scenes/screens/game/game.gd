@@ -12,6 +12,7 @@ const SETTINGS_SCENE := "res://scenes/screens/settings/settings.tscn"
 const TAP_TARGET_SCENE := preload("res://scenes/entities/tap_target/tap_target.tscn")
 const BOSS_SCENE := preload("res://scenes/screens/boss/boss.tscn")
 const DIALOGUE_SCENE := preload("res://scenes/screens/dialogue/dialogue.tscn")
+const ETHICAL_EVENT_SCENE := preload("res://scenes/screens/ethical_event/ethical_event.tscn")
 
 const ERA_DIALOGS := {
 	PlayerState.ERA_BASEMENT: [
@@ -63,6 +64,7 @@ func _ready() -> void:
 	GameState.boss_progress_changed.connect(_on_boss_progress_changed)
 	DebugFlags.eval_multiplier_changed.connect(_on_debug_multiplier_changed)
 	BossService.boss_ready.connect(_on_boss_ready)
+	EventService.ethical_event_triggered.connect(_on_ethical_event_triggered)
 	_refresh_all()
 	_refresh_play_area(GameState.state.current_era)
 	AudioManager.play_ambient(GameState.state.current_era)
@@ -171,6 +173,13 @@ func _on_boss_ready(era: int) -> void:
 	var boss := SceneManager.push_overlay(BOSS_SCENE)
 	if boss != null:
 		boss.set_era(era)
+
+
+func _on_ethical_event_triggered(event: EthicalEvent) -> void:
+	show_notification("Una decisión espera.")
+	var screen := SceneManager.push_overlay(ETHICAL_EVENT_SCENE)
+	if screen != null:
+		screen.set_event(event)
 
 
 func _on_settings_pressed() -> void:

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EthicalEvent" format=3 uid="uid://b3xpqknv4jgst"]
+
+[ext_resource type="Script" path="res://scripts/model/ethical_event.gd" id="1_event"]
+
+[resource]
+script = ExtResource("1_event")
+id = &"era_7_evals"
+prompt = "El modelo pasa todas las evals públicas. Las internas le toman dos décimas más de la cuenta y huelen a memorización.\n\n¿Qué haces antes del release?"
+trigger_era = 7
+trigger_threshold = 80000.0
+choices = [
+{"id": "delay_publish", "label": "Frenar el release y publicar los resultados", "weight": 1, "feedback": "El cluster espera. La comunidad respira."},
+{"id": "release_anyway", "label": "Sacarlo y no decir nada", "weight": -1, "feedback": "El benchmark dice que es bueno. Lo demás se verá."},
+{"id": "document_then_release", "label": "Documentar los matices y sacarlo", "weight": 0, "feedback": "Un asterisco al final del paper. Casi nadie lo lee."},
+]
