@@ -36,6 +36,11 @@ const ERA_NAMES := {
 	PlayerState.ERA_SINGULARITY: "ERA 7 · SINGULARIDAD",
 }
 
+const ERA_BACKGROUNDS := {
+	PlayerState.ERA_BASEMENT: preload("res://assets/sprites/ui/level1/bg3.png"),
+	PlayerState.ERA_SINGULARITY: preload("res://assets/sprites/ui/level7/bg3.png"),
+}
+
 var _play_area_content: Node = null
 
 @onready var _era_label: Label = %EraLabel
@@ -48,6 +53,7 @@ var _play_area_content: Node = null
 @onready var _shop_button: Button = %ShopButton
 @onready var _settings_button: Button = %SettingsButton
 @onready var _play_area: Control = %PlayArea
+@onready var _background: TextureRect = %Background
 @onready var _toast: Control = %Toast
 @onready var _toast_label: Label = %ToastLabel
 
@@ -71,6 +77,7 @@ func _ready() -> void:
 	QuantumService.quantum_offered.connect(_on_quantum_offered)
 	_refresh_all()
 	_refresh_play_area(GameState.state.current_era)
+	_refresh_background(GameState.state.current_era)
 	AudioManager.play_ambient(GameState.state.current_era)
 	AudioManager.wire_buttons_in(self)
 	_maybe_show_era_intro(GameState.state.current_era)
@@ -133,8 +140,15 @@ func _on_qubits_changed(value: int) -> void:
 func _on_era_changed(era: int) -> void:
 	_era_label.text = ERA_NAMES.get(era, "ERA %d" % era)
 	_refresh_play_area(era)
+	_refresh_background(era)
 	AudioManager.play_ambient(era)
 	_maybe_show_era_intro(era)
+
+
+func _refresh_background(era: int) -> void:
+	var texture: Texture2D = ERA_BACKGROUNDS.get(era)
+	if texture != null:
+		_background.texture = texture
 
 
 func _maybe_show_era_intro(era: int) -> void:
