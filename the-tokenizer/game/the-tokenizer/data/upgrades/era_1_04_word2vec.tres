@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="UpgradeData" load_steps=2 format=3 uid="uid://bxhfkwt5g6ifk"]
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://bxhfkwt5g6ifk"]
 
 [ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_1_word2vec.png" id="2_icon"]
 
 [resource]
 script = ExtResource("1_script")
@@ -14,3 +15,4 @@ max_level = 1
 effect_type = 3
 effect_value = 0.5
 prerequisite_id = &"era_1_stopwords"
+icon = ExtResource("2_icon")

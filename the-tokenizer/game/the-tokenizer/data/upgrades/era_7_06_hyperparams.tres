@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://b4qjyu7ndcqsv"]
 
 [ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_7_hyperparams.png" id="2_icon"]
 
 [resource]
 script = ExtResource("1_script")
@@ -14,3 +15,4 @@ max_level = 3
 effect_type = 5
 effect_value = 0.1
 prerequisite_id = &"era_7_distillation"
+icon = ExtResource("2_icon")

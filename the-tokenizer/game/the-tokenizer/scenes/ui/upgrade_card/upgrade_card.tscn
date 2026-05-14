@@ -1,0 +1,107 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1k9eoqfgp4vc"]
+
+[ext_resource type="Script" path="res://scenes/ui/upgrade_card/upgrade_card.gd" id="1_card"]
+[ext_resource type="Texture2D" uid="uid://1hua56gng50q" path="res://assets/sprites/ui/shop/icon-screen-shop.png" id="2_icon_frame"]
+[ext_resource type="Texture2D" uid="uid://ba3ftpaisirx3" path="res://assets/sprites/ui/shop/background-shop-text.png" id="3_text_frame"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_icon"]
+texture = ExtResource("2_icon_frame")
+content_margin_left = 30.0
+content_margin_top = 30.0
+content_margin_right = 30.0
+content_margin_bottom = 30.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_text"]
+texture = ExtResource("3_text_frame")
+content_margin_left = 44.0
+content_margin_top = 24.0
+content_margin_right = 44.0
+content_margin_bottom = 24.0
+
+[node name="UpgradeCard" type="HBoxContainer"]
+custom_minimum_size = Vector2(0, 180)
+theme_override_constants/separation = 8
+script = ExtResource("1_card")
+
+[node name="IconCard" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_icon")
+
+[node name="Icon" type="TextureRect" parent="IconCard"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TextCard" type="PanelContainer" parent="."]
+custom_minimum_size = Vector2(0, 180)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxTexture_text")
+
+[node name="VBox" type="VBoxContainer" parent="TextCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Header" type="HBoxContainer" parent="TextCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="NameLabel" type="Label" parent="TextCard/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.92, 0.95, 0.85, 1)
+text = "Nombre"
+
+[node name="LevelLabel" type="Label" parent="TextCard/VBox/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.65, 0.85, 0.7, 0.9)
+text = "Lv 0"
+
+[node name="DescriptionLabel" type="Label" parent="TextCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.82, 0.86, 0.78, 0.92)
+theme_override_constants/line_spacing = 4
+text = "Descripción"
+autowrap_mode = 2
+
+[node name="Footer" type="HBoxContainer" parent="TextCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="EffectLabel" type="Label" parent="TextCard/VBox/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.6, 0.85, 0.65, 1)
+text = "+1 / tap"
+
+[node name="Spacer" type="Control" parent="TextCard/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CostLabel" type="Label" parent="TextCard/VBox/Footer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.95, 0.95, 0.85, 1)
+text = "10"
+
+[node name="BuyButton" type="Button" parent="TextCard/VBox/Footer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "COMPRAR"

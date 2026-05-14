@@ -8,7 +8,7 @@ extends Control
 ## ha desbloqueado la mecánica cuántica (#321) — por ahora se mantiene
 ## oculta y se rellena cuando aterrice el catálogo de qubits.
 
-const UPGRADE_ROW_SCENE := preload("res://scenes/ui/upgrade_row/upgrade_row.tscn")
+const UPGRADE_CARD_SCENE := preload("res://scenes/ui/upgrade_card/upgrade_card.tscn")
 
 @onready var _close_button: Button = %CloseButton
 @onready var _tokens_label: Label = %TokensLabel
@@ -41,11 +41,11 @@ func _populate(era: int) -> void:
 	_empty_label.visible = false
 	upgrades.sort_custom(func(a, b): return a.base_cost < b.base_cost)
 	for upgrade in upgrades:
-		var row := UPGRADE_ROW_SCENE.instantiate()
-		_list.add_child(row)
-		row.bind(upgrade)
-		row.purchase_requested.connect(_on_purchase_requested)
-		_rows[upgrade.id] = row
+		var card := UPGRADE_CARD_SCENE.instantiate()
+		_list.add_child(card)
+		card.bind(upgrade)
+		card.purchase_requested.connect(_on_purchase_requested)
+		_rows[upgrade.id] = card
 
 
 func _on_purchase_requested(upgrade_id: StringName) -> void:

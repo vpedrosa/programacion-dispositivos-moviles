@@ -1,13 +1,16 @@
-extends PanelContainer
+extends HBoxContainer
 
-## Fila de la tienda para una mejora concreta.
+## Card de tienda para una mejora concreta.
 ##
-## La pantalla de tienda instancia una por cada UpgradeData de la era actual
-## y se encarga de llamar refresh() cuando cambian tokens o nivel. La fila
-## en sí es tonta: no escucha señales globales, sólo renderiza estado.
+## La tienda instancia una por cada UpgradeData de la era actual y llama
+## refresh() cuando cambian tokens o nivel. La card encuadra el icono con
+## icon-screen-shop.png y el nombre/descripción/efecto/coste/botón con
+## background-shop-text.png; los textos se posicionan dentro del rectángulo
+## interior gracias al content_margin de los StyleBoxTexture.
 
 signal purchase_requested(upgrade_id: StringName)
 
+@onready var _icon: TextureRect = %Icon
 @onready var _name_label: Label = %NameLabel
 @onready var _level_label: Label = %LevelLabel
 @onready var _description_label: Label = %DescriptionLabel
@@ -28,6 +31,8 @@ func bind(upgrade: UpgradeData) -> void:
 		await ready
 	_name_label.text = upgrade.display_name
 	_description_label.text = upgrade.description
+	if upgrade.icon != null:
+		_icon.texture = upgrade.icon
 	refresh()
 
 
@@ -74,7 +79,7 @@ static func _effect_text(upgrade: UpgradeData) -> String:
 		UpgradeData.EffectType.TOKENS_PER_SECOND_MULT:
 			return "x%s / s" % _trim(value)
 		UpgradeData.EffectType.QUBIT_MULTIPLIER_ADD:
-			return "+%s qubit ×" % _trim(value)
+			return "+%s qubit x" % _trim(value)
 		_:
 			return ""
 
