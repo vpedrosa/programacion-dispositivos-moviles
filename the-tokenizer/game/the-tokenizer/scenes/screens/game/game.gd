@@ -13,6 +13,7 @@ const TAP_TARGET_SCENE := preload("res://scenes/entities/tap_target/tap_target.t
 const BOSS_SCENE := preload("res://scenes/screens/boss/boss.tscn")
 const DIALOGUE_SCENE := preload("res://scenes/screens/dialogue/dialogue.tscn")
 const ETHICAL_EVENT_SCENE := preload("res://scenes/screens/ethical_event/ethical_event.tscn")
+const QUANTUM_EVENT_SCENE := preload("res://scenes/screens/quantum_event/quantum_event.tscn")
 
 const ERA_DIALOGS := {
 	PlayerState.ERA_BASEMENT: [
@@ -67,6 +68,7 @@ func _ready() -> void:
 	EventService.ethical_event_triggered.connect(_on_ethical_event_triggered)
 	MinigameService.minigame_offered.connect(_on_minigame_offered)
 	MinigameService.minigame_outcome_applied.connect(_on_minigame_outcome)
+	QuantumService.quantum_offered.connect(_on_quantum_offered)
 	_refresh_all()
 	_refresh_play_area(GameState.state.current_era)
 	AudioManager.play_ambient(GameState.state.current_era)
@@ -194,6 +196,11 @@ func _on_minigame_outcome(success: bool, bonus: float) -> void:
 		show_notification("Minijuego completado · +%s tokens" % _format_amount(bonus))
 	elif not success and bonus < 0.0:
 		show_notification("Minijuego fallado · -%s tokens" % _format_amount(absf(bonus)))
+
+
+func _on_quantum_offered() -> void:
+	show_notification("Realidad cuántica desbloqueada.")
+	SceneManager.push_overlay(QUANTUM_EVENT_SCENE)
 
 
 func _on_settings_pressed() -> void:
