@@ -1,6 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://crmqg4n2u1tx7"]
+[gd_scene format=3 uid="uid://crmqg4n2u1tx7"]
 
-[ext_resource type="Script" path="res://scenes/screens/intro/intro.gd" id="1_intro"]
+[ext_resource type="Script" uid="uid://dn3xsttuoianb" path="res://scenes/screens/intro/intro.gd" id="1_intro"]
 [ext_resource type="Texture2D" uid="uid://gfijnpill0p3" path="res://assets/sprites/ui/level1/bg0.png" id="2_bg0"]
 [ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="3_font"]
 [ext_resource type="Texture2D" uid="uid://tu8wqtkp7ouw" path="res://assets/sprites/ui/level1/bg1.png" id="4_bg1"]
@@ -11,7 +11,7 @@
 default_font = ExtResource("3_font")
 default_font_size = 18
 
-[node name="Intro" type="Control"]
+[node name="Intro" type="Control" unique_id=1168254999]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,7 +21,7 @@ grow_vertical = 2
 theme = SubResource("Theme_intro")
 script = ExtResource("1_intro")
 
-[node name="BG0" type="TextureRect" parent="."]
+[node name="BG0" type="TextureRect" parent="." unique_id=283440982]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -34,8 +34,9 @@ texture = ExtResource("2_bg0")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="BG1" type="TextureRect" parent="."]
+[node name="BG1" type="TextureRect" parent="." unique_id=1679176443]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -46,10 +47,10 @@ mouse_filter = 2
 texture = ExtResource("4_bg1")
 expand_mode = 1
 stretch_mode = 6
-modulate = Color(1, 1, 1, 0)
 
-[node name="BG2" type="TextureRect" parent="."]
+[node name="BG2" type="TextureRect" parent="." unique_id=1357429943]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -60,10 +61,10 @@ mouse_filter = 2
 texture = ExtResource("5_bg2")
 expand_mode = 1
 stretch_mode = 6
-modulate = Color(1, 1, 1, 0)
 
-[node name="BG3" type="TextureRect" parent="."]
+[node name="BG3" type="TextureRect" parent="." unique_id=1469397304]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -74,9 +75,8 @@ mouse_filter = 2
 texture = ExtResource("6_bg3")
 expand_mode = 1
 stretch_mode = 6
-modulate = Color(1, 1, 1, 0)
 
-[node name="MessagePanel" type="MarginContainer" parent="."]
+[node name="MessagePanel" type="MarginContainer" parent="." unique_id=1684860291]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -91,31 +91,46 @@ theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 48
 
-[node name="MessageBackground" type="ColorRect" parent="MessagePanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MessageBackground" type="ColorRect" parent="MessagePanel" unique_id=1921947529]
+layout_mode = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0.55)
 
-[node name="MessageLabel" type="Label" parent="MessagePanel"]
+[node name="MessageLabel" type="Label" parent="MessagePanel" unique_id=1004228600]
 unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(0.92, 0.95, 0.88, 1)
 theme_override_constants/line_spacing = 6
-text = ""
+theme_override_font_sizes/font_size = 20
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
-modulate = Color(1, 1, 1, 0)
 
-[node name="SkipButton" type="Button" parent="."]
+[node name="HintLabel" type="Label" parent="."]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -30.0
+offset_right = 160.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.75, 0.85, 0.7, 0.7)
+text = "toca para continuar"
+horizontal_alignment = 1
+
+[node name="SkipButton" type="Button" parent="." unique_id=864641575]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
@@ -126,7 +141,7 @@ offset_top = 32.0
 offset_right = -32.0
 offset_bottom = 80.0
 grow_horizontal = 0
-flat = true
-theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.85, 0.85, 0.75, 0.8)
+theme_override_font_sizes/font_size = 14
 text = "Saltar ›"
+flat = true
