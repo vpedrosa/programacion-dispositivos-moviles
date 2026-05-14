@@ -1,0 +1,82 @@
+[gd_scene load_steps=4 format=3 uid="uid://cwumcrgw1qbhk"]
+
+[ext_resource type="Script" path="res://scenes/screens/boss/boss.gd" id="1_boss"]
+[ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="2_font"]
+
+[sub_resource type="Theme" id="Theme_boss"]
+default_font = ExtResource("2_font")
+default_font_size = 16
+
+[node name="Boss" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_boss")
+script = ExtResource("1_boss")
+
+[node name="Veil" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="Margin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 96
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 80
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="Prefix" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.6, 0.85, 0.65, 0.85)
+text = "HITO TÉCNICO ALCANZADO"
+horizontal_alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.92, 0.95, 0.85, 1)
+text = "EL PRIMER MODELO"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="DescriptionLabel" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.84, 0.88, 0.78, 0.92)
+theme_override_constants/line_spacing = 6
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ConfirmButton" type="Button" parent="Margin/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 60)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 16
+text = "CONTINUAR"

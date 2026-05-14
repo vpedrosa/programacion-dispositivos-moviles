@@ -26,6 +26,7 @@ SceneManager="*res://autoloads/scene_manager.gd"
 AudioManager="*res://autoloads/audio_manager.gd"
 DebugFlags="*res://autoloads/debug_flags.gd"
 UpgradeService="*res://autoloads/upgrade_service.gd"
+BossService="*res://autoloads/boss_service.gd"
 
 [display]
 

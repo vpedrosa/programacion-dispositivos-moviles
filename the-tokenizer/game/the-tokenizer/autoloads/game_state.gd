@@ -43,6 +43,9 @@ func add_tokens(amount: float) -> void:
 	if amount == 0.0:
 		return
 	state.tokens = maxf(0.0, state.tokens + amount)
+	if amount > 0.0:
+		state.lifetime_tokens += amount
+		state.era_lifetime_tokens += amount
 	tokens_changed.emit(state.tokens)
 
 
@@ -84,8 +87,18 @@ func set_era(era: int) -> void:
 		return
 	state.current_era = era
 	state.boss_progress = 0.0
+	state.era_lifetime_tokens = 0.0
 	era_changed.emit(era)
 	boss_progress_changed.emit(0.0)
+
+
+func mark_boss_defeated(era: int) -> void:
+	if not state.bosses_defeated.has(era):
+		state.bosses_defeated.append(era)
+
+
+func is_boss_defeated(era: int) -> bool:
+	return state.bosses_defeated.has(era)
 
 
 func set_boss_progress(progress: float) -> void:

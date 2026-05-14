@@ -17,6 +17,9 @@ const ERA_SINGULARITY := 7
 @export var qubit_multiplier: float = 1.0
 @export var current_era: int = ERA_BASEMENT
 @export var boss_progress: float = 0.0
+@export var bosses_defeated: Array[int] = []
+@export var lifetime_tokens: float = 0.0
+@export var era_lifetime_tokens: float = 0.0
 @export var upgrade_levels: Dictionary = {}
 @export var ethical_decisions: Dictionary = {}
 @export var triggered_events: Array[StringName] = []
@@ -35,6 +38,9 @@ func to_dict() -> Dictionary:
 		"qubit_multiplier": qubit_multiplier,
 		"current_era": current_era,
 		"boss_progress": boss_progress,
+		"bosses_defeated": bosses_defeated.duplicate(),
+		"lifetime_tokens": lifetime_tokens,
+		"era_lifetime_tokens": era_lifetime_tokens,
 		"upgrade_levels": upgrade_levels,
 		"ethical_decisions": ethical_decisions,
 		"triggered_events": triggered_events.map(func(e: StringName) -> String: return String(e)),
@@ -50,6 +56,10 @@ static func from_dict(data: Dictionary) -> PlayerState:
 	state.qubit_multiplier = float(data.get("qubit_multiplier", 1.0))
 	state.current_era = int(data.get("current_era", ERA_BASEMENT))
 	state.boss_progress = clampf(float(data.get("boss_progress", 0.0)), 0.0, 1.0)
+	var defeated: Array = data.get("bosses_defeated", [])
+	state.bosses_defeated.assign(defeated.map(func(v: Variant) -> int: return int(v)))
+	state.lifetime_tokens = float(data.get("lifetime_tokens", 0.0))
+	state.era_lifetime_tokens = float(data.get("era_lifetime_tokens", 0.0))
 	if data.has("upgrade_levels"):
 		var raw: Dictionary = data.get("upgrade_levels", {})
 		state.upgrade_levels = {}
