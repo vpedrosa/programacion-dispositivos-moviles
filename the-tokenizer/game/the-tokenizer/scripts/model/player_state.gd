@@ -22,6 +22,7 @@ const ERA_SINGULARITY := 7
 @export var era_lifetime_tokens: float = 0.0
 @export var upgrade_levels: Dictionary = {}
 @export var ethical_decisions: Dictionary = {}
+@export var ethical_score: int = 0
 @export var triggered_events: Array[StringName] = []
 
 
@@ -43,6 +44,7 @@ func to_dict() -> Dictionary:
 		"era_lifetime_tokens": era_lifetime_tokens,
 		"upgrade_levels": upgrade_levels,
 		"ethical_decisions": ethical_decisions,
+		"ethical_score": ethical_score,
 		"triggered_events": triggered_events.map(func(e: StringName) -> String: return String(e)),
 	}
 
@@ -72,6 +74,7 @@ static func from_dict(data: Dictionary) -> PlayerState:
 		for id in legacy:
 			state.upgrade_levels[String(id)] = 1
 	state.ethical_decisions = data.get("ethical_decisions", {}).duplicate()
+	state.ethical_score = int(data.get("ethical_score", 0))
 	var events: Array = data.get("triggered_events", [])
 	state.triggered_events.assign(events.map(func(e: Variant) -> StringName: return StringName(e)))
 	return state

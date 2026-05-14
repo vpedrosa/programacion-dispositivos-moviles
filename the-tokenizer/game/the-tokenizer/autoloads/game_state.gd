@@ -1,5 +1,14 @@
 extends Node
 
+enum Ending {
+	RESPONSIBLE,
+	BALANCED,
+	QUESTIONABLE,
+}
+
+const RESPONSIBLE_THRESHOLD := 3
+const QUESTIONABLE_THRESHOLD := -3
+
 ## Mantiene la instancia activa de [PlayerState] y notifica cambios.
 ##
 ## El resto del juego nunca debería mutar `state` directamente: para que las
@@ -123,8 +132,17 @@ func increment_upgrade_level(upgrade_id: StringName) -> int:
 	return new_level
 
 
-func record_ethical_decision(event_id: StringName, choice_id: StringName) -> void:
+func record_ethical_decision(event_id: StringName, choice_id: StringName, weight: int = 0) -> void:
 	state.ethical_decisions[String(event_id)] = String(choice_id)
+	state.ethical_score += weight
+
+
+func get_ending_variant() -> Ending:
+	if state.ethical_score >= RESPONSIBLE_THRESHOLD:
+		return Ending.RESPONSIBLE
+	if state.ethical_score <= QUESTIONABLE_THRESHOLD:
+		return Ending.QUESTIONABLE
+	return Ending.BALANCED
 
 
 func mark_event_triggered(event_id: StringName) -> void:
