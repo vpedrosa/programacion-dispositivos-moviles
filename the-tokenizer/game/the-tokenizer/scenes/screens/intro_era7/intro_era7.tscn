@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=3 uid="uid://b4xqrlj1m3pn7"]
+
+[ext_resource type="Script" path="res://scenes/screens/intro_era7/intro_era7.gd" id="1_intro7"]
+[ext_resource type="Texture2D" uid="uid://b4hqpt7vbcif0" path="res://assets/sprites/ui/level7/bg0.png" id="2_bg0"]
+[ext_resource type="Texture2D" uid="uid://d2oar04j68etj" path="res://assets/sprites/ui/level7/bg1.png" id="3_bg1"]
+[ext_resource type="Texture2D" uid="uid://b7s0lbvb87p63" path="res://assets/sprites/ui/level7/bg2.png" id="4_bg2"]
+[ext_resource type="Texture2D" uid="uid://dxaw0a654miwt" path="res://assets/sprites/ui/level7/bg3.png" id="5_bg3"]
+
+[node name="IntroEra7" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_intro7")
+
+[node name="BG0" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_bg0")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BG1" type="TextureRect" parent="."]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_bg1")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BG2" type="TextureRect" parent="."]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_bg2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BG3" type="TextureRect" parent="."]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_bg3")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="SkipButton" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 32.0
+offset_right = -32.0
+offset_bottom = 80.0
+grow_horizontal = 0
+flat = true
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.85, 0.9, 1, 0.85)
+text = "Saltar ›"

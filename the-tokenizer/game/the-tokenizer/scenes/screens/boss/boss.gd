@@ -7,6 +7,7 @@ extends Control
 ## prevista en NEXT_ERA y se cierra el overlay.
 
 const ENDING_SCENE := "res://scenes/screens/ending/ending.tscn"
+const INTRO_ERA7_SCENE := "res://scenes/screens/intro_era7/intro_era7.tscn"
 
 const BOSS_TITLES := {
 	1: "EL PRIMER MODELO",
@@ -49,6 +50,6 @@ func _on_confirm_pressed() -> void:
 	SceneManager.pop_overlay()
 	match _era:
 		PlayerState.ERA_BASEMENT:
-			GameState.set_era(PlayerState.ERA_SINGULARITY)
+			SceneManager.change_scene(INTRO_ERA7_SCENE)
 		PlayerState.ERA_SINGULARITY:
 			SceneManager.change_scene(ENDING_SCENE)
