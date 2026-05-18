@@ -6,25 +6,25 @@
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_icon"]
 texture = ExtResource("2_icon_frame")
-content_margin_left = 46.0
-content_margin_top = 28.0
-content_margin_right = 26.0
-content_margin_bottom = 28.0
+content_margin_left = 40.0
+content_margin_top = 21.0
+content_margin_right = 19.0
+content_margin_bottom = 21.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_text"]
 texture = ExtResource("3_text_frame")
-content_margin_left = 130.0
-content_margin_top = 26.0
-content_margin_right = 120.0
-content_margin_bottom = 26.0
+content_margin_left = 52.0
+content_margin_top = 18.0
+content_margin_right = 30.0
+content_margin_bottom = 18.0
 
 [node name="UpgradeCard" type="HBoxContainer"]
-custom_minimum_size = Vector2(0, 168)
+custom_minimum_size = Vector2(0, 144)
 theme_override_constants/separation = 6
 script = ExtResource("1_card")
 
 [node name="IconCard" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(178, 168)
+custom_minimum_size = Vector2(162, 144)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_icon")
 
@@ -39,7 +39,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="TextCard" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(0, 168)
+custom_minimum_size = Vector2(0, 144)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxTexture_text")
@@ -59,6 +59,7 @@ size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(0.92, 0.95, 0.85, 1)
 text = "Nombre"
+clip_text = true
 
 [node name="LevelLabel" type="Label" parent="TextCard/VBox/Header"]
 unique_name_in_owner = true
