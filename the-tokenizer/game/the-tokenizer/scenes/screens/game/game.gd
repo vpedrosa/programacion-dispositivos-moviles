@@ -10,6 +10,7 @@ extends Control
 const SHOP_SCENE := "res://scenes/screens/shop/shop.tscn"
 const SETTINGS_SCENE := "res://scenes/screens/settings/settings.tscn"
 const TAP_TARGET_SCENE := preload("res://scenes/entities/tap_target/tap_target.tscn")
+const WORKSTATION_SCENE := preload("res://scenes/ui/workstation/workstation.tscn")
 const BOSS_SCENE := preload("res://scenes/screens/boss/boss.tscn")
 const DIALOGUE_SCENE := preload("res://scenes/screens/dialogue/dialogue.tscn")
 const ETHICAL_EVENT_SCENE := preload("res://scenes/screens/ethical_event/ethical_event.tscn")
@@ -40,8 +41,6 @@ const ERA_BACKGROUNDS := {
 	PlayerState.ERA_BASEMENT: preload("res://assets/sprites/ui/level1/bg3.png"),
 	PlayerState.ERA_SINGULARITY: preload("res://assets/sprites/ui/level7/bg3.png"),
 }
-
-var _play_area_content: Node = null
 
 @onready var _era_label: Label = %EraLabel
 @onready var _tokens_label: Label = %TokensLabel
@@ -166,13 +165,13 @@ func _maybe_show_era_intro(era: int) -> void:
 
 
 func _refresh_play_area(era: int) -> void:
-	if _play_area_content != null:
-		_play_area_content.queue_free()
-		_play_area_content = null
-	match era:
-		PlayerState.ERA_BASEMENT:
-			_play_area_content = TAP_TARGET_SCENE.instantiate()
-			_play_area.add_child(_play_area_content)
+	for child in _play_area.get_children():
+		child.queue_free()
+	var workstation: Control = WORKSTATION_SCENE.instantiate()
+	workstation.era = era
+	_play_area.add_child(workstation)
+	if era == PlayerState.ERA_BASEMENT:
+		_play_area.add_child(TAP_TARGET_SCENE.instantiate())
 
 
 func _on_boss_progress_changed(progress: float) -> void:
