@@ -1,23 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cwk1qz5xq2m7b"]
+[gd_scene load_steps=3 format=3 uid="uid://cwk1qz5xq2m7b"]
 
 [ext_resource type="Script" path="res://scenes/ui/workstation/workstation.gd" id="1_workstation"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/workstation/frame_era1.png" id="2_frame_era1"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot"]
-content_margin_left = 6.0
-content_margin_top = 6.0
-content_margin_right = 6.0
-content_margin_bottom = 6.0
-bg_color = Color(0.03, 0.06, 0.04, 0.55)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.32, 0.6, 0.42, 0.75)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
 
 [node name="Workstation" type="Control"]
 layout_mode = 3
@@ -61,7 +45,8 @@ texture = ExtResource("2_frame_era1")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Margin" type="MarginContainer" parent="Center/Aspect/Frame"]
+[node name="SlotsLayer" type="Control" parent="Center/Aspect/Frame"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -69,63 +54,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 56
-theme_override_constants/margin_top = 56
-theme_override_constants/margin_right = 56
-theme_override_constants/margin_bottom = 56
-
-[node name="SlotsGrid" type="GridContainer" parent="Center/Aspect/Frame/Margin"]
-unique_name_in_owner = true
-layout_mode = 2
-columns = 3
-mouse_filter = 2
-theme_override_constants/h_separation = 24
-theme_override_constants/v_separation = 24
-
-[node name="Slot1" type="PanelContainer" parent="Center/Aspect/Frame/Margin/SlotsGrid"]
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
-
-[node name="Slot2" type="PanelContainer" parent="Center/Aspect/Frame/Margin/SlotsGrid"]
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
-
-[node name="Slot3" type="PanelContainer" parent="Center/Aspect/Frame/Margin/SlotsGrid"]
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
-
-[node name="Slot4" type="PanelContainer" parent="Center/Aspect/Frame/Margin/SlotsGrid"]
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
-
-[node name="Slot5" type="PanelContainer" parent="Center/Aspect/Frame/Margin/SlotsGrid"]
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
-
-[node name="Slot6" type="PanelContainer" parent="Center/Aspect/Frame/Margin/SlotsGrid"]
-custom_minimum_size = Vector2(120, 120)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_slot")
