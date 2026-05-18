@@ -5,6 +5,11 @@ extends Resource
 ##
 ## Cada mejora es un .tres en data/upgrades/. El UpgradeService los carga al
 ## arrancar y resuelve coste, disponibilidad y aplicación de efecto.
+##
+## Los campos workstation_* los consume la escena Workstation del HUD (no la
+## tienda) para pintar el slot correspondiente a esta mejora sobre el monitor
+## de la era. Si workstation_icon o workstation_locked_icon están vacíos, la
+## workstation simplemente no renderiza ese slot.
 
 enum EffectType {
 	NONE,
@@ -31,6 +36,9 @@ const LEVEL_INFINITE := -1
 @export var effect_value: float = 0.0
 @export var prerequisite_id: StringName = &""
 @export var icon: Texture2D
+@export var workstation_icon: Texture2D
+@export var workstation_locked_icon: Texture2D
+@export var workstation_position: Vector2 = Vector2.ZERO
 
 
 func cost_at_level(level: int) -> float:

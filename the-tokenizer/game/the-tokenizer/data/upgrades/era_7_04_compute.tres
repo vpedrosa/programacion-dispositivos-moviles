@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_7_compute.png" id="2_icon"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
 
 [resource]
 script = ExtResource("1_script")
@@ -16,3 +17,6 @@ effect_type = 3
 effect_value = 500.0
 prerequisite_id = &"era_7_continual"
 icon = ExtResource("2_icon")
+workstation_icon = ExtResource("2_icon")
+workstation_locked_icon = ExtResource("3_locked")
+workstation_position = Vector2(116, 260)
