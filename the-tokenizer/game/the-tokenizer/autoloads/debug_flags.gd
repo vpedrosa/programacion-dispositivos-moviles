@@ -30,8 +30,16 @@ func set_eval_multiplier_enabled(value: bool) -> void:
 	eval_multiplier_changed.emit(value)
 
 
-func apply_to_token_yield(amount: float) -> float:
-	return amount * EVAL_MULTIPLIER if _eval_multiplier_enabled else amount
+## Tokens "extra" que el multiplicador añade encima de la cantidad base.
+##
+## Estos tokens van al balance gastable únicamente (vía
+## [method GameState.add_debug_bonus]) para no falsear lifetime_tokens
+## ni era_lifetime_tokens — y por tanto no acelerar boss, eventos éticos
+## ni la entrada a Era 7.
+func bonus_for(amount: float) -> float:
+	if not _eval_multiplier_enabled or amount <= 0.0:
+		return 0.0
+	return amount * (EVAL_MULTIPLIER - 1.0)
 
 
 func _load() -> void:

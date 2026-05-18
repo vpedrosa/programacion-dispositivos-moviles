@@ -3,10 +3,11 @@ extends Control
 ## Mecánica de tap manual de Era 1.
 ##
 ## La escena se instancia dentro del PlayArea del HUD por game.gd. Cada
-## pulsación sobre el botón llama GameState.add_tokens con
-## tokens_per_tap (atravesando DebugFlags para que el multiplicador de
-## evaluación se aplique), reproduce SFX, anima un bounce sobre la propia
-## escena y dispara un "+N" flotante que sube y se desvanece.
+## pulsación suma tokens_per_tap al balance vía GameState.add_tokens y, si
+## el modo evaluación está activo, añade un bono extra al balance gastable
+## que no toca lifetime/era_lifetime (de modo que boss y eventos no se
+## aceleren). Reproduce SFX, anima un bounce sobre la propia escena y
+## dispara un "+N" flotante con la cantidad total añadida.
 
 const FLOAT_DURATION := 0.7
 const FLOAT_DISTANCE := 90.0
@@ -26,11 +27,13 @@ func _ready() -> void:
 func _on_tap() -> void:
 	if SceneManager.has_overlay():
 		return
-	var amount := DebugFlags.apply_to_token_yield(GameState.state.tokens_per_tap)
-	GameState.add_tokens(amount)
+	var base := GameState.state.tokens_per_tap
+	GameState.add_tokens(base)
+	var bonus := DebugFlags.bonus_for(base)
+	GameState.add_debug_bonus(bonus)
 	AudioManager.play_button_sfx()
 	_play_bounce()
-	_spawn_floating(amount)
+	_spawn_floating(base + bonus)
 
 
 func _play_bounce() -> void:

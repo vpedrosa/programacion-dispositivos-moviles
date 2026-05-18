@@ -44,7 +44,8 @@ func apply_outcome(success: bool) -> void:
 		rate = GameState.state.tokens_per_tap * 5.0
 	var bonus := rate * (REWARD_SECONDS if success else -PENALTY_SECONDS)
 	if bonus > 0.0:
-		GameState.add_tokens(DebugFlags.apply_to_token_yield(bonus))
+		GameState.add_tokens(bonus)
+		GameState.add_debug_bonus(DebugFlags.bonus_for(bonus))
 	elif bonus < 0.0:
 		GameState.try_spend_tokens(absf(bonus))
 	minigame_outcome_applied.emit(success, bonus)

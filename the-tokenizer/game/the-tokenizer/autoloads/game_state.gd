@@ -58,6 +58,18 @@ func add_tokens(amount: float) -> void:
 	tokens_changed.emit(state.tokens)
 
 
+## Suma tokens al balance gastable sin tocar lifetime/era_lifetime.
+##
+## Reservado para el multiplicador del modo evaluación: el evaluador puede
+## comprar mejoras con holgura sin que la curva narrativa (eventos éticos,
+## boss, qubits) se acelere artificialmente.
+func add_debug_bonus(amount: float) -> void:
+	if amount <= 0.0:
+		return
+	state.tokens = maxf(0.0, state.tokens + amount)
+	tokens_changed.emit(state.tokens)
+
+
 func try_spend_tokens(amount: float) -> bool:
 	if amount < 0.0 or state.tokens < amount:
 		return false

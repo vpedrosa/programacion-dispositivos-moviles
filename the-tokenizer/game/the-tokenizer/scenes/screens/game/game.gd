@@ -88,7 +88,9 @@ func _process(delta: float) -> void:
 	var base_rate := GameState.state.tokens_per_second * GameState.state.qubit_multiplier
 	if base_rate <= 0.0:
 		return
-	GameState.add_tokens(DebugFlags.apply_to_token_yield(base_rate) * delta)
+	var base := base_rate * delta
+	GameState.add_tokens(base)
+	GameState.add_debug_bonus(DebugFlags.bonus_for(base))
 
 
 func show_notification(text: String) -> void:
