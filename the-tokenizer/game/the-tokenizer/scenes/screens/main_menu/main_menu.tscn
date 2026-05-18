@@ -24,10 +24,10 @@ texture = ExtResource("5_btn_active")
 [sub_resource type="Theme" id="Theme_main_menu"]
 default_font = ExtResource("6_font")
 default_font_size = 24
-Button/colors/font_color = Color(0.92, 0.92, 0.84, 1)
-Button/colors/font_disabled_color = Color(0.5, 0.5, 0.45, 0.6)
-Button/colors/font_hover_color = Color(1, 1, 1, 1)
-Button/colors/font_pressed_color = Color(0.74, 0.74, 0.6, 1)
+Button/colors/font_color = Color(0.18, 0.1, 0.06, 1)
+Button/colors/font_disabled_color = Color(0.45, 0.38, 0.32, 0.6)
+Button/colors/font_hover_color = Color(0.3, 0.16, 0.1, 1)
+Button/colors/font_pressed_color = Color(0.1, 0.06, 0.04, 1)
 Button/styles/disabled = SubResource("StyleBoxTexture_btn")
 Button/styles/focus = SubResource("StyleBoxTexture_btn_active")
 Button/styles/hover = SubResource("StyleBoxTexture_btn_active")
@@ -92,7 +92,7 @@ size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.75, 0.78, 0.7, 0.85)
 theme_override_fonts/font = ExtResource("6_font")
 theme_override_font_sizes/font_size = 14
-text = "un mensaje en el servidor abandonado"
+text = "un mensaje en un servidor abandonado"
 horizontal_alignment = 1
 
 [node name="Spacer" type="Control" parent="MarginContainer/VBox" unique_id=1568133731]

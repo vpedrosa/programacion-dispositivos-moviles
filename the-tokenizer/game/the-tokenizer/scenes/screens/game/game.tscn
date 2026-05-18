@@ -42,9 +42,9 @@ corner_radius_bottom_left = 2
 [sub_resource type="Theme" id="Theme_game"]
 default_font = ExtResource("5_font")
 default_font_size = 18
-Button/colors/font_color = Color(0.92, 0.92, 0.84, 1)
-Button/colors/font_hover_color = Color(1, 1, 1, 1)
-Button/colors/font_pressed_color = Color(0.74, 0.74, 0.6, 1)
+Button/colors/font_color = Color(0.18, 0.1, 0.06, 1)
+Button/colors/font_hover_color = Color(0.3, 0.16, 0.1, 1)
+Button/colors/font_pressed_color = Color(0.1, 0.06, 0.04, 1)
 Button/styles/disabled = SubResource("StyleBoxTexture_btn_normal")
 Button/styles/focus = SubResource("StyleBoxTexture_btn_active")
 Button/styles/hover = SubResource("StyleBoxTexture_btn_active")

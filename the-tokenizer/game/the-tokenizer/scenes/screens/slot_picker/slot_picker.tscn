@@ -63,10 +63,10 @@ content_margin_bottom = 6.0
 [sub_resource type="Theme" id="Theme_slot_picker"]
 default_font = ExtResource("5_font")
 default_font_size = 18
-Button/colors/font_color = Color(0.92, 0.92, 0.84, 1)
-Button/colors/font_hover_color = Color(1, 1, 1, 1)
-Button/colors/font_pressed_color = Color(0.74, 0.74, 0.6, 1)
-Button/colors/font_disabled_color = Color(0.6, 0.6, 0.55, 0.5)
+Button/colors/font_color = Color(0.18, 0.1, 0.06, 1)
+Button/colors/font_hover_color = Color(0.3, 0.16, 0.1, 1)
+Button/colors/font_pressed_color = Color(0.1, 0.06, 0.04, 1)
+Button/colors/font_disabled_color = Color(0.45, 0.38, 0.32, 0.6)
 Button/styles/normal = SubResource("StyleBoxTexture_slot")
 Button/styles/hover = SubResource("StyleBoxTexture_slot_active")
 Button/styles/pressed = SubResource("StyleBoxTexture_slot_active")
