@@ -1,21 +1,21 @@
-[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://btr2um4rjq05w"]
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://c8rkjvw5pa3qh"]
 
 [ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_1_trigrams.png" id="2_icon"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_1_coffee.png" id="2_icon"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
 
 [resource]
 script = ExtResource("1_script")
-id = &"era_1_trigrams"
-display_name = "Trigrams"
-description = "El siguiente paso natural: probabilidades sobre tríos. Sigue siendo memoria pura, pero predice mejor el plural y la negación."
+id = &"era_1_coffee"
+display_name = "Cafetera de oficina"
+description = "La jarra siempre caliente cambia el ritmo del sótano. Tus dedos vuelan: +2 al ritmo manual por cada nivel."
 era = 1
 base_cost = 50.0
 cost_growth = 1.55
 max_level = 5
 effect_type = 1
 effect_value = 2.0
-prerequisite_id = &"era_1_bigrams"
+prerequisite_id = &"era_1_intern"
 icon = ExtResource("2_icon")
 workstation_icon = ExtResource("2_icon")
 workstation_locked_icon = ExtResource("3_locked")

@@ -226,78 +226,83 @@ el que se monta el logotipo y los botones del menú principal.
 
 ---
 
-## 5. Mejoras de tienda — Era 1 (replanteadas)
+## 5. Mejoras de tienda — convenciones comunes
 
-Las 6 mejoras actuales de Era 1 son conceptos académicos abstractos
-(bigrams, trigrams, stop-words, word2vec, skip-gram, subword units). Visualmente
-son difíciles de "atornillar" a la estética antigua del sótano sin caer en
-adornos neón. Propuesta: **mantener exactamente la misma curva de gameplay**
-(3 mejoras que suben el tap manual, 3 que generan tokens pasivos, con los
-mismos costes y prerequisites) pero sustituir cada concepto por un **objeto
-físico** del laboratorio de 2010.
+Las 12 mejoras (6 de Era 1, 6 de Era 7) comparten cuatro reglas de
+composición para que la cuadrícula de la tienda lea como un set
+coherente:
 
-> Cambia el id, `display_name`, `description` e icono de cada `.tres`. Los
-> campos `era`, `base_cost`, `cost_growth`, `max_level`, `effect_type` y
-> `effect_value` se mantienen tal cual están hoy, así no se rebalancea nada.
+1. **Fondo neutro oscuro uniforme** (cercano a `#1a1c1e`), no
+   transparente. Nada de degradados ni texturas en el fondo.
+2. **Encuadre cuadrado**, sujeto centrado ocupando ~70-80% del recuadro
+   con aire arriba y abajo.
+3. **Vista 3/4 ortográfica** para objetos físicos de Era 1 (la
+   misma inclinación para todos los iconos de la era).
+4. **Sin sombra arrojada al suelo** — el objeto flota sobre el fondo
+   plano. Solo modelado interno por bloques de píxel.
 
-| nuevo id           | reemplaza a       | objeto / persona               | efecto (sin cambios) |
-| ------------------ | ----------------- | ------------------------------ | -------------------- |
-| `era_1_intern`     | `era_1_bigrams`   | Becario en prácticas           | +1 / tap             |
-| `era_1_coffee`     | `era_1_trigrams`  | Cafetera de oficina            | +2 / tap             |
-| `era_1_floppy`     | `era_1_stopwords` | Disquete con corpus            | x1.25 / tap          |
-| `era_1_gpu`        | `era_1_word2vec`  | Tarjeta gráfica GeForce 2 MX   | +0.5 / s             |
-| `era_1_cluster`    | `era_1_skipgram`  | Cluster Beowulf casero         | +1.5 / s             |
-| `era_1_serverroom` | `era_1_subwords`  | Sala de servidores refrigerada | x1.3 / s             |
+## 5.1 Mejoras de Era 1 (objetos físicos del sótano 2010)
 
-Iconos a generar (uno por mejora):
+| id `.tres`         | objeto / persona               | efecto       |
+| ------------------ | ------------------------------ | ------------ |
+| `era_1_intern`     | Becario en prácticas           | +1 / tap     |
+| `era_1_coffee`     | Cafetera de oficina            | +2 / tap     |
+| `era_1_floppy`     | Disquete con corpus            | x1.25 / tap  |
+| `era_1_gpu`        | Tarjeta gráfica GeForce 2 MX   | +0.5 / s     |
+| `era_1_cluster`    | Cluster Beowulf casero         | +1.5 / s     |
+| `era_1_serverroom` | Sala de servidores refrigerada | x1.3 / s     |
 
 ### `ui/shop/upgrades/era_1_intern.png`
 
-Becario de unos 20 años sentado en silla de oficina, ratón en la mano,
-mirando al monitor. Camiseta sencilla, pelo sin peinar, postura cansada.
-Encuadre frontal del torso y la cabeza, recortado contra fondo neutro.
+Becario de unos 20 años sentado en silla de oficina, vista 3/4. **El
+monitor del escritorio aparece a su derecha** (no detrás), también en
+3/4, mostrando que está trabajando. Camiseta lisa, pelo sin peinar,
+postura ligeramente encorvada. Mano sobre el ratón.
 
 ### `ui/shop/upgrades/era_1_coffee.png`
 
-Cafetera eléctrica de oficina (la típica de jarra de cristal con resistencia
-caliente debajo y mango de plástico negro), llena de café, **un hilillo de
-vapor** saliendo de la boquilla. Sobre superficie plana, encuadre 3/4.
+Cafetera eléctrica de oficina (típica del 2000 con jarra de cristal,
+asa de plástico negro y placa caliente debajo), llena de café oscuro.
+Cuerpo de plástico negro mate, panel lateral con indicador. Vista 3/4.
 
 ### `ui/shop/upgrades/era_1_floppy.png`
 
-Disquete de 3.5 pulgadas en posición ligeramente inclinada, vista
-predominantemente frontal. **Etiqueta escrita a mano** con texto corto y
-poco legible (estilo "CORPUS v3" o "DATASET"). Visible la pestaña metálica
-de protección de escritura.
+Disquete de 3.5 pulgadas en posición ligeramente inclinada (vista
+casi frontal). **Etiqueta escrita a mano** con texto corto poco
+legible (estilo "CORPUS v3"). Carcasa azul oscura, pestaña metálica
+de protección visible.
 
 ### `ui/shop/upgrades/era_1_gpu.png`
 
-Tarjeta gráfica antigua de finales de los 90 / principios de 2000
-(referencia: NVIDIA GeForce 2 MX o Voodoo 3). PCB verde visible,
-disipador pasivo metálico con un pequeño ventilador, conector AGP en la
-parte inferior. Encuadre 3/4 dejando ver el perfil.
+Tarjeta gráfica antigua (referencia: NVIDIA GeForce 2 MX), vista 3/4.
+PCB verde visible, disipador pasivo metálico con ventilador pequeño,
+chasis trasero con conectores VGA y DVI, conector AGP en el borde
+inferior. La tarjeta apoyada sobre el fondo, sin chasis.
 
 ### `ui/shop/upgrades/era_1_cluster.png`
 
-Pila desordenada de **3 o 4 torres de PC viejas** (cajas beige y gris,
-con disqueteras y unidades de CD), conectadas entre sí con un revoltijo
-de cables ethernet y de alimentación. Una de las torres tiene el LED de
-disco duro encendido.
+**Tres torres de PC viejas** (cajas beige y gris claro, con
+disqueteras y unidades de CD frontales) apoyadas en grupo,
+**frontales hacia el espectador**, conectadas entre sí por cables
+ethernet azules y cables de alimentación grises.
 
 ### `ui/shop/upgrades/era_1_serverroom.png`
 
-Rack de servidores rack-mount (al menos 4 unidades 1U apiladas) con
-**hileras de LEDs verdes y un parpadeo rojo aislado** en una de las
-unidades. Un ventilador grande de pie a la derecha empujando aire hacia
-el rack. Encuadre frontal recortado en el rack.
+**Rack negro** de servidores rack-mount (al menos 4 unidades 1U
+apiladas) con hileras de LEDs verdes y un parpadeo rojo aislado en
+una unidad. **Ventilador grande de pie a la derecha** del rack,
+empujando aire hacia él. Vista 3/4 del conjunto rack + ventilador.
 
 ---
 
 ## 6. Mejoras de tienda — Era 7
 
-Las 6 mejoras actuales encajan con la estética post-singularidad. Se mantienen
-los `id`, nombres y efectos. Se redescribe solo el **contenido visual** de
-cada icono.
+Las 6 mejoras de Era 7 encajan con la estética post-singularidad. Se
+mantienen los `id`, nombres y efectos; se redescribe solo el **contenido
+visual** de cada icono. Aplican las mismas 4 convenciones comunes del
+§5 (fondo neutro oscuro, encuadre cuadrado, sin sombra) salvo que la
+vista deja de ser 3/4 ortográfica para volverse **frontal abstracta**
+(estética post-singularidad, sin materia identificable).
 
 ### `ui/shop/upgrades/era_7_rsi.png` — Recursive self-improvement
 
@@ -338,16 +343,12 @@ solos. Una mano fantasmal (o simplemente "nadie") los está ajustando.
 
 ## 7. Cobertura
 
-Quedan cubiertas las 35 imágenes PNG presentes hoy en
+Quedan cubiertas las 36 imágenes PNG presentes hoy en
 `game/the-tokenizer/assets/sprites/`:
 
 - 5 frames del investigador
-- 4 fondos Era 1 + 4 fondos Era 7
+- 4 fondos Era 1 + 4 fondos Era 7 + 1 teclado (tap target Era 1)
 - 2 botones + 2 toggles
 - 2 marcos de tienda + 2 marcos de workstation + 1 slot bloqueado
 - 2 logotipos + 1 home
-- 6 iconos Era 1 (replanteados) + 6 iconos Era 7
-
-Si Era 1 se replantea como propongo en §5, hay que renombrar los iconos y
-actualizar las referencias en `data/upgrades/*.tres`. Ese refactor no entra
-en este documento.
+- 6 iconos Era 1 + 6 iconos Era 7

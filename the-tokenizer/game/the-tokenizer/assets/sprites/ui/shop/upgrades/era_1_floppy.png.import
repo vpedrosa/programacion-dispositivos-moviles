@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xdqd1my1ysj8"
-path="res://.godot/imported/era_1_subwords.png-26abffa0fab9395c6f2ef27e6eeae6ce.ctex"
+uid="uid://c2f8rmo6xrch0"
+path="res://.godot/imported/era_1_floppy.png-d097499bb24497045a5f085dfac5f760.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/shop/upgrades/era_1_subwords.png"
-dest_files=["res://.godot/imported/era_1_subwords.png-26abffa0fab9395c6f2ef27e6eeae6ce.ctex"]
+source_file="res://assets/sprites/ui/shop/upgrades/era_1_floppy.png"
+dest_files=["res://.godot/imported/era_1_floppy.png-d097499bb24497045a5f085dfac5f760.ctex"]
 
 [params]
 

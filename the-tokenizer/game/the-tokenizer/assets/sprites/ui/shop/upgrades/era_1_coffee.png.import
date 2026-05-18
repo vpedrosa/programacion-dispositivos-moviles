@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dbiatuo3akup5"
-path="res://.godot/imported/era_1_stopwords.png-42d9132a8e4e247850378b5829739ee5.ctex"
+uid="uid://mbjxilunl0b6"
+path="res://.godot/imported/era_1_coffee.png-5895b6951190f674d67830b6d760d13a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/shop/upgrades/era_1_stopwords.png"
-dest_files=["res://.godot/imported/era_1_stopwords.png-42d9132a8e4e247850378b5829739ee5.ctex"]
+source_file="res://assets/sprites/ui/shop/upgrades/era_1_coffee.png"
+dest_files=["res://.godot/imported/era_1_coffee.png-5895b6951190f674d67830b6d760d13a.ctex"]
 
 [params]
 

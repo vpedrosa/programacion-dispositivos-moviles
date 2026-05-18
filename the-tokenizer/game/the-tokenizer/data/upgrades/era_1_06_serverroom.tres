@@ -1,21 +1,21 @@
-[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://dctj4lr7v8tk2"]
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://d6xvjklpmtq3w"]
 
 [ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_1_subwords.png" id="2_icon"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_1_serverroom.png" id="2_icon"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
 
 [resource]
 script = ExtResource("1_script")
-id = &"era_1_subwords"
-display_name = "Subword units"
-description = "Trocear las palabras raras en morfemas elimina las OOV y mejora el rendimiento global del entrenamiento pasivo."
+id = &"era_1_serverroom"
+display_name = "Sala de servidores refrigerada"
+description = "Aire forzado constante mantiene el rack a temperatura óptima. El throughput pasivo se multiplica (x1.3/s)."
 era = 1
 base_cost = 8000.0
 cost_growth = 2.5
 max_level = 2
 effect_type = 4
 effect_value = 1.3
-prerequisite_id = &"era_1_skipgram"
+prerequisite_id = &"era_1_cluster"
 icon = ExtResource("2_icon")
 workstation_icon = ExtResource("2_icon")
 workstation_locked_icon = ExtResource("3_locked")

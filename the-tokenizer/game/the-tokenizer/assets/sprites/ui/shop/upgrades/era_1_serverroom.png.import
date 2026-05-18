@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://du7ymlh4ofsx6"
-path="res://.godot/imported/era_1_trigrams.png-ed5d73645b9f56ca76bae1e3e48b33f1.ctex"
+uid="uid://b3fvud5n4k2n3"
+path="res://.godot/imported/era_1_serverroom.png-ce0ebfdb3b444b96c34fcaa115492e2f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/ui/shop/upgrades/era_1_trigrams.png"
-dest_files=["res://.godot/imported/era_1_trigrams.png-ed5d73645b9f56ca76bae1e3e48b33f1.ctex"]
+source_file="res://assets/sprites/ui/shop/upgrades/era_1_serverroom.png"
+dest_files=["res://.godot/imported/era_1_serverroom.png-ce0ebfdb3b444b96c34fcaa115492e2f.ctex"]
 
 [params]
 
