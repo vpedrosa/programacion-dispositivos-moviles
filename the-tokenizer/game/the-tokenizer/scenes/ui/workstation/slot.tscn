@@ -30,7 +30,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
 [node name="Slot" type="Control"]
-custom_minimum_size = Vector2(120, 120)
+custom_minimum_size = Vector2(96, 96)
 mouse_filter = 2
 script = ExtResource("1_slot")
 
@@ -62,14 +62,14 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -52.0
-offset_top = -26.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_left = -40.0
+offset_top = -19.0
+offset_right = -2.0
+offset_bottom = -2.0
 grow_horizontal = 0
 grow_vertical = 0
 mouse_filter = 2
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
 theme_override_styles/normal = SubResource("StyleBoxFlat_badge")
 theme_override_colors/font_color = Color(0.78, 0.95, 0.82, 1)
 text = "Lv 0"

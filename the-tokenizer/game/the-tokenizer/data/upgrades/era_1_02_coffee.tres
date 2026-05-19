@@ -19,4 +19,4 @@ prerequisite_id = &"era_1_intern"
 icon = ExtResource("2_icon")
 workstation_icon = ExtResource("2_icon")
 workstation_locked_icon = ExtResource("3_locked")
-workstation_position = Vector2(260, 116)
+workstation_position = Vector2(398, 159)
