@@ -10,12 +10,12 @@ extends Control
 signal closed()
 
 const TALKING_FRAMES := [
-	preload("res://assets/sprites/player/researcher-talking-animation-1.png"),
-	preload("res://assets/sprites/player/researcher-talking-animation-2.png"),
-	preload("res://assets/sprites/player/researcher-talking-animation-3.png"),
-	preload("res://assets/sprites/player/researcher-talking-idle.png"),
+	preload("res://assets/sprites/player/researcher-talking1.png"),
+	preload("res://assets/sprites/player/researcher-talking-2.png"),
+	preload("res://assets/sprites/player/researcher-talking-3.png"),
+	preload("res://assets/sprites/player/researcher-talking-4.png"),
 ]
-const IDLE_FRAME := preload("res://assets/sprites/player/researcher-talking-idle.png")
+const IDLE_FRAME := preload("res://assets/sprites/player/researcher-idle.png")
 const CHAR_INTERVAL := 0.035
 const TALK_FRAME_INTERVAL := 0.13
 
