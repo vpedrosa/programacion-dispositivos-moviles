@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0ervm7sw1ce2"
-path="res://.godot/imported/researcher-idle.png-0eda847d256c93f8d8c211be8f37fdeb.ctex"
+uid="uid://1hua56gng50q"
+path="res://.godot/imported/icon-screen-shop.png-297acccce1656c0344a37c4d12fdfeca.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/player/researcher-idle.png"
-dest_files=["res://.godot/imported/researcher-idle.png-0eda847d256c93f8d8c211be8f37fdeb.ctex"]
+source_file="res://assets/sprites/ui/shop/icon-screen-shop.png"
+dest_files=["res://.godot/imported/icon-screen-shop.png-297acccce1656c0344a37c4d12fdfeca.ctex"]
 
 [params]
 

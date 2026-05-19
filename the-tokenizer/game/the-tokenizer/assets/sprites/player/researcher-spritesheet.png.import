@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pccw2sj40vj2"
-path="res://.godot/imported/researcher-talking-animation-3.png-509e49aa22003760b0525852a1902a2a.ctex"
+uid="uid://cw8r0uwwwerau"
+path="res://.godot/imported/researcher-spritesheet.png-f32788ea8fb4f031ea08f9cd90e26405.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/player/researcher-talking-animation-3.png"
-dest_files=["res://.godot/imported/researcher-talking-animation-3.png-509e49aa22003760b0525852a1902a2a.ctex"]
+source_file="res://assets/sprites/player/researcher-spritesheet.png"
+dest_files=["res://.godot/imported/researcher-spritesheet.png-f32788ea8fb4f031ea08f9cd90e26405.ctex"]
 
 [params]
 

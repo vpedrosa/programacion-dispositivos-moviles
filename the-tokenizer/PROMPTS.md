@@ -194,8 +194,28 @@ Teclado mecánico antiguo (estilo IBM Model M / teclado beige de los 90),
 vista 3/4 ortográfica. Carcasa oscura inclinada hacia el espectador con
 4 filas de teclas claras escalonadas + barra espaciadora. Un cable
 saliendo por la esquina superior derecha hacia fuera del cuadro. Es la
-imagen sobre la que el jugador toca para "entrenar" en Era 1. Imagen
-cuadrada, fondo transparente, sin sombra arrojada.
+imagen sobre la que el jugador toca para "entrenar" en Era 1; se
+renderiza **debajo de la workstation**, no superpuesta. Aspecto
+**aproximadamente 2:1** (más ancho que alto, como un teclado real),
+fondo transparente, sin sombra arrojada.
+
+### `ui/cursor/cursor.png` — puntero del ratón (estado normal)
+
+Puntero de flecha clásico de sistema operativo de finales de los 90 /
+principios de 2000 (estilo Windows 98 / 2000), apuntando hacia la
+**esquina superior izquierda**. Silueta blanca con borde negro de 1 px
+para que se lea sobre cualquier fondo. Tamaño cuadrado pequeño
+(suficiente para ser reconocible a 32 px sin perder forma); el **hotspot
+está en la punta** (pixel superior izquierdo). Fondo transparente.
+
+### `ui/cursor/cursor-pointer.png` — puntero del ratón (estado interactivo)
+
+Mismo lenguaje visual que `cursor.png` pero con forma de **mano con
+dedo índice extendido** (el cursor que el SO muestra al pasar sobre
+enlaces o controles clicables). Mantiene el mismo tamaño cuadrado y el
+mismo grosor de contorno negro. **Hotspot en la punta del dedo
+índice**. Fondo transparente. Se usa cuando el ratón pasa sobre
+elementos interactivos (botones, slots, tap target).
 
 ### `ui/workstation/slot_locked.png` — slot bloqueado
 
@@ -343,12 +363,12 @@ solos. Una mano fantasmal (o simplemente "nadie") los está ajustando.
 
 ## 7. Cobertura
 
-Quedan cubiertas las 36 imágenes PNG presentes hoy en
+Quedan cubiertas las 38 imágenes PNG previstas en
 `game/the-tokenizer/assets/sprites/`:
 
 - 5 frames del investigador
 - 4 fondos Era 1 + 4 fondos Era 7 + 1 teclado (tap target Era 1)
-- 2 botones + 2 toggles
+- 2 botones + 2 toggles + 2 cursores (normal y pointer)
 - 2 marcos de tienda + 2 marcos de workstation + 1 slot bloqueado
 - 2 logotipos + 1 home
 - 6 iconos Era 1 + 6 iconos Era 7

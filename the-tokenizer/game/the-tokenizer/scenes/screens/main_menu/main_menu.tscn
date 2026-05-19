@@ -74,8 +74,8 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="LogotipoTransparente" type="Sprite2D" parent="MarginContainer/VBox" unique_id=1333322619]
-position = Vector2(312.99997, 233)
-scale = Vector2(0.2548828, 0.2548828)
+position = Vector2(319.00003, 281)
+scale = Vector2(0.49945065, 0.49945065)
 texture = ExtResource("3_logo")
 
 [node name="Logo" type="TextureRect" parent="MarginContainer/VBox" unique_id=1522722541]

@@ -31,16 +31,16 @@ EventService="*res://autoloads/event_service.gd"
 MinigameService="*res://autoloads/minigame_service.gd"
 QuantumService="*res://autoloads/quantum_service.gd"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/gut/plugin.cfg")
-
 [display]
 
 window/size/viewport_width=720
 window/size/viewport_height=1280
 window/stretch/mode="canvas_items"
 window/handheld/orientation=1
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
 [input]
 

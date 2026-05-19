@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="EthicalEvent" format=3 uid="uid://c7d2qjlrk9hbm"]
+[gd_resource type="Resource" script_class="EthicalEvent" format=3 uid="uid://c7d2qjlrlahbm"]
 
 [ext_resource type="Script" path="res://scripts/model/ethical_event.gd" id="1_event"]
 
