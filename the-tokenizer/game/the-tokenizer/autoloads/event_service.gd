@@ -59,11 +59,17 @@ func _load_catalog() -> void:
 	dir.list_dir_begin()
 	var file_name := dir.get_next()
 	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(".tres"):
-			var resource := load(EVENTS_DIR + "/" + file_name)
-			if resource is EthicalEvent and resource.id != &"":
-				_catalog.append(resource)
-			elif resource != null:
-				push_warning("EventService: %s no es un EthicalEvent válido" % file_name)
+		if not dir.current_is_dir():
+			# Ver upgrade_service.gd:_load_catalog — los .tres llegan como
+			# .tres.remap en el APK; canonicalizar antes de filtrar.
+			var canonical := file_name
+			if canonical.ends_with(".remap"):
+				canonical = canonical.substr(0, canonical.length() - ".remap".length())
+			if canonical.ends_with(".tres"):
+				var resource := load(EVENTS_DIR + "/" + canonical)
+				if resource is EthicalEvent and resource.id != &"":
+					_catalog.append(resource)
+				elif resource != null:
+					push_warning("EventService: %s no es un EthicalEvent válido" % canonical)
 		file_name = dir.get_next()
 	_catalog.sort_custom(func(a, b): return a.trigger_threshold < b.trigger_threshold)
