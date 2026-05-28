@@ -99,19 +99,12 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="NewGameButton" type="Button" parent="MarginContainer/VBox" unique_id=1145879048]
+[node name="PlayButton" type="Button" parent="MarginContainer/VBox" unique_id=1145879048]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(440, 130)
 layout_mode = 2
 size_flags_horizontal = 4
-text = "NUEVA"
-
-[node name="ContinueButton" type="Button" parent="MarginContainer/VBox" unique_id=14490269]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(440, 130)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Continuar"
+text = "Nueva partida"
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/VBox" unique_id=763918658]
 unique_name_in_owner = true

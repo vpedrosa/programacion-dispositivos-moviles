@@ -1,19 +1,23 @@
 extends Control
 
-## Overlay para elegir un hueco al empezar una partida nueva.
+## Overlay para elegir un hueco entre los 5 slots (#381).
 ##
-## Tras #367 "Continuar" ya carga directamente el slot más reciente sin
-## pasar por aquí, así que esta pantalla solo aparece desde "Nueva":
-## tap sobre un hueco vacío arranca la intro, tap sobre uno ocupado pide
-## confirmación de sobrescritura. El botón de papelera siempre pide
-## confirmación.
+## Hay una sola pantalla para nueva partida y continuar: tap sobre un
+## slot vacío arranca la intro de Era 1, tap sobre un slot ocupado
+## carga directamente esa partida. El botón de papelera pide
+## confirmación antes de borrar.
 
 const INTRO_SCENE := "res://scenes/screens/intro/intro.tscn"
+const GAME_SCENE := "res://scenes/screens/game/game.tscn"
 
 @onready var _title: Label = %TitleLabel
 @onready var _back_button: Button = %BackButton
-@onready var _slot_buttons: Array[Button] = [%SlotButton1, %SlotButton2, %SlotButton3]
-@onready var _delete_buttons: Array[Button] = [%DeleteButton1, %DeleteButton2, %DeleteButton3]
+@onready var _slot_buttons: Array[Button] = [
+	%SlotButton1, %SlotButton2, %SlotButton3, %SlotButton4, %SlotButton5,
+]
+@onready var _delete_buttons: Array[Button] = [
+	%DeleteButton1, %DeleteButton2, %DeleteButton3, %DeleteButton4, %DeleteButton5,
+]
 @onready var _confirm_modal: ConfirmModal = %ConfirmModal
 
 var _pending_action: Callable = Callable()
@@ -32,7 +36,7 @@ func _ready() -> void:
 
 
 func refresh() -> void:
-	_title.text = "ELIGE HUECO"
+	_title.text = "ELIGE PARTIDA"
 	for i in range(SaveService.MAX_SLOTS):
 		var slot := i + 1
 		var occupied := SaveService.has_save(slot)
@@ -75,16 +79,21 @@ static func _format_relative_time(ts: int) -> String:
 
 func _on_slot_pressed(slot: int) -> void:
 	if SaveService.has_save(slot):
-		_pending_action = _start_new_in.bind(slot)
-		_confirm_modal.set_content(
-			"Sobrescribir partida",
-			"El SLOT %d tiene una partida. ¿Sobrescribir y empezar de nuevo?" % slot,
-			"Empezar",
-			"Cancelar",
-		)
-		_confirm_modal.show_modal()
+		_load_slot(slot)
 	else:
 		_start_new_in(slot)
+
+
+func _load_slot(slot: int) -> void:
+	var state := SaveService.load_save(slot)
+	if state == null:
+		push_warning("SlotPicker: no se pudo cargar el SLOT %d" % slot)
+		refresh()
+		return
+	SaveService.set_active_slot(slot)
+	GameState.load_from(state)
+	SceneManager.pop_overlay()
+	SceneManager.change_scene(GAME_SCENE)
 
 
 func _on_delete_pressed(slot: int) -> void:

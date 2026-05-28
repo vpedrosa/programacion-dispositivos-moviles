@@ -230,6 +230,58 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_delete_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_delete_hover")
 text = "✕"
 
+[node name="SlotRow4" type="HBoxContainer" parent="Margin/VBox/Slots"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SlotButton4" type="Button" parent="Margin/VBox/Slots/SlotRow4"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SLOT 4 · vacío"
+autowrap_mode = 3
+
+[node name="DeleteButton4" type="Button" parent="Margin/VBox/Slots/SlotRow4"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(88, 64)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.75, 0.75, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
+theme_override_styles/hover = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_delete_hover")
+text = "✕"
+
+[node name="SlotRow5" type="HBoxContainer" parent="Margin/VBox/Slots"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SlotButton5" type="Button" parent="Margin/VBox/Slots/SlotRow5"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 130)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SLOT 5 · vacío"
+autowrap_mode = 3
+
+[node name="DeleteButton5" type="Button" parent="Margin/VBox/Slots/SlotRow5"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(88, 64)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.75, 0.75, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
+theme_override_styles/hover = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_delete_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_delete_hover")
+text = "✕"
+
 [node name="ConfirmModal" parent="." instance=ExtResource("6_modal")]
 unique_name_in_owner = true
 visible = false
