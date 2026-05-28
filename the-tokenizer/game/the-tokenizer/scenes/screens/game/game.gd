@@ -45,6 +45,7 @@ const ERA_BACKGROUNDS := {
 @onready var _era_label: Label = %EraLabel
 @onready var _tokens_label: Label = %TokensLabel
 @onready var _per_second_label: Label = %PerSecondLabel
+@onready var _multiplier_badge: Label = %MultiplierBadge
 @onready var _boss_progress: ProgressBar = %BossProgress
 @onready var _qubits_container: Control = %QubitsContainer
 @onready var _qubits_label: Label = %QubitsLabel
@@ -55,19 +56,28 @@ const ERA_BACKGROUNDS := {
 @onready var _background: TextureRect = %Background
 @onready var _toast: Control = %Toast
 @onready var _toast_label: Label = %ToastLabel
+@onready var _debug_launcher: Control = %DebugMinigameLauncher
+@onready var _debug_launcher_backprop: Button = %DebugLaunchBackprop
+@onready var _debug_launcher_refrig: Button = %DebugLaunchRefrig
 
 var _toast_tween: Tween
+var _multiplier_fade_tween: Tween
+var _multiplier_color_buff := Color(0.45, 0.85, 0.55, 1.0)
+var _multiplier_color_debuff := Color(0.95, 0.45, 0.45, 1.0)
 
 
 func _ready() -> void:
 	_shop_button.pressed.connect(_on_shop_pressed)
 	_settings_button.pressed.connect(_on_settings_pressed)
+	_debug_launcher_backprop.pressed.connect(_on_debug_launch_backprop)
+	_debug_launcher_refrig.pressed.connect(_on_debug_launch_refrig)
 	GameState.tokens_changed.connect(_on_tokens_changed)
 	GameState.tokens_per_second_changed.connect(_on_per_second_changed)
 	GameState.qubit_multiplier_changed.connect(_on_qubit_multiplier_changed)
 	GameState.qubits_changed.connect(_on_qubits_changed)
 	GameState.era_changed.connect(_on_era_changed)
 	GameState.boss_progress_changed.connect(_on_boss_progress_changed)
+	GameState.minigame_multiplier_changed.connect(_on_minigame_multiplier_changed)
 	DebugFlags.eval_multiplier_changed.connect(_on_debug_multiplier_changed)
 	BossService.boss_ready.connect(_on_boss_ready)
 	EventService.ethical_event_triggered.connect(_on_ethical_event_triggered)
@@ -83,6 +93,11 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	# El multiplicador del minijuego se expira de forma perezosa; consultamos
+	# en cada frame para refrescar el label de PerSecond aunque la partida
+	# esté pausada por un overlay.
+	var mult := GameState.get_minigame_multiplier()
+	_refresh_per_second()
 	if GameState.passive_paused:
 		return
 	var base_rate := GameState.state.tokens_per_second * GameState.state.qubit_multiplier
@@ -91,6 +106,10 @@ func _process(delta: float) -> void:
 	var base := base_rate * delta
 	GameState.add_tokens(base)
 	GameState.add_debug_bonus(DebugFlags.bonus_for(base))
+	# Buff/debuff del minijuego: el extra (positivo o negativo) sólo afecta
+	# al balance gastable, no a lifetime/era_lifetime.
+	if not is_equal_approx(mult, 1.0):
+		GameState.apply_minigame_delta(base * (mult - 1.0))
 
 
 func show_notification(text: String) -> void:
@@ -128,9 +147,47 @@ func _on_qubit_multiplier_changed(_value: float) -> void:
 
 
 func _refresh_per_second() -> void:
-	var effective := GameState.state.tokens_per_second * GameState.state.qubit_multiplier
+	var base := GameState.state.tokens_per_second * GameState.state.qubit_multiplier
+	var mult := GameState.get_minigame_multiplier()
+	var effective := base * mult
 	_per_second_label.text = "+%s / s" % _format_amount(effective)
 	_per_second_label.visible = effective > 0.0
+	_refresh_multiplier_badge(mult)
+
+
+func _refresh_multiplier_badge(mult: float) -> void:
+	if is_equal_approx(mult, 1.0):
+		if _multiplier_badge.visible and _multiplier_badge.modulate.a > 0.01:
+			_fade_out_multiplier_badge()
+		else:
+			_multiplier_badge.visible = false
+		return
+	if _multiplier_fade_tween and _multiplier_fade_tween.is_running():
+		_multiplier_fade_tween.kill()
+	_multiplier_badge.visible = true
+	_multiplier_badge.modulate.a = 1.0
+	var remaining := GameState.get_minigame_multiplier_remaining()
+	if mult > 1.0:
+		_multiplier_badge.text = "×%s · %.0fs" % [_format_multiplier(mult), remaining]
+		_multiplier_badge.add_theme_color_override("font_color", _multiplier_color_buff)
+	else:
+		var divisor := 1.0 / maxf(mult, 0.0001)
+		_multiplier_badge.text = "÷%s · %.0fs" % [_format_multiplier(divisor), remaining]
+		_multiplier_badge.add_theme_color_override("font_color", _multiplier_color_debuff)
+
+
+func _fade_out_multiplier_badge() -> void:
+	if _multiplier_fade_tween and _multiplier_fade_tween.is_running():
+		return
+	_multiplier_fade_tween = create_tween()
+	_multiplier_fade_tween.tween_property(_multiplier_badge, "modulate:a", 0.0, 0.4)
+	_multiplier_fade_tween.tween_callback(func() -> void: _multiplier_badge.visible = false)
+
+
+static func _format_multiplier(value: float) -> String:
+	if is_equal_approx(value, roundf(value)):
+		return "%d" % roundi(value)
+	return "%.1f" % value
 
 
 func _on_qubits_changed(value: int) -> void:
@@ -182,6 +239,19 @@ func _on_boss_progress_changed(progress: float) -> void:
 
 func _on_debug_multiplier_changed(enabled: bool) -> void:
 	_debug_badge.visible = enabled
+	_debug_launcher.visible = enabled
+
+
+func _on_minigame_multiplier_changed(_value: float, _remaining: float) -> void:
+	_refresh_per_second()
+
+
+func _on_debug_launch_backprop() -> void:
+	SceneManager.push_overlay("res://scenes/minigames/backpropagation/backpropagation.tscn")
+
+
+func _on_debug_launch_refrig() -> void:
+	SceneManager.push_overlay("res://scenes/minigames/refrigeration/refrigeration.tscn")
 
 
 func _on_shop_pressed() -> void:

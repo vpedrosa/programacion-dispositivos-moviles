@@ -24,6 +24,10 @@ const TRIGGER_CHANCE := 0.4
 ## Recompensa en segundos equivalentes de producción pasiva.
 const REWARD_SECONDS := 60.0
 const PENALTY_SECONDS := 15.0
+## Buff/debuff multiplicativo sobre la tasa pasiva tras un minijuego.
+const SUCCESS_MULTIPLIER := 2.0
+const FAILURE_MULTIPLIER := 0.5
+const MULTIPLIER_DURATION := 30.0
 
 var _timer: Timer
 var _last_triggered_msec: int = -int(COOLDOWN * 1000.0)
@@ -48,6 +52,8 @@ func apply_outcome(success: bool) -> void:
 		GameState.add_debug_bonus(DebugFlags.bonus_for(bonus))
 	elif bonus < 0.0:
 		GameState.try_spend_tokens(absf(bonus))
+	var multiplier := SUCCESS_MULTIPLIER if success else FAILURE_MULTIPLIER
+	GameState.set_minigame_multiplier(multiplier, MULTIPLIER_DURATION)
 	minigame_outcome_applied.emit(success, bonus)
 
 

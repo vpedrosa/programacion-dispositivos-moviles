@@ -24,6 +24,7 @@ signal boss_progress_changed(progress: float)
 signal ethical_score_changed(value: int)
 signal upgrade_purchased(upgrade_id: StringName)
 signal upgrade_levelup(upgrade_id: StringName, new_level: int)
+signal minigame_multiplier_changed(value: float, remaining_seconds: float)
 signal state_loaded()
 
 var state: PlayerState = PlayerState.new_default()
@@ -32,6 +33,13 @@ var state: PlayerState = PlayerState.new_default()
 ## ponen este flag a true para que el ticker pasivo de game.gd se detenga
 ## hasta que vuelvan a darlo a false al cerrarse.
 var passive_paused: bool = false
+
+## Multiplicador temporal sobre la generación de tokens aplicado por
+## [MinigameService] al resolver un minijuego (×2 éxito, ÷2 fallo).
+## No se persiste en save y no afecta a lifetime/era_lifetime para no
+## adelantar boss ni eventos éticos artificialmente.
+var _minigame_multiplier: float = 1.0
+var _minigame_mult_expires_msec: int = 0
 
 
 func reset(keep_qubits: bool = false) -> void:
@@ -69,6 +77,56 @@ func add_debug_bonus(amount: float) -> void:
 		return
 	state.tokens = maxf(0.0, state.tokens + amount)
 	tokens_changed.emit(state.tokens)
+
+
+## Aplica un delta (positivo o negativo) sólo al balance gastable.
+##
+## Compartido con [method add_debug_bonus] en intención: lifetime y
+## era_lifetime nunca se tocan, así que un debuff del minijuego no
+## retrasa el boss y un buff no lo adelanta.
+func apply_minigame_delta(amount: float) -> void:
+	if amount == 0.0:
+		return
+	state.tokens = maxf(0.0, state.tokens + amount)
+	tokens_changed.emit(state.tokens)
+
+
+## Activa o reemplaza el multiplicador temporal de minijuego.
+##
+## value: factor aplicado a la generación pasiva (p.ej. 2.0 o 0.5).
+## duration_seconds: cuánto dura desde la llamada.
+func set_minigame_multiplier(value: float, duration_seconds: float) -> void:
+	_minigame_multiplier = maxf(0.0, value)
+	_minigame_mult_expires_msec = Time.get_ticks_msec() + int(duration_seconds * 1000.0)
+	minigame_multiplier_changed.emit(_minigame_multiplier, duration_seconds)
+
+
+## Devuelve el multiplicador vigente, expirándolo de forma perezosa.
+##
+## Si el buff ha caducado, vuelve a 1.0 y emite la señal con remaining=0.
+func get_minigame_multiplier() -> float:
+	if is_equal_approx(_minigame_multiplier, 1.0):
+		return 1.0
+	if Time.get_ticks_msec() >= _minigame_mult_expires_msec:
+		_minigame_multiplier = 1.0
+		_minigame_mult_expires_msec = 0
+		minigame_multiplier_changed.emit(1.0, 0.0)
+	return _minigame_multiplier
+
+
+## Segundos restantes del buff. 0 si no hay buff activo.
+func get_minigame_multiplier_remaining() -> float:
+	if is_equal_approx(_minigame_multiplier, 1.0):
+		return 0.0
+	return maxf(0.0, (_minigame_mult_expires_msec - Time.get_ticks_msec()) / 1000.0)
+
+
+func clear_minigame_multiplier() -> void:
+	if is_equal_approx(_minigame_multiplier, 1.0):
+		return
+	_minigame_multiplier = 1.0
+	_minigame_mult_expires_msec = 0
+	minigame_multiplier_changed.emit(1.0, 0.0)
 
 
 func try_spend_tokens(amount: float) -> bool:
