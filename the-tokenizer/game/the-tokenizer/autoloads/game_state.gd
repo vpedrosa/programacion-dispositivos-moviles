@@ -48,6 +48,9 @@ func reset(keep_qubits: bool = false) -> void:
 	state = PlayerState.new_default()
 	state.qubits = preserved_qubits
 	state.qubit_multiplier = preserved_mult
+	# El buff/debuff de minijuego es transient: no persiste entre partidas
+	# ni sobrevive a un reset cuántico — limpia el badge en el HUD.
+	clear_minigame_multiplier()
 	_emit_all()
 
 

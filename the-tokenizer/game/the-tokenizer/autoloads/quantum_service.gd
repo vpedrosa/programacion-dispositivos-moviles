@@ -42,6 +42,11 @@ func multiplier_after_reset() -> float:
 func perform_reset() -> void:
 	var earned := qubits_on_reset()
 	var preserved := GameState.state.qubits + earned
+	# Limpia cualquier overlay activo antes de reiniciar para evitar que un
+	# residuo del stack (ej. el propio quantum_event o un minijuego que se
+	# disparó antes del confirm) bloquee inputs de la nueva partida vía
+	# `SceneManager.has_overlay()`.
+	SceneManager.clear_overlays()
 	GameState.reset(false)
 	GameState.add_qubits(preserved)
 	GameState.set_qubit_multiplier(1.0 + float(preserved) * QUBIT_BONUS)

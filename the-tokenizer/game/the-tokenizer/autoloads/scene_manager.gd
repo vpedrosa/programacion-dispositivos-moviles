@@ -74,6 +74,14 @@ func pop_overlay() -> void:
 		top.queue_free()
 
 
+## Popea todos los overlays activos. Usado tras transiciones que reinician
+## la partida (p.ej. reset cuántico) para que el stack quede limpio antes
+## de cargar la nueva escena raíz.
+func clear_overlays() -> void:
+	while not _overlay_stack.is_empty():
+		pop_overlay()
+
+
 func has_overlay() -> bool:
 	return not _overlay_stack.is_empty()
 
