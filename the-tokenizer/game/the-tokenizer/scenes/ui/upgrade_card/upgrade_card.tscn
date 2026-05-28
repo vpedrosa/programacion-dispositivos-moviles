@@ -56,10 +56,12 @@ theme_override_constants/separation = 8
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.92, 0.95, 0.85, 1)
 text = "Nombre"
+autowrap_mode = 0
 clip_text = true
+text_overrun_behavior = 3
 
 [node name="LevelLabel" type="Label" parent="TextCard/VBox/Header"]
 unique_name_in_owner = true
