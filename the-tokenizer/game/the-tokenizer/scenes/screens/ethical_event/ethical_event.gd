@@ -55,6 +55,7 @@ func _render() -> void:
 
 
 func _on_choice_pressed(choice: Dictionary) -> void:
+	AudioManager.play_ethical_action_sfx(int(choice.get("weight", 0)))
 	EventService.record_choice(_event, choice)
 	for child in _choices_box.get_children():
 		if child is Button:

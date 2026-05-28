@@ -14,6 +14,10 @@ signal sfx_volume_changed(db: float)
 
 const BUTTON_SFX := preload("res://assets/sounds/button-pluck.mp3")
 const TYPING_LOOP := preload("res://assets/sounds/typing.mp3")
+const WIN_JINGLE := preload("res://assets/sounds/win.mp3")
+const ACTION_POSITIVE_SFX := preload("res://assets/sounds/action-positive.mp3")
+const ACTION_NEUTRAL_SFX := preload("res://assets/sounds/action-neutral.mp3")
+const ACTION_NEGATIVE_SFX := preload("res://assets/sounds/action-negative.mp3")
 const FADE_OUT_DB := -40.0
 const CONFIG_PATH := "user://audio_settings.cfg"
 
@@ -103,6 +107,25 @@ func play_sfx(stream: AudioStream) -> void:
 
 func play_button_sfx() -> void:
 	play_sfx(BUTTON_SFX)
+
+
+## Jingle de victoria al llegar a la pantalla de Ending.
+##
+## El propio caller (ending.gd) es responsable de no llamarlo más de una
+## vez por instancia — aquí no se guarda estado.
+func play_win_jingle() -> void:
+	play_sfx(WIN_JINGLE)
+
+
+## SFX al confirmar una decisión ética. El stream elegido depende del
+## signo del peso de la opción seleccionada (ver [EthicalEvent]).
+func play_ethical_action_sfx(weight: int) -> void:
+	if weight > 0:
+		play_sfx(ACTION_POSITIVE_SFX)
+	elif weight < 0:
+		play_sfx(ACTION_NEGATIVE_SFX)
+	else:
+		play_sfx(ACTION_NEUTRAL_SFX)
 
 
 func start_typing() -> void:

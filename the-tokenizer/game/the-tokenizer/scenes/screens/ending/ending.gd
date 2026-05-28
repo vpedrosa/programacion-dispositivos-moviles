@@ -41,6 +41,7 @@ func _ready() -> void:
 	_menu_button.pressed.connect(_on_menu_pressed)
 	AudioManager.wire_buttons_in(self)
 	AudioManager.stop_music(2.0)
+	AudioManager.play_win_jingle()
 	GameState.passive_paused = true
 	var variant := GameState.get_ending_variant()
 	_title.text = VARIANT_TITLES.get(variant, "FIN")
