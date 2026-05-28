@@ -200,7 +200,13 @@ func _on_era_changed(era: int) -> void:
 	_refresh_play_area(era)
 	_refresh_background(era)
 	AudioManager.play_ambient(era)
-	_maybe_show_era_intro(era)
+	# Importante: NO disparamos _maybe_show_era_intro aquí. Cuando un reset
+	# cuántico hace GameState.reset(), era_changed(1) llega a esta game.tscn
+	# todavía viva — empujar el diálogo de intro como efecto colateral deja
+	# un overlay residual que bloquea el tap manual hasta que algo lo popee
+	# (#372). El intro de era ya se muestra desde _ready cuando la nueva
+	# game.tscn se monta tras el change_scene, que es el único momento en
+	# el que tiene sentido mostrarlo.
 
 
 func _refresh_background(era: int) -> void:

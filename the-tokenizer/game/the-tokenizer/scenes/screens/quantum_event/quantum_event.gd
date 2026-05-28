@@ -51,8 +51,12 @@ func _on_confirm_pressed() -> void:
 
 
 func _perform_reset() -> void:
+	# QuantumService.perform_reset() ya limpia el stack de overlays vía
+	# SceneManager.clear_overlays(). Antes había aquí un pop_overlay extra
+	# porque el reset disparaba como efecto colateral el diálogo de intro
+	# de Era 1 (vía era_changed); arreglado en #372 ese push ya no ocurre,
+	# así que el pop sobraba.
 	QuantumService.perform_reset()
-	SceneManager.pop_overlay()
 	SceneManager.change_scene(GAME_SCENE)
 
 
