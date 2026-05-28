@@ -23,6 +23,11 @@ var _upgrade: UpgradeData
 
 func _ready() -> void:
 	_buy_button.pressed.connect(_on_buy_pressed)
+	# Forzar single-line + ellipsis aquí también — en algunos viewports el
+	# Label se reflowaba palabra por palabra a pesar de tener clip_text
+	# (ver #380).
+	_name_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_name_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 
 func bind(upgrade: UpgradeData) -> void:
