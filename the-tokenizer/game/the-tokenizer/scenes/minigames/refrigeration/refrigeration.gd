@@ -36,6 +36,12 @@ const DRAG_VELOCITY_THRESHOLD := 800.0
 ## Color frío que parpadea sobre la temperatura cuando se detecta una sacudida.
 const SHAKE_FLASH_COLOR := Color(0.55, 0.85, 1.0, 1.0)
 const SHAKE_FLASH_DURATION := 0.28
+## Tinte de la TempBar dentro de la zona óptima y por defecto. La transición
+## entre ambos se hace por lerp en _process para que no sea un parpadeo
+## brusco cuando la temperatura oscila cerca de los bordes de la franja.
+const TEMP_BAR_OPTIMAL_TINT := Color(0.55, 1.0, 0.65, 1.0)
+const TEMP_BAR_DEFAULT_TINT := Color(1.0, 1.0, 1.0, 1.0)
+const TEMP_BAR_TINT_SPEED := 8.0
 
 @onready var _temp_bar: ProgressBar = %TempBar
 @onready var _temp_label: Label = %TempLabel
@@ -85,14 +91,23 @@ func _process(delta: float) -> void:
 	if _maybe_shake():
 		_temperature = clampf(_temperature - COOL_PER_SHAKE, TEMP_MIN, TEMP_MAX)
 		_flash_shake()
-	if _temperature >= OPTIMAL_MIN and _temperature <= OPTIMAL_MAX:
+	var in_zone := _temperature >= OPTIMAL_MIN and _temperature <= OPTIMAL_MAX
+	if in_zone:
 		_hold += delta
 		if _hold >= TARGET_HOLD:
 			_finish(true)
 			return
 	else:
 		_hold = maxf(0.0, _hold - delta * 0.5)
+	_update_temp_bar_tint(in_zone, delta)
 	_update_labels()
+
+
+func _update_temp_bar_tint(in_zone: bool, delta: float) -> void:
+	var target := TEMP_BAR_OPTIMAL_TINT if in_zone else TEMP_BAR_DEFAULT_TINT
+	_temp_bar.self_modulate = _temp_bar.self_modulate.lerp(
+		target, minf(1.0, delta * TEMP_BAR_TINT_SPEED)
+	)
 
 
 func _on_gui_input(event: InputEvent) -> void:

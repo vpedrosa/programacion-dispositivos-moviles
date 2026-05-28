@@ -106,3 +106,49 @@ func test_single_shake_does_not_dominate_optimal_band() -> void:
 	refrig.queue_free()
 	assert_lt(cool, width * 0.25,
 		"Una sacudida no debe consumir más del 25% de la franja óptima")
+
+
+func test_temp_bar_tints_green_inside_optimal_zone() -> void:
+	# #374: el feedback visual de "estás dentro de la franja" debe ser
+	# inequívoco. Verificamos que `self_modulate` deriva al verde mientras
+	# la temperatura permanece en zona.
+	var minigame: Control = REFRIG_SCENE.instantiate()
+	minigame.set_process(false)
+	get_tree().root.add_child(minigame)
+	await get_tree().process_frame
+	var bar: ProgressBar = minigame.get_node("Margin/VBox/TempBar")
+	# Empiezo del tinte neutro y aplico varios ticks de lerp con la
+	# bandera in_zone = true; tras ~250 ms el verde debe dominar al rojo.
+	bar.self_modulate = minigame.TEMP_BAR_DEFAULT_TINT
+	var delta := 0.05
+	for _i in range(20):
+		minigame._update_temp_bar_tint(true, delta)
+	assert_gt(bar.self_modulate.g, bar.self_modulate.r,
+		"Dentro de la zona óptima el canal verde debe dominar al rojo")
+	minigame.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+
+func test_temp_bar_returns_to_default_outside_zone() -> void:
+	# Inverso del anterior: partiendo del tinte verde, fuera de la zona
+	# `self_modulate` debe converger de nuevo al blanco por defecto sin
+	# quedarse "atascado" en verde.
+	var minigame: Control = REFRIG_SCENE.instantiate()
+	minigame.set_process(false)
+	get_tree().root.add_child(minigame)
+	await get_tree().process_frame
+	var bar: ProgressBar = minigame.get_node("Margin/VBox/TempBar")
+	bar.self_modulate = minigame.TEMP_BAR_OPTIMAL_TINT
+	var delta := 0.05
+	for _i in range(40):
+		minigame._update_temp_bar_tint(false, delta)
+	# Tras ~2 s de lerp hacia blanco, los canales deben estar cerca del
+	# tinte por defecto (≥ 0.95 en r y g).
+	assert_gt(bar.self_modulate.r, 0.95,
+		"Fuera de zona, el rojo del tinte debe volver al blanco")
+	assert_almost_eq(bar.self_modulate.r, bar.self_modulate.g, 0.05,
+		"Fuera de zona, los canales R y G deben estar prácticamente igualados")
+	minigame.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
