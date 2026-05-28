@@ -1,3 +1,7 @@
 .claude/
 .mcp.json
 .env
+
+# Godot Android build template instalado en local; cada dev/CI lo
+# instala con `godot --install-android-build-template`.
+the-tokenizer/game/the-tokenizer/android/

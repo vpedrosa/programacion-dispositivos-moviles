@@ -70,4 +70,7 @@ Ambos workflows comparten los secretos de firma Android del repo:
 - `ANDROID_KEY_PASSWORD`
 
 El workflow de the-tokenizer ejecuta primero la suite GUT (`addons/gut/gut_cmdln.gd`)
-y solo exporta si los tests pasan.
+y solo exporta si los tests pasan. El export Android instala primero el
+template Gradle con `godot --headless --install-android-build-template`
+porque `gradle_build/use_gradle_build=true` en `export_presets.cfg` lo
+exige (en local cada dev también debe ejecutar este comando una vez).

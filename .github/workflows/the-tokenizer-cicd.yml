@@ -119,6 +119,16 @@ jobs:
           printf 'keystore/debug_user="%s"\n' "$KEY_ALIAS" >> "$PROJECT_PATH/export_presets.cfg"
           printf 'keystore/debug_key_password="%s"\n' "$KEY_PASSWORD" >> "$PROJECT_PATH/export_presets.cfg"
 
+      - name: Install Android build template
+        run: |
+          # gradle_build/use_gradle_build=true exige el template Gradle
+          # copiado dentro de <project>/android/build/. Godot 4 lo instala
+          # con esta acción headless que extrae android_source.zip de los
+          # export templates al árbol del proyecto. Idempotente.
+          mkdir -p "$PROJECT_PATH/android/build"
+          cd "$PROJECT_PATH"
+          godot --headless --install-android-build-template
+
       - name: Export Android APK
         run: |
           mkdir -p /tmp/build
