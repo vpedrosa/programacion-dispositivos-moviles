@@ -55,3 +55,54 @@ func test_slow_drag_with_left_button_is_ignored() -> void:
 	minigame._finish(false)
 	await get_tree().process_frame
 	await get_tree().process_frame
+
+
+func test_steady_cadence_wins_within_time_limit() -> void:
+	# Con la calibración (#371) el minijuego debe poder resolverse a una
+	# cadencia razonable. Simulamos la mecánica de _process en un modelo
+	# standalone — replicar `_maybe_shake` exigiría falsificar
+	# `Time.get_ticks_msec`, que es el reloj real y por tanto no admite
+	# avance determinista en cuestión de milisegundos.
+	var refrig: Control = REFRIG_SCENE.instantiate()
+	var heat_per_second: float = refrig.HEAT_PER_SECOND
+	var cool_per_shake: float = refrig.COOL_PER_SHAKE
+	var optimal_min: float = refrig.OPTIMAL_MIN
+	var optimal_max: float = refrig.OPTIMAL_MAX
+	var target_hold: float = refrig.TARGET_HOLD
+	var time_limit: float = refrig.TIME_LIMIT
+	refrig.queue_free()
+	var delta := 0.05
+	var shake_interval := 0.45 # ~2.2 shakes/s, holgado bajo el cooldown de 0.18 s
+	var temperature := 50.0
+	var hold := 0.0
+	var time_left := time_limit
+	var time_since_shake := 0.0
+	var success := false
+	while time_left > 0.0:
+		time_left -= delta
+		temperature = clampf(temperature + heat_per_second * delta, 0.0, 100.0)
+		time_since_shake += delta
+		if time_since_shake >= shake_interval:
+			time_since_shake = 0.0
+			temperature = clampf(temperature - cool_per_shake, 0.0, 100.0)
+		if temperature >= optimal_min and temperature <= optimal_max:
+			hold += delta
+			if hold >= target_hold:
+				success = true
+				break
+		else:
+			hold = maxf(0.0, hold - delta * 0.5)
+	assert_true(success,
+		"A 2.2 shakes/s el minijuego debe completar el hold antes del límite")
+
+
+func test_single_shake_does_not_dominate_optimal_band() -> void:
+	# La franja óptima [OPTIMAL_MIN, OPTIMAL_MAX] debe seguir siendo
+	# significativa: una sola sacudida no debe abarcar más de un cuarto
+	# del ancho de la zona (criterio de calibración de #371).
+	var refrig: Control = REFRIG_SCENE.instantiate()
+	var cool: float = refrig.COOL_PER_SHAKE
+	var width: float = refrig.OPTIMAL_MAX - refrig.OPTIMAL_MIN
+	refrig.queue_free()
+	assert_lt(cool, width * 0.25,
+		"Una sacudida no debe consumir más del 25% de la franja óptima")

@@ -20,8 +20,12 @@ const TEMP_MIN := 0.0
 const TEMP_MAX := 100.0
 const OPTIMAL_MIN := 30.0
 const OPTIMAL_MAX := 70.0
-const HEAT_PER_SECOND := 22.0
-const COOL_PER_SHAKE := 9.0
+# Calibración: a ~2.2 shakes/s (intervalo ~0.45 s) el enfriamiento (9.9°/s)
+# empata con el calentamiento (10°/s), así que el jugador puede mantenerse
+# en la franja óptima sin spamear ni quedarse parado. Los valores previos
+# (HEAT=22, COOL=9) hacían que la temperatura cruzara la zona en <1 s.
+const HEAT_PER_SECOND := 10.0
+const COOL_PER_SHAKE := 4.5
 const SHAKE_COOLDOWN := 0.18
 ## Magnitud del delta entre lecturas consecutivas del acelerómetro
 ## (m/s²) que cuenta como sacudida. Trabajar sobre el delta filtra
