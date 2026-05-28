@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ddb5iv32i2yip" path="res://scenes/screens/ethical_event/ethical_event.gd" id="1_event"]
 [ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="2_font"]
-[ext_resource type="Texture2D" uid="uid://bxku688gsvl2j" path="res://assets/sprites/player/researcher-idle.png" id="3_portrait"]
+[ext_resource type="Texture2D" uid="uid://d0ervm7sw1ce2" path="res://assets/sprites/player/researcher-idle.png" id="3_portrait"]
 
 [sub_resource type="Theme" id="Theme_ee"]
 default_font = ExtResource("2_font")
