@@ -18,7 +18,7 @@ const GAME_SCENE := "res://scenes/screens/game/game.tscn"
 @onready var _back_button: Button = %BackButton
 @onready var _slot_buttons: Array[Button] = [%SlotButton1, %SlotButton2, %SlotButton3]
 @onready var _delete_buttons: Array[Button] = [%DeleteButton1, %DeleteButton2, %DeleteButton3]
-@onready var _confirm_dialog: ConfirmationDialog = %ConfirmDialog
+@onready var _confirm_modal: ConfirmModal = %ConfirmModal
 
 var _pending_action: Callable = Callable()
 
@@ -29,7 +29,8 @@ func _ready() -> void:
 		var slot := i + 1
 		_slot_buttons[i].pressed.connect(_on_slot_pressed.bind(slot))
 		_delete_buttons[i].pressed.connect(_on_delete_pressed.bind(slot))
-	_confirm_dialog.confirmed.connect(_run_pending_action)
+	_confirm_modal.confirmed.connect(_run_pending_action)
+	_confirm_modal.cancelled.connect(_cancel_pending_action)
 	AudioManager.wire_buttons_in(self)
 	refresh()
 
@@ -88,9 +89,13 @@ func _on_slot_pressed(slot: int) -> void:
 		Mode.NEW:
 			if SaveService.has_save(slot):
 				_pending_action = _start_new_in.bind(slot)
-				_confirm_dialog.dialog_text = "El SLOT %d tiene una partida. ¿Sobrescribir y empezar de nuevo?" % slot
-				_confirm_dialog.ok_button_text = "Empezar"
-				_confirm_dialog.popup_centered()
+				_confirm_modal.set_content(
+					"Sobrescribir partida",
+					"El SLOT %d tiene una partida. ¿Sobrescribir y empezar de nuevo?" % slot,
+					"Empezar",
+					"Cancelar",
+				)
+				_confirm_modal.show_modal()
 			else:
 				_start_new_in(slot)
 		Mode.CONTINUE:
@@ -100,9 +105,13 @@ func _on_slot_pressed(slot: int) -> void:
 
 func _on_delete_pressed(slot: int) -> void:
 	_pending_action = _delete_slot.bind(slot)
-	_confirm_dialog.dialog_text = "Vas a borrar la partida del SLOT %d. ¿Estás seguro?" % slot
-	_confirm_dialog.ok_button_text = "Borrar"
-	_confirm_dialog.popup_centered()
+	_confirm_modal.set_content(
+		"Borrar partida",
+		"Vas a borrar la partida del SLOT %d. ¿Estás seguro?" % slot,
+		"Borrar",
+		"Cancelar",
+	)
+	_confirm_modal.show_modal()
 
 
 func _run_pending_action() -> void:
@@ -110,6 +119,10 @@ func _run_pending_action() -> void:
 		var action := _pending_action
 		_pending_action = Callable()
 		action.call()
+
+
+func _cancel_pending_action() -> void:
+	_pending_action = Callable()
 
 
 func _start_new_in(slot: int) -> void:

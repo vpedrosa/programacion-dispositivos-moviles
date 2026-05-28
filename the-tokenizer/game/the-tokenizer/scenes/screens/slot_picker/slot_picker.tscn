@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://5rjktphs0p8a" path="res://assets/sprites/ui/button/button.png" id="3_btn"]
 [ext_resource type="Texture2D" uid="uid://wosee55dt4e7" path="res://assets/sprites/ui/button/button-active.png" id="4_btn_active"]
 [ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="5_font"]
+[ext_resource type="PackedScene" path="res://scenes/ui/confirm_modal/confirm_modal.tscn" id="6_modal"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot"]
 content_margin_left = 80.0
@@ -126,7 +127,7 @@ theme_override_constants/separation = 12
 
 [node name="BackButton" type="Button" parent="Margin/VBox/TopBar"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 56)
+custom_minimum_size = Vector2(140, 56)
 layout_mode = 2
 flat = true
 theme_override_font_sizes/font_size = 16
@@ -142,7 +143,7 @@ text = "ELIGE PARTIDA"
 horizontal_alignment = 1
 
 [node name="TopSpacer" type="Control" parent="Margin/VBox/TopBar"]
-custom_minimum_size = Vector2(120, 0)
+custom_minimum_size = Vector2(140, 0)
 layout_mode = 2
 
 [node name="Slots" type="VBoxContainer" parent="Margin/VBox"]
@@ -166,8 +167,9 @@ text = "SLOT 1 · vacío"
 [node name="DeleteButton1" type="Button" parent="Margin/VBox/Slots/SlotRow1"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(72, 100)
+custom_minimum_size = Vector2(88, 64)
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.95, 0.75, 0.75, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
@@ -191,8 +193,9 @@ text = "SLOT 2 · vacío"
 [node name="DeleteButton2" type="Button" parent="Margin/VBox/Slots/SlotRow2"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(72, 100)
+custom_minimum_size = Vector2(88, 64)
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.95, 0.75, 0.75, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
@@ -216,8 +219,9 @@ text = "SLOT 3 · vacío"
 [node name="DeleteButton3" type="Button" parent="Margin/VBox/Slots/SlotRow3"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(72, 100)
+custom_minimum_size = Vector2(88, 64)
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(0.95, 0.75, 0.75, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_delete")
@@ -226,10 +230,6 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_delete_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_delete_hover")
 text = "✕"
 
-[node name="ConfirmDialog" type="ConfirmationDialog" parent="."]
+[node name="ConfirmModal" parent="." instance=ExtResource("6_modal")]
 unique_name_in_owner = true
-title = "Confirmar"
-size = Vector2i(540, 200)
-ok_button_text = "Confirmar"
-cancel_button_text = "Cancelar"
-dialog_text = ""
+visible = false

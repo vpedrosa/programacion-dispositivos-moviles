@@ -4,6 +4,11 @@ extends GutTest
 
 const SCENES := [
 	"res://scenes/screens/game/game.tscn",
+	"res://scenes/screens/slot_picker/slot_picker.tscn",
+	"res://scenes/screens/quantum_event/quantum_event.tscn",
+	"res://scenes/screens/ending/ending.tscn",
+	"res://scenes/screens/intro_era7/intro_era7.tscn",
+	"res://scenes/ui/confirm_modal/confirm_modal.tscn",
 	"res://scenes/minigames/backpropagation/backpropagation.tscn",
 	"res://scenes/minigames/refrigeration/refrigeration.tscn",
 ]
