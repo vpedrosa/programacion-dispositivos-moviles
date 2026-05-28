@@ -86,7 +86,9 @@ func _on_gui_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseMotion:
 		var motion: InputEventMouseMotion = event
-		if motion.button_mask & MOUSE_BUTTON_MASK_LEFT == 0:
+		# `==` tiene mayor precedencia que `&` en GDScript, así que el
+		# paréntesis es obligatorio para que la máscara se evalúe primero.
+		if (motion.button_mask & MOUSE_BUTTON_MASK_LEFT) == 0:
 			return
 		if motion.velocity.length() >= DRAG_VELOCITY_THRESHOLD:
 			_drag_shake_pending = true
