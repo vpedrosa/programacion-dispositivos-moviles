@@ -9,9 +9,9 @@
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot"]
 content_margin_left = 80.0
-content_margin_top = 18.0
+content_margin_top = 24.0
 content_margin_right = 80.0
-content_margin_bottom = 18.0
+content_margin_bottom = 24.0
 texture = ExtResource("3_btn")
 texture_margin_left = 0.0
 texture_margin_top = 0.0
@@ -20,9 +20,9 @@ texture_margin_bottom = 0.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_slot_active"]
 content_margin_left = 80.0
-content_margin_top = 18.0
+content_margin_top = 24.0
 content_margin_right = 80.0
-content_margin_bottom = 18.0
+content_margin_bottom = 24.0
 texture = ExtResource("4_btn_active")
 texture_margin_left = 0.0
 texture_margin_top = 0.0
@@ -63,7 +63,7 @@ content_margin_bottom = 6.0
 
 [sub_resource type="Theme" id="Theme_slot_picker"]
 default_font = ExtResource("5_font")
-default_font_size = 18
+default_font_size = 24
 Button/colors/font_color = Color(0.18, 0.1, 0.06, 1)
 Button/colors/font_hover_color = Color(0.3, 0.16, 0.1, 1)
 Button/colors/font_pressed_color = Color(0.1, 0.06, 0.04, 1)
@@ -158,11 +158,11 @@ theme_override_constants/separation = 10
 
 [node name="SlotButton1" type="Button" parent="Margin/VBox/Slots/SlotRow1"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 16
 text = "SLOT 1 · vacío"
+autowrap_mode = 3
 
 [node name="DeleteButton1" type="Button" parent="Margin/VBox/Slots/SlotRow1"]
 unique_name_in_owner = true
@@ -184,11 +184,11 @@ theme_override_constants/separation = 10
 
 [node name="SlotButton2" type="Button" parent="Margin/VBox/Slots/SlotRow2"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 16
 text = "SLOT 2 · vacío"
+autowrap_mode = 3
 
 [node name="DeleteButton2" type="Button" parent="Margin/VBox/Slots/SlotRow2"]
 unique_name_in_owner = true
@@ -210,11 +210,11 @@ theme_override_constants/separation = 10
 
 [node name="SlotButton3" type="Button" parent="Margin/VBox/Slots/SlotRow3"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 130)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 16
 text = "SLOT 3 · vacío"
+autowrap_mode = 3
 
 [node name="DeleteButton3" type="Button" parent="Margin/VBox/Slots/SlotRow3"]
 unique_name_in_owner = true
