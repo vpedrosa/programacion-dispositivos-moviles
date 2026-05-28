@@ -39,6 +39,16 @@ jobs:
       - name: Install Godot
         run: sudo ln -sf "/tmp/godot_bin/Godot_v${GODOT_VERSION}-${GODOT_RELEASE}_linux.x86_64" /usr/local/bin/godot
 
+      - name: Import project resources
+        # `.godot/` está en .gitignore, así que el runner arranca sin
+        # caché. Sin este paso, la primera invocación de Godot no
+        # resuelve los class_name globales (PlayerState, EthicalEvent...)
+        # ni los preload() de assets, y los autoloads fallan al cargarse.
+        # `--import` hace el escaneo y sale por sí solo con exit 0.
+        run: |
+          cd "$PROJECT_PATH"
+          godot --headless --import
+
       - name: Run GUT suite
         run: |
           cd "$PROJECT_PATH"
@@ -118,6 +128,15 @@ jobs:
           printf 'keystore/debug_password="%s"\n' "$KEYSTORE_PASSWORD" >> "$PROJECT_PATH/export_presets.cfg"
           printf 'keystore/debug_user="%s"\n' "$KEY_ALIAS" >> "$PROJECT_PATH/export_presets.cfg"
           printf 'keystore/debug_key_password="%s"\n' "$KEY_PASSWORD" >> "$PROJECT_PATH/export_presets.cfg"
+
+      - name: Import project resources
+        # Mismo motivo que en el job test: sin .godot/ pre-poblado,
+        # `--install-android-build-template` arranca el editor, intenta
+        # cargar autoloads/main_scene y se cae al no poder resolver UIDs
+        # ni class_name. `--import` hace el escaneo y sale por sí solo.
+        run: |
+          cd "$PROJECT_PATH"
+          godot --headless --import
 
       - name: Install Android build template
         run: |
