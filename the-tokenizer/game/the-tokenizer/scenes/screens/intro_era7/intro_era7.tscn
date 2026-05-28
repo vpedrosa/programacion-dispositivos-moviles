@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://b4xqrlj1m3pn7"]
 
-[ext_resource type="Script" path="res://scenes/screens/intro_era7/intro_era7.gd" id="1_intro7"]
+[ext_resource type="Script" uid="uid://cjs3mic8cteey" path="res://scenes/screens/intro_era7/intro_era7.gd" id="1_intro7"]
 [ext_resource type="Texture2D" uid="uid://b4hqpt7vbcif0" path="res://assets/sprites/ui/level7/bg0.png" id="2_bg0"]
 [ext_resource type="Texture2D" uid="uid://d2oar04j68etj" path="res://assets/sprites/ui/level7/bg1.png" id="3_bg1"]
 [ext_resource type="Texture2D" uid="uid://b7s0lbvb87p63" path="res://assets/sprites/ui/level7/bg2.png" id="4_bg2"]

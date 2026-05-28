@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b1k9eoqfgp4vc"]
 
-[ext_resource type="Script" path="res://scenes/ui/upgrade_card/upgrade_card.gd" id="1_card"]
+[ext_resource type="Script" uid="uid://bs1a4tyjibh56" path="res://scenes/ui/upgrade_card/upgrade_card.gd" id="1_card"]
 [ext_resource type="Texture2D" uid="uid://1hua56gng50q" path="res://assets/sprites/ui/shop/icon-screen-shop.png" id="2_icon_frame"]
 [ext_resource type="Texture2D" uid="uid://ba3ftpaisirx3" path="res://assets/sprites/ui/shop/background-shop-text.png" id="3_text_frame"]
 

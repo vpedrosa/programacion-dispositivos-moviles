@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b1jpqrt6csvy7"]
 
-[ext_resource type="Script" path="res://scenes/screens/quantum_event/quantum_event.gd" id="1_qe"]
+[ext_resource type="Script" uid="uid://374dv2krtfkf" path="res://scenes/screens/quantum_event/quantum_event.gd" id="1_qe"]
 [ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="2_font"]
 [ext_resource type="PackedScene" path="res://scenes/ui/confirm_modal/confirm_modal.tscn" id="3_modal"]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cwumcrgw1qbhk"]
 
-[ext_resource type="Script" path="res://scenes/screens/boss/boss.gd" id="1_boss"]
+[ext_resource type="Script" uid="uid://diuurfjkijddp" path="res://scenes/screens/boss/boss.gd" id="1_boss"]
 [ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="2_font"]
 
 [sub_resource type="Theme" id="Theme_boss"]

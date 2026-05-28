@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b5pkqcoqjsy3r"]
 
-[ext_resource type="Script" path="res://scenes/screens/dialogue/dialogue.gd" id="1_dialog"]
+[ext_resource type="Script" uid="uid://d381e5s4kutnm" path="res://scenes/screens/dialogue/dialogue.gd" id="1_dialog"]
 [ext_resource type="Texture2D" uid="uid://bxku688gsvl2j" path="res://assets/sprites/player/researcher-idle.png" id="2_portrait"]
 [ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="3_font"]
 

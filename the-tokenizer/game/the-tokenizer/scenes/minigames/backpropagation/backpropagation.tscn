@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b5xdvqpr3jjkq"]
 
-[ext_resource type="Script" path="res://scenes/minigames/backpropagation/backpropagation.gd" id="1_bp"]
+[ext_resource type="Script" uid="uid://bt2b7j6lofqoo" path="res://scenes/minigames/backpropagation/backpropagation.gd" id="1_bp"]
 [ext_resource type="FontFile" uid="uid://ci40ab3op2mh7" path="res://assets/fonts/Silkscreen-Regular.ttf" id="2_font"]
 
 [sub_resource type="Theme" id="Theme_bp"]

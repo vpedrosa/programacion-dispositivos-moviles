@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b8oqkmcv4uhvw"]
 
-[ext_resource type="Script" path="res://scenes/entities/tap_target/tap_target.gd" id="1_tap"]
+[ext_resource type="Script" uid="uid://djbrr80pqiy6i" path="res://scenes/entities/tap_target/tap_target.gd" id="1_tap"]
 [ext_resource type="Texture2D" uid="uid://dggcatur1j385" path="res://assets/sprites/ui/level1/keyboard.png" id="2_keyboard"]
 
 [node name="TapTarget" type="Control"]

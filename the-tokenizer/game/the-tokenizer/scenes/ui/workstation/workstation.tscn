@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cwk1qz5xq2m7b"]
 
-[ext_resource type="Script" path="res://scenes/ui/workstation/workstation.gd" id="1_workstation"]
+[ext_resource type="Script" uid="uid://cntoie3qyqfky" path="res://scenes/ui/workstation/workstation.gd" id="1_workstation"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/workstation/frame_era1.png" id="2_frame_era1"]
 
 [node name="Workstation" type="Control"]
