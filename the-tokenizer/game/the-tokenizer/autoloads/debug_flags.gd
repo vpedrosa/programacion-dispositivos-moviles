@@ -11,6 +11,14 @@ signal eval_multiplier_changed(enabled: bool)
 const CONFIG_PATH := "user://debug_flags.cfg"
 const EVAL_MULTIPLIER := 1000.0
 
+## Overrides de [code]effect_value[/code] que se aplican cuando DEBUG
+## está activo. Permite que upgrades concretas exhiban un valor
+## "evaluable" sin tener que tocar el .tres del catálogo. Ver #379.
+const DEBUG_OVERRIDES: Dictionary = {
+	&"era_1_gpu": 100.0,
+	&"era_7_rsi": 1000.0,
+}
+
 var _eval_multiplier_enabled: bool = false
 
 
@@ -40,6 +48,15 @@ func bonus_for(amount: float) -> float:
 	if not _eval_multiplier_enabled or amount <= 0.0:
 		return 0.0
 	return amount * (EVAL_MULTIPLIER - 1.0)
+
+
+## Devuelve el valor de efecto a aplicar para una upgrade dada,
+## considerando los overrides de DEBUG. Si DEBUG está apagado o la
+## upgrade no tiene override, devuelve el valor base recibido.
+func effect_value_for(upgrade_id: StringName, base_value: float) -> float:
+	if not _eval_multiplier_enabled:
+		return base_value
+	return float(DEBUG_OVERRIDES.get(upgrade_id, base_value))
 
 
 func _load() -> void:

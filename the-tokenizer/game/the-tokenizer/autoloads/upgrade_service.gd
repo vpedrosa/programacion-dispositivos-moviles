@@ -16,6 +16,11 @@ var _catalog: Dictionary = {}
 
 func _ready() -> void:
 	_load_catalog()
+	DebugFlags.eval_multiplier_changed.connect(_on_debug_changed)
+
+
+func _on_debug_changed(_enabled: bool) -> void:
+	recompute_derived_stats()
 
 
 func get_by_id(id: StringName) -> UpgradeData:
@@ -142,16 +147,17 @@ func _prerequisite_satisfied(upgrade: UpgradeData) -> bool:
 
 
 func _apply_effect(upgrade: UpgradeData) -> void:
+	var value := DebugFlags.effect_value_for(upgrade.id, upgrade.effect_value)
 	match upgrade.effect_type:
 		UpgradeData.EffectType.NONE:
 			pass
 		UpgradeData.EffectType.TOKENS_PER_TAP_ADD:
-			GameState.set_tokens_per_tap(GameState.state.tokens_per_tap + upgrade.effect_value)
+			GameState.set_tokens_per_tap(GameState.state.tokens_per_tap + value)
 		UpgradeData.EffectType.TOKENS_PER_TAP_MULT:
-			GameState.set_tokens_per_tap(GameState.state.tokens_per_tap * upgrade.effect_value)
+			GameState.set_tokens_per_tap(GameState.state.tokens_per_tap * value)
 		UpgradeData.EffectType.TOKENS_PER_SECOND_ADD:
-			GameState.set_tokens_per_second(GameState.state.tokens_per_second + upgrade.effect_value)
+			GameState.set_tokens_per_second(GameState.state.tokens_per_second + value)
 		UpgradeData.EffectType.TOKENS_PER_SECOND_MULT:
-			GameState.set_tokens_per_second(GameState.state.tokens_per_second * upgrade.effect_value)
+			GameState.set_tokens_per_second(GameState.state.tokens_per_second * value)
 		UpgradeData.EffectType.QUBIT_MULTIPLIER_ADD:
-			GameState.set_qubit_multiplier(GameState.state.qubit_multiplier + upgrade.effect_value)
+			GameState.set_qubit_multiplier(GameState.state.qubit_multiplier + value)
