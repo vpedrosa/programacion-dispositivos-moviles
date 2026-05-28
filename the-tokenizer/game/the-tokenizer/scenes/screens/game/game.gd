@@ -45,6 +45,7 @@ const ERA_BACKGROUNDS := {
 @onready var _era_label: Label = %EraLabel
 @onready var _tokens_label: Label = %TokensLabel
 @onready var _per_second_label: Label = %PerSecondLabel
+@onready var _qubit_badge: Label = %QubitBadge
 @onready var _multiplier_badge: Label = %MultiplierBadge
 @onready var _boss_progress: ProgressBar = %BossProgress
 @onready var _qubits_container: Control = %QubitsContainer
@@ -128,6 +129,7 @@ func show_notification(text: String) -> void:
 func _refresh_all() -> void:
 	_on_tokens_changed(GameState.state.tokens)
 	_refresh_per_second()
+	_refresh_qubit_badge(GameState.state.qubit_multiplier)
 	_on_qubits_changed(GameState.state.qubits)
 	_on_era_changed(GameState.state.current_era)
 	_on_boss_progress_changed(GameState.state.boss_progress)
@@ -142,8 +144,17 @@ func _on_per_second_changed(_value: float) -> void:
 	_refresh_per_second()
 
 
-func _on_qubit_multiplier_changed(_value: float) -> void:
+func _on_qubit_multiplier_changed(value: float) -> void:
 	_refresh_per_second()
+	_refresh_qubit_badge(value)
+
+
+func _refresh_qubit_badge(value: float) -> void:
+	if value <= 1.0 + 0.0001:
+		_qubit_badge.visible = false
+		return
+	_qubit_badge.text = "×%s q" % _format_multiplier(value)
+	_qubit_badge.visible = true
 
 
 func _refresh_per_second() -> void:

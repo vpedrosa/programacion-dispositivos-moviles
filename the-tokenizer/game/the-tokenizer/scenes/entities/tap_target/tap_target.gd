@@ -27,7 +27,11 @@ func _ready() -> void:
 func _on_tap() -> void:
 	if SceneManager.has_overlay():
 		return
-	var base := GameState.state.tokens_per_tap
+	# Tras un reset cuántico la generación pasiva se reinicia a 0 pero el
+	# qubit_multiplier sigue vivo. Si no lo aplicamos al tap, el jugador
+	# percibe que los qubits no hacen nada hasta volver a comprar mejoras
+	# (#373).
+	var base := GameState.state.tokens_per_tap * GameState.state.qubit_multiplier
 	GameState.add_tokens(base)
 	var bonus := DebugFlags.bonus_for(base)
 	GameState.add_debug_bonus(bonus)
