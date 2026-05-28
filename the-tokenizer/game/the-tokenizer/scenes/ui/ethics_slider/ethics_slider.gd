@@ -27,8 +27,16 @@ func _ready() -> void:
 	custom_minimum_size = Vector2(180.0, KNOB_RADIUS * 2.0 + 4.0)
 	GameState.ethical_score_changed.connect(_on_score_changed)
 	GameState.state_loaded.connect(_on_state_loaded)
+	DebugFlags.eval_multiplier_changed.connect(_on_debug_changed)
 	_displayed_score = float(GameState.state.ethical_score)
+	visible = DebugFlags.is_eval_multiplier_enabled()
 	queue_redraw()
+
+
+func _on_debug_changed(enabled: bool) -> void:
+	visible = enabled
+	if enabled:
+		queue_redraw()
 
 
 func _on_state_loaded() -> void:
