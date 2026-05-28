@@ -15,14 +15,14 @@ const GAME_SCENE := "res://scenes/screens/game/game.tscn"
 @onready var _multiplier_label: Label = %MultiplierLabel
 @onready var _confirm_button: Button = %ConfirmButton
 @onready var _cancel_button: Button = %CancelButton
-@onready var _confirm_dialog: ConfirmationDialog = %ConfirmDialog
+@onready var _confirm_modal: ConfirmModal = %ConfirmModal
 
 
 func _ready() -> void:
 	GameState.passive_paused = true
 	_confirm_button.pressed.connect(_on_confirm_pressed)
 	_cancel_button.pressed.connect(_close)
-	_confirm_dialog.confirmed.connect(_perform_reset)
+	_confirm_modal.confirmed.connect(_perform_reset)
 	AudioManager.wire_buttons_in(self)
 	_refresh()
 
@@ -41,8 +41,13 @@ func _refresh() -> void:
 
 
 func _on_confirm_pressed() -> void:
-	_confirm_dialog.dialog_text = "Vas a crear una realidad paralela: tokens, mejoras y decisiones se reinician. Los qubits permanecen."
-	_confirm_dialog.popup_centered()
+	_confirm_modal.set_content(
+		"Confirmar reset cuántico",
+		"Vas a crear una realidad paralela: tokens, mejoras y decisiones se reinician. Los qubits permanecen.",
+		"Reiniciar",
+		"Cancelar",
+	)
+	_confirm_modal.show_modal()
 
 
 func _perform_reset() -> void:
