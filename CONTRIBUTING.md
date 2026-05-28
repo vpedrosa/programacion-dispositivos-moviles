@@ -53,3 +53,21 @@ docs #3: actualiza README con instrucciones de instalación
 
 Closes #3
 ```
+
+## CI/CD
+
+Cada proyecto Godot del repo dispone de un workflow en `.github/workflows/`
+que se dispara con push a `master` y genera artifacts descargables:
+
+- `city-defender-cicd.yml` → APK Android + binario Linux x86_64.
+- `the-tokenizer-cicd.yml` → APK Android + binario Linux x86_64.
+
+Ambos workflows comparten los secretos de firma Android del repo:
+
+- `ANDROID_KEYSTORE_BASE64`
+- `ANDROID_KEYSTORE_PASSWORD`
+- `ANDROID_KEY_ALIAS`
+- `ANDROID_KEY_PASSWORD`
+
+El workflow de the-tokenizer ejecuta primero la suite GUT (`addons/gut/gut_cmdln.gd`)
+y solo exporta si los tests pasan.
