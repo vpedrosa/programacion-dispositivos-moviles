@@ -9,8 +9,10 @@ extends Control
 ## se resuelve con éxito. Si el tiempo se agota antes, se reporta
 ## fallo. SALTAR cancela con fallo y libera el overlay.
 ##
-## En desktop la barra espaciadora simula un shake para poder probar
-## el minijuego sin acelerómetro.
+## En móvil el shake se detecta con el acelerómetro. En escritorio se
+## consigue arrastrando rápido el ratón con clic izquierdo dentro del
+## área del minijuego (velocidad ≥ DRAG_VELOCITY_THRESHOLD px/s).
+## La acción "ui_accept" sigue funcionando como atajo para tests.
 
 const TIME_LIMIT := 15.0
 const TARGET_HOLD := 5.0
@@ -22,11 +24,14 @@ const HEAT_PER_SECOND := 22.0
 const COOL_PER_SHAKE := 9.0
 const SHAKE_COOLDOWN := 0.18
 const ACCEL_THRESHOLD := 12.0
+## Velocidad mínima del cursor (px/s) que cuenta como sacudida en escritorio.
+const DRAG_VELOCITY_THRESHOLD := 800.0
 
 @onready var _temp_bar: ProgressBar = %TempBar
 @onready var _temp_label: Label = %TempLabel
 @onready var _time_label: Label = %TimeLabel
 @onready var _hint_label: Label = %HintLabel
+@onready var _instructions_label: Label = %Instructions
 @onready var _skip_button: Button = %SkipButton
 
 var _temperature: float = 50.0
@@ -34,14 +39,20 @@ var _time_left: float = TIME_LIMIT
 var _hold: float = 0.0
 var _last_shake_msec: int = 0
 var _finished: bool = false
+var _is_mobile: bool = false
+var _drag_shake_pending: bool = false
 
 
 func _ready() -> void:
 	GameState.passive_paused = true
+	_is_mobile = OS.has_feature("mobile")
 	_skip_button.pressed.connect(_finish.bind(false))
 	_temp_bar.min_value = TEMP_MIN
 	_temp_bar.max_value = TEMP_MAX
 	_temp_bar.value = _temperature
+	gui_input.connect(_on_gui_input)
+	if not _is_mobile:
+		_instructions_label.text = "Arrastra rápido el ratón con clic izquierdo para enfriar.\nMantén la temperatura en zona óptima durante 5 s."
 	AudioManager.wire_buttons_in(self)
 	_update_labels()
 
@@ -70,12 +81,28 @@ func _process(delta: float) -> void:
 	_update_labels()
 
 
+func _on_gui_input(event: InputEvent) -> void:
+	if _is_mobile:
+		return
+	if event is InputEventMouseMotion:
+		var motion: InputEventMouseMotion = event
+		if motion.button_mask & MOUSE_BUTTON_MASK_LEFT == 0:
+			return
+		if motion.velocity.length() >= DRAG_VELOCITY_THRESHOLD:
+			_drag_shake_pending = true
+
+
 func _maybe_shake() -> bool:
 	var now := Time.get_ticks_msec()
 	if now - _last_shake_msec < int(SHAKE_COOLDOWN * 1000.0):
+		_drag_shake_pending = false
 		return false
 	var accel := Input.get_accelerometer()
 	if accel.length() >= ACCEL_THRESHOLD:
+		_last_shake_msec = now
+		return true
+	if _drag_shake_pending:
+		_drag_shake_pending = false
 		_last_shake_msec = now
 		return true
 	if Input.is_action_just_pressed("ui_accept"):
@@ -88,10 +115,12 @@ func _update_labels() -> void:
 	_temp_bar.value = _temperature
 	_temp_label.text = "%d°C" % roundi(_temperature)
 	_time_label.text = "%.1f s" % maxf(0.0, _time_left)
+	var below := "Sigue agitando." if _is_mobile else "Arrastra rápido para refrigerar."
+	var above := "Demasiado calor — sigue." if _is_mobile else "Demasiado calor — sigue arrastrando."
 	if _temperature < OPTIMAL_MIN:
-		_hint_label.text = "Sigue agitando."
+		_hint_label.text = below
 	elif _temperature > OPTIMAL_MAX:
-		_hint_label.text = "Demasiado calor — sigue."
+		_hint_label.text = above
 	else:
 		_hint_label.text = "Zona óptima · mantener %.1f s" % maxf(0.0, TARGET_HOLD - _hold)
 

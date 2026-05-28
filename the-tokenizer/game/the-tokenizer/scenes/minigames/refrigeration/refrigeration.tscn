@@ -83,12 +83,13 @@ text = "El cluster suda"
 horizontal_alignment = 1
 
 [node name="Instructions" type="Label" parent="Margin/VBox"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(0.84, 0.88, 0.78, 0.9)
 theme_override_constants/line_spacing = 4
-text = "Agita el teléfono (o pulsa espacio) para enfriar.\nMantén la temperatura en zona óptima durante 5 s."
+text = "Agita el teléfono para enfriar.\nMantén la temperatura en zona óptima durante 5 s."
 horizontal_alignment = 1
 autowrap_mode = 2
 
