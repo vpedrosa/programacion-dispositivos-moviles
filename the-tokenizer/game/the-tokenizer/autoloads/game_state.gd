@@ -21,6 +21,7 @@ signal qubits_changed(value: int)
 signal qubit_multiplier_changed(value: float)
 signal era_changed(era: int)
 signal boss_progress_changed(progress: float)
+signal ethical_score_changed(value: int)
 signal upgrade_purchased(upgrade_id: StringName)
 signal upgrade_levelup(upgrade_id: StringName, new_level: int)
 signal state_loaded()
@@ -147,6 +148,7 @@ func increment_upgrade_level(upgrade_id: StringName) -> int:
 func record_ethical_decision(event_id: StringName, choice_id: StringName, weight: int = 0) -> void:
 	state.ethical_decisions[String(event_id)] = String(choice_id)
 	state.ethical_score += weight
+	ethical_score_changed.emit(state.ethical_score)
 
 
 func get_ending_variant() -> Ending:
@@ -174,3 +176,4 @@ func _emit_all() -> void:
 	qubit_multiplier_changed.emit(state.qubit_multiplier)
 	era_changed.emit(state.current_era)
 	boss_progress_changed.emit(state.boss_progress)
+	ethical_score_changed.emit(state.ethical_score)

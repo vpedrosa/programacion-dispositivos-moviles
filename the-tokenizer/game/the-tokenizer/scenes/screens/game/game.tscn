@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dyqv1ck1l8tx5"]
 
 [ext_resource type="Script" uid="uid://dreqbluvqku2h" path="res://scenes/screens/game/game.gd" id="1_game"]
+[ext_resource type="Script" path="res://scenes/ui/ethics_slider/ethics_slider.gd" id="2_ethics"]
 [ext_resource type="Texture2D" uid="uid://5rjktphs0p8a" path="res://assets/sprites/ui/button/button.png" id="3_btn"]
 [ext_resource type="Texture2D" uid="uid://wosee55dt4e7" path="res://assets/sprites/ui/button/button-active.png" id="4_btn_active"]
 [ext_resource type="Texture2D" uid="uid://b8cqocxrm23tc" path="res://assets/sprites/ui/level1/bg3.png" id="5_2tqw5"]
@@ -153,6 +154,14 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 show_percentage = false
+
+[node name="EthicsSlider" type="Control" parent="Margin/VBox" unique_id=987654321]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(180, 22)
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+script = ExtResource("2_ethics")
 
 [node name="PlayArea" type="Control" parent="Margin/VBox" unique_id=1941545499]
 unique_name_in_owner = true
