@@ -139,9 +139,20 @@ func stop_typing() -> void:
 		_typing_player.stop()
 
 
+## Conecta el SFX genérico de pulsación a todos los Button del subárbol.
+##
+## Si un botón tiene la metadata booleana `skip_button_sfx = true`, se
+## omite — útil para botones que disparan su propio SFX (ej. opciones de
+## una decisión ética, ver [code]ethical_event.gd[/code]) y donde el
+## click genérico pisaría al SFX específico porque ambos comparten
+## [code]_sfx_player[/code].
 func wire_buttons_in(root: Node) -> void:
 	for button in root.find_children("", "Button", true, false):
-		if button is Button and not button.pressed.is_connected(play_button_sfx):
+		if not (button is Button):
+			continue
+		if button.has_meta("skip_button_sfx") and bool(button.get_meta("skip_button_sfx")):
+			continue
+		if not button.pressed.is_connected(play_button_sfx):
 			button.pressed.connect(play_button_sfx)
 
 

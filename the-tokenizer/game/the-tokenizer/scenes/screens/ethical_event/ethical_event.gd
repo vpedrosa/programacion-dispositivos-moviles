@@ -49,9 +49,12 @@ func _render() -> void:
 		button.custom_minimum_size = Vector2(0, 72)
 		button.add_theme_font_size_override("font_size", 18)
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD
+		# El SFX ético comparte `_sfx_player` con el click genérico:
+		# si wire_buttons_in conectase play_button_sfx aquí, pisaría al
+		# play_ethical_action_sfx. La metadata evita ese conflicto.
+		button.set_meta("skip_button_sfx", true)
 		button.pressed.connect(_on_choice_pressed.bind(dict))
 		_choices_box.add_child(button)
-	AudioManager.wire_buttons_in(_choices_box)
 
 
 func _on_choice_pressed(choice: Dictionary) -> void:
