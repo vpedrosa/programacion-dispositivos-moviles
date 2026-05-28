@@ -23,9 +23,15 @@ const OPTIMAL_MAX := 70.0
 const HEAT_PER_SECOND := 22.0
 const COOL_PER_SHAKE := 9.0
 const SHAKE_COOLDOWN := 0.18
-const ACCEL_THRESHOLD := 12.0
+## Magnitud del delta entre lecturas consecutivas del acelerómetro
+## (m/s²) que cuenta como sacudida. Trabajar sobre el delta filtra
+## la gravedad (que es ~constante) y deja sólo el movimiento real.
+const ACCEL_DELTA_THRESHOLD := 6.0
 ## Velocidad mínima del cursor (px/s) que cuenta como sacudida en escritorio.
 const DRAG_VELOCITY_THRESHOLD := 800.0
+## Color frío que parpadea sobre la temperatura cuando se detecta una sacudida.
+const SHAKE_FLASH_COLOR := Color(0.55, 0.85, 1.0, 1.0)
+const SHAKE_FLASH_DURATION := 0.28
 
 @onready var _temp_bar: ProgressBar = %TempBar
 @onready var _temp_label: Label = %TempLabel
@@ -41,6 +47,9 @@ var _last_shake_msec: int = 0
 var _finished: bool = false
 var _is_mobile: bool = false
 var _drag_shake_pending: bool = false
+var _last_accel: Vector3 = Vector3.ZERO
+var _accel_seeded: bool = false
+var _shake_flash_tween: Tween
 
 
 func _ready() -> void:
@@ -71,6 +80,7 @@ func _process(delta: float) -> void:
 	_temperature = clampf(_temperature + HEAT_PER_SECOND * delta, TEMP_MIN, TEMP_MAX)
 	if _maybe_shake():
 		_temperature = clampf(_temperature - COOL_PER_SHAKE, TEMP_MIN, TEMP_MAX)
+		_flash_shake()
 	if _temperature >= OPTIMAL_MIN and _temperature <= OPTIMAL_MAX:
 		_hold += delta
 		if _hold >= TARGET_HOLD:
@@ -99,10 +109,19 @@ func _maybe_shake() -> bool:
 	if now - _last_shake_msec < int(SHAKE_COOLDOWN * 1000.0):
 		_drag_shake_pending = false
 		return false
+	# Trabajar sobre el delta de la aceleración descarta la gravedad
+	# (que aporta ~9.8 m/s² constantes) y deja sólo el movimiento real.
+	# La primera lectura se usa como semilla — el primer frame nunca dispara.
 	var accel := Input.get_accelerometer()
-	if accel.length() >= ACCEL_THRESHOLD:
-		_last_shake_msec = now
-		return true
+	if not _accel_seeded:
+		_last_accel = accel
+		_accel_seeded = true
+	else:
+		var jerk := accel - _last_accel
+		_last_accel = accel
+		if jerk.length() >= ACCEL_DELTA_THRESHOLD:
+			_last_shake_msec = now
+			return true
 	if _drag_shake_pending:
 		_drag_shake_pending = false
 		_last_shake_msec = now
@@ -111,6 +130,16 @@ func _maybe_shake() -> bool:
 		_last_shake_msec = now
 		return true
 	return false
+
+
+func _flash_shake() -> void:
+	if _shake_flash_tween and _shake_flash_tween.is_running():
+		_shake_flash_tween.kill()
+	_temp_label.modulate = SHAKE_FLASH_COLOR
+	_shake_flash_tween = create_tween()
+	_shake_flash_tween.tween_property(
+		_temp_label, "modulate", Color(1, 1, 1, 1), SHAKE_FLASH_DURATION
+	)
 
 
 func _update_labels() -> void:
