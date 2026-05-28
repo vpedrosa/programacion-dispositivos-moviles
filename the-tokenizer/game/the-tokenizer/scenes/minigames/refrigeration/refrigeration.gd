@@ -100,5 +100,7 @@ func _finish(success: bool) -> void:
 	if _finished:
 		return
 	_finished = true
-	MinigameService.apply_outcome(success)
+	# Ver backpropagation.gd:_finish — el orden importa para no popear el
+	# overlay equivocado si apply_outcome dispara un ethical_event.
 	SceneManager.pop_overlay()
+	MinigameService.apply_outcome(success)
