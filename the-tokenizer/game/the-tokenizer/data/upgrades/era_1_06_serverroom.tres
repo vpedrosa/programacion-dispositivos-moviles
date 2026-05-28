@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("1_script")
 id = &"era_1_serverroom"
-display_name = "Sala de servidores refrigerada"
+display_name = "Sala de servidores"
 description = "Aire forzado constante mantiene el rack a temperatura óptima. El throughput pasivo se multiplica (x1.3/s)."
 era = 1
 base_cost = 8000.0

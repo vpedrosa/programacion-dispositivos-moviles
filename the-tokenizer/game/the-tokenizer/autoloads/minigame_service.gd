@@ -17,6 +17,9 @@ const MINIGAME_SCENES := [
 	"res://scenes/minigames/refrigeration/refrigeration.tscn",
 ]
 
+const REFRIGERATION_SCENE := "res://scenes/minigames/refrigeration/refrigeration.tscn"
+const REFRIGERATION_REQUIRED_UPGRADE := &"era_1_serverroom"
+
 const CHECK_INTERVAL := 50.0
 const CHECK_JITTER := 30.0
 const COOLDOWN := 90.0
@@ -80,8 +83,24 @@ func _should_trigger() -> bool:
 
 
 func _trigger_random() -> void:
-	if MINIGAME_SCENES.is_empty():
+	var available := _available_scenes()
+	if available.is_empty():
 		return
 	_last_triggered_msec = Time.get_ticks_msec()
-	var scene_path: String = MINIGAME_SCENES[randi() % MINIGAME_SCENES.size()]
+	var scene_path: String = available[randi() % available.size()]
 	minigame_offered.emit(scene_path)
+
+
+## Devuelve las escenas de minijuego cuya condición de desbloqueo se
+## cumple. Refrigeración requiere que el jugador haya comprado al
+## menos un nivel de [constant REFRIGERATION_REQUIRED_UPGRADE]; no
+## tiene sentido pedirle al jugador que refrigere unos servidores que
+## todavía no ha montado (#378).
+func _available_scenes() -> Array:
+	var result: Array = []
+	for path in MINIGAME_SCENES:
+		if path == REFRIGERATION_SCENE:
+			if GameState.get_upgrade_level(REFRIGERATION_REQUIRED_UPGRADE) <= 0:
+				continue
+		result.append(path)
+	return result
