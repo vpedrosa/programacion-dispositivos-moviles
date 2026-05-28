@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://c2t7nhm77e8qk" path="res://scenes/screens/splash/splash.gd" id="1_splash"]
+[ext_resource type="Texture2D" uid="uid://cc883prjshom4" path="res://assets/sprites/home.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://tpp8arx727cj" path="res://assets/sprites/logotipo-transparente.png" id="3_logo"]
+
+[node name="Splash" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_splash")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="LogoCenter" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Logo" type="TextureRect" parent="LogoCenter"]
+custom_minimum_size = Vector2(420, 420)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_logo")
+expand_mode = 1
+stretch_mode = 5
