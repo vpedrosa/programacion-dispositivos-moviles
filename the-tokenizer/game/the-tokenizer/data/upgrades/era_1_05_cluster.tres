@@ -1,20 +1,19 @@
-[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://c2sptmeahrkq8"]
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://blmrl2i6f4jg8"]
 
-[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_1_cluster.png" id="2_icon"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
+[ext_resource type="Script" uid="uid://ceg5uuxihs132" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dr8vc8b0l4b4k" path="res://assets/sprites/ui/shop/upgrades/era_1_cluster.png" id="2_icon"]
+[ext_resource type="Texture2D" uid="uid://dpf3wpkj4l6gv" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
 
 [resource]
 script = ExtResource("1_script")
 id = &"era_1_cluster"
 display_name = "Cluster Beowulf casero"
 description = "Tres torres viejas conectadas por ethernet hablándose entre sí. Más músculo para el entrenamiento pasivo (+1.5/s)."
-era = 1
 base_cost = 2000.0
 cost_growth = 1.8
 max_level = 3
 effect_type = 3
-effect_value = 1.5
+effect_value = 1.0
 prerequisite_id = &"era_1_gpu"
 icon = ExtResource("2_icon")
 workstation_icon = ExtResource("2_icon")

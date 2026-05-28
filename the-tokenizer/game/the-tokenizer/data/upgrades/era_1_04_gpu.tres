@@ -1,20 +1,18 @@
-[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://b70qkwl4pjnv6"]
+[gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://be3dttg60shth"]
 
-[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_1_gpu.png" id="2_icon"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
+[ext_resource type="Script" uid="uid://ceg5uuxihs132" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bey5tcum24cfy" path="res://assets/sprites/ui/shop/upgrades/era_1_gpu.png" id="2_icon"]
+[ext_resource type="Texture2D" uid="uid://dpf3wpkj4l6gv" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
 
 [resource]
 script = ExtResource("1_script")
 id = &"era_1_gpu"
 display_name = "Tarjeta gráfica GeForce 2 MX"
 description = "El modelo deja de depender solo de ti: la GPU entrena en segundo plano. Por primera vez ganas tokens pasivamente (+0.5/s)."
-era = 1
 base_cost = 500.0
 cost_growth = 1.0
-max_level = 1
 effect_type = 3
-effect_value = 0.5
+effect_value = 100.0
 prerequisite_id = &"era_1_floppy"
 icon = ExtResource("2_icon")
 workstation_icon = ExtResource("2_icon")
