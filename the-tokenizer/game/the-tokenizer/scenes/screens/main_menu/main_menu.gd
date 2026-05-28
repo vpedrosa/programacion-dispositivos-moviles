@@ -2,14 +2,14 @@ extends Control
 
 ## Pantalla de entrada del juego.
 ##
-## NUEVA y CONTINUAR abren el selector de slot ([url=slot_picker.gd]SlotPicker[/url])
-## en modos distintos; el menú no decide sobre qué slot escribir. CONTINUAR se
-## deshabilita visualmente si ningún slot tiene partida.
+## NUEVA abre el selector de slot ([url=slot_picker.gd]SlotPicker[/url]) para
+## elegir hueco. CONTINUAR carga directamente el slot con `timestamp` más alto
+## (SaveService.most_recent_slot) sin pasar por el selector, y se deshabilita
+## si no hay ninguna partida.
 
 const SETTINGS_SCENE := "res://scenes/screens/settings/settings.tscn"
 const SLOT_PICKER_SCENE := preload("res://scenes/screens/slot_picker/slot_picker.tscn")
-
-const SlotPicker := preload("res://scenes/screens/slot_picker/slot_picker.gd")
+const GAME_SCENE := "res://scenes/screens/game/game.tscn"
 
 @onready var _new_game_button: Button = %NewGameButton
 @onready var _continue_button: Button = %ContinueButton
@@ -22,17 +22,26 @@ func _ready() -> void:
 	_continue_button.pressed.connect(_on_continue_pressed)
 	_settings_button.pressed.connect(_on_settings_pressed)
 	_quit_button.pressed.connect(_on_quit_pressed)
-	_continue_button.disabled = not _any_slot_has_save()
+	_continue_button.disabled = SaveService.most_recent_slot() == 0
 	AudioManager.play_ambient(PlayerState.ERA_BASEMENT)
 	AudioManager.wire_buttons_in(self)
 
 
 func _on_new_game_pressed() -> void:
-	_open_slot_picker(SlotPicker.Mode.NEW)
+	SceneManager.push_overlay(SLOT_PICKER_SCENE)
 
 
 func _on_continue_pressed() -> void:
-	_open_slot_picker(SlotPicker.Mode.CONTINUE)
+	var slot := SaveService.most_recent_slot()
+	if slot == 0:
+		return
+	var state := SaveService.load_save(slot)
+	if state == null:
+		push_warning("MainMenu: no se pudo cargar el SLOT %d" % slot)
+		return
+	SaveService.set_active_slot(slot)
+	GameState.load_from(state)
+	SceneManager.change_scene(GAME_SCENE)
 
 
 func _on_settings_pressed() -> void:
@@ -41,16 +50,3 @@ func _on_settings_pressed() -> void:
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()
-
-
-func _open_slot_picker(mode: int) -> void:
-	var picker := SceneManager.push_overlay(SLOT_PICKER_SCENE)
-	if picker != null:
-		picker.set_mode(mode)
-
-
-func _any_slot_has_save() -> bool:
-	for slot in range(1, SaveService.MAX_SLOTS + 1):
-		if SaveService.has_save(slot):
-			return true
-	return false

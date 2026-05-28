@@ -1,18 +1,14 @@
 extends Control
 
-## Overlay para elegir uno de los slots de guardado.
+## Overlay para elegir un hueco al empezar una partida nueva.
 ##
-## El modo se ajusta tras instanciar (set_mode) y determina el comportamiento
-## del tap sobre cada slot: en NEW se inicia una partida nueva (con confirmación
-## si ya había datos), en CONTINUE se carga el slot si está ocupado. El botón
-## de papelera es independiente y siempre pide confirmación.
-
-enum Mode { CONTINUE, NEW }
+## Tras #367 "Continuar" ya carga directamente el slot más reciente sin
+## pasar por aquí, así que esta pantalla solo aparece desde "Nueva":
+## tap sobre un hueco vacío arranca la intro, tap sobre uno ocupado pide
+## confirmación de sobrescritura. El botón de papelera siempre pide
+## confirmación.
 
 const INTRO_SCENE := "res://scenes/screens/intro/intro.tscn"
-const GAME_SCENE := "res://scenes/screens/game/game.tscn"
-
-@export var mode: int = Mode.CONTINUE
 
 @onready var _title: Label = %TitleLabel
 @onready var _back_button: Button = %BackButton
@@ -35,20 +31,13 @@ func _ready() -> void:
 	refresh()
 
 
-func set_mode(new_mode: int) -> void:
-	mode = new_mode
-	if is_inside_tree():
-		refresh()
-
-
 func refresh() -> void:
-	_title.text = "ELIGE HUECO" if mode == Mode.NEW else "ELIGE PARTIDA"
+	_title.text = "ELIGE HUECO"
 	for i in range(SaveService.MAX_SLOTS):
 		var slot := i + 1
 		var occupied := SaveService.has_save(slot)
 		var meta := SaveService.read_metadata(slot) if occupied else {}
 		_slot_buttons[i].text = _format_slot(slot, occupied, meta)
-		_slot_buttons[i].disabled = mode == Mode.CONTINUE and not occupied
 		_delete_buttons[i].visible = occupied
 
 
@@ -85,22 +74,17 @@ static func _format_relative_time(ts: int) -> String:
 
 
 func _on_slot_pressed(slot: int) -> void:
-	match mode:
-		Mode.NEW:
-			if SaveService.has_save(slot):
-				_pending_action = _start_new_in.bind(slot)
-				_confirm_modal.set_content(
-					"Sobrescribir partida",
-					"El SLOT %d tiene una partida. ¿Sobrescribir y empezar de nuevo?" % slot,
-					"Empezar",
-					"Cancelar",
-				)
-				_confirm_modal.show_modal()
-			else:
-				_start_new_in(slot)
-		Mode.CONTINUE:
-			if SaveService.has_save(slot):
-				_load_slot(slot)
+	if SaveService.has_save(slot):
+		_pending_action = _start_new_in.bind(slot)
+		_confirm_modal.set_content(
+			"Sobrescribir partida",
+			"El SLOT %d tiene una partida. ¿Sobrescribir y empezar de nuevo?" % slot,
+			"Empezar",
+			"Cancelar",
+		)
+		_confirm_modal.show_modal()
+	else:
+		_start_new_in(slot)
 
 
 func _on_delete_pressed(slot: int) -> void:
@@ -131,18 +115,6 @@ func _start_new_in(slot: int) -> void:
 	GameState.reset()
 	SceneManager.pop_overlay()
 	SceneManager.change_scene(INTRO_SCENE)
-
-
-func _load_slot(slot: int) -> void:
-	var state := SaveService.load_save(slot)
-	if state == null:
-		push_warning("SlotPicker: no se pudo cargar el SLOT %d" % slot)
-		refresh()
-		return
-	SaveService.set_active_slot(slot)
-	GameState.load_from(state)
-	SceneManager.pop_overlay()
-	SceneManager.change_scene(GAME_SCENE)
 
 
 func _delete_slot(slot: int) -> void:

@@ -88,6 +88,27 @@ func load_save(slot: int) -> PlayerState:
 	return PlayerState.from_dict(data.get("state", {}))
 
 
+## Devuelve el slot con `timestamp` más alto entre los ocupados, o 0 si
+## no hay ninguna partida guardada. En caso de empate gana el slot activo
+## (`_current_slot`) — útil cuando dos snapshots se han escrito en el
+## mismo segundo. Usado por el menú principal para que "Continuar"
+## cargue directamente la última partida sin pasar por el selector.
+func most_recent_slot() -> int:
+	var best_slot := 0
+	var best_ts := -1
+	for slot in range(1, MAX_SLOTS + 1):
+		if not has_save(slot):
+			continue
+		var meta := read_metadata(slot)
+		var ts := int(meta.get("timestamp", 0))
+		if ts > best_ts:
+			best_ts = ts
+			best_slot = slot
+		elif ts == best_ts and slot == _current_slot:
+			best_slot = slot
+	return best_slot
+
+
 func read_metadata(slot: int) -> Dictionary:
 	var data := _read_payload(slot)
 	if data.is_empty():
