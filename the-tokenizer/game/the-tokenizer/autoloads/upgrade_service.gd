@@ -112,31 +112,11 @@ func recompute_derived_stats() -> void:
 
 func _load_catalog() -> void:
 	_catalog.clear()
-	if not DirAccess.dir_exists_absolute(UPGRADES_DIR):
-		catalog_loaded.emit()
-		return
-	var dir := DirAccess.open(UPGRADES_DIR)
-	if dir == null:
-		catalog_loaded.emit()
-		return
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if not dir.current_is_dir():
-			# En el APK, los .tres se reempaquetan como .tres.remap (Godot
-			# 4 los convierte a binario y deja el remap para redirigir
-			# el path original). Sin canonicalizar, el iterador no ve
-			# ninguna mejora en móvil y la tienda queda vacía.
-			var canonical := file_name
-			if canonical.ends_with(".remap"):
-				canonical = canonical.substr(0, canonical.length() - ".remap".length())
-			if canonical.ends_with(".tres"):
-				var resource := load(UPGRADES_DIR + "/" + canonical)
-				if resource is UpgradeData and resource.id != &"":
-					_catalog[resource.id] = resource
-				elif resource != null:
-					push_warning("UpgradeService: %s no es un UpgradeData válido" % canonical)
-		file_name = dir.get_next()
+	for resource in ResourceCatalog.load_dir(UPGRADES_DIR):
+		if resource is UpgradeData and resource.id != &"":
+			_catalog[resource.id] = resource
+		else:
+			push_warning("UpgradeService: %s no es un UpgradeData válido" % resource.resource_path)
 	catalog_loaded.emit()
 
 
