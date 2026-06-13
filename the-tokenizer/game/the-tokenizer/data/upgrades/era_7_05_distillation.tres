@@ -1,8 +1,8 @@
 [gd_resource type="Resource" script_class="UpgradeData" format=3 uid="uid://chdc1q0rxk04m"]
 
-[ext_resource type="Script" path="res://scripts/model/upgrade_data.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/shop/upgrades/era_7_distillation.png" id="2_icon"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
+[ext_resource type="Script" uid="uid://ceg5uuxihs132" path="res://scripts/model/upgrade_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cxgpnklj51ssb" path="res://assets/sprites/ui/shop/upgrades/era_7_distillation.png" id="2_icon"]
+[ext_resource type="Texture2D" uid="uid://dpf3wpkj4l6gv" path="res://assets/sprites/ui/workstation/slot_locked.png" id="3_locked"]
 
 [resource]
 script = ExtResource("1_script")
@@ -10,7 +10,7 @@ id = &"era_7_distillation"
 display_name = "Auto-destilación"
 description = "El modelo comprime sus propios pesos en versiones más pequeñas y rápidas, y vuelve a entrenarse sobre sí mismo. Triplica el goteo por nivel."
 era = 7
-base_cost = 100000000.0
+base_cost = 1000000.0
 cost_growth = 2.5
 max_level = 2
 effect_type = 4
