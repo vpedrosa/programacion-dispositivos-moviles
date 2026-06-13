@@ -5,3 +5,8 @@
 # Artefactos de exportación
 *.apk
 *.aab
+
+# Copias de seguridad manuales (el VCS ya conserva el histórico)
+*.bak
+*.old
+*.orig
