@@ -74,3 +74,34 @@ y solo exporta si los tests pasan. El export Android instala primero el
 template Gradle con `godot --headless --install-android-build-template`
 porque `gradle_build/use_gradle_build=true` en `export_presets.cfg` lo
 exige (en local cada dev también debe ejecutar este comando una vez).
+
+## Gestión de assets
+
+Los binarios del juego (sprites `.png`, sonidos `.mp3`, fuentes `.ttf`) se
+versionan directamente en el repositorio, pero **siempre en la resolución y
+formato mínimos que consume el juego** para no inflar el histórico. Reglas:
+
+1. **Optimiza antes de commitear.** Los assets generados a alta resolución
+   (p.ej. iconos a 1024×1024) no se versionan en bruto: se reducen a la
+   resolución que usa la UI antes de añadirlos. Para los iconos de tienda hay
+   un script de apoyo, `the-tokenizer/game/the-tokenizer/scripts/resize_upgrades.py`.
+2. **No versionar copias ni artefactos.** Los `*.bak`/`*.old`/`*.orig` y los
+   export `*.apk`/`*.aab` están en `.gitignore`; el histórico de git ya
+   conserva las versiones previas, así que no hagas backups manuales dentro
+   del repo.
+3. **Mantén el original aparte.** Si necesitas conservar la fuente a alta
+   resolución de un asset, guárdala fuera del repo (almacenamiento del equipo);
+   en el repo va solo la versión optimizada.
+4. **Binarios grandes nuevos → Git LFS.** Si en el futuro hay que versionar un
+   asset realmente pesado que no se puede optimizar (vídeo, audio largo sin
+   comprimir), gestiónalo con Git LFS en lugar de subirlo directo:
+
+   ```
+   git lfs install
+   git lfs track "*.ogg"   # ejemplo: añade el patrón a .gitattributes
+   git add .gitattributes
+   ```
+
+   No migramos a LFS los assets ya versionados (requeriría reescribir el
+   histórico y romper los clones existentes); LFS aplica solo a binarios
+   pesados añadidos a partir de ahora.
