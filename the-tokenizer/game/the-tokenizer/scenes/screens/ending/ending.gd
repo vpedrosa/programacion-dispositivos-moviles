@@ -57,7 +57,10 @@ func _exit_tree() -> void:
 func _render_summary() -> void:
 	_decisions_label.text = "Decisiones tomadas · %d" % GameState.state.ethical_decisions.size()
 	_bosses_label.text = "Hitos superados · %d / 2" % GameState.state.bosses_defeated.size()
-	_qubits_label.text = "Qubits acumulados · %d" % GameState.state.qubits
+	# Qubits que esta partida vale (floor(sqrt(lifetime/divisor))). Mostramos
+	# lo generado por la run en vez de state.qubits, que en una primera pasada
+	# hasta el final siempre es 0 porque el reset cuántico te devuelve a Era 1.
+	_qubits_label.text = "Qubits generados · %d" % QuantumService.qubits_on_reset()
 	_lifetime_label.text = "Tokens totales · %s" % _format(GameState.state.lifetime_tokens)
 
 
