@@ -20,10 +20,10 @@ const MINIGAME_SCENES := [
 const REFRIGERATION_SCENE := "res://scenes/minigames/refrigeration/refrigeration.tscn"
 const REFRIGERATION_REQUIRED_UPGRADE := &"era_1_serverroom"
 
-const CHECK_INTERVAL := 50.0
-const CHECK_JITTER := 30.0
-const COOLDOWN := 90.0
-const TRIGGER_CHANCE := 0.4
+const CHECK_INTERVAL := 20.0
+const CHECK_JITTER := 20.0
+const COOLDOWN := 30.0
+const TRIGGER_CHANCE := 0.6
 ## Recompensa en segundos equivalentes de producción pasiva.
 const REWARD_SECONDS := 60.0
 const PENALTY_SECONDS := 15.0

@@ -11,8 +11,8 @@ signal boss_ready(era: int)
 
 ## Tokens acumulados en la era necesarios para enfrentar al jefe.
 const ERA_THRESHOLDS := {
-	1: 5000.0,
-	7: 1_000_000.0,
+	1: 100_000.0,
+	7: 1_000_000_000.0,
 }
 
 var _ready_emitted: bool = false

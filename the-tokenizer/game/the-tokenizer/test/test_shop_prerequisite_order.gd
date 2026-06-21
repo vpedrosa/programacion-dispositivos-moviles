@@ -63,7 +63,7 @@ func test_era_1_lists_prerequisites_above_dependents() -> void:
 func test_era_7_lists_prerequisites_above_dependents() -> void:
 	var ids: Array = await _displayed_order(PlayerState.ERA_SINGULARITY)
 	_assert_prereqs_above(ids, "Era 7")
-	# hyperparams (20000) cuelga de distillation (1000000): pese a ser mucho
-	# más barato, debe quedar por debajo.
-	assert_lt(ids.find(&"era_7_distillation"), ids.find(&"era_7_hyperparams"),
-		"era_7_distillation debe aparecer por encima de era_7_hyperparams")
+	# hyperparams (20000) cuelga de nas (50000): pese a ser más barato que su
+	# prerrequisito, debe quedar por debajo.
+	assert_lt(ids.find(&"era_7_nas"), ids.find(&"era_7_hyperparams"),
+		"era_7_nas debe aparecer por encima de era_7_hyperparams")
