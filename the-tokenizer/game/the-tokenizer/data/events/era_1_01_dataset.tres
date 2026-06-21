@@ -9,7 +9,7 @@ prompt = "El corpus que has volcado al disco mezcla Wikipedia, foros y un raspad
 trigger_era = 1
 trigger_threshold = 500.0
 choices = [
-{"id": "filter_hard", "label": "Filtrar todo lo sensible", "weight": 1, "feedback": "El modelo aprende a no responder lo dudoso. Costará más pulir el resto, pero dormirás."},
-{"id": "leave_raw", "label": "Entrenar con lo crudo", "weight": -1, "feedback": "Velocidad pura. Lo que salga, saldrá."},
-{"id": "flag_review", "label": "Marcar fragmentos para revisión humana", "weight": 0, "feedback": "Una capa más entre tú y el corpus. Te ralentiza."},
+{"id": "filter_hard", "label": "Filtrar todo lo sensible", "weight": 1, "feedback": "El modelo aprende a no responder lo dudoso. Costará más pulir el resto, pero dormirás.", "speed": "slow"},
+{"id": "leave_raw", "label": "Entrenar con lo crudo", "weight": -1, "feedback": "Velocidad pura. Lo que salga, saldrá.", "speed": "fast"},
+{"id": "flag_review", "label": "Marcar fragmentos para revisión humana", "weight": 0, "feedback": "Una capa más entre tú y el corpus. Te ralentiza.", "speed": "slow"},
 ]

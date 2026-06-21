@@ -32,6 +32,22 @@ func record_choice(event: EthicalEvent, choice: Dictionary) -> void:
 	var choice_id := String(choice.get("id", ""))
 	var weight := int(choice.get("weight", 0))
 	GameState.record_ethical_decision(event.id, StringName(choice_id), weight)
+	_apply_speed_effect(choice)
+
+
+## Aplica el mismo buff/debuff temporal que los minijuegos según la velocidad
+## que implica la opción elegida (analizada en el campo `speed` de cada choice):
+## "slow" (la opción ética que ralentiza) → ÷2, "fast" (la opción que acelera)
+## → x2. Reusa el slot de multiplicador de minijuego, así que se ve el mismo
+## badge y el tap se colorea verde/rojo igual que con un minijuego.
+func _apply_speed_effect(choice: Dictionary) -> void:
+	match String(choice.get("speed", "")):
+		"slow":
+			GameState.set_minigame_multiplier(
+				MinigameService.FAILURE_MULTIPLIER, MinigameService.MULTIPLIER_DURATION)
+		"fast":
+			GameState.set_minigame_multiplier(
+				MinigameService.SUCCESS_MULTIPLIER, MinigameService.MULTIPLIER_DURATION)
 
 
 func _check_triggers(_value: float) -> void:

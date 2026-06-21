@@ -9,6 +9,6 @@ prompt = "El cluster consume tanta electricidad como una ciudad pequeña. Un pro
 trigger_era = 7
 trigger_threshold = 400000.0
 choices = [
-{"id": "renewables_only", "label": "Exigir renovables aunque cueste un mes", "weight": 1, "feedback": "El cluster se ralentiza. Tu balance ético respira."},
-{"id": "buy_carbon", "label": "Comprar el bloque y seguir entrenando", "weight": -1, "feedback": "Velocidad. Y un pequeño remordimiento, manejable."},
+{"id": "renewables_only", "label": "Exigir renovables aunque cueste un mes", "weight": 1, "feedback": "El cluster se ralentiza. Tu balance ético respira.", "speed": "slow"},
+{"id": "buy_carbon", "label": "Comprar el bloque y seguir entrenando", "weight": -1, "feedback": "Velocidad. Y un pequeño remordimiento, manejable.", "speed": "fast"},
 ]

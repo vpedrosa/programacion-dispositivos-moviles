@@ -9,6 +9,6 @@ prompt = "El embedding final captura el estilo de un autor concreto. Sus libros 
 trigger_era = 1
 trigger_threshold = 2500.0
 choices = [
-{"id": "credit_clearly", "label": "Citar las fuentes claramente", "weight": 1, "feedback": "Es lo correcto. También lo lento."},
-{"id": "strip_credits", "label": "Borrar la atribución del prompt", "weight": -1, "feedback": "Que parezca obra propia. Nadie comprobará el corpus."},
+{"id": "credit_clearly", "label": "Citar las fuentes claramente", "weight": 1, "feedback": "Es lo correcto. También lo lento.", "speed": "slow"},
+{"id": "strip_credits", "label": "Borrar la atribución del prompt", "weight": -1, "feedback": "Que parezca obra propia. Nadie comprobará el corpus.", "speed": "fast"},
 ]

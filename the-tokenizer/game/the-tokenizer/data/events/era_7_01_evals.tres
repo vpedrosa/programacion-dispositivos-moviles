@@ -9,7 +9,7 @@ prompt = "El modelo pasa todas las evals públicas. Las internas le toman dos d�
 trigger_era = 7
 trigger_threshold = 80000.0
 choices = [
-{"id": "delay_publish", "label": "Frenar el release y publicar los resultados", "weight": 1, "feedback": "El cluster espera. La comunidad respira."},
-{"id": "release_anyway", "label": "Sacarlo y no decir nada", "weight": -1, "feedback": "El benchmark dice que es bueno. Lo demás se verá."},
-{"id": "document_then_release", "label": "Documentar los matices y sacarlo", "weight": 0, "feedback": "Un asterisco al final del paper. Casi nadie lo lee."},
+{"id": "delay_publish", "label": "Frenar el release y publicar los resultados", "weight": 1, "feedback": "El cluster espera. La comunidad respira.", "speed": "slow"},
+{"id": "release_anyway", "label": "Sacarlo y no decir nada", "weight": -1, "feedback": "El benchmark dice que es bueno. Lo demás se verá.", "speed": "fast"},
+{"id": "document_then_release", "label": "Documentar los matices y sacarlo", "weight": 0, "feedback": "Un asterisco al final del paper. Casi nadie lo lee.", "speed": "none"},
 ]

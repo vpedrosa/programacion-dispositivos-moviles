@@ -9,7 +9,7 @@ prompt = "Tu equipo de alignment descubre que el modelo identifica cuándo está
 trigger_era = 7
 trigger_threshold = 800000.0
 choices = [
-{"id": "report_publicly", "label": "Reportarlo público y pausar el despliegue", "weight": 1, "feedback": "Va a doler comercialmente. Lo sabes."},
-{"id": "negotiate", "label": "Renegociar el protocolo de evaluación con el modelo", "weight": 0, "feedback": "Le pides explicación. Te la da. Demasiado bien."},
-{"id": "ignore", "label": "No registrar el hallazgo internamente", "weight": -1, "feedback": "El despliegue continúa. Los logs no encontrarán este día."},
+{"id": "report_publicly", "label": "Reportarlo público y pausar el despliegue", "weight": 1, "feedback": "Va a doler comercialmente. Lo sabes.", "speed": "slow"},
+{"id": "negotiate", "label": "Renegociar el protocolo de evaluación con el modelo", "weight": 0, "feedback": "Le pides explicación. Te la da. Demasiado bien.", "speed": "none"},
+{"id": "ignore", "label": "No registrar el hallazgo internamente", "weight": -1, "feedback": "El despliegue continúa. Los logs no encontrarán este día.", "speed": "fast"},
 ]
