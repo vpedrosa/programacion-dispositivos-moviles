@@ -42,6 +42,12 @@ const SHAKE_FLASH_DURATION := 0.28
 const TEMP_BAR_OPTIMAL_TINT := Color(0.55, 1.0, 0.65, 1.0)
 const TEMP_BAR_DEFAULT_TINT := Color(1.0, 1.0, 1.0, 1.0)
 const TEMP_BAR_TINT_SPEED := 8.0
+## Instrucción según plataforma: en móvil se agita el dispositivo
+## (acelerómetro), en escritorio se arrastra el ratón. El código es la
+## única fuente de verdad — el .tscn no hardcodea el texto de móvil para
+## que no se filtre en PC si algo impidiera el override.
+const INSTRUCTIONS_MOBILE := "Agita el teléfono para enfriar.\nMantén la temperatura en zona óptima durante 5 s."
+const INSTRUCTIONS_DESKTOP := "Arrastra rápido el ratón con clic izquierdo para enfriar.\nMantén la temperatura en zona óptima durante 5 s."
 
 @onready var _temp_bar: ProgressBar = %TempBar
 @onready var _temp_label: Label = %TempLabel
@@ -70,8 +76,7 @@ func _ready() -> void:
 	_temp_bar.max_value = TEMP_MAX
 	_temp_bar.value = _temperature
 	gui_input.connect(_on_gui_input)
-	if not _is_mobile:
-		_instructions_label.text = "Arrastra rápido el ratón con clic izquierdo para enfriar.\nMantén la temperatura en zona óptima durante 5 s."
+	_instructions_label.text = INSTRUCTIONS_MOBILE if _is_mobile else INSTRUCTIONS_DESKTOP
 	AudioManager.wire_buttons_in(self)
 	_update_labels()
 
