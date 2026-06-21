@@ -12,6 +12,11 @@ extends Control
 const FLOAT_DURATION := 0.7
 const FLOAT_DISTANCE := 90.0
 const BOUNCE_SCALE := 1.08
+## Color del "+N" flotante según el multiplicador de minijuego activo:
+## neutro sin multiplicador, verde con buff (x2), rojo con debuff (÷2).
+const FLOAT_COLOR_DEFAULT := Color(0.92, 0.96, 0.85, 1.0)
+const FLOAT_COLOR_BUFF := Color(0.45, 0.85, 0.55, 1.0)
+const FLOAT_COLOR_DEBUFF := Color(0.95, 0.45, 0.45, 1.0)
 
 @onready var _button: TextureButton = %TapButton
 @onready var _float_layer: Control = %FloatLayer
@@ -35,9 +40,18 @@ func _on_tap() -> void:
 	GameState.add_tokens(base)
 	var bonus := DebugFlags.bonus_for(base)
 	GameState.add_debug_bonus(bonus)
+	# El buff/debuff temporal de minijuego (x2 / ÷2) también aplica al tap.
+	# Igual que en la generación pasiva (game.gd), el extra va sólo al balance
+	# gastable vía apply_minigame_delta para no adelantar boss ni eventos
+	# éticos: lifetime/era_lifetime sólo reciben el `base`.
+	var mult := GameState.get_minigame_multiplier()
+	var extra := 0.0
+	if not is_equal_approx(mult, 1.0):
+		extra = base * (mult - 1.0)
+		GameState.apply_minigame_delta(extra)
 	AudioManager.play_button_sfx()
 	_play_bounce()
-	_spawn_floating(base + bonus)
+	_spawn_floating(base + bonus + extra, mult)
 
 
 func _play_bounce() -> void:
@@ -48,11 +62,11 @@ func _play_bounce() -> void:
 	_bounce_tween.tween_property(self, "scale", Vector2.ONE, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 
-func _spawn_floating(amount: float) -> void:
+func _spawn_floating(amount: float, mult: float) -> void:
 	var label := Label.new()
 	label.text = "+%s" % _format(amount)
 	label.add_theme_font_size_override("font_size", 28)
-	label.add_theme_color_override("font_color", Color(0.92, 0.96, 0.85, 1))
+	label.add_theme_color_override("font_color", _floating_color(mult))
 	label.add_theme_constant_override("outline_size", 4)
 	label.add_theme_color_override("font_outline_color", Color(0, 0.1, 0, 0.8))
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -66,6 +80,16 @@ func _spawn_floating(amount: float) -> void:
 	t.tween_property(label, "position:y", label.position.y - FLOAT_DISTANCE, FLOAT_DURATION).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 	t.tween_property(label, "modulate:a", 0.0, FLOAT_DURATION).set_delay(0.15)
 	t.chain().tween_callback(label.queue_free)
+
+
+## Verde con buff de minijuego (x2), rojo con debuff (÷2), neutro si no hay
+## multiplicador activo.
+func _floating_color(mult: float) -> Color:
+	if mult > 1.0 + 0.0001:
+		return FLOAT_COLOR_BUFF
+	if mult < 1.0 - 0.0001:
+		return FLOAT_COLOR_DEBUFF
+	return FLOAT_COLOR_DEFAULT
 
 
 static func _format(value: float) -> String:
