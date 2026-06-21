@@ -15,6 +15,7 @@ jobs:
   test:
     name: GUT Tests
     runs-on: ubuntu-22.04
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -58,6 +59,7 @@ jobs:
     name: Export APK + Linux
     needs: test
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -140,13 +142,19 @@ jobs:
 
       - name: Install Android build template
         run: |
-          # gradle_build/use_gradle_build=true exige el template Gradle
-          # copiado dentro de <project>/android/build/. Godot 4 lo instala
-          # con esta acción headless que extrae android_source.zip de los
-          # export templates al árbol del proyecto. Idempotente.
+          # gradle_build/use_gradle_build=true exige el template Gradle dentro
+          # de <project>/android/build/. NO usamos `godot --install-android-
+          # build-template`: en headless arranca el bucle del editor y no
+          # termina solo, colgando el job hasta el timeout (los runs previos
+          # morían a las 6h). En su lugar extraemos a mano android_source.zip
+          # de los export templates, que es justo lo que ese comando hace.
+          TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_RELEASE}"
           mkdir -p "$PROJECT_PATH/android/build"
-          cd "$PROJECT_PATH"
-          godot --headless --install-android-build-template
+          unzip -q -o "$TEMPLATES_DIR/android_source.zip" -d "$PROJECT_PATH/android/build"
+          # Marca de versión que Godot valida para dar el template por instalado.
+          echo "${GODOT_VERSION}.${GODOT_RELEASE}" > "$PROJECT_PATH/android/.build_version"
+          # Evita que el árbol Gradle se escanee como recursos del proyecto.
+          touch "$PROJECT_PATH/android/build/.gdignore"
 
       - name: Export Android APK
         run: |
