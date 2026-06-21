@@ -2,9 +2,10 @@ extends Node
 
 ## Flags para acelerar la evaluación académica.
 ##
-## El multiplicador se aplica únicamente sobre la generación de tokens
-## (tap y pasiva): los qubits y el progreso del jefe permanecen intactos
-## para no falsear la mecánica cuántica ni la curva de eras.
+## El multiplicador se aplica sobre la generación de tokens (tap y pasiva) y
+## sus tokens extra cuentan como tokens normales, de modo que el modo debug
+## adelanta toda la curva: barra del jefe, eventos éticos, entrada a Era 7 y
+## qubits avanzan deprisa para poder testear la progresión completa.
 
 signal eval_multiplier_changed(enabled: bool)
 
@@ -40,10 +41,9 @@ func set_eval_multiplier_enabled(value: bool) -> void:
 
 ## Tokens "extra" que el multiplicador añade encima de la cantidad base.
 ##
-## Estos tokens van al balance gastable únicamente (vía
-## [method GameState.add_debug_bonus]) para no falsear lifetime_tokens
-## ni era_lifetime_tokens — y por tanto no acelerar boss, eventos éticos
-## ni la entrada a Era 7.
+## Se suman como tokens normales (vía [method GameState.add_tokens]), así que
+## cuentan para lifetime_tokens y era_lifetime_tokens y aceleran también el
+## boss, los eventos éticos, la entrada a Era 7 y los qubits.
 func bonus_for(amount: float) -> float:
 	if not _eval_multiplier_enabled or amount <= 0.0:
 		return 0.0

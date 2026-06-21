@@ -52,7 +52,7 @@ func apply_outcome(success: bool) -> void:
 	var bonus := rate * (REWARD_SECONDS if success else -PENALTY_SECONDS)
 	if bonus > 0.0:
 		GameState.add_tokens(bonus)
-		GameState.add_debug_bonus(DebugFlags.bonus_for(bonus))
+		GameState.add_tokens(DebugFlags.bonus_for(bonus))
 	elif bonus < 0.0:
 		GameState.try_spend_tokens(absf(bonus))
 	var multiplier := SUCCESS_MULTIPLIER if success else FAILURE_MULTIPLIER

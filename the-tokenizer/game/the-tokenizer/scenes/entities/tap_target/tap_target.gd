@@ -38,8 +38,10 @@ func _on_tap() -> void:
 	# (#373).
 	var base := GameState.state.tokens_per_tap * GameState.state.qubit_multiplier
 	GameState.add_tokens(base)
+	# El bonus de debug cuenta como tokens normales (lifetime/era_lifetime),
+	# así que con debug el tap también adelanta el boss.
 	var bonus := DebugFlags.bonus_for(base)
-	GameState.add_debug_bonus(bonus)
+	GameState.add_tokens(bonus)
 	# El buff/debuff temporal de minijuego (x2 / ÷2) también aplica al tap.
 	# Igual que en la generación pasiva (game.gd), el extra va sólo al balance
 	# gastable vía apply_minigame_delta para no adelantar boss ni eventos

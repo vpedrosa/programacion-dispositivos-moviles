@@ -70,22 +70,9 @@ func add_tokens(amount: float) -> void:
 	tokens_changed.emit(state.tokens)
 
 
-## Suma tokens al balance gastable sin tocar lifetime/era_lifetime.
-##
-## Reservado para el multiplicador del modo evaluación: el evaluador puede
-## comprar mejoras con holgura sin que la curva narrativa (eventos éticos,
-## boss, qubits) se acelere artificialmente.
-func add_debug_bonus(amount: float) -> void:
-	if amount <= 0.0:
-		return
-	state.tokens = maxf(0.0, state.tokens + amount)
-	tokens_changed.emit(state.tokens)
-
-
 ## Aplica un delta (positivo o negativo) sólo al balance gastable.
 ##
-## Compartido con [method add_debug_bonus] en intención: lifetime y
-## era_lifetime nunca se tocan, así que un debuff del minijuego no
+## lifetime y era_lifetime nunca se tocan, así que un debuff del minijuego no
 ## retrasa el boss y un buff no lo adelanta.
 func apply_minigame_delta(amount: float) -> void:
 	if amount == 0.0:

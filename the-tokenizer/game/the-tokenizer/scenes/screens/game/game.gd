@@ -106,7 +106,9 @@ func _process(delta: float) -> void:
 		return
 	var base := base_rate * delta
 	GameState.add_tokens(base)
-	GameState.add_debug_bonus(DebugFlags.bonus_for(base))
+	# El bonus de debug se suma como tokens normales: cuenta para
+	# lifetime/era_lifetime y por tanto adelanta también el boss.
+	GameState.add_tokens(DebugFlags.bonus_for(base))
 	# Buff/debuff del minijuego: el extra (positivo o negativo) sólo afecta
 	# al balance gastable, no a lifetime/era_lifetime.
 	if not is_equal_approx(mult, 1.0):
