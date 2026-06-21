@@ -9,23 +9,27 @@ extends Control
 ## oculta y se rellena cuando aterrice el catálogo de qubits.
 
 const UPGRADE_CARD_SCENE := preload("res://scenes/ui/upgrade_card/upgrade_card.tscn")
+const QUANTUM_EVENT_SCENE := preload("res://scenes/screens/quantum_event/quantum_event.tscn")
 
 @onready var _close_button: Button = %CloseButton
 @onready var _tokens_label: Label = %TokensLabel
 @onready var _list: VBoxContainer = %UpgradeList
 @onready var _empty_label: Label = %EmptyLabel
 @onready var _qubit_section: Control = %QubitSection
+@onready var _qubit_label: Label = %QubitLabel
+@onready var _quantum_button: Button = %QuantumButton
 
 var _rows: Dictionary = {}
 
 
 func _ready() -> void:
 	_close_button.pressed.connect(_close)
+	_quantum_button.pressed.connect(_on_quantum_pressed)
 	GameState.tokens_changed.connect(_on_tokens_changed)
-	GameState.qubits_changed.connect(_refresh_qubit_section_visibility)
+	GameState.qubits_changed.connect(func(_v: int) -> void: _refresh_qubit_section())
 	GameState.upgrade_levelup.connect(_on_upgrade_levelup)
 	_refresh_tokens(GameState.state.tokens)
-	_refresh_qubit_section_visibility(GameState.state.qubits)
+	_refresh_qubit_section()
 	_populate(GameState.state.current_era)
 	AudioManager.wire_buttons_in(self)
 
@@ -82,6 +86,10 @@ func _on_purchase_requested(upgrade_id: StringName) -> void:
 func _on_tokens_changed(value: float) -> void:
 	_refresh_tokens(value)
 	_refresh_all_rows()
+	# La disponibilidad del reinicio cuántico depende de lifetime_tokens, que
+	# sigue creciendo con la generación pasiva mientras la tienda está abierta;
+	# refrescamos para revelar el botón en cuanto se cruza el umbral.
+	_refresh_qubit_section()
 
 
 func _on_upgrade_levelup(_id: StringName, _level: int) -> void:
@@ -97,8 +105,33 @@ func _refresh_tokens(value: float) -> void:
 	_tokens_label.text = _format(value)
 
 
-func _refresh_qubit_section_visibility(qubits: int) -> void:
-	_qubit_section.visible = qubits > 0
+## Refresca la sección de qubits de la tienda.
+##
+## Si el reinicio cuántico está disponible (Era 7 + lifetime suficiente),
+## muestra el botón de relanzamiento aunque el jugador ya lo haya rechazado:
+## la oferta automática es de una sola vez por sesión, así que la tienda es el
+## punto de reentrada. Si no está disponible pero el jugador ya tiene qubits
+## (p.ej. de vuelta en Era 1 tras un reset), muestra sólo el recuento.
+func _refresh_qubit_section() -> void:
+	var qubits := GameState.state.qubits
+	var available := QuantumService.is_available()
+	_qubit_section.visible = available or qubits > 0
+	if not _qubit_section.visible:
+		return
+	if available:
+		var earned := QuantumService.qubits_on_reset()
+		_qubit_label.text = "Realidad cuántica disponible · tienes %d qubits" % qubits
+		_quantum_button.text = "REINICIAR CON QUBITS (+%d)" % earned
+		_quantum_button.visible = true
+	else:
+		_qubit_label.text = "Qubits acumulados · %d" % qubits
+		_quantum_button.visible = false
+
+
+func _on_quantum_pressed() -> void:
+	if not QuantumService.is_available():
+		return
+	SceneManager.push_overlay(QUANTUM_EVENT_SCENE)
 
 
 func _close() -> void:
