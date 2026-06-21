@@ -92,7 +92,10 @@ func _load_slot(slot: int) -> void:
 		return
 	SaveService.set_active_slot(slot)
 	GameState.load_from(state)
-	SceneManager.pop_overlay()
+	# clear_overlays (no un solo pop) por si la sesión anterior dejó un
+	# overlay colgado: si no, has_overlay() seguiría true en la nueva
+	# partida y bloquearía el tap manual de Era 1 (#372).
+	SceneManager.clear_overlays()
 	SceneManager.change_scene(GAME_SCENE)
 
 
@@ -122,7 +125,9 @@ func _start_new_in(slot: int) -> void:
 	SaveService.clear_save(slot)
 	SaveService.set_active_slot(slot)
 	GameState.reset()
-	SceneManager.pop_overlay()
+	# Igual que en _load_slot: limpia todo el stack para que un overlay
+	# residual de la sesión anterior no mate el tap de Era 1 (#372).
+	SceneManager.clear_overlays()
 	SceneManager.change_scene(INTRO_SCENE)
 
 

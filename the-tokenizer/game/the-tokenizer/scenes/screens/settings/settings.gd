@@ -46,7 +46,10 @@ func _ready() -> void:
 func _on_back_to_menu_pressed() -> void:
 	if not persist_active_slot():
 		return
-	SceneManager.pop_overlay()
+	# clear_overlays en vez de un solo pop: al volver a una escena raíz hay
+	# que vaciar el stack para no arrastrar overlays residuales a la siguiente
+	# partida (bloquearían el tap de Era 1 vía has_overlay(), #372).
+	SceneManager.clear_overlays()
 	SceneManager.change_scene(MAIN_MENU_SCENE)
 
 
@@ -77,7 +80,7 @@ func _delete_current_slot() -> void:
 	SaveService.clear_save(slot)
 	SaveService.set_active_slot(0)
 	GameState.reset()
-	SceneManager.pop_overlay()
+	SceneManager.clear_overlays()
 	SceneManager.change_scene(MAIN_MENU_SCENE)
 
 
