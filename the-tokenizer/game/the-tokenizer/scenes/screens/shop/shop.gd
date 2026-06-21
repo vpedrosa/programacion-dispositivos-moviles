@@ -39,13 +39,39 @@ func _populate(era: int) -> void:
 		_empty_label.visible = true
 		return
 	_empty_label.visible = false
-	upgrades.sort_custom(func(a, b): return a.base_cost < b.base_cost)
+	upgrades.sort_custom(_compare_upgrades)
 	for upgrade in upgrades:
 		var card := UPGRADE_CARD_SCENE.instantiate()
 		_list.add_child(card)
 		card.bind(upgrade)
 		card.purchase_requested.connect(_on_purchase_requested)
 		_rows[upgrade.id] = card
+
+
+## Ordena la lista dejando cada prerrequisito por encima de quien lo exige.
+##
+## Prima la profundidad en la cadena de prerrequisitos: una mejora sin
+## prerrequisito (profundidad 0) aparece siempre por encima de la que la
+## necesita (profundidad >= 1), aunque esta última sea más barata — p.ej.
+## era_1_serverroom (8000) cuelga de era_1_cluster (20000). A igualdad de
+## profundidad se conserva el orden por coste.
+func _compare_upgrades(a: UpgradeData, b: UpgradeData) -> bool:
+	var depth_a := _prerequisite_depth(a)
+	var depth_b := _prerequisite_depth(b)
+	if depth_a != depth_b:
+		return depth_a < depth_b
+	return a.base_cost < b.base_cost
+
+
+## Longitud de la cadena de prerrequisitos de una mejora (0 si no tiene).
+## Acotada por seguridad para no colgarse si el catálogo tuviera un ciclo.
+func _prerequisite_depth(upgrade: UpgradeData) -> int:
+	var depth := 0
+	var current := upgrade
+	while current != null and current.prerequisite_id != &"" and depth < 32:
+		current = UpgradeService.get_by_id(current.prerequisite_id)
+		depth += 1
+	return depth
 
 
 func _on_purchase_requested(upgrade_id: StringName) -> void:
